@@ -1,0 +1,17 @@
+﻿--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcdc.c	2018-07-10 09:54:38.000000000 +0200
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/bcdc.c	2018-07-10 10:38:29.000000000 +0200
+@@ -271,13 +271,13 @@
+ 	h = (struct brcmf_proto_bcdc_header *)(pktbuf->data);
+ 
+ 	h->flags = (BCDC_PROTO_VER << BCDC_FLAG_VER_SHIFT);
+ 	if (pktbuf->ip_summed == CHECKSUM_PARTIAL)
+ 		h->flags |= BCDC_FLAG_SUM_NEEDED;
+ 
+-	h->priority = (pktbuf->priority & BCDC_PRIORITY_MASK);
++	h->priority = 0;
+ 	h->flags2 = 0;
+ 	h->data_offset = offset;
+ 	BCDC_SET_IF_IDX(h, ifidx);
+ 	trace_brcmf_bcdchdr(pktbuf->data);
+ }
+ 

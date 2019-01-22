@@ -1,0 +1,17 @@
+﻿--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c	2018-07-10 09:54:38.000000000 +0200
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/core.c	2018-07-10 10:14:34.000000000 +0200
+@@ -1000,13 +1000,13 @@
+ 	struct brcmf_if *ifp;
+ 	struct brcmf_if *p2p_ifp;
+ 
+ 	brcmf_dbg(TRACE, "\n");
+ 
+ 	/* add primary networking interface */
+-	ifp = brcmf_add_if(drvr, 0, 0, false, "wlan%d", NULL);
++	ifp = brcmf_add_if(drvr, 0, 0, false, "intwifi%d", NULL);
+ 	if (IS_ERR(ifp))
+ 		return PTR_ERR(ifp);
+ 
+ 	p2p_ifp = NULL;
+ 
+ 	/* signal bus ready */
