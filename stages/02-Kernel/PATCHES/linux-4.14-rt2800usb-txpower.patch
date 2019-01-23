@@ -1,0 +1,177 @@
+﻿--- drivers/net/wireless/ralink/rt2x00/rt2800usb.c
++++ drivers/net/wireless/ralink/rt2x00/rt2800usb.c
+@@ -48,12 +48,21 @@
+ 
+ static bool rt2800usb_hwcrypt_disabled(struct rt2x00_dev *rt2x00dev)
+ {
+ 	return modparam_nohwcrypt;
+ }
+ 
++static int modparam_txpower;
++module_param_named(txpower, modparam_txpower, int, S_IRUGO);
++MODULE_PARM_DESC(txpower, "TX power. Default 0, min=-5, max=5 (dB)");
++
++static int rt2800usb_txpower(struct rt2x00_dev *rt2x00dev)
++{
++    return modparam_txpower;
++}
++
+ /*
+  * Queue handlers.
+  */
+ static void rt2800usb_start_queue(struct data_queue *queue)
+ {
+ 	struct rt2x00_dev *rt2x00dev = queue->rt2x00dev;
+@@ -817,12 +826,13 @@
+ 	.register_write_lock	= rt2x00usb_register_write_lock,
+ 	.register_multiread	= rt2x00usb_register_multiread,
+ 	.register_multiwrite	= rt2x00usb_register_multiwrite,
+ 	.regbusy_read		= rt2x00usb_regbusy_read,
+ 	.read_eeprom		= rt2800usb_read_eeprom,
+ 	.hwcrypt_disabled	= rt2800usb_hwcrypt_disabled,
++	.txpower			= rt2800usb_txpower,
+ 	.drv_write_firmware	= rt2800usb_write_firmware,
+ 	.drv_init_registers	= rt2800usb_init_registers,
+ 	.drv_get_txwi		= rt2800usb_get_txwi,
+ };
+ 
+ static const struct rt2x00lib_ops rt2800usb_rt2x00_ops = {
+--- drivers/net/wireless/ralink/rt2x00/rt2800lib.h
++++ drivers/net/wireless/ralink/rt2x00/rt2800lib.h
+@@ -68,12 +68,14 @@
+ 	int (*regbusy_read)(struct rt2x00_dev *rt2x00dev,
+ 			    const unsigned int offset,
+ 			    const struct rt2x00_field32 field, u32 *reg);
+ 
+ 	int (*read_eeprom)(struct rt2x00_dev *rt2x00dev);
+ 	bool (*hwcrypt_disabled)(struct rt2x00_dev *rt2x00dev);
++	
++	int (*txpower)(struct rt2x00_dev *rt2x00dev);
+ 
+ 	int (*drv_write_firmware)(struct rt2x00_dev *rt2x00dev,
+ 				  const u8 *data, const size_t len);
+ 	int (*drv_init_registers)(struct rt2x00_dev *rt2x00dev);
+ 	__le32 *(*drv_get_txwi)(struct queue_entry *entry);
+ };
+@@ -150,12 +152,19 @@
+ 
+ static inline bool rt2800_hwcrypt_disabled(struct rt2x00_dev *rt2x00dev)
+ {
+ 	const struct rt2800_ops *rt2800ops = rt2x00dev->ops->drv;
+ 
+ 	return rt2800ops->hwcrypt_disabled(rt2x00dev);
++}
++
++static inline int rt2800_txpower(struct rt2x00_dev *rt2x00dev)
++{
++    const struct rt2800_ops *rt2800ops = rt2x00dev->ops->drv;
++
++    return rt2800ops->txpower(rt2x00dev);
+ }
+ 
+ static inline int rt2800_drv_write_firmware(struct rt2x00_dev *rt2x00dev,
+ 					    const u8 *data, const size_t len)
+ {
+ 	const struct rt2800_ops *rt2800ops = rt2x00dev->ops->drv;
+--- drivers/net/wireless/ralink/rt2x00/rt2800lib.c
++++ drivers/net/wireless/ralink/rt2x00/rt2800lib.c
+@@ -4735,45 +4735,49 @@
+ 		 * TX_PWR_CFG_4: unknown
+ 		 */
+ 		txpower = rt2x00_get_field16(eeprom,
+ 					     EEPROM_TXPOWER_BYRATE_RATE0);
+ 		txpower = rt2800_compensate_txpower(rt2x00dev, is_rate_b, band,
+ 					     power_level, txpower, delta);
++		txpower += rt2800_txpower(rt2x00dev);
+ 		rt2x00_set_field32(&reg, TX_PWR_CFG_RATE0, txpower);
+ 
+ 		/*
+ 		 * TX_PWR_CFG_0: 2MBS, TX_PWR_CFG_1: 36MBS,
+ 		 * TX_PWR_CFG_2: MCS5, TX_PWR_CFG_3: MCS13,
+ 		 * TX_PWR_CFG_4: unknown
+ 		 */
+ 		txpower = rt2x00_get_field16(eeprom,
+ 					     EEPROM_TXPOWER_BYRATE_RATE1);
+ 		txpower = rt2800_compensate_txpower(rt2x00dev, is_rate_b, band,
+ 					     power_level, txpower, delta);
++		txpower += rt2800_txpower(rt2x00dev);
+ 		rt2x00_set_field32(&reg, TX_PWR_CFG_RATE1, txpower);
+ 
+ 		/*
+ 		 * TX_PWR_CFG_0: 5.5MBS, TX_PWR_CFG_1: 48MBS,
+ 		 * TX_PWR_CFG_2: MCS6,  TX_PWR_CFG_3: MCS14,
+ 		 * TX_PWR_CFG_4: unknown
+ 		 */
+ 		txpower = rt2x00_get_field16(eeprom,
+ 					     EEPROM_TXPOWER_BYRATE_RATE2);
+ 		txpower = rt2800_compensate_txpower(rt2x00dev, is_rate_b, band,
+ 					     power_level, txpower, delta);
++		txpower += rt2800_txpower(rt2x00dev);
+ 		rt2x00_set_field32(&reg, TX_PWR_CFG_RATE2, txpower);
+ 
+ 		/*
+ 		 * TX_PWR_CFG_0: 11MBS, TX_PWR_CFG_1: 54MBS,
+ 		 * TX_PWR_CFG_2: MCS7,  TX_PWR_CFG_3: MCS15,
+ 		 * TX_PWR_CFG_4: unknown
+ 		 */
+ 		txpower = rt2x00_get_field16(eeprom,
+ 					     EEPROM_TXPOWER_BYRATE_RATE3);
+ 		txpower = rt2800_compensate_txpower(rt2x00dev, is_rate_b, band,
+ 					     power_level, txpower, delta);
++		txpower += rt2800_txpower(rt2x00dev);
+ 		rt2x00_set_field32(&reg, TX_PWR_CFG_RATE3, txpower);
+ 
+ 		/* read the next four txpower values */
+ 		eeprom = rt2800_eeprom_read_from_array(rt2x00dev,
+ 						       EEPROM_TXPOWER_BYRATE,
+ 						       i + 1);
+@@ -4785,45 +4789,49 @@
+ 		 * TX_PWR_CFG_4: unknown
+ 		 */
+ 		txpower = rt2x00_get_field16(eeprom,
+ 					     EEPROM_TXPOWER_BYRATE_RATE0);
+ 		txpower = rt2800_compensate_txpower(rt2x00dev, is_rate_b, band,
+ 					     power_level, txpower, delta);
++		txpower += rt2800_txpower(rt2x00dev);
+ 		rt2x00_set_field32(&reg, TX_PWR_CFG_RATE4, txpower);
+ 
+ 		/*
+ 		 * TX_PWR_CFG_0: 9MBS, TX_PWR_CFG_1: MCS1,
+ 		 * TX_PWR_CFG_2: MCS9, TX_PWR_CFG_3: unknown,
+ 		 * TX_PWR_CFG_4: unknown
+ 		 */
+ 		txpower = rt2x00_get_field16(eeprom,
+ 					     EEPROM_TXPOWER_BYRATE_RATE1);
+ 		txpower = rt2800_compensate_txpower(rt2x00dev, is_rate_b, band,
+ 					     power_level, txpower, delta);
++		txpower += rt2800_txpower(rt2x00dev);
+ 		rt2x00_set_field32(&reg, TX_PWR_CFG_RATE5, txpower);
+ 
+ 		/*
+ 		 * TX_PWR_CFG_0: 12MBS, TX_PWR_CFG_1: MCS2,
+ 		 * TX_PWR_CFG_2: MCS10, TX_PWR_CFG_3: unknown,
+ 		 * TX_PWR_CFG_4: unknown
+ 		 */
+ 		txpower = rt2x00_get_field16(eeprom,
+ 					     EEPROM_TXPOWER_BYRATE_RATE2);
+ 		txpower = rt2800_compensate_txpower(rt2x00dev, is_rate_b, band,
+ 					     power_level, txpower, delta);
++		txpower += rt2800_txpower(rt2x00dev);
+ 		rt2x00_set_field32(&reg, TX_PWR_CFG_RATE6, txpower);
+ 
+ 		/*
+ 		 * TX_PWR_CFG_0: 18MBS, TX_PWR_CFG_1: MCS3,
+ 		 * TX_PWR_CFG_2: MCS11, TX_PWR_CFG_3: unknown,
+ 		 * TX_PWR_CFG_4: unknown
+ 		 */
+ 		txpower = rt2x00_get_field16(eeprom,
+ 					     EEPROM_TXPOWER_BYRATE_RATE3);
+ 		txpower = rt2800_compensate_txpower(rt2x00dev, is_rate_b, band,
+ 					     power_level, txpower, delta);
++		txpower += rt2800_txpower(rt2x00dev);
+ 		rt2x00_set_field32(&reg, TX_PWR_CFG_RATE7, txpower);
+ 
+ 		rt2800_register_write(rt2x00dev, offset, reg);
+ 
+ 		/* next TX_PWR_CFG register */
+ 		offset += 4;
