@@ -1,5 +1,5 @@
-# wifibroadcast-image-builder
-Short version: This project takes a Raspbian-lite base image and modifies it into a EZ-Wifibroadcast compatible image.
+# Open.HD-Image-Builder
+Short version: This project takes a Raspbian-lite base image and modifies it into a Open.HD compatible image.
 For the long version, read on.
 
 ## Using
@@ -12,28 +12,9 @@ sudo apt-get install curl git qemu qemu-user-static binfmt-support build-essenti
 Then git clone this repository to a suitable folder 
 
 ```
-git clone https://github.com/RespawnDespair/wifibroadcast-image-builder.git
-For easy copy paste (Original project upper):
-git clone https://github.com/user1321/wifibroadcast-image-builder.git
-cd wifibroadcast-image-builder
+git clone https://github.com/HD-Fpv/Open.HD_Image_Builder.git
+cd Open.HD_Image_Builder
 ```
-
-To compile 5\10MHz version use:
-
-```
- git clone -b user1321-5MHzAth9k https://github.com/user1321/wifibroadcast-image-builder.git
- cd wifibroadcast-image-builder
- ```
- 
-Not recommended for use!
-To compile 5\10 MHz + Code for MCP3008 that used too add 4 (missing) Axis to cheap USB joystick use:
-Warning -  As MCP3008 is a hardware microchip that connected to RPi. Look at source codes of RC-joystick program before use it and read datasheet how to use it to avoid hardware damage.
-
-```
-git clone -b user1321-5MhzAth9k-MCP3008 https://github.com/user1321/wifibroadcast-image-builder.git
- ```
-
-Warning: Experimental and untested!!! 
 
 and run:
 
@@ -41,9 +22,6 @@ and run:
 sudo -s
 ./build.sh
 ```
-
-NOTE : you should answer "No" to the question asked by wireshark installation.
-
 
 
 ## More information (what's going on?)
