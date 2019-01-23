@@ -52,7 +52,7 @@ So after thinking about the problem and looking for projects who had tackled thi
 
 This concept applies to the EZ-Wifibroadcast image creation as well. So i modified the core logic into this system:
 
-![flow](https://github.com/HD-Fpv/Open.HD_Image_Builder/raw/Builder%20flow.png "Flow")
+![flow](https://github.com/HD-Fpv/Open.HD_Image_Builder/Builder%20flow.png "Flow")
 
 This allows us to run the build process once, and when we want to make a change in stage 3, we only run stage 3 and 4 again by removing the `SKIP` file from the `stages/03-Packages` and the `stages/04-Wifibroadcast` folders. The build system will copy the kernel `IMAGE.img` from stage 2 to stage 3 and re-run all the scripts in stage 3. The resulting image is copied to stage 4 and all those scripts are run. Finally, when there are no more stages, the `IMAGE.img` from the last stage is copied to the `deploy/ezwfb-{date}.img` file.
 
