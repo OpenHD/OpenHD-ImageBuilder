@@ -8,10 +8,10 @@ mkdir -p GIT
 
 pushd GIT
 
+MNT_DIR="${STAGE_WORK_DIR}/mnt"
+
 log "Download all Open.HD Sources"
 sudo git clone https://github.com/HD-Fpv/Open.HD.git
-
-MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
 log "v4l2loopback"
 sudo git clone https://github.com/umlaeute/v4l2loopback.git
@@ -54,13 +54,15 @@ popd
 log "Download EZWFB - RC"
 # sudo git clone https://github.com/user1321/wifibroadcast-rc-orig.git wifibroadcast-rc
 sudo mv Open.HD/wifibroadcast-rc/ wifibroadcast-rc/
+# sudo git clone -b user1321-5MHzAth9k https://github.com/user1321/wifibroadcast-rc-orig.git wifibroadcast-rc-Ath9k
+sudo mv Open.HD/wifibroadcast-rc-Ath9k/ wifibroadcast-rc-Ath9k/
 
 log "Download EZWFB - Status"
 # sudo git clone https://github.com/RespawnDespair/wifibroadcast-status.git
 sudo mv Open.HD/wifibroadcast-status/ wifibroadcast-status/
 
 log "Download EZWFB - Scripts"
-# sudo git clone https://github.com/user1321/wifibroadcast-scripts.git
+# sudo git clone -b user1321-5MhzAth9k https://github.com/user1321/wifibroadcast-scripts.git
 sudo mv Open.HD/wifibroadcast-scripts/ wifibroadcast-scripts/
 
 log "Download EZWFB - Misc"
@@ -79,7 +81,7 @@ log "Download FLIR one"
 sudo git clone https://github.com/fnoop/flirone-v4l2.git
 
 log "Download RemoteSettings"
-# sudo git clone https://github.com/user1321/RemoteSettings
+# sudo git clone -b user1321-5MhzAth9k https://github.com/user1321/RemoteSettings
 sudo mv Open.HD/RemoteSettings/ RemoteSettings/
 
 log "Download cameracontrol"
