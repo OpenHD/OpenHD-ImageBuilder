@@ -12,12 +12,15 @@ MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
 log "Download all Open.HD Sources"
 sudo git clone https://github.com/HD-Fpv/Open.HD.git
+pushd Open.HD
+sudo git submodule update --init
+popd
 
 log "v4l2loopback"
 sudo git clone https://github.com/umlaeute/v4l2loopback.git
 
 log "Download OpenVG"
-sudo mv Open.HD/openvg-font/ openvg-font/
+sudo mv Open.HD/openvg/ openvg/
 # sudo git clone https://github.com/RespawnDespair/openvg-font.git openvg
 
 log "Download Mavlink router"
@@ -40,16 +43,12 @@ popd
 log "Download EZWFB - Base"
 # sudo git clone https://github.com/user1321/wifibroadcast-base.git
 sudo mv Open.HD/wifibroadcast-base/ wifibroadcast-base/
-pushd wifibroadcast-base
-sudo git submodule update --init
-popd
+sudo cp -r Open.HD/mavlink/ wifibroadcast-base/mavlink/
 
 log "Download EZWFB - OSD"
 # sudo git clone https://github.com/user1321/wifibroadcast-osd-orig wifibroadcast-osd
 sudo mv Open.HD/wifibroadcast-osd/ wifibroadcast-osd/
-pushd wifibroadcast-osd
-sudo git submodule update --init
-popd
+sudo cp -r Open.HD/mavlink/ wifibroadcast-osd/mavlink/
 
 log "Download EZWFB - RC"
 # sudo git clone https://github.com/user1321/wifibroadcast-rc-orig.git wifibroadcast-rc
