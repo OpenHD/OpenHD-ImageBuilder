@@ -13,7 +13,7 @@ rm /lib/modules/4.14.71*/build
 rm /lib/modules/4.14.71*/source
 
 # Install kernel-headers before apt-get update
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install raspberrypi-kernel-headers
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install raspberrypi-kernel-headers
 
 # Latest package source
 # sudo rm -rf /var/lib/apt/lists/*
@@ -21,38 +21,38 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install raspberrypi-kernel-heade
 sudo apt-get update
 
 # Install essentials
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install python-pip
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install aircrack-ng
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gnuplot
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install udhcpd
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install socat
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install python-pip
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install aircrack-ng
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install gnuplot
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install udhcpd
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install socat
 # DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install --assume-no wireshark-common
 # DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install tshark
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install ser2net
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-tools
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-plugins-bad
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-plugins-good
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libtool
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install autoconf
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libsdl1.2-dev
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libboost-all-dev cmake libconfig++-dev libreadline-dev
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install git libpcap-dev wiringpi iw usbmount
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libjpeg8-dev indent libfreetype6-dev ttf-dejavu-core
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install python-m2crypto
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install dos2unix
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install hostapd
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install pump
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libpng12-dev
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install python-future python-attr
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libfontconfig1-dev 
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libsdl2-dev
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libsdl1.2-dev
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install ser2net
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install gstreamer1.0-tools
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install gstreamer1.0-plugins-bad
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install gstreamer1.0-plugins-good
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install libtool
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install autoconf
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install libsdl1.2-dev
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install libboost-all-dev cmake libconfig++-dev libreadline-dev
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install git libpcap-dev wiringpi iw usbmount
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install libjpeg8-dev indent libfreetype6-dev ttf-dejavu-core
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install python-m2crypto
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install dos2unix
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install hostapd
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install pump
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install libpng12-dev
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install python-future python-attr
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install libfontconfig1-dev 
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install libsdl2-dev
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install libsdl1.2-dev
 
 # v4l2loopback and flir dependencies NEED TO CHECK IF THEY ARE ALREADY INSTALLED
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install vim
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install fuse
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libusb-1.0-0-dev
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install vim
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install fuse
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install gstreamer1.0
+DEBIAN_FRONTEND=noninteractive sudo apt-get --no-install-recommends -yq install libusb-1.0-0-dev
 
 # Remove packages that conflict with the workings of EZ-Wifibroadcast
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge wireless-regdb
