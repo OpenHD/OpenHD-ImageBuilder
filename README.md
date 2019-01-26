@@ -13,7 +13,7 @@ Then git clone this repository to a suitable folder
 
 ```
 git clone https://github.com/HD-Fpv/Open.HD_Image_Builder.git
-cd Open.HD_Image_Builder-master
+cd Open.HD_Image_Builder
 ```
 
 and run:
