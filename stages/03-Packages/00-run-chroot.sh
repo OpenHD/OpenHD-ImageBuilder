@@ -48,6 +48,9 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install --no-install-recommends 
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install --no-install-recommends libsdl2-dev
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install --no-install-recommends libsdl1.2-dev
 
+#Was missing
+sudo pip install psutil
+
 # v4l2loopback and flir dependencies NEED TO CHECK IF THEY ARE ALREADY INSTALLED
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install --no-install-recommends vim
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install --no-install-recommends fuse
