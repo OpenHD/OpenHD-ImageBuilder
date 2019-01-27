@@ -2,12 +2,12 @@
 # ==============================================
 #
 # set this to "a" for 5Ghz, to "g" for 2.4Ghz
-hw_mode=g
+hw_mode=a
 #
 # Channels 1-13 for 2.4Ghz, Channels 36,40,44,48,52,56,60,64 for 5Ghz
-channel=1
+channel=36
 ssid=Open.HD
-wpa_passphrase=openhd
+wpa_passphrase=wifiopenhd
 #
 #
 wpa=2
