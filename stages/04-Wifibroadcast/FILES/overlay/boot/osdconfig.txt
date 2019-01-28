@@ -68,14 +68,14 @@
 #define HOME_ARROW_INVERT false // set to true if arrow points in the opposite direction
 
 #define BATT_STATUS
-#define BATT_STATUS_POS_X 19
-#define BATT_STATUS_POS_Y 6
+#define BATT_STATUS_POS_X 17
+#define BATT_STATUS_POS_Y 2
 #define BATT_STATUS_SCALE 1
 #define BATT_STATUS_CURRENT true // set to true to draw current (ampere) (mavlink only)
 
 #define BATT_GAUGE
-#define BATT_GAUGE_POS_X 3
-#define BATT_GAUGE_POS_Y 6
+#define BATT_GAUGE_POS_X 2
+#define BATT_GAUGE_POS_Y 8
 #define BATT_GAUGE_SCALE 1
 #define CELLS 3 // set to number of cells used
 #define CELL_MAX 4.20 // maximum cell voltage
@@ -107,17 +107,17 @@
 
 #define POSITION
 #define POSITION_POS_X 76
-#define POSITION_POS_Y 6
+#define POSITION_POS_Y 5
 #define POSITION_SCALE 0.8
 
 #define SAT
-#define SAT_POS_X 6
-#define SAT_POS_Y 12
+#define SAT_POS_X 79
+#define SAT_POS_Y 7
 #define SAT_SCALE 0.8
 
 #define DISTANCE
-#define DISTANCE_POS_X 95
-#define DISTANCE_POS_Y 6
+#define DISTANCE_POS_X 96
+#define DISTANCE_POS_Y 1
 #define DISTANCE_SCALE 1
 
 #define FLIGHTMODE
@@ -160,17 +160,19 @@
 
 // display of TOTALS
 #define TOTAL_AMPS true // set to false if you dont want to see this
-#define TOTAL_AMPS_POS_X 19
-#define TOTAL_AMPS_POS_Y 15
+#define TOTAL_AMPS_POS_X 3
+#define TOTAL_AMPS_POS_Y 2
 #define TOTAL_AMPS_SCALE 1
 
 #define TOTAL_DIST true // set to false if you dont want to see this
-#define TOTAL_DIST_POS_X 6
-#define TOTAL_DIST_POS_Y 19
+#define TOTAL_DIST_POS_X 17
+#define TOTAL_DIST_POS_Y 12
 #define TOTAL_DIST_SCALE 0.8
 
 #define TOTAL_TIME true // set to false if you dont want to see this
-#define TOTAL_TIME_POS_X 19
-#define TOTAL_TIME_POS_Y 19
+#define TOTAL_TIME_POS_X 6
+#define TOTAL_TIME_POS_Y 14
+#define TOTAL_TIME_SCALE 0.8
+//---end of TOTALS
 #define TOTAL_TIME_SCALE 0.8
 //---end of TOTALS
