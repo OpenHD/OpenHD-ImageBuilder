@@ -24,6 +24,7 @@ sudo systemctl disable triggerhappy.service
 sudo systemctl disable ser2net.service
 sudo systemctl disable systemd-timesyncd.service
 sudo systemctl disable hciuart.service
+sudo systemctl disable exim4.service
 
 #Mask difficult to disable services
 systemctl stop systemd-journald.service
