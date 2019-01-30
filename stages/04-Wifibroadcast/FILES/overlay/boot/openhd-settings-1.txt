@@ -139,7 +139,7 @@ BITRATE_PERCENT=65
 #
 # CTS protection (use in areas with other wifi networks)
 # set to "auto" for automatic detection, "N" to disable, "Y" to enable
-CTS_PROTECTION=N
+CTS_PROTECTION=auto
 #
 #
 # Camera image settings
