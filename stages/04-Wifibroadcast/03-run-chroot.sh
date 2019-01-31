@@ -13,11 +13,24 @@ sudo mkfifo /root/telemetryfifo5
 sudo mkfifo /root/telemetryfifo6
 sudo mkfifo /root/mspfifo
 
+#Ensure the runlevel is multi-target (3) could possibly be lower...
+sudo systemctl set-default multi-user.target
+
 # Enable gpio service
 sudo systemctl enable wbcconfig.service
 sudo systemctl start wbcconfig.service
 
 #disable unneeded services
+sudo systemctl disable cron.service
+sudo systemctl disable syslog.service
+sudo systemctl disable journald.service
+sudo systemctl disable logind.service
+sudo systemctl disable triggerhappy.service
+sudo systemctl disable avahi-daemon.service
+sudo systemctl disable ser2net.service
+sudo systemctl disable dbus.service
+sudo systemctl disable systemd-timesyncd.service
+sudo systemctl disable hciuart.service
 sudo systemctl disable anacron.service
 sudo systemctl disable syslog.service
 sudo systemctl disable triggerhappy.service
@@ -25,6 +38,17 @@ sudo systemctl disable ser2net.service
 sudo systemctl disable systemd-timesyncd.service
 sudo systemctl disable hciuart.service
 sudo systemctl disable exim4.service
+
+sudo systemctl disable plymouth-start.service
+sudo systemctl disable plymouth-read-write.service
+sudo systemctl disable plymouth-quit-wait.service
+sudo systemctl disable plymouth-quit.service
+sudo systemctl disable systemd-journal-flush.service
+#this service updates runlevel changes. Set desired runlevel prior to this being disabled
+sudo systemctl disable systemd-update-utmp.service
+#might break app functionality along with other functionality *TEST*
+sudo systemctl disable udhcpd.service
+sudo systemctl disable networking.service
 
 #Mask difficult to disable services
 systemctl stop systemd-journald.service
@@ -66,18 +90,6 @@ sudo chmod +x wbcconfig.sh
 
 #disable sync option for usbmount
 sudo sed -i 's/sync,//g' /etc/usbmount/usbmount.conf
-
-#disable unneeded services
-sudo systemctl disable cron.service
-sudo systemctl disable syslog.service
-sudo systemctl disable journald.service
-sudo systemctl disable logind.service
-sudo systemctl disable triggerhappy.service
-sudo systemctl disable avahi-daemon.service
-sudo systemctl disable ser2net.service
-sudo systemctl disable dbus.service
-sudo systemctl disable systemd-timesyncd.service
-sudo systemctl disable hciuart.service
 
 #change hostname
 CURRENT_HOSTNAME=`sudo cat /etc/hostname | sudo tr -d " \t\n\r"`
