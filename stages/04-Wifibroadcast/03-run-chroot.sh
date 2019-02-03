@@ -47,7 +47,6 @@ sudo systemctl disable systemd-journal-flush.service
 #this service updates runlevel changes. Set desired runlevel prior to this being disabled
 sudo systemctl disable systemd-update-utmp.service
 #might break app functionality along with other functionality *TEST*
-sudo systemctl disable udhcpd.service
 sudo systemctl disable networking.service
 
 #Mask difficult to disable services
