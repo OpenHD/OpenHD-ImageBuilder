@@ -13,17 +13,17 @@ input_state1 = GPIO.input(21)
 # True = not connected, False = connected to GND
 
 if (input_state0 == False) and (input_state1 == False):
-	print ('wifibroadcast-4.txt')
+	print ('openhd-settings-4.txt')
 	quit()
 
 if (input_state0 == False) and (input_state1 == True):
-	print ('wifibroadcast-3.txt')
+	print ('openhd-settings-3.txt')
 	quit()
 
 if (input_state0 == True) and (input_state1 == False):
-	print ('wifibroadcast-2.txt')
+	print ('openhd-settings-2.txt')
 	quit()
 
 if (input_state0 == True) and (input_state1 == True):
-	print ('wifibroadcast-1.txt')
+	print ('openhd-settings-1.txt')
 	quit()
