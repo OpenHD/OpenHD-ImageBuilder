@@ -4,10 +4,6 @@
 
 #!/bin/bash
 
-# disable dhcpcd service
-sudo systemctl stop dhcpcd.service
-sudo systemctl disable dhcpcd.service
-
 # Remove bad and unnecessary symlinks 
 rm /lib/modules/4.14.71*/build
 rm /lib/modules/4.14.71*/source
