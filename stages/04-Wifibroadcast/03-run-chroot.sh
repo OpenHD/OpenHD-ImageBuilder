@@ -39,14 +39,14 @@ sudo systemctl disable systemd-timesyncd.service
 sudo systemctl disable hciuart.service
 sudo systemctl disable exim4.service
 
-sudo systemctl disable plymouth-start.service
-sudo systemctl disable plymouth-read-write.service
-sudo systemctl disable plymouth-quit-wait.service
-sudo systemctl disable plymouth-quit.service
+#Disable does not work on PLYMOUTH
+sudo systemctl mask plymouth-start.service
+sudo systemctl mask plymouth-read-write.service
+sudo systemctl mask plymouth-quit-wait.service
+sudo systemctl mask plymouth-quit.service
 sudo systemctl disable systemd-journal-flush.service
 #this service updates runlevel changes. Set desired runlevel prior to this being disabled
 sudo systemctl disable systemd-update-utmp.service
-#might break app functionality along with other functionality *TEST*
 sudo systemctl disable networking.service
 
 #Mask difficult to disable services
