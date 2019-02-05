@@ -21,6 +21,7 @@ sudo systemctl enable wbcconfig.service
 sudo systemctl start wbcconfig.service
 
 #disable unneeded services
+sudo systemctl disable dhcpcd.service
 sudo systemctl disable cron.service
 sudo systemctl disable syslog.service
 sudo systemctl disable journald.service
