@@ -43,6 +43,7 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install python-future python-att
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libfontconfig1-dev 
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libsdl2-dev
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libsdl1.2-dev
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libav-tools
 
 # v4l2loopback and flir dependencies NEED TO CHECK IF THEY ARE ALREADY INSTALLED
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install vim
