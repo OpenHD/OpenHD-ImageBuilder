@@ -54,6 +54,7 @@ TXPOWER=2000
 # 1=5.5Mbit, 2=11Mbit, 3=12Mbit, 4=19.5Mbit/18Mbit, 5=24Mbit, 6=36Mbit
 DATARATE=4
 #
+#
 # FEATURE WIFI BANDWIDTH SETTINGS: If ath9k Wi-Fi card, users can choose between 3 bandwidth options: 20mhz, 10mhz or 5mhz. 
 #***Default @ 20mhz compatible with all Wireless cards. 5/10mhz Bandwidth options will result in 1/4 & 1/2 of total available Datarate/Mbit of the selected Wi-Fi datarate option (1-6) selected above.
 #
@@ -61,6 +62,7 @@ DATARATE=4
 #
 Bandwidth=20
 UplinkSpeed=11
+#
 #
 # FEATURE BAND SWITCHER: allows users to remotely switch between 5/10/20 mhz bandwidth. simply assign RC Channel and pwm values for each setting (>2 selectable settings must be used on Axis RC channels 1-8)
 #**ONLY TESTED ON THE GROUND SO FAR. IN ORDER FOR THE BANDWIDTH TO SWITCH, THERE MUST BE A GOOD LINK BETWEEN ALL AIR AND GROUND WIFI CARDS. 
@@ -70,7 +72,7 @@ UplinkSpeed=11
 #
 # IsBandSwicherEnabled "0"=disabled "1"= enabled
 #
-
+#
 IsBandSwicherEnabled=0
 ChannelToListen2=8
 #Ground TX\RX card
@@ -120,7 +122,9 @@ RC=mavlink
 #Values:  "Range" or "Encryption"
 #
 EncryptionOrRange=Range
-# TX settings
+#
+#
+# AIRPI settings
 # ============================================================
 #
 # set to "auto" for automatic video bitrate measuring. Set to a fixed value to
@@ -177,7 +181,7 @@ FC_MSP_BAUDRATE=115200
 #
 #
 #
-# RX settings
+# GROUNDPI settings
 # ============================================================
 #
 # Set to "Y" to scan for wifi networks with airodump-ng before starting RX
@@ -249,14 +253,17 @@ MAVLINK_FORWARDER=mavlink-routerd
 # will find the debug logs on the memory stick.
 DEBUG=N
 #
-#AUDIO Over Open.HD Features the ability to transmit audio and output over analog, HDMI or set to auto drtect. *USE ONLY WITH PI2 or PI3 Air.
+#AUDIO Over Open.HD Features the ability to transmit audio and output over analog, HDMI or set to auto detect. 
+#*USE ONLY WITH PI2 or PI3 Air.
 
 #0 Auto, 1 Analog, 2 HDMI
 DefaultAudioOut=0
 IsAudioTransferEnabled=0
 
 # Camera Switcher Adapter 
-#This Camera Switcher feature must be used with the Arducam 4 camera Raspberry Pi multiplexer.  if no camera switcher is detected, feature is automatically disabled.  if used, simply assign desired RC Channel and pwm values for each camera.  default settings are for 3 cameras (CAM A, B, & C) *Cam 4 "D" disabled by default.
+#This Camera Switcher feature must be used with the Arducam 4 camera Raspberry Pi multiplexer.  
+#If no camera switcher is detected, feature is automatically disabled.  if used, simply assign desired 
+#RC Channel and pwm values for each camera.  default settings are for 3 cameras (CAM A, B, & C) *Cam 4 "D" disabled by default.
 IsCamera1Enabled=1
 IsCamera2Enabled=1
 IsCamera3Enabled=1
@@ -278,7 +285,9 @@ Camera4ValueMin=2300
 Camera4ValueMax=2500
 #
 # FEATURE: 2-WAY COMM For Air/Ground settings with Open.HD APP.
-#this enables or disables two-way communication between the open HD app and air/ground units.  You may also set a predefined time (in 2-xxx) seconds for the two way communication to be disabled, primary benefit is to keep RPI zero CPU Usage down to a minimum.
+#this enables or disables two-way communication between the open HD app and air/ground units.  
+#You may also set a predefined time (in 2-xxx) seconds for the two way communication to be disabled, 
+#primary benefit is to keep RPI zero CPU Usage down to a minimum.
 
 #Values 1 - Enabled, 0 - Disabled, 60 (Or any other digits).
 
