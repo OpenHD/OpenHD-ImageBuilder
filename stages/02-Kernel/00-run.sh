@@ -7,7 +7,7 @@ log "Remove previous Kernel"
 rm -r linux || true
 
 log "Download the Raspberry Pi Kernel"
-git clone --depth=100 https://github.com/raspberrypi/linux
+git clone --depth=100 -b rpi-4.14.y https://github.com/raspberrypi/linux
 
 pushd linux
 # Switch to specific commit
