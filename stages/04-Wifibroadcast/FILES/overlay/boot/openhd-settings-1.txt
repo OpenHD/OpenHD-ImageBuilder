@@ -259,6 +259,8 @@ DEBUG=N
 #0 Auto, 1 Analog, 2 HDMI
 DefaultAudioOut=0
 IsAudioTransferEnabled=0
+MicBoost=75
+SpeakersLevel=100
 
 # Camera Switcher Adapter 
 #This Camera Switcher feature must be used with the Arducam 4 camera Raspberry Pi multiplexer.  
