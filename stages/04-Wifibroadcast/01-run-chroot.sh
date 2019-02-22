@@ -4,6 +4,12 @@
 
 #!/bin/bash
 
+#Install Raspi2png
+cd /home/pi
+cd raspi2png
+sudo make
+sudo make install
+
 # Install OpenVG
 cd /home/pi
 cd openvg
@@ -55,7 +61,8 @@ sudo cp .profile /root/
 cd /home/pi
 cd wifibroadcast-misc
 sudo chmod +x ftee
-sudo chmod +x raspi2png
+#raspi2png was not working and had to be compiled
+#sudo chmod +x raspi2png
 
 #install wifibroadcast-splash
 cd /home/pi
