@@ -250,7 +250,7 @@ MAVLINK_FORWARDER=mavlink-routerd
 #
 # Set this to "Y" to enable collection of extra debug logs. If you experience any issues,
 # please reproduce them with debug set to "Y" and plug a USB memory stick afterwards, you
-# will find the debug logs on the memory stick.
+# will find the debug logs on the memory stick. THIS WILL ALSO REENABLE TEXT OUTPUT ON AIRPI
 DEBUG=N
 #
 #AUDIO Over Open.HD Features the ability to transmit audio and output over analog, HDMI or set to auto detect. 
