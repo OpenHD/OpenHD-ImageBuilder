@@ -25,9 +25,21 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install socat
 # DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install --assume-no wireshark-common
 # DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install tshark
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install ser2net
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-tools
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-plugins-bad
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-plugins-good
+
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libgstreamer1.0-0 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-plugins-base 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-plugins-good 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-plugins-bad 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-plugins-ugly 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-libav 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-tools 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-x 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-alsa 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-gl 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-gtk3 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-qt5 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-pulseaudio
+
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libtool
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install autoconf
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libsdl1.2-dev
@@ -48,7 +60,7 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libav-tools
 # v4l2loopback and flir dependencies NEED TO CHECK IF THEY ARE ALREADY INSTALLED
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install vim
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install fuse
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0
+#DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libusb-1.0-0-dev
 
 # Remove packages that conflict with the workings of EZ-Wifibroadcast
@@ -80,4 +92,3 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq autoremove
 
 # Python essentials for mavlink router autoconf
 sudo pip install future
-
