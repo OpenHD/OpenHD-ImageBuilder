@@ -12,10 +12,6 @@ MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
 log "Download Raspi2png"
 git clone https://github.com/AndrewFromMelbourne/raspi2png.git
-pushd raspi2png
-sudo make
-sudo make install
-popd
 
 log "Download all Open.HD Sources"
 sudo git clone -b development https://github.com/HD-Fpv/Open.HD.git
