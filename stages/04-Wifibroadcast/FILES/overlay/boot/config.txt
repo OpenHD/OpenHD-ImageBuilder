@@ -84,7 +84,7 @@ dtparam=audio=on
 
 # Enable camera
 start_x=1
-gpu_mem=128
+gpu_mem=256
 
 # force gpu to run in turbo mode for less latency and jitter
 force_turbo=1
