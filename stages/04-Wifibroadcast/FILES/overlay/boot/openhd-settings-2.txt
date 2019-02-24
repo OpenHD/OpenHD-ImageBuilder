@@ -114,6 +114,7 @@ CTS_PROTECTION=auto
 # V2 cam: 1280x720: 30fps, 48fps, 59.9fps. 1640x922: 30fps, 40fps. 1920x1080: 30fps
 WIDTH=1280
 HEIGHT=720
+MirrorDSI_To_HDMI=y
 #
 #
 # Lower values mean faster glitch-recovery, but also lower video quality.
