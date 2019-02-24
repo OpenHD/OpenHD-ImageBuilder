@@ -33,5 +33,7 @@ cd raspi2png
 chmod 755 raspi2png
 sudo mv raspi2png /home/pi/wifibroadcast-misc
 
+chmod 775 /home/pi/wifibroadcast-misc/raspi2raspi
+
 
 EOF
