@@ -83,8 +83,6 @@ max_framebuffers=2
 # Enable audio (loads snd_bcm2835)
 dtparam=audio=on
 
-# Enable camera
-start_x=1
 gpu_mem=256
 
 # force gpu to run in turbo mode for less latency and jitter
@@ -126,4 +124,25 @@ usb_mdio=0x7000
 #
 # uncomment for SPI
 #dtparam=spi=on
+
+
+[pi0]
+start_file=zero_x.elf
+fixup_file=zeroup_x.dat
+[pi0w]
+start_file=zero_x.elf
+fixup_file=zeroup_x.dat
+
+[pi1]
+start_file=1to3b_x.elf
+fixup_file=1to3bup_x.dat
+[pi2]
+start_file=1to3b_x.elf
+fixup_file=1to3bup_x.dat
+[pi3]
+start_file=1to3b_x.elf
+fixup_file=1to3bup_x.dat
+[pi3+]
+start_file=1to3b_x.elf
+fixup_file=1to3bup_x.dat
 
