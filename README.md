@@ -6,7 +6,7 @@ For the long version, read on.
 In order to be able to run this you need a Debian or Ubuntu Linux machine with 30 Gb free space on the main partition, and with the following packages:
 
 ```
-sudo apt-get install curl git qemu qemu-user-static binfmt-support build-essential gcc-arm*
+sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support build-essential gcc-arm*
 ```
 
 Then git clone this repository to a suitable folder 
