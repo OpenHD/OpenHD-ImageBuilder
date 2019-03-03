@@ -27,4 +27,13 @@ sudo depmod -a -w $KERNEL_VERSION_V7
 #cd flirone-v4l2
 #sudo make
 
+#Move Raspi2png to wifibroadcast-misc
+cd /home/pi
+cd raspi2png
+chmod 755 raspi2png
+sudo mv raspi2png /home/pi/wifibroadcast-misc
+
+chmod 775 /home/pi/wifibroadcast-misc/raspi2raspi
+
+
 EOF
