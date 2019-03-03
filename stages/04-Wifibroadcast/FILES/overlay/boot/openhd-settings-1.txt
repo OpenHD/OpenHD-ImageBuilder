@@ -191,13 +191,21 @@ AIRODUMP=N
 # Number of seconds wifi scanner is shown. Minimum recommended scanning time is 25 seconds.
 AIRODUMP_SECONDS=25
 #
-#
-# set this to "Y" to enable Wifi Hotspot. Default SSID is "EZ-Wifibroadcast", password is "wifibroadcast".
-# See apconfig.txt for configuration. This will forward the received video and telemetry streams to a
+# set this to "Y" to enable Wifi Hotspot and you (manually) set the band below. Set "auto" (recommended) for automatic band 
+# selection.
+# set to "N" for no wifi hotspot
+#Default SSID is "EZ-Wifibroadcast", password is "wifibroadcast"
 # smartphone/tablet or computer connected to the RX Pi via WiFi.
-WIFI_HOTSPOT=Y
+WIFI_HOTSPOT=auto
+#
+# wifi hotspot depends on your groundpi capabilty. Set to "a" for 5.8ghz, "g" for 2.4ghz
+# Channels 1-11 for 2.4Ghz, Channels 36,40,44,48,52,56,60,64 for 5Ghz
+# NOTE with WIFI_HOTSPOT=auto your setting here will be over written
+HOTSPOT_BAND=a
+HOTSPOT_CHANNEL=52
 #
 # Set to "internal" to use the interal Pi3 wifi chip or the MAC address of the USB wifi card you want to use
+# NOTE "auto" hotspot only works with internal wifihotspot. 
 WIFI_HOTSPOT_NIC=internal
 #
 # set this to "Y" to enable Ethernet hotspot. This will forward the received video and telemetry streams
