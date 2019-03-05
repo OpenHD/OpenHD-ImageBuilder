@@ -304,3 +304,9 @@ Camera4ValueMax=2500
 
 RemoteSettingsEnabled=1
 
+SettingsSyncForceOffRC_Value=1700
+SettingsSyncForceOnRC_Value=1400
+SettingsSyncRC_Channel=1
+SettingsSyncStartOption=0
+SettingsSyncOffByTimer=20
+NotBreakByTimerIfLastRequestWas=3
