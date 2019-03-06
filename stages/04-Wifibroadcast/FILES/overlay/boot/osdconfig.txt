@@ -87,7 +87,7 @@
 #define COMPASS_POS_Y 89
 #define COMPASS_SCALE 0.8
 #define COMPASS_USECOG false // set to true to use course over ground (from gps) instead of magnetometer
-#define COMPASS_INAV  // set to true to fix Inav vs Ardupilot digit difference
+#define COMPASS_INAV false // set to true to fix Inav vs Ardupilot digit difference. Otherwise false
 
 #define ALTLADDER
 #define ALTLADDER_POS_X 87
