@@ -26,7 +26,8 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install socat
 # DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install tshark
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install ser2net
 
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libgstreamer1.0-0 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libgstreamer1.0-0
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-plugins-base 
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-plugins-good 
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-plugins-bad 
@@ -60,7 +61,6 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libav-tools
 # v4l2loopback and flir dependencies NEED TO CHECK IF THEY ARE ALREADY INSTALLED
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install vim
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install fuse
-#DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libusb-1.0-0-dev
 
 # Remove packages that conflict with the workings of EZ-Wifibroadcast
