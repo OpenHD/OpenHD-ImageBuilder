@@ -23,7 +23,7 @@ log "Download v4l2loopback"
 sudo git clone https://github.com/umlaeute/v4l2loopback.git
 
 log "Download OMX"
-sudo git clone https://github.com/GStreamer/gst-omx.git
+sudo git clone https://gitlab.freedesktop.org/gstreamer/gst-omx.git
 
 log "Download OpenVG"
 sudo mv Open.HD/openvg/ openvg/
