@@ -21,7 +21,9 @@ sudo make install
 cd /home/pi
 cd gst-omx
 sudo make clean
+sudo ./configure
 sudo make 
+sudo make install
 
 # Gets stuck
 # Install mavlink-router
