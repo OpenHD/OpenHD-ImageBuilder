@@ -21,7 +21,8 @@ sudo make install
 cd /home/pi
 cd gst-omx
 sudo make clean
-#sudo ./configure
+sudo ./autogen.sh
+sudo ./configure
 sudo make 
 sudo make install
 
