@@ -40,7 +40,8 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-gl
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-gtk3 
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-qt5 
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-pulseaudio
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gtk-doc-tools
+#DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gtk-doc-tools
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-omx-rpi-config
 
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libtool
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install autoconf
