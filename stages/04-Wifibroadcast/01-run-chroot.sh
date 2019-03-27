@@ -17,6 +17,14 @@ sudo make clean
 sudo make library
 sudo make install
 
+# Install OMX
+cd /home/pi
+cd gst-omx
+sudo make clean
+sudo ./autogen.sh
+sudo make 
+sudo make install
+
 # Gets stuck
 # Install mavlink-router
 cd /home/pi
