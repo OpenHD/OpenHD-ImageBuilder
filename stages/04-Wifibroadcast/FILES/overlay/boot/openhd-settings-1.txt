@@ -304,3 +304,10 @@ Camera4ValueMax=2500
 
 RemoteSettingsEnabled=1
 
+SmartSync_StartupMode=1
+SmartSyncRC_Channel=3
+SmartSyncGround_Countdown=45
+SmartSyncOFF_RC_Value=1700
+SmartSyncStayON_RC_Value=1300
+#Values: joystick   GPIO
+SmartSyncControlVia=GPIO
