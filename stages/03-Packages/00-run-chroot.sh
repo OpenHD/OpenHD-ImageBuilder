@@ -25,6 +25,7 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install socat
 # DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install --assume-no wireshark-common
 # DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install tshark
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install ser2net
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install mc
 
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libgstreamer1.0-0
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0
