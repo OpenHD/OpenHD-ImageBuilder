@@ -78,7 +78,7 @@ ChannelToListen2=8
 #Ground TX\RX card
 PrimaryCardMAC=0
 #Ground RX card
-SlaveCardMAC=a0f3c12c1e23
+SlaveCardMAC=0
 
 Band5Below=1200
 Band10ValueMin=1200
@@ -123,7 +123,6 @@ RC=mavlink
 #
 EncryptionOrRange=Range
 #
-#
 # AIRPI settings
 # ============================================================
 #
@@ -138,12 +137,12 @@ VIDEO_BITRATE=auto
 # this to a lower value like 60% to avoid a delayed video stream.
 # On free channels you may set this to a higher value like 75% to get a higher
 # bitrate and thus image quality.
-BITRATE_PERCENT=65
+BITRATE_PERCENT=60
 #
 #
 # CTS protection (use in areas with other wifi networks)
 # set to "auto" for automatic detection, "N" to disable, "Y" to enable
-CTS_PROTECTION=auto
+CTS_PROTECTION=Y
 #
 #
 # Camera image settings
@@ -151,13 +150,13 @@ CTS_PROTECTION=auto
 # V2 cam: 1280x720: 30fps, 48fps, 59.9fps. 1640x922: 30fps, 40fps. 1920x1080: 30fps
 WIDTH=1280
 HEIGHT=720
-MirrorDSI_To_HDMI=y
+MirrorDSI_To_HDMI=Y
 #
 #
 # Lower values mean faster glitch-recovery, but also lower video quality.
 # With fps=48 and keyframerate=5, glitches will stay visible for around 100ms in worst case.
 # You can set this higher or lower according to your needs. Minimum value is 2.
-KEYFRAMERATE=5
+KEYFRAMERATE=8
 #
 #
 # Set additional raspivid parameters here
@@ -167,13 +166,13 @@ EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb h
 # Serial port and baudrate (19200 is minimum) to use for the R/C connection between air Pi and flight control
 # Set this to "/dev/serial0" for Pi onboard serial port or  "/dev/ttyUSB0" for USB-to-serial adapter
 FC_RC_SERIALPORT=/dev/serial0
-FC_RC_BAUDRATE=115200
+FC_RC_BAUDRATE=57600
 #
 #
 # Serial port and baudrate to use for the telemetry connection between air Pi and flight control
 # Set this to "/dev/serial0" for Pi onboard serial port or  "/dev/ttyUSB0" for USB-to-serial adapter
 FC_TELEMETRY_SERIALPORT=/dev/serial0
-FC_TELEMETRY_BAUDRATE=115200
+FC_TELEMETRY_BAUDRATE=57600
 #
 #
 # not supported yet, do not change
@@ -277,37 +276,38 @@ SpeakersLevel=75
 #RC Channel and pwm values for each camera.  default settings are for 3 cameras (CAM A, B, & C) *Cam 4 "D" disabled by default.
 IsCamera1Enabled=1
 IsCamera2Enabled=1
-IsCamera3Enabled=1
+IsCamera3Enabled=0
 IsCamera4Enabled=0
 
 DefaultCameraId=1
-ChannelToListen=7
+ChannelToListen=16
 
-Camera1ValueMin=1350
-Camera1ValueMax=1650
+Camera1ValueMin=700
+Camera1ValueMax=1400
 
-Camera2ValueMin=700
-Camera2ValueMax=1100
+Camera2ValueMin=1450
+Camera2ValueMax=2100
 
-Camera3ValueMin=1900
-Camera3ValueMax=2100
+Camera3ValueMin=2150
+Camera3ValueMax=2200
 
-Camera4ValueMin=2300
+Camera4ValueMin=2250
 Camera4ValueMax=2500
 #
 # FEATURE: 2-WAY COMM For Air/Ground settings with Open.HD APP.
-#this enables or disables two-way communication between the open HD app and air/ground units.  
-#You may also set a predefined time (in 2-xxx) seconds for the two way communication to be disabled, 
-#primary benefit is to keep RPI zero CPU Usage down to a minimum.
+#This enables or disables two-way communication between the open HD app and air/ground units.
+#**Setting "2" disables AirPi remote settings (not needed anyways), 
+#primary benefit is to keep RPI zero CPU Usage down to a minimum with Atheros. Setting "1" is required with Encrypted RC
 
-#Values 1 - Enabled, 0 - Disabled, 60 (Or any other digits).
+#Values "2"=Enables Ground Only(Best for Atheros+SmartSync); "1"=EnableAir/Ground (REQUIRED FOR RALINK/REALTEK ENCRYPTED RC)
 
-RemoteSettingsEnabled=1
+RemoteSettingsEnabled=2
 
 SmartSync_StartupMode=1
-SmartSyncRC_Channel=3
+SmartSyncRC_Channel=2
 SmartSyncGround_Countdown=45
 SmartSyncOFF_RC_Value=1700
 SmartSyncStayON_RC_Value=1300
-#Values: joystick   GPIO
-SmartSyncControlVia=GPIO
+#Values: joystick   GPIO   *Simply Jump GPIO #21 & Ground to Trigger or Bypass SmartSync (Trigger depends on default SmartSync_StartupMode = 1 OR 2)
+SmartSyncControlVia=joystick
+
