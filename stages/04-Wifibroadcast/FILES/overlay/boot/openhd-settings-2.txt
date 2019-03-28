@@ -168,13 +168,13 @@ EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb h
 # Serial port and baudrate (19200 is minimum) to use for the R/C connection between air Pi and flight control
 # Set this to "/dev/serial0" for Pi onboard serial port or  "/dev/ttyUSB0" for USB-to-serial adapter
 FC_RC_SERIALPORT=/dev/serial0
-FC_RC_BAUDRATE=57600
+FC_RC_BAUDRATE=115200
 #
 #
 # Serial port and baudrate to use for the telemetry connection between air Pi and flight control
 # Set this to "/dev/serial0" for Pi onboard serial port or  "/dev/ttyUSB0" for USB-to-serial adapter
 FC_TELEMETRY_SERIALPORT=/dev/serial0
-FC_TELEMETRY_BAUDRATE=57600
+FC_TELEMETRY_BAUDRATE=115200
 #
 #
 # not supported yet, do not change
@@ -278,22 +278,22 @@ SpeakersLevel=75
 #RC Channel and pwm values for each camera.  default settings are for 3 cameras (CAM A, B, & C) *Cam 4 "D" disabled by default.
 IsCamera1Enabled=1
 IsCamera2Enabled=1
-IsCamera3Enabled=1
+IsCamera3Enabled=0
 IsCamera4Enabled=0
 
 DefaultCameraId=1
-ChannelToListen=7
+ChannelToListen=16
 
-Camera1ValueMin=1350
-Camera1ValueMax=1650
+Camera1ValueMin=700
+Camera1ValueMax=1400
 
-Camera2ValueMin=700
-Camera2ValueMax=1100
+Camera2ValueMin=1450
+Camera2ValueMax=2100
 
-Camera3ValueMin=1900
-Camera3ValueMax=2100
+Camera3ValueMin=2150
+Camera3ValueMax=2200
 
-Camera4ValueMin=2300
+Camera4ValueMin=2250
 Camera4ValueMax=2500
 #
 # FEATURE: 2-WAY COMM For Air/Ground settings with Open.HD APP.
