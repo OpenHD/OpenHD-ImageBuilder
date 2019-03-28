@@ -83,7 +83,7 @@ max_framebuffers=2
 # Enable audio (loads snd_bcm2835)
 dtparam=audio=on
 
-gpu_mem=256
+gpu_mem=128
 
 # force gpu to run in turbo mode for less latency and jitter
 force_turbo=1
@@ -143,6 +143,6 @@ fixup_file=1to3bup_x.dat
 start_file=1to3b_x.elf
 fixup_file=1to3bup_x.dat
 [pi3+]
-start_file=1to3b_x.elf
-fixup_file=1to3bup_x.dat
+start_file=start_x.elf
+fixup_file=fixup_x.dat
 
