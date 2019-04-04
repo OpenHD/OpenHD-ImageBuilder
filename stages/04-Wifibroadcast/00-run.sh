@@ -32,7 +32,7 @@ pushd mavlink-router
 sudo git submodule update --init
 #fix missing pymavlink
 pushd modules/mavlink
-sudo git clone --recurse-submodules  https://github.com/ArduPilot/pymavlink.git
+sudo git clone --recurse-submodules https://github.com/user1321/pymavlink
 
 popd
 popd
