@@ -21,5 +21,9 @@ rm -r rtl8812au || true
 # Fixed at v5.2.20 until 5.3.4 works for injection
 git clone -b v5.2.20 https://github.com/aircrack-ng/rtl8812au.git
 
+log "Download the v4l2loopback module"
+rm -r v4l2loopback || true
+git clone https://github.com/RespawnDespair/v4l2loopback.git
+
 #return 
 popd

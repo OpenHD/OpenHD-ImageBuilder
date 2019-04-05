@@ -1,0 +1,18 @@
+--- drivers/media/Kconfig	2019-02-22 13:57:34.144585200 +0100
++++ drivers/media/Kconfig	2019-04-05 15:32:15.396699800 +0200
+@@ -132,6 +132,15 @@
+ 
+ source "drivers/media/v4l2-core/Kconfig"
+ 
++
++config VIDEO_LOOPBACK
++	tristate
++	depends on MEDIA_SUPPORT
++	depends on MEDIA_CAMERA_SUPPORT || MEDIA_ANALOG_TV_SUPPORT || MEDIA_RADIO_SUPPORT || MEDIA_SDR_SUPPORT
++	default y
++
++source "drivers/media/v4l2loopback/Kconfig"
++
+ #
+ # DVB Core
+ #	Only enables if one of DTV is selected
