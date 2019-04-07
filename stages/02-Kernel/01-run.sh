@@ -23,7 +23,7 @@ log "Merge the RTL8812 driver into kernel"
 cp -a rtl8812au/. linux/drivers/net/wireless/realtek/rtl8812au/
 
 log "Copy v4l2loopback driver into kernel"
-cp -a v4l2loopback/. linux/drivers/media/
+cp -a v4l2loopback/. linux/drivers/media/v4l2loopback/
 
 log "Patch the Kernel"
 pushd linux
