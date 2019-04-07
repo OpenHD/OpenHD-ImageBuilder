@@ -1,5 +1,7 @@
 #!/bin/bash
 #
+# THIS ONLY GETS ENABLED/USED VIA GPIO SWITCHES
+#
 # Common settings (need to be kept in sync for both TX and RX!)
 # ============================================================
 #
@@ -121,7 +123,7 @@ RC=mavlink
 #Encryption is a more secure means of RC uplink, if using RPI zero on the UAV, this causes higher CPU usage, so it is recommended to only use encryption with Pi2/3 boards, encryption RC may have reduced range.
 #Values:  "Range" or "Encryption"
 #
-EncryptionOrRange=Range
+EncryptionOrRange=Encryption
 #
 # AIRPI settings
 # ============================================================
@@ -142,7 +144,7 @@ BITRATE_PERCENT=60
 #
 # CTS protection (use in areas with other wifi networks)
 # set to "auto" for automatic detection, "N" to disable, "Y" to enable
-CTS_PROTECTION=Y
+CTS_PROTECTION=N
 #
 #
 # Camera image settings
@@ -166,13 +168,13 @@ EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb h
 # Serial port and baudrate (19200 is minimum) to use for the R/C connection between air Pi and flight control
 # Set this to "/dev/serial0" for Pi onboard serial port or  "/dev/ttyUSB0" for USB-to-serial adapter
 FC_RC_SERIALPORT=/dev/serial0
-FC_RC_BAUDRATE=115200
+FC_RC_BAUDRATE=57600
 #
 #
 # Serial port and baudrate to use for the telemetry connection between air Pi and flight control
 # Set this to "/dev/serial0" for Pi onboard serial port or  "/dev/ttyUSB0" for USB-to-serial adapter
 FC_TELEMETRY_SERIALPORT=/dev/serial0
-FC_TELEMETRY_BAUDRATE=115200
+FC_TELEMETRY_BAUDRATE=57600
 #
 #
 # not supported yet, do not change
@@ -259,7 +261,6 @@ MAVLINK_FORWARDER=mavlink-routerd
 # Set this to "Y" to enable collection of extra debug logs. If you experience any issues,
 # please reproduce them with debug set to "Y" and plug a USB memory stick afterwards, you
 # will find the debug logs on the memory stick. THIS WILL ALSO REENABLE TEXT OUTPUT ON AIRPI
-# AND ADDITIONAL SSH FUNCTIONALITY ON AIRPI
 DEBUG=N
 #
 #AUDIO Over Open.HD Features the ability to transmit audio and output over analog, HDMI or set to auto detect. 
@@ -281,18 +282,18 @@ IsCamera3Enabled=0
 IsCamera4Enabled=0
 
 DefaultCameraId=1
-ChannelToListen=16
+ChannelToListen=7
 
 Camera1ValueMin=700
-Camera1ValueMax=1400
+Camera1ValueMax=1450
 
-Camera2ValueMin=1450
-Camera2ValueMax=2100
+Camera2ValueMin=1550
+Camera2ValueMax=2000
 
-Camera3ValueMin=2150
-Camera3ValueMax=2200
+Camera3ValueMin=2050
+Camera3ValueMax=2100
 
-Camera4ValueMin=2250
+Camera4ValueMin=2150
 Camera4ValueMax=2500
 #
 # FEATURE: 2-WAY COMM For Air/Ground settings with Open.HD APP.
@@ -302,7 +303,7 @@ Camera4ValueMax=2500
 
 #Values "2"=Enables Ground Only(Best for Atheros+SmartSync); "1"=EnableAir/Ground (REQUIRED FOR RALINK/REALTEK ENCRYPTED RC)
 
-RemoteSettingsEnabled=2
+RemoteSettingsEnabled=1
 
 SmartSync_StartupMode=1
 SmartSyncRC_Channel=2
@@ -311,4 +312,3 @@ SmartSyncOFF_RC_Value=1700
 SmartSyncStayON_RC_Value=1300
 #Values: joystick   GPIO   *Simply Jump GPIO #21 & Ground to Trigger or Bypass SmartSync (Trigger depends on default SmartSync_StartupMode = 1 OR 2)
 SmartSyncControlVia=joystick
-

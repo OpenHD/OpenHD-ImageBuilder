@@ -166,13 +166,13 @@ EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb h
 # Serial port and baudrate (19200 is minimum) to use for the R/C connection between air Pi and flight control
 # Set this to "/dev/serial0" for Pi onboard serial port or  "/dev/ttyUSB0" for USB-to-serial adapter
 FC_RC_SERIALPORT=/dev/serial0
-FC_RC_BAUDRATE=115200
+FC_RC_BAUDRATE=57600
 #
 #
 # Serial port and baudrate to use for the telemetry connection between air Pi and flight control
 # Set this to "/dev/serial0" for Pi onboard serial port or  "/dev/ttyUSB0" for USB-to-serial adapter
 FC_TELEMETRY_SERIALPORT=/dev/serial0
-FC_TELEMETRY_BAUDRATE=115200
+FC_TELEMETRY_BAUDRATE=57600
 #
 #
 # not supported yet, do not change
@@ -259,7 +259,6 @@ MAVLINK_FORWARDER=mavlink-routerd
 # Set this to "Y" to enable collection of extra debug logs. If you experience any issues,
 # please reproduce them with debug set to "Y" and plug a USB memory stick afterwards, you
 # will find the debug logs on the memory stick. THIS WILL ALSO REENABLE TEXT OUTPUT ON AIRPI
-# AND ADDITIONAL SSH FUNCTIONALITY ON AIRPI
 DEBUG=N
 #
 #AUDIO Over Open.HD Features the ability to transmit audio and output over analog, HDMI or set to auto detect. 
@@ -311,4 +310,3 @@ SmartSyncOFF_RC_Value=1700
 SmartSyncStayON_RC_Value=1300
 #Values: joystick   GPIO   *Simply Jump GPIO #21 & Ground to Trigger or Bypass SmartSync (Trigger depends on default SmartSync_StartupMode = 1 OR 2)
 SmartSyncControlVia=joystick
-

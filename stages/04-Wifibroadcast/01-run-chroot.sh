@@ -17,6 +17,14 @@ sudo make clean
 sudo make library
 sudo make install
 
+# Install OMX
+#cd /home/pi
+#cd gst-omx
+#sudo make clean
+#sudo ./autogen.sh
+#sudo make 
+#sudo make install
+
 # Gets stuck
 # Install mavlink-router
 cd /home/pi
@@ -127,3 +135,9 @@ cd /home/pi/cameracontrol/IPCamera/svpcom_wifibroadcast
 chmod 755 version.py
 make
 ./wfb_keygen
+
+sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/rctxUDP.sh
+sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/rctxUDP_IN
+
+sudo chmod 775 /home/pi/wifibroadcast-rc/rctxUDP.sh
+sudo chmod 775 /home/pi/wifibroadcast-rc/rctxUDP_IN

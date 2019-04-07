@@ -28,6 +28,6 @@
 #define AXIS7_INITIAL 1000
 
 // 3 = 6ms (167Hz), 4 = 8ms (125Hz), 5 = 10ms (100Hz), 6 = 12ms (83Hz), 7 = 14ms (71Hz), 8 = 16ms (63Hz), 9 = 18ms (56Hz), 10 = 20ms (50Hz) 
-#define UPDATE_NTH_TIME 8 
+#define UPDATE_NTH_TIME 10
 #define TRANSMISSIONS 2
 

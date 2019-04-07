@@ -6,7 +6,7 @@
 # ============================================================
 #
 # Desired frequency in MHz
-FREQ=2372
+FREQ=2472
 #
 # Set to "Y" on the RX for auto-scanning. Frequency still has to be set on TX!
 # Feature might be buggy or not work at all!
@@ -51,11 +51,42 @@ MAC_TX[1]=ec086b1c7834
 FREQ_TX[1]=2472
 #
 #
+TXPOWER=2000
 # Wifi Datarate. Lower settings yield higher range and vice versa.
 # 1=5.5Mbit, 2=11Mbit, 3=12Mbit, 4=19.5Mbit/18Mbit, 5=24Mbit, 6=36Mbit
 DATARATE=4
 #
 #
+# FEATURE WIFI BANDWIDTH SETTINGS: If ath9k Wi-Fi card, users can choose between 3 bandwidth options: 20mhz, 10mhz or 5mhz. 
+#***Default @ 20mhz compatible with all Wireless cards. 5/10mhz Bandwidth options will result in 1/4 & 1/2 of total available Datarate/Mbit of the selected Wi-Fi datarate option (1-6) selected above.
+#
+# Default Bandwidth:5, 10 or 20.
+#
+Bandwidth=20
+UplinkSpeed=11
+#
+#
+# FEATURE BAND SWITCHER: allows users to remotely switch between 5/10/20 mhz bandwidth. simply assign RC Channel and pwm values for each setting (>2 selectable settings must be used on Axis RC channels 1-8)
+#**ONLY TESTED ON THE GROUND SO FAR. IN ORDER FOR THE BANDWIDTH TO SWITCH, THERE MUST BE A GOOD LINK BETWEEN ALL AIR AND GROUND WIFI CARDS. 
+#**RC bandwidth switcher is only tested with pi2/3 air.  if using RPI zero it is recommended to disable the switcher and instead set a fixed desired bandwidth prior to flight.  
+#**YOU MUST ALSO DEFINE THE MAC ADDRESSES OF YOUR GROUND ath9k Atheros cards for use with the RC bandwidth Switcher.  
+#MAKE SURE THAT YOUR MOST POWERFUL GROUND RECEIVER CARD MAC ADDRESS IS SET AS THE "PRIMARY RX/TX".
+#
+# IsBandSwicherEnabled "0"=disabled "1"= enabled
+#
+#
+IsBandSwicherEnabled=0
+ChannelToListen2=8
+#Ground TX\RX card
+PrimaryCardMAC=0
+#Ground RX card
+SlaveCardMAC=0
+
+Band5Below=1200
+Band10ValueMin=1200
+Band10ValueMax=1650
+Band20After=1650
+
 # Choose between 30, 40, 48, 59.9
 FPS=48
 #
@@ -79,15 +110,22 @@ TELEMETRY_TRANSMISSION=wbc
 # Set to "disabled" or "mavlink" for Mavlink (Tower App, Missionplanner, etc.)
 TELEMETRY_UPLINK=mavlink
 #
-#
-# Set this to "mavlink" to enable R/C over wifibroadcast using mavlink protocol or "msp" for MSP protocol
+# RC OVER OPEN.HD SETTINGS
+# Set this to "mavlink" to enable R/C over Open.HD using mavlink protocol or "msp" for MSP protocol
 # Set to "sumd" for Graupner SUMD, "ibus" for Flysky IBUS, "srxl" for Multiplex SRXL / XBUS Mode B. Set to "disabled" to disable
-# See joyconfig.txt for other settings, default settings work for Taranis in USB Joystick mode
+# See joyconfig.txt for other settings, default settings work for Taranis in USB
+#
+#Joystick mode
 RC=mavlink
 #
+# RC Type RANGE or ENCRYPTION
+# Range utilizes the original EZ-wifibroadcast "joystick" code.  It is only confirmed to reliably work with Atheros Ath9k cards, this setting is not as secure but should provide better range.
+#Encryption is a more secure means of RC uplink, if using RPI zero on the UAV, this causes higher CPU usage, so it is recommended to only use encryption with Pi2/3 boards, encryption RC may have reduced range.
+#Values:  "Range" or "Encryption"
 #
+EncryptionOrRange=Encryption
 #
-# TX settings
+# AIRPI settings
 # ============================================================
 #
 # set to "auto" for automatic video bitrate measuring. Set to a fixed value to
@@ -101,12 +139,12 @@ VIDEO_BITRATE=auto
 # this to a lower value like 60% to avoid a delayed video stream.
 # On free channels you may set this to a higher value like 75% to get a higher
 # bitrate and thus image quality.
-BITRATE_PERCENT=65
+BITRATE_PERCENT=60
 #
 #
 # CTS protection (use in areas with other wifi networks)
 # set to "auto" for automatic detection, "N" to disable, "Y" to enable
-CTS_PROTECTION=auto
+CTS_PROTECTION=N
 #
 #
 # Camera image settings
@@ -114,13 +152,13 @@ CTS_PROTECTION=auto
 # V2 cam: 1280x720: 30fps, 48fps, 59.9fps. 1640x922: 30fps, 40fps. 1920x1080: 30fps
 WIDTH=1280
 HEIGHT=720
-MirrorDSI_To_HDMI=y
+MirrorDSI_To_HDMI=Y
 #
 #
 # Lower values mean faster glitch-recovery, but also lower video quality.
 # With fps=48 and keyframerate=5, glitches will stay visible for around 100ms in worst case.
 # You can set this higher or lower according to your needs. Minimum value is 2.
-KEYFRAMERATE=5
+KEYFRAMERATE=8
 #
 #
 # Set additional raspivid parameters here
@@ -130,13 +168,13 @@ EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb h
 # Serial port and baudrate (19200 is minimum) to use for the R/C connection between air Pi and flight control
 # Set this to "/dev/serial0" for Pi onboard serial port or  "/dev/ttyUSB0" for USB-to-serial adapter
 FC_RC_SERIALPORT=/dev/serial0
-FC_RC_BAUDRATE=57600
+FC_RC_BAUDRATE=115200
 #
 #
 # Serial port and baudrate to use for the telemetry connection between air Pi and flight control
 # Set this to "/dev/serial0" for Pi onboard serial port or  "/dev/ttyUSB0" for USB-to-serial adapter
 FC_TELEMETRY_SERIALPORT=/dev/serial0
-FC_TELEMETRY_BAUDRATE=57600
+FC_TELEMETRY_BAUDRATE=115200
 #
 #
 # not supported yet, do not change
@@ -145,7 +183,7 @@ FC_MSP_BAUDRATE=115200
 #
 #
 #
-# RX settings
+# GROUNDPI settings
 # ============================================================
 #
 # Set to "Y" to scan for wifi networks with airodump-ng before starting RX
@@ -154,13 +192,21 @@ AIRODUMP=N
 # Number of seconds wifi scanner is shown. Minimum recommended scanning time is 25 seconds.
 AIRODUMP_SECONDS=25
 #
-#
-# set this to "Y" to enable Wifi Hotspot. Default SSID is "EZ-Wifibroadcast", password is "wifibroadcast".
-# See apconfig.txt for configuration. This will forward the received video and telemetry streams to a
+# set this to "Y" to enable Wifi Hotspot and you (manually) set the band below. Set "auto" (recommended) for automatic band 
+# selection.
+# set to "N" for no wifi hotspot
+#Default SSID is "EZ-Wifibroadcast", password is "wifibroadcast"
 # smartphone/tablet or computer connected to the RX Pi via WiFi.
-WIFI_HOTSPOT=Y
+WIFI_HOTSPOT=auto
+#
+# wifi hotspot depends on your groundpi capabilty. Set to "a" for 5.8ghz, "g" for 2.4ghz
+# Channels 1-11 for 2.4Ghz, Channels 36,40,44,48,52,56,60,64 for 5Ghz
+# NOTE with WIFI_HOTSPOT=auto your setting here will be over written
+HOTSPOT_BAND=a
+HOTSPOT_CHANNEL=52
 #
 # Set to "internal" to use the interal Pi3 wifi chip or the MAC address of the USB wifi card you want to use
+# NOTE "auto" hotspot only works with internal wifihotspot. 
 WIFI_HOTSPOT_NIC=internal
 #
 # set this to "Y" to enable Ethernet hotspot. This will forward the received video and telemetry streams
@@ -214,37 +260,55 @@ MAVLINK_FORWARDER=mavlink-routerd
 #
 # Set this to "Y" to enable collection of extra debug logs. If you experience any issues,
 # please reproduce them with debug set to "Y" and plug a USB memory stick afterwards, you
-# will find the debug logs on the memory stick.
+# will find the debug logs on the memory stick. THIS WILL ALSO REENABLE TEXT OUTPUT ON AIRPI
 DEBUG=N
 #
+#AUDIO Over Open.HD Features the ability to transmit audio and output over analog, HDMI or set to auto detect. 
+#*USE ONLY WITH PI2 or PI3 Air.
 
-#Values:  Range   Encryption
-EncryptionOrRange=Range
 #0 Auto, 1 Analog, 2 HDMI
 DefaultAudioOut=0
 IsAudioTransferEnabled=0
 MicBoost=75
 SpeakersLevel=75
 
+# Camera Switcher Adapter 
+#This Camera Switcher feature must be used with the Arducam 4 camera Raspberry Pi multiplexer.  
+#If no camera switcher is detected, feature is automatically disabled.  if used, simply assign desired 
+#RC Channel and pwm values for each camera.  default settings are for 3 cameras (CAM A, B, & C) *Cam 4 "D" disabled by default.
 IsCamera1Enabled=1
 IsCamera2Enabled=1
-IsCamera3Enabled=1
+IsCamera3Enabled=0
 IsCamera4Enabled=0
 
 DefaultCameraId=1
-ChannelToListen=7
+ChannelToListen=16
 
-Camera1ValueMin=1350
-Camera1ValueMax=1650
+Camera1ValueMin=700
+Camera1ValueMax=1400
 
-Camera2ValueMin=700
-Camera2ValueMax=1100
+Camera2ValueMin=1450
+Camera2ValueMax=2100
 
-Camera3ValueMin=1900
-Camera3ValueMax=2100
+Camera3ValueMin=2150
+Camera3ValueMax=2200
 
-Camera4ValueMin=2300
+Camera4ValueMin=2250
 Camera4ValueMax=2500
+#
+# FEATURE: 2-WAY COMM For Air/Ground settings with Open.HD APP.
+#This enables or disables two-way communication between the open HD app and air/ground units.
+#**Setting "2" disables AirPi remote settings (not needed anyways), 
+#primary benefit is to keep RPI zero CPU Usage down to a minimum with Atheros. Setting "1" is required with Encrypted RC
 
-#Values 1 - Enabled, 0 - Disabled, 60 ( or any other digit) time in seconds before auto disabled in case if no phone will be connected
+#Values "2"=Enables Ground Only(Best for Atheros+SmartSync); "1"=EnableAir/Ground (REQUIRED FOR RALINK/REALTEK ENCRYPTED RC)
+
 RemoteSettingsEnabled=1
+
+SmartSync_StartupMode=1
+SmartSyncRC_Channel=2
+SmartSyncGround_Countdown=45
+SmartSyncOFF_RC_Value=1700
+SmartSyncStayON_RC_Value=1300
+#Values: joystick   GPIO   *Simply Jump GPIO #21 & Ground to Trigger or Bypass SmartSync (Trigger depends on default SmartSync_StartupMode = 1 OR 2)
+SmartSyncControlVia=joystick
