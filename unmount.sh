@@ -5,7 +5,7 @@
 set -e
 set -o xtrace
 
-DATA_DIR="$PWD/data"
+DATA_DIR="$PWD/work/02-Kernel"
 MNT_DIR="$DATA_DIR/mnt"
 
 function unmount {

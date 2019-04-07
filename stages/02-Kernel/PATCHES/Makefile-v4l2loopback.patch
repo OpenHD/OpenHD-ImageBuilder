@@ -1,0 +1,10 @@
+--- drivers/media/Makefile	2019-02-22 13:57:34.144585200 +0100
++++ drivers/media/Makefile	2019-04-05 15:30:05.092699800 +0200
+@@ -20,6 +20,7 @@
+ endif
+ 
+ obj-$(CONFIG_VIDEO_DEV) += v4l2-core/
++obj-$(CONFIG_VIDEO_LOOPBACK) += v4l2loopback/
+ obj-$(CONFIG_DVB_CORE)  += dvb-core/
+ 
+ # There are both core and drivers at RC subtree - merge before drivers
