@@ -19,7 +19,7 @@ sed -r -e's/txpower=[^ ]+/txpower='$1'/g' /etc/modprobe.d/ath9k_hw.conf.old > /e
 mv /etc/modprobe.d/rtl88XXau.conf /etc/modprobe.d/rtl88XXau.conf.old
 sed -r -e's/rtw_tx_pwr_idx_override=[^ ]+/rtw_tx_pwr_idx_override='$1'/g' /etc/modprobe.d/rtl88XXau.conf.old > /etc/modprobe.d/rtl88XXau.conf
 mv /etc/modprobe.d/rtl8812au.conf /etc/modprobe.d/rtl8812au.conf.old
-sed -r -e's/rtw_tx_pwr_idx_override=[^ ]+/rtw_tx_pwr_idx_override='$1'/g' /etc/modprobe.d/rtl8812au.conf.old > /etc/modprobe.d/rtl88X12au.conf
+sed -r -e's/rtw_tx_pwr_idx_override=[^ ]+/rtw_tx_pwr_idx_override='$1'/g' /etc/modprobe.d/rtl8812au.conf.old > /etc/modprobe.d/rtl8812au.conf
 sync
 echo
 echo "txpower set to $1. You may power-off now or type \"reboot\" to restart"
