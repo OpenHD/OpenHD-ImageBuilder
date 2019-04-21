@@ -6,7 +6,7 @@ For the long version, read on.
 In order to be able to run this you need a Debian or Ubuntu Linux machine with 30 Gb free space on the main partition, and with the following packages:
 
 ```
-sudo apt-get install curl git qemu qemu-user-static binfmt-support build-essential gcc-arm*
+sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support build-essential gcc-arm*
 ```
 
 Then git clone this repository to a suitable folder 
@@ -52,7 +52,7 @@ So after thinking about the problem and looking for projects who had tackled thi
 
 This concept applies to the EZ-Wifibroadcast image creation as well. So i modified the core logic into this system:
 
-![flow](https://github.com/HD-Fpv/Open.HD_Image_Builder/Builder%20flow.png "Flow")
+![flow](https://github.com/HD-Fpv/Open.HD_Image_Builder/raw/master/Builder%20flow.png "Flow")
 
 This allows us to run the build process once, and when we want to make a change in stage 3, we only run stage 3 and 4 again by removing the `SKIP` file from the `stages/03-Packages` and the `stages/04-Wifibroadcast` folders. The build system will copy the kernel `IMAGE.img` from stage 2 to stage 3 and re-run all the scripts in stage 3. The resulting image is copied to stage 4 and all those scripts are run. Finally, when there are no more stages, the `IMAGE.img` from the last stage is copied to the `deploy/ezwfb-{date}.img` file.
 
@@ -65,6 +65,5 @@ It is also possible to put a `SKIP-IMAGE` file into a stage, this will disable a
 Every stage comprises one or more scripts. Scripts need to be named in the format `XX-run.sh` or `XX-run-chroot.sh`. The order is determined by the XX part, where any `-chroot` script is run **AFTER** the non-chroot script.
 
 **chroot**? What's that? Well, it's a little complex, but basically it allows you to run statements within the image as if you were running the image on an actual Raspberry Pi. This is used to download and install the `apt-get` packages and several scripts to make the image ready for use with the EZ-Wifibroadcast system. Please remember to use `sudo` in the `-chroot` scripts where approperiate.
-
 
 
