@@ -83,7 +83,7 @@ log "Download EZWFB - Splash"
 sudo mv Open.HD/wifibroadcast-splash/ wifibroadcast-splash/
 
 log "Download FLIR one"
-sudo git clone https://github.com/fnoop/flirone-v4l2.git
+sudo git clone https://github.com/HD-Fpv/Open.HD_FlirOneDrv.git
 
 log "Download RemoteSettings"
 # sudo git clone -b user1321-5MhzAth9k https://github.com/user1321/RemoteSettings

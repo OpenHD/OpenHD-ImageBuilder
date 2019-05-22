@@ -25,6 +25,15 @@ sudo make install
 #sudo make 
 #sudo make install
 
+# Install FLIROne Driver
+cd /home/pi
+cd Open.HD_FlirOneDrv
+cd flir8p1-gpl
+sudo make
+sudo chmod +x flir8p1
+
+git clone https://github.com/HD-Fpv/Open.HD_FlirOneDrv.git
+
 # Gets stuck
 # Install mavlink-router
 cd /home/pi
