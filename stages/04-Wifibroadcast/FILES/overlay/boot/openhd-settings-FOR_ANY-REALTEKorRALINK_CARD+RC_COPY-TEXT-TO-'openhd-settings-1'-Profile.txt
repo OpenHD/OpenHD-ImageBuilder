@@ -186,6 +186,9 @@ FC_MSP_BAUDRATE=115200
 # GROUNDPI settings
 # ============================================================
 #
+# Set to "N" to not display the OSD
+DISPLAY_OSD=Y
+#
 # Set to "Y" to scan for wifi networks with airodump-ng before starting RX
 AIRODUMP=N
 #
