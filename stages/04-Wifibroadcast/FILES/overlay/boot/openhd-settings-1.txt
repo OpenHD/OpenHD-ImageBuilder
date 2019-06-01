@@ -50,6 +50,8 @@ FREQ_TX[1]=2472
 #
 #
 TXPOWER=2000
+TxPowerAir=58
+TxPowerGround=58
 # Wifi Datarate. Lower settings yield higher range and vice versa.
 # 1=5.5Mbit, 2=11Mbit, 3=12Mbit, 4=19.5Mbit/18Mbit, 5=24Mbit, 6=36Mbit
 DATARATE=4
@@ -184,6 +186,9 @@ FC_MSP_BAUDRATE=115200
 # GROUNDPI settings
 # ============================================================
 #
+# Set to "N" to not display the OSD
+DISPLAY_OSD=Y
+#
 # Set to "Y" to scan for wifi networks with airodump-ng before starting RX
 AIRODUMP=N
 #
@@ -311,4 +316,21 @@ SmartSyncOFF_RC_Value=1700
 SmartSyncStayON_RC_Value=1300
 #Values: joystick   GPIO   *Simply Jump GPIO #21 & Ground to Trigger or Bypass SmartSync (Trigger depends on default SmartSync_StartupMode = 1 OR 2)
 SmartSyncControlVia=joystick
+
+
+
+#IP or USB secondary camera. To use "IsBandSwicherEnabled=1" must be enabled
+#RC channel to switch 3 different modes:  (#Camera1ValueMin .. Camera3ValueMax - used )
+ChannelIPCamera=7
+#Mode 1: LCD(HDMI) + android phone - RPi CSI camera
+#Mode 2: LCD(HDMI) - RPi CSI camera, android phone - IP or USB camera. Bitrate = bitrate / 2 (20MHz) ,4(10Mhz) ,8(5Mhz). IPCameraLowRes is used  
+#Mode 3: Adroid phone only -  IP or USB camera. IPCameraHiRes (20MHz) , or auto bitrate = initial-bitrate=\$1 USBCamera.  (20MHz, 10Mhz /2, 5Mhz /4). (To use fixed: initial-bitrate=200000)
+
+#Values: No, IP, USB
+SecondaryCamera=IP
+
+USBCamera="gst-launch-1.0 uvch264src device=/dev/video0 initial-bitrate=\$1 average-bitrate=\$1 iframe-period=1000 name=src auto-start=true src.vidsrc ! queue ! video/x-h264,width=1280,height=720,framerate=30/1 ! h264parse ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
+IPCameraHiRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=0.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
+IPCameraLowRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=1.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
+
 
