@@ -14,7 +14,7 @@ log "Download Raspi2png"
 git clone https://github.com/AndrewFromMelbourne/raspi2png.git
 
 log "Download all Open.HD Sources"
-sudo git clone -b development https://github.com/HD-Fpv/Open.HD.git
+sudo git clone -b FlirPip https://github.com/HD-Fpv/Open.HD.git
 pushd Open.HD
 sudo git submodule update --init
 popd
@@ -83,7 +83,7 @@ log "Download EZWFB - Splash"
 sudo mv Open.HD/wifibroadcast-splash/ wifibroadcast-splash/
 
 log "Download FLIR one"
-sudo git clone https://github.com/fnoop/flirone-v4l2.git
+sudo git clone https://github.com/HD-Fpv/Open.HD_FlirOneDrv.git
 
 log "Download RemoteSettings"
 # sudo git clone -b user1321-5MhzAth9k https://github.com/user1321/RemoteSettings
