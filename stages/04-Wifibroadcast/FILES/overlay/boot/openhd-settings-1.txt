@@ -163,6 +163,7 @@ KEYFRAMERATE=8
 #
 # Set additional raspivid parameters here
 EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb horizon"
+EXTRAPARAMS_IMX290="-cd H264 -n -fl -ih -pf high -if both"
 #
 #
 # Serial port and baudrate (19200 is minimum) to use for the R/C connection between air Pi and flight control
@@ -327,10 +328,13 @@ ChannelIPCamera=7
 #Mode 3: Adroid phone only -  IP or USB camera. IPCameraHiRes (20MHz) , or auto bitrate = initial-bitrate=\$1 USBCamera.  (20MHz, 10Mhz /2, 5Mhz /4). (To use fixed: initial-bitrate=200000)
 
 #Values: No, IP, USB
-SecondaryCamera=IP
+SecondaryCamera=No
 
 USBCamera="gst-launch-1.0 uvch264src device=/dev/video0 initial-bitrate=\$1 average-bitrate=\$1 iframe-period=1000 name=src auto-start=true src.vidsrc ! queue ! video/x-h264,width=1280,height=720,framerate=30/1 ! h264parse ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
 IPCameraHiRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=0.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
 IPCameraLowRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=1.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
 
-
+IMX290_videoformat=PAL
+IMX290_wdrmode=0x00
+IMX290_mirrormode=0x00
+IMX290_denoise=0x07
