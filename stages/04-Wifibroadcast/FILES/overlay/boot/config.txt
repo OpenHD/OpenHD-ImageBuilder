@@ -125,6 +125,7 @@ dtparam=i2c_arm=on
 # uncomment for SPI
 #dtparam=spi=on
 
+start_x=1
 
 [pi0]
 start_file=zero_x.elf
