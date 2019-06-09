@@ -126,6 +126,7 @@ mv processUDP ../processUDP
 
 #Configure scripts
 chmod 755 -R /home/pi/RemoteSettings
+chmod 755 -R /home/pi/raspberrypi
 
 apt-get --yes --force-yes install gstreamer1.0-alsa
 
