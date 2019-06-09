@@ -32,7 +32,7 @@ cd flir8p1-gpl
 sudo make
 sudo chmod +x flir8p1
 
-git clone https://github.com/HD-Fpv/Open.HD_FlirOneDrv.git
+#git clone https://github.com/HD-Fpv/Open.HD_FlirOneDrv.git  #already exist`s
 
 # Gets stuck
 # Install mavlink-router
