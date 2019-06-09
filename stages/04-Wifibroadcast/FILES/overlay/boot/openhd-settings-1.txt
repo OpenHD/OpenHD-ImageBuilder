@@ -164,6 +164,13 @@ KEYFRAMERATE=8
 # Set additional raspivid parameters here
 EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb horizon"
 EXTRAPARAMS_IMX290="-cd H264 -n -fl -ih -pf high -if both"
+
+
+IMX290_videoformat=PAL
+IMX290_wdrmode=0x00
+IMX290_mirrormode=0x00
+IMX290_denoise=0x07
+
 #
 #
 # Serial port and baudrate (19200 is minimum) to use for the R/C connection between air Pi and flight control
@@ -334,7 +341,3 @@ USBCamera="gst-launch-1.0 uvch264src device=/dev/video0 initial-bitrate=\$1 aver
 IPCameraHiRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=0.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
 IPCameraLowRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=1.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
 
-IMX290_videoformat=PAL
-IMX290_wdrmode=0x00
-IMX290_mirrormode=0x00
-IMX290_denoise=0x07
