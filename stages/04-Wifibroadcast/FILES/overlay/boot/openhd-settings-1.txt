@@ -263,6 +263,7 @@ FORWARD_STREAM=rtp
 #
 # UDP port to send video stream to, set to 5000 for FPV_VR app or 5600 for Mission Planner
 VIDEO_UDP_PORT=5600
+VIDEO_UDP_PORT2=5601
 #
 #
 # Mavlink forwarder to use. Choose "mavlink-routerd" or "cmavnode"
