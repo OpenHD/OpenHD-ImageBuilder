@@ -133,6 +133,7 @@ apt-get --yes --force-yes install gstreamer1.0-alsa
 #install cameracontrol
 
 chmod 755 /home/pi/cameracontrol/cameracontrolUDP.py
+chmod 755 /home/pi/cameracontrol/LoadFlirDriver.sh
 pip install psutil
 
 cd /home/pi/cameracontrol/RCParseChSrc
