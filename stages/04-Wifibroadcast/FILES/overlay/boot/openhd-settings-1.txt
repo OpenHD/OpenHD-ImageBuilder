@@ -327,7 +327,8 @@ SmartSyncStayON_RC_Value=1300
 SmartSyncControlVia=joystick
 
 
-
+Values: Y N
+LoadFlirDriver=N
 #IP or USB secondary camera. To use "IsBandSwicherEnabled=1" must be enabled
 #RC channel to switch 3 different modes:  (#Camera1ValueMin .. Camera3ValueMax - used )
 ChannelIPCamera=7
