@@ -101,6 +101,10 @@ log "Download JoystickIn"
 # sudo git clone https://github.com/user1321/JoystickIn
 sudo mv Open.HD/JoystickIn/ JoystickIn/
 
+log "Download IMX290"
+sudo mv Open.HD/raspberrypi/ raspberrypi/
+
+
 sudo rm -rf Open.HD
 
 #return
