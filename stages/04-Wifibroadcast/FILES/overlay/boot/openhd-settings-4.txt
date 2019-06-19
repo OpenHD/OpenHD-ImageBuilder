@@ -1,5 +1,5 @@
 #!/bin/bash
-# openhd-settings-2.txt
+# openhd-settings-4.txt
 # Common settings (need to be kept in sync for both TX and RX!)
 # ============================================================
 #
