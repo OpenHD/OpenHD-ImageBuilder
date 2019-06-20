@@ -12,7 +12,8 @@
 /* --------------*/
 #define IMPERIAL false
 #define COPTER false
-
+//set the message source for relative altitude. Default is mavlink global_rel_alt
+#define MAVLINK_GPS_RAW_REL_ALT false
 
 /* DISPLAY */
 /* --------*/
