@@ -12,8 +12,11 @@
 /* --------------*/
 #define IMPERIAL false
 #define COPTER false
+//reverse where msl altitude and relative altitudes are displayed
+#define REVERSE_ALTITUDES false
 //set the message source for relative altitude. Default is mavlink global_rel_alt
-#define MAVLINK_GPS_RAW_REL_ALT false
+#define MAVLINK_MSL_SOURCE_VFR_HUD false
+
 
 /* DISPLAY */
 /* --------*/
@@ -93,7 +96,11 @@
 #define ALTLADDER
 #define ALTLADDER_POS_X 87
 #define ALTLADDER_SCALE 1.1
-#define ALTLADDER_USEBAROALT false // set to true to use barometer altitude instead of gps altitude
+
+#define MSLALT
+#define MSLALT_POS_X 93
+#define MSLALT_POS_Y 16
+#define MSLALT_SCALE 0.6
 
 #define SPEEDLADDER
 #define SPEEDLADDER_POS_X 12
@@ -137,11 +144,6 @@
 #define AIRSPEED_POS_Y 21
 #define AIRSPEED_SCALE 0.6
 
-#define BAROALT
-#define BAROALT_POS_X 93
-#define BAROALT_POS_Y 16
-#define BAROALT_SCALE 0.6
-
 //#define COURSE_OVER_GROUND
 #define COURSE_OVER_GROUND_POS_X 92
 #define COURSE_OVER_GROUND_POS_Y 65
@@ -151,11 +153,6 @@
 #define GPSSPEED_POS_X 93
 #define GPSSPEED_POS_Y 60
 #define GPSSPEED_SCALE 0.8
-
-//#define GPSALT
-#define GPSALT_POS_X 92
-#define GPSALT_POS_Y 55
-#define GPSALT_SCALE 0.8
 
 #define WARNING_POS_X 50
 #define WARNING_POS_Y 25
