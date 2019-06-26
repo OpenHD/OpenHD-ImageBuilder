@@ -373,13 +373,13 @@ LoadFlirDriver=N
 # That function let make 2 way toggle switch be 3 way switch using other 2 way toggle switch. May be used with IP\USB camera switch, etc...
 # Values: 1-8
 # In case if channel 0 is selected function disabled.
-TrimChannel=3
+TrimChannel=0
 # Action: 1 - add PWM to channel. 0 - extract PWM from channel
 Action=1
 # PWM value to add\extract: 1-900
 PWMCount=202
 # To trigger function PWM value must be above 1850. To return back lower 1700
-ActivateChannel=7
+ActivateChannel=0
 
 
 # >>>>>>>>>>[LORA RADIO]--Under Development
