@@ -368,6 +368,19 @@ LoadFlirDriver=N
 #gstreamer videotestsrc:
 #USBCamera="gst-launch-1.0 videotestsrc ! video/x-raw,width=160,height=120,framerate=30/1 ! omxh264enc control-rate=1 target-bitrate=600000 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
 
+
+# >>>>>>>>>>[Adjust channel value using other channel.]--
+# That function let make 2 way toggle switch be 3 way switch using other 2 way toggle switch. May be used with IP\USB camera switch, etc...
+# Values: 1-8
+# In case if channel 0 is selected function disabled.
+TrimChannel=3
+# Action: 1 - add PWM to channel. 0 - extract PWM from channel
+Action=1
+# PWM value to add\extract: 1-900
+PWMCount=202
+# To trigger function PWM value must be above 1850. To return back lower 1700
+ActivateChannel=7
+
 # >>>>>>>>>>[LORA RADIO]--Under Development
 # Values "0" or "1"
 Lora=0
