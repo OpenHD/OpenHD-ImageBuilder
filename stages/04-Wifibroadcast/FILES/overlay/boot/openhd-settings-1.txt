@@ -105,7 +105,7 @@ WIFI_HOTSPOT_NIC=internal
 # Set "auto" (default) with Pi3b+ on Ground Pi (As it has 2.4/5ghz internal hotspot).
 # Set "Y" to enable Hotspot and you (manually) set the band & ch below. 
 # Set to "N" for no wifi hotspot (Recommended If NOT using Pi3b+ & 2.4ghz for video as it could # interfere.
-WIFI_HOTSPOT=auto
+WIFI_HOTSPOT=N
 
 # >>>>>>>>>>[HOTSPOT BAND/CHANNEL_MANUAL CONFIG]
 # NOTE with WIFI_HOTSPOT=auto your setting here will be over written.
@@ -142,7 +142,7 @@ VIDEO_UDP_PORT2=5601
 # Set "Y" in conjunction with "Range" RC
 # Set "auto" for automatic detection. 
 # Set "N" to disable.
-CTS_PROTECTION=Y
+CTS_PROTECTION=N
 
 # >>>>>>>>>>[DEDICATED WIFI-CARD UPLINK/RC MAC ADDR.]-- If different types of Ground wifi cards are used.
 # Set this if you have 1 High-Power ground card plus 1 or more lower power cards so that
@@ -158,7 +158,7 @@ PrimaryCardMAC=0
 # Set to "sumd" for Graupner SUMD, "ibus" for Flysky IBUS, "srxl" for Multiplex SRXL/XBUS
 # Mode B. Set to "disabled" to disable
 # **See joyconfig.txt for other settings, default settings work for Taranis in USB.
-RC=mavlink
+RC=disabled
 
 # >>>>>>>>>>[USB RC RANGE OR ENCRYPTION]-- 
 # For Atheros Cards use "Range" + CTS=Y
@@ -167,7 +167,7 @@ RC=mavlink
 # to reliably work with Atheros/AR9271/Ath9k cards, this setting should provide better range. 
 # ***"Encryption" Is a more secure means of RC uplink and works with any wifi cards but may
 # Result in higher packet loss at longer ranges.
-EncryptionOrRange=Range
+EncryptionOrRange=Encryption
 
 # >>>>>>>>>>[TELEMETRY WBC/OTHER]--
 # wbc = use wifibroadcast as telemetry up/downlink
