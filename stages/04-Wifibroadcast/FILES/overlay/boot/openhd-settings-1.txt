@@ -97,7 +97,7 @@ EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb h
 # ======================================================================================
 
 # >>>>>>>>>>[HOTSPOT SOURCE]--
-# Set "internal" or "external"
+# Set "internal" or mac address of the wifi card
 WIFI_HOTSPOT_NIC=internal
 
 # >>>>>>>>>>[HOTSPOT MODE]-- Default SSID is "Openhd" Password "wifiopenhd"
