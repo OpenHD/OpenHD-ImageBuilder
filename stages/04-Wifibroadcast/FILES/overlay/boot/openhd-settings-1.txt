@@ -102,7 +102,8 @@ WIFI_HOTSPOT_NIC=internal
 
 # >>>>>>>>>>[HOTSPOT MODE]-- Default SSID is "Openhd" Password "wifiopenhd"
 # ***USE WITH QGC-PHONE, OPENHD APP, MISSION PLANNER OR HID/RC APP***
-# Set "auto" (default) with Pi3b+ on Ground Pi (As it has 2.4/5ghz internal hotspot).
+# Set "auto" (default) with Pi3b+ as GroundPi (it has 2.4/5ghz internal hotspot) OR Pi3b/2b video is 5.8ghz 
+# and internal hotspot is 2.4ghz. For 2.4ghz hotspot and 2.4ghz video must be manually set at your own risk!
 # Set "Y" to enable Hotspot and you (manually) set the band & ch below. 
 # Set to "N" for no wifi hotspot (Recommended If NOT using Pi3b+ & 2.4ghz for video as it could # interfere.
 WIFI_HOTSPOT=N
