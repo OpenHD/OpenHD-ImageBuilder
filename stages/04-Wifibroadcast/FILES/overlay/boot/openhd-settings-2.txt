@@ -1,10 +1,25 @@
 #!/bin/bash
 #
-# ======================================================================================
-#    <BASIC RF/VIDEO LINK CONFIGURATION>
-# ======================================================================================
+# ##########################################################################################
+# 
+# WELCOME TO OPEN.HD (RC1 2019_07-03)
+# Please contribute with your feedback! 
+# Our Public Telegram Channel: https://t.me/OpenHD_May_2019
+# RCGroups Forum:
+# https://www.rcgroups.com/forums/showthread.php?3154184-Open-HD-(BETA-TESTING)FPV-Discussion 
+# Our GitHub Wiki Page: *Please also download Open.HD and QGC APP for full functionality*
+# https://github.com/HD-Fpv/Open.HD/wiki
+#
+# ###########################################################################################
+
+
+
+# ==========================================================
+#          <BASIC RF/VIDEO LINK CONFIGURATION>
+# ==========================================================
 
 # >>>>>>>>>>[FREQUENCY FOR OPEN.HD]-- in MHz (See full Frequency List Below)
+# *Default settings as of July 2019 2.4Ghz does not currently work correctly for RTL8812AU Cards. 
 FREQ=2472
 
 # >>>>>>>>>>[DATARATE] Lower settings yield higher range and vice versa.
@@ -12,6 +27,9 @@ FREQ=2472
 DATARATE=4
 
 # >>>>>>>>>>[TXPOWER-AIR/GROUND]-- For Atheros AR9271 or RTL8812/14AU Cards ONLY
+# Some high power Realtek or Atheros cards will work better reducing power down to 54 or 56
+# *Settable Range is 1-60 (Every 2 digits=1db of power). 
+# **You can set to 1 or 2 for ultra low power ground testing mode.
 TxPowerAir=58
 TxPowerGround=58
 
@@ -28,7 +46,7 @@ VIDEO_BLOCKLENGTH=1024
 
 # >>>>>>>>>>[DEBUGGING OR SSH]--
 # Set this to "Y" to enable collection of extra debug logs or to allow SSH. If you experience anyways
-# issues.
+# issues. Also Set "Y" to enable normal Ethernet connection for SSH Console Debugging...
 DEBUG=N
 
 # >>>>>>>>>>[DISABLE SCREEN MESSAGES]--
@@ -52,9 +70,9 @@ DISPLAY_OSD=Y
 Bandwidth=20
 
 
-# ======================================================================================
-#                            <VIDEO/CAMERA CONFIGURATION>
-# ======================================================================================
+# ==========================================================
+#               <VIDEO/CAMERA CONFIGURATION>
+# ==========================================================
 
 # >>>>>>>>>>[VIDEO BITRATE]-- "auto" recommended
 # Air Pi reads available bandwidth to determine bitrate.
@@ -92,17 +110,18 @@ EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb h
 
 
 
-# ======================================================================================
-#                   <GROUND STATION/PC/PHONE/TABLET INTERFACE CONFIG>
-# ======================================================================================
+# ==========================================================
+#      <GROUND STATION/PC/PHONE/TABLET INTERFACE CONFIG>
+# ==========================================================
 
 # >>>>>>>>>>[HOTSPOT SOURCE]--
-# Set "internal" or "external"
+# Set "internal" or mac address of the wifi card
 WIFI_HOTSPOT_NIC=internal
 
 # >>>>>>>>>>[HOTSPOT MODE]-- Default SSID is "Openhd" Password "wifiopenhd"
 # ***USE WITH QGC-PHONE, OPENHD APP, MISSION PLANNER OR HID/RC APP***
-# Set "auto" (default) with Pi3b+ on Ground Pi (As it has 2.4/5ghz internal hotspot).
+# Set "auto" (default) with Pi3b+ as GroundPi (it has 2.4/5ghz internal hotspot) OR Pi3b/2b video is 5.8ghz 
+# and internal hotspot is 2.4ghz. For 2.4ghz hotspot and 2.4ghz video must be manually set at your own risk!
 # Set "Y" to enable Hotspot and you (manually) set the band & ch below. 
 # Set to "N" for no wifi hotspot (Recommended If NOT using Pi3b+ & 2.4ghz for video as it could # interfere.
 WIFI_HOTSPOT=auto
@@ -134,15 +153,15 @@ VIDEO_UDP_PORT2=5601
 
 
 
-# ======================================================================================
-#                     <TELEMETRY/USB RC CONFIGURATION>
-# ======================================================================================
+# ==========================================================
+#              <TELEMETRY/USB RC CONFIGURATION>
+# ==========================================================
 
 # >>>>>>>>>>[CTS PROTECTION]--Use in areas with other wifi networks or Interference
 # Set "Y" in conjunction with "Range" RC
 # Set "auto" for automatic detection. 
 # Set "N" to disable.
-CTS_PROTECTION=Y
+CTS_PROTECTION=N
 
 # >>>>>>>>>>[DEDICATED WIFI-CARD UPLINK/RC MAC ADDR.]-- If different types of Ground wifi cards are used.
 # Set this if you have 1 High-Power ground card plus 1 or more lower power cards so that
@@ -158,7 +177,7 @@ PrimaryCardMAC=0
 # Set to "sumd" for Graupner SUMD, "ibus" for Flysky IBUS, "srxl" for Multiplex SRXL/XBUS
 # Mode B. Set to "disabled" to disable
 # **See joyconfig.txt for other settings, default settings work for Taranis in USB.
-RC=mavlink
+RC=disabled
 
 # >>>>>>>>>>[USB RC RANGE OR ENCRYPTION]-- 
 # For Atheros Cards use "Range" + CTS=Y
@@ -167,7 +186,7 @@ RC=mavlink
 # to reliably work with Atheros/AR9271/Ath9k cards, this setting should provide better range. 
 # ***"Encryption" Is a more secure means of RC uplink and works with any wifi cards but may
 # Result in higher packet loss at longer ranges.
-EncryptionOrRange=Range
+EncryptionOrRange=Encryption
 
 # >>>>>>>>>>[TELEMETRY WBC/OTHER]--
 # wbc = use wifibroadcast as telemetry up/downlink
@@ -210,9 +229,9 @@ MAVLINK_FORWARDER=mavlink-routerd
 
 
 
-#  ======================================================================================
-#                      <ADVANCED/ADDITIONAL HARDWARE SETTINGS>
-#  ======================================================================================
+# ==========================================================
+#         <ADVANCED/ADDITIONAL HARDWARE SETTINGS>
+# ==========================================================
 
 # >>>>>>>>>>[ARDUCAM V2.0 OR V2.1 MULTI-CAMERA ADAPTER]-- 
 # This Camera Switcher feature must be used with the Arducam 4 camera Raspberry Pi multiplexer.  
@@ -259,9 +278,9 @@ IMX290_denoise=0x00
 
 
 
-# ======================================================================================
-#                    <DEVELOPER-ENHANCEMENTS IN PROGRESS OPTIONS>
-# ======================================================================================
+# ==========================================================
+#       <DEVELOPER-ENHANCEMENTS IN PROGRESS OPTIONS>
+# ==========================================================
 
 # >>>>>>>>>>[MIRROR DSI AND HDMI DISPLAY]--See wiki for how-to
 MirrorDSI_To_HDMI=Y
@@ -330,9 +349,9 @@ SmartSyncControlVia=joystick
 
 
 
-# ======================================================================================
-#                    <DEVELOPER-ENHANCEMENTS IN PROGRESS OPTIONS>
-# ======================================================================================
+# ==========================================================
+#        <DEVELOPER-ENHANCEMENTS IN PROGRESS OPTIONS>
+# ==========================================================
 
 # >>>>>>>>>>[SECONDARY IP/USB CAMERA SETTINGS]--
 # Values: No, IP, USB
@@ -381,14 +400,13 @@ PWMCount=202
 # To trigger function PWM value must be above 1850. To return back lower 1700
 ActivateChannel=0
 
-
 # >>>>>>>>>>[LORA RADIO]--Under Development
 # Values "0" or "1"
 Lora=0
 
-# ======================================================================================
-#                          FREQUENCY LIST AND OTHER Settings
-# ======================================================================================
+# ==========================================================
+#             FREQUENCY LIST AND OTHER Settings
+# ==========================================================
 
 # [FREQUENCY AND ALTERNATIVE MULTI-CARD TRANSMISSION CONFIGURATION]
 # Set to "Y" on the RX for auto-scanning. Frequency still has to be set on TX!
