@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 # ##########################################################################################
-# 
 # WELCOME TO OPEN.HD (RC1 2019_07-03)
+#
 # Please contribute with your feedback! 
 # Our Public Telegram Channel: https://t.me/OpenHD_May_2019
 # RCGroups Forum:
@@ -102,7 +102,7 @@ FPS=48
 # With fps=48 and keyframerate=5, glitches will stay visible for around 100ms in worst case.
 # You can set this higher or lower according to your needs. Minimum value is 2.
 KEYFRAMERATE=5
-#
+
 # >>>>>>>>>>[RASPIVID CAMERA SETTINGS]--
 # There are dozens of paramaters, see the RPI forum for all settings.
 EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb horizon"
