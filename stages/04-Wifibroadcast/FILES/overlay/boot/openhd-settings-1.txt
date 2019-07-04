@@ -386,6 +386,10 @@ ActivateChannel=0
 # Values "0" or "1"
 Lora=0
 
+
+# >>>>>>>>>> [TTY CONSOLE]-- View Output of Different Consoles and Scripts
+TTY_CONSOLE=1
+
 # ======================================================================================
 #                          FREQUENCY LIST AND OTHER Settings
 # ======================================================================================
