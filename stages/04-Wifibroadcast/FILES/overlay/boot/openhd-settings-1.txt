@@ -387,7 +387,7 @@ ActivateChannel=0
 Lora=0
 
 
-# >>>>>>>>>> [TTY CONSOLE]-- View Output of Different Consoles and Scripts
+# >>>>>>>>>> [TTY CONSOLE]-- View Output of GroundPi Consoles and Scripts
 TTY_CONSOLE=1
 
 # ======================================================================================
