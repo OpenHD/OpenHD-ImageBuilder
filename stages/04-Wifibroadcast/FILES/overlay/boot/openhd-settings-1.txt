@@ -389,11 +389,11 @@ ActivateChannel=0
 Lora=0
 
 # >>>>>>>>>>[Adjust LCD screen backlight using touchscreen]--
-AdjustLCDBacklight=Y
+AdjustLCDBacklight=N
 # Time in seconds
-AutoDimTime=3600
+AutoDimTime=30
 # Values from 0 to 255, where 0 - off or 0%, 255 - or or 100%
-AutoDimValue=255
+AutoDimValue=130
 
 
 # >>>>>>>>>> [TTY CONSOLE]-- View Output of GroundPi Consoles and Scripts
