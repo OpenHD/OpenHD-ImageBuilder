@@ -293,7 +293,7 @@ Band10ValueMax=1650
 Band20After=1650
 
 # >>>>>>>>>>[RELAY OPEN.HD}--
-# *May have problems...
+# DO NOT USE. BROKEN.
 # Set this to "Y" to enable Open.HD relay mode. Will forward the received video and teleme stream.
 # to another Open.HD RX.
 RELAY=N
