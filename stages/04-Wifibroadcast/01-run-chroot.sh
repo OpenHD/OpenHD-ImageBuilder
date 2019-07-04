@@ -160,3 +160,8 @@ sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/buildlora.sh
 sudo /home/pi/wifibroadcast-rc-Ath9k/buildlora.sh
 sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/lora
 
+
+cd /home/pi/wifibroadcast-misc/LCD
+sudo make
+chmod 755 /home/pi/wifibroadcast-misc/LCD/MouseListener
+
