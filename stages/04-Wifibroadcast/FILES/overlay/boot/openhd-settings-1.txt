@@ -303,7 +303,9 @@ RELAY_FREQ=5220
 # >>>>>>>>>>[SAVE VIDEO-RAMdisk/Memory]--Set to "memory" to use RAMdisk for temporary video/screenshot/telemetry 
 # storage recording time to ~12-14 minutes, but is the safe way. If you need longer recording times, use "sdcard", to 
 # use the sdcard as the temporary video storage. Keep in mind though, that this might introduce video stutter and/or bad blocks. 
+# VIDEO_FS set to "ext4" (Linux, which is recommended for performance) or "fat" (Windows)
 VIDEO_TMP=memory
+VIDEO_FS=ext4
 
 # >>>>>>>>>>[AIRODUMP Y/N]--Set to "Y" to scan for wifi networks with airodump-ng before starting RX
 AIRODUMP=N
