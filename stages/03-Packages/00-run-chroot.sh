@@ -52,6 +52,7 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install git libpcap-dev wiringpi
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libjpeg8-dev indent libfreetype6-dev ttf-dejavu-core
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install python-m2crypto
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install dos2unix
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install dosfstools
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install hostapd
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install pump
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libpng12-dev
