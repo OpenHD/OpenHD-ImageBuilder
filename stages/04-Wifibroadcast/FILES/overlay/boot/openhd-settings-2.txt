@@ -386,6 +386,13 @@ ActivateChannel=0
 # Values "0" or "1"
 Lora=0
 
+# >>>>>>>>>>[Adjust LCD screen backlight using touchscreen]--
+AdjustLCDBacklight=N
+# Time in seconds
+AutoDimTime=30
+# Values from 0 to 255, where 0 - off or 0%, 255 - or or 100%
+AutoDimValue=130
+
 # ======================================================================================
 #                          FREQUENCY LIST AND OTHER Settings
 # ======================================================================================
