@@ -89,6 +89,12 @@ KEYFRAMERATE=5
 # There are dozens of paramaters, see the RPI forum for all settings.
 EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb horizon"
 
+# >>>>>>>>>>[SAVE VIDEO-RAMdisk/Memory]--Set to "memory" to use RAMdisk for temporary video/screenshot/telemetry 
+# storage recording time to ~12-14 minutes, but is the safe way. If you need longer recording times, use "sdcard", to 
+# use the sdcard as the temporary video storage. Keep in mind though, that this might introduce video stutter and/or bad blocks. 
+# VIDEO_FS set to "ext4" (Linux, which is recommended for performance) or "fat" (Windows)
+VIDEO_TMP=memory
+
 
 
 
@@ -96,13 +102,14 @@ EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb h
 #                   <GROUND STATION/PC/PHONE/TABLET INTERFACE CONFIG>
 # ======================================================================================
 
-# >>>>>>>>>>[HOTSPOT SOURCE]--
-# Set "internal" or "external"
+# >>>>>>>>>>[HOTSPOT SOURCE]-- **THE EXTERNAL HOTSPOT IS CURRENTLY BROKEN, DON'T USE**
+# Set "internal" or MAC address of EXTERNAL wifi card
 WIFI_HOTSPOT_NIC=internal
 
 # >>>>>>>>>>[HOTSPOT MODE]-- Default SSID is "Openhd" Password "wifiopenhd"
 # ***USE WITH QGC-PHONE, OPENHD APP, MISSION PLANNER OR HID/RC APP***
-# Set "auto" (default) with Pi3b+ on Ground Pi (As it has 2.4/5ghz internal hotspot).
+# Set "auto" (default) with Pi3b+ as GroundPi (it has 2.4/5ghz internal hotspot) OR Pi3b/2b video is 5.8ghz 
+# and internal hotspot is 2.4ghz. For 2.4ghz hotspot and 2.4ghz video must be manually set at your own risk!
 # Set "Y" to enable Hotspot and you (manually) set the band & ch below. 
 # Set to "N" for no wifi hotspot (Recommended If NOT using Pi3b+ & 2.4ghz for video as it could # interfere.
 WIFI_HOTSPOT=auto
@@ -142,7 +149,7 @@ VIDEO_UDP_PORT2=5601
 # Set "Y" in conjunction with "Range" RC
 # Set "auto" for automatic detection. 
 # Set "N" to disable.
-CTS_PROTECTION=Y
+CTS_PROTECTION=N
 
 # >>>>>>>>>>[DEDICATED WIFI-CARD UPLINK/RC MAC ADDR.]-- If different types of Ground wifi cards are used.
 # Set this if you have 1 High-Power ground card plus 1 or more lower power cards so that
@@ -158,7 +165,7 @@ PrimaryCardMAC=0
 # Set to "sumd" for Graupner SUMD, "ibus" for Flysky IBUS, "srxl" for Multiplex SRXL/XBUS
 # Mode B. Set to "disabled" to disable
 # **See joyconfig.txt for other settings, default settings work for Taranis in USB.
-RC=mavlink
+RC=disabled
 
 # >>>>>>>>>>[USB RC RANGE OR ENCRYPTION]-- 
 # For Atheros Cards use "Range" + CTS=Y
@@ -167,7 +174,7 @@ RC=mavlink
 # to reliably work with Atheros/AR9271/Ath9k cards, this setting should provide better range. 
 # ***"Encryption" Is a more secure means of RC uplink and works with any wifi cards but may
 # Result in higher packet loss at longer ranges.
-EncryptionOrRange=Range
+EncryptionOrRange=Encryption
 
 # >>>>>>>>>>[TELEMETRY WBC/OTHER]--
 # wbc = use wifibroadcast as telemetry up/downlink
@@ -292,17 +299,15 @@ Band10ValueMax=1650
 Band20After=1650
 
 # >>>>>>>>>>[RELAY OPEN.HD}--
-# *May have problems...
+# DO NOT USE. BROKEN.
 # Set this to "Y" to enable Open.HD relay mode. Will forward the received video and teleme stream.
 # to another Open.HD RX.
 RELAY=N
 RELAY_NIC=112233445566
 RELAY_FREQ=5220
 
-# >>>>>>>>>>[SAVE VIDEO-RAMdisk/Memory]--Set to "memory" to use RAMdisk for temporary video/screenshot/telemetry 
-# storage recording time to ~12-14 minutes, but is the safe way. If you need longer recording times, use "sdcard", to 
-# use the sdcard as the temporary video storage. Keep in mind though, that this might introduce video stutter and/or bad blocks. 
-VIDEO_TMP=memory
+# >>>>>>>>>>[CHANGE TMP VIDEO PARTITION TYPE]--
+VIDEO_FS=ext4
 
 # >>>>>>>>>>[AIRODUMP Y/N]--Set to "Y" to scan for wifi networks with airodump-ng before starting RX
 AIRODUMP=N
@@ -381,7 +386,6 @@ PWMCount=202
 # To trigger function PWM value must be above 1850. To return back lower 1700
 ActivateChannel=0
 
-
 # >>>>>>>>>>[LORA RADIO]--Under Development
 # Values "0" or "1"
 Lora=0
@@ -391,7 +395,11 @@ AdjustLCDBacklight=N
 # Time in seconds
 AutoDimTime=30
 # Values from 0 to 255, where 0 - off or 0%, 255 - or or 100%
-AutoDimValue=130
+AutoDimValue=255
+
+
+# >>>>>>>>>> [TTY CONSOLE]-- View Output of GroundPi Consoles and Scripts
+TTY_CONSOLE=1
 
 # ======================================================================================
 #                          FREQUENCY LIST AND OTHER Settings
@@ -409,8 +417,8 @@ FREQSCAN=N
 # 2477, 2482, 2487, 2489, 2492, 2494, 2497, 2499, 2512, 2532, 2572, 2592, 2612, 2632, 2652, 2672, 2692, 2712 (Atheros only)
 #
 # {5Ghz)
-# 5180, 5200, 5220, 5240, 5260, 5280, 5300, 5320
-# 5500, 5520, 5540, 5560, 5580, 5600, 5620, 5640, 5660, 5680, 5700
+# 5180, 5200, 5220, 5240
+# 5260, 5280, 5300, 5320, 5500, 5520, 5540, 5560, 5580, 5600, 5620, 5640, 5660, 5680, 5700 *(DFS RADAR CHANNELS--MAY CAUSE PROBLEMS, RECOMMEND TO AVOID THESE).
 # 5745, 5765, 5785, 5805, 5825
 #
 # ***(2.3Ghz and 2.5-2.7Ghz band only works with Atheros cards. Check your local regulations before transmitting)!
