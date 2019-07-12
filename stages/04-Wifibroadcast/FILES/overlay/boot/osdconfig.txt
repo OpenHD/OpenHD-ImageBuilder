@@ -14,8 +14,13 @@
 #define COPTER true
 //reverse where msl altitude and relative altitudes are displayed
 #define REVERSE_ALTITUDES false
-//set the message source for relative altitude. Default is mavlink global_rel_alt
-#define MAVLINK_MSL_SOURCE_VFR_HUD false
+
+// RELATIVE ALTITUDE MAVLINK SOURCE. Default is "global_rel" 
+// "global_rel=1"     this is the fused altitude from all sensors and most accurate
+// "gps_raw=2"        WGS84 altitude derived from gps module. Ghetto station uses this as REL altitude
+// "vfr_hud=3"        Normally this is an MSL altitude
+// Dev Note. Using numbers because strings are not being evalutated correctly...
+#define REL_ALT_SOURCE 1
 
 
 /* DISPLAY */
