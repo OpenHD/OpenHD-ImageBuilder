@@ -399,6 +399,7 @@ AutoDimValue=255
 
 
 # >>>>>>>>>> [TTY CONSOLE]-- View Output of GroundPi Consoles and Scripts
+# set to "13" for a blank screen
 TTY_CONSOLE=1
 
 # ======================================================================================
