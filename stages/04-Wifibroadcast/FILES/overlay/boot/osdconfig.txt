@@ -10,8 +10,13 @@
 
 /* MISC SETTINGS */
 /* --------------*/
+
 #define IMPERIAL false
 #define COPTER true
+
+// Only on the OSD, the digits to the left of the decimal point are replaced with "00"
+#define HIDE_LATLON true
+
 //reverse where msl altitude and relative altitudes are displayed
 #define REVERSE_ALTITUDES false
 
