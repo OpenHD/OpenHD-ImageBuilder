@@ -1,0 +1,69 @@
+# On chroot
+
+#Ensure the runlevel is multi-target (3) could possibly be lower...
+sudo systemctl set-default multi-user.target
+
+#disable unneeded services
+sudo systemctl disable dhcpcd.service
+sudo systemctl disable cron.service
+sudo systemctl disable syslog.service
+sudo systemctl disable journald.service
+sudo systemctl disable logind.service
+sudo systemctl disable triggerhappy.service
+sudo systemctl disable avahi-daemon.service
+sudo systemctl disable ser2net.service
+sudo systemctl disable dbus.service
+sudo systemctl disable systemd-timesyncd.service
+sudo systemctl disable hciuart.service
+sudo systemctl disable anacron.service
+sudo systemctl disable syslog.service
+sudo systemctl disable triggerhappy.service
+sudo systemctl disable ser2net.service
+sudo systemctl disable systemd-timesyncd.service
+sudo systemctl disable hciuart.service
+sudo systemctl disable exim4.service
+
+#Disable does not work on PLYMOUTH
+sudo systemctl mask plymouth-start.service
+sudo systemctl mask plymouth-read-write.service
+sudo systemctl mask plymouth-quit-wait.service
+sudo systemctl mask plymouth-quit.service
+sudo systemctl disable systemd-journal-flush.service
+#this service updates runlevel changes. Set desired runlevel prior to this being disabled
+sudo systemctl disable systemd-update-utmp.service
+sudo systemctl disable networking.service
+
+#Mask difficult to disable services
+systemctl stop systemd-journald.service
+systemctl disable systemd-journald.service
+systemctl mask systemd-journald.service
+
+systemctl stop systemd-login.service
+systemctl disable systemd-login.service
+systemctl mask systemd-login.service
+
+systemctl stop dbus.service
+systemctl disable dbus.service
+systemctl mask dbus.service
+
+# Copy tty autologin stuff
+cd /etc/systemd/system/getty.target.wants
+sudo cp getty@tty1.service getty@tty2.service
+sudo cp getty@tty1.service getty@tty3.service
+sudo cp getty@tty1.service getty@tty4.service
+sudo cp getty@tty1.service getty@tty5.service
+sudo cp getty@tty1.service getty@tty6.service
+sudo cp getty@tty1.service getty@tty7.service
+sudo cp getty@tty1.service getty@tty8.service
+sudo cp getty@tty1.service getty@tty9.service
+sudo cp getty@tty1.service getty@tty10.service
+sudo cp getty@tty1.service getty@tty11.service
+sudo cp getty@tty1.service getty@tty12.service
+
+#enable /dev/video0
+#sudo modprobe bcm2835-v4l2
+
+
+
+
+
