@@ -77,6 +77,9 @@ sudo mv Open.HD/JoystickIn/ JoystickIn/
 log "Download IMX290"
 sudo mv Open.HD/raspberrypi/ raspberrypi/
 
+log "Download UDPSplitter"
+sudo mv Open.HD/UDPSplitter/ UDPSplitter/
+
 
 sudo rm -rf Open.HD
 
