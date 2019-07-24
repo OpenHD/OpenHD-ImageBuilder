@@ -17,7 +17,7 @@ log "Download v4l2loopback"
 sudo git clone https://github.com/umlaeute/v4l2loopback.git
 
 log "Download Mavlink router"
-sudo git clone -b rock64 https://github.com/estechnical/mavlink-router.git
+sudo git clone -b rock64 https://github.com/user1321/mavlink-router.git
 pushd mavlink-router
 sudo git submodule update --init
 
