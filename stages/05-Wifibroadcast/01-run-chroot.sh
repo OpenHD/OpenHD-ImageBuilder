@@ -129,3 +129,6 @@ cd /home/pi/wifibroadcast-misc/LCD
 sudo make
 chmod 755 /home/pi/wifibroadcast-misc/LCD/MouseListener
 
+ rm /etc/init.d/dnsmasq
+ rm /etc/init.d/dhcpcd
+
