@@ -20,7 +20,7 @@ sudo apt-get update
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install python-pip
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install aircrack-ng
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gnuplot
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install udhcpd
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install dnsmasq
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install socat
 # DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install --assume-no wireshark-common
 # DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install tshark
