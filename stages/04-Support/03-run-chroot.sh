@@ -6,6 +6,7 @@ sudo systemctl set-default multi-user.target
 #disable unneeded services
 sudo systemctl disable dhcpcd.service
 sudo systemctl disable dnsmasq.service
+sudo systemctl disable regenerate_ssh_host_keys.service
 sudo systemctl disable cron.service
 sudo systemctl disable syslog.service
 sudo systemctl disable journald.service
