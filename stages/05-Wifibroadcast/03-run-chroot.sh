@@ -1,8 +1,21 @@
 # On chroot
 
-
 sudo rm /etc/init.d/resize2fs_once
 sudo mkdir /wbc_tmp
+
+#configure SSH permissions copied from overlay dir
+sudo chmod 644 /etc/ssh/moduli
+sudo chmod 644 /etc/ssh/ssh_config
+sudo chmod 644 /etc/ssh/sshd_config
+sudo chmod 600 /etc/ssh/ssh_host_dsa_key
+sudo chmod 644 /etc/ssh/ssh_host_dsa_key.pub
+sudo chmod 600 /etc/ssh/ssh_host_ecdsa_key
+sudo chmod 644 /etc/ssh/ssh_host_ecdsa_key.pub
+sudo chmod 600 /etc/ssh/ssh_host_ed25519_key
+sudo chmod 644 /etc/ssh/ssh_host_ed25519_key.pub
+sudo chmod 600 /etc/ssh/ssh_host_rsa_key
+sudo chmod 644 /etc/ssh/ssh_host_rsa_key.pub
+sudo chmod 644 /etc/ssh/ssh_import_id
 
 # Make fifos
 sudo mkfifo /root/videofifo1
