@@ -1,5 +1,9 @@
 # On chroot
 
+
+sudo rm /etc/init.d/resize2fs_once
+sudo mkdir /wbc_tmp
+
 # Make fifos
 sudo mkfifo /root/videofifo1
 sudo mkfifo /root/videofifo2
