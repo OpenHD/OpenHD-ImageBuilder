@@ -11,6 +11,12 @@ FREQ=2472
 # 1=5.5Mbit, 2=11Mbit, 3=12Mbit, 4=19.5Mbit/18Mbit, 5=24Mbit, 6=36Mbit
 DATARATE=4
 
+# Secondary camera (IP\USB) DATARATE
+# Applied only to 8812AU! Ath9k will ignore secondary camera datarate and use DATARATE=
+# 0=6.5Mbit (BPSK 1\2),		1=13Mbit (QPSK 1\2)
+# 2= 19.5MBit (QPSK 3/4), 	3=26Mbit (16-QAM 1\2)
+DATARATE_SECONDARY_8812AU=2
+
 # >>>>>>>>>>[TXPOWER-AIR/GROUND]-- For Atheros AR9271 or RTL8812/14AU Cards ONLY
 TxPowerAir=58
 TxPowerGround=58
@@ -25,6 +31,12 @@ TXPOWER=2000
 VIDEO_BLOCKS=8
 VIDEO_FECS=4
 VIDEO_BLOCKLENGTH=1024
+
+#Secondary camera (IP\USB)
+VIDEO_BLOCKS_SECONDARY=8
+VIDEO_FECS_SECONDARY=4
+
+
 
 # >>>>>>>>>>[DEBUGGING OR SSH]--
 # Set this to "Y" to enable collection of extra debug logs or to allow SSH. If you experience anyways
