@@ -51,7 +51,7 @@ VIDEO_FECS_SECONDARY=4
 
 # >>>>>>>>>>[DEBUGGING OR SSH]--
 # Set this to "Y" to enable collection of extra debug logs or to allow SSH. If you experience anyways
-# issues.
+# issues. "Y" also turns on the display for the airpi
 DEBUG=N
 
 # >>>>>>>>>>[DISABLE SCREEN MESSAGES]--
@@ -98,7 +98,7 @@ WIDTH=1280
 HEIGHT=720
 
 # >>>>>>>>>>[CAMERA FPS]--"48 default"
-# Choose between 30, 40, 48, 59.9
+# Choose between 30, 40, 48, 59.9, values above 60 are experimental
 FPS=48
 
 # >>>>>>>>>>[KEYFRAME RATE]-- 
