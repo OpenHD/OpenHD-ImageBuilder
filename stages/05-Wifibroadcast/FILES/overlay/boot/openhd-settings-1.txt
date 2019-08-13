@@ -11,6 +11,23 @@ FREQ=2472
 # 1=5.5Mbit, 2=11Mbit, 3=12Mbit, 4=19.5Mbit/18Mbit, 5=24Mbit, 6=36Mbit
 DATARATE=4
 
+# 1 - 5.5       802.11b         1 - 6.5         MCS 0
+# 2 - 11        802.11b         2 - 13          MCS 1
+# 3 - 12        802.11g         3 - 13          MCS 1
+# 4 - 19.5      802.11n         4 - 19.5        MCS 2
+# 5 - 24        802.11g         5 - 26          MCS 3           
+# 6 - 36        802.11g         4 - 39          MCS 4
+
+UseMCS=N
+UseSTBC=N
+UseLDPC=N
+
+# Secondary camera (IP\USB) DATARATE
+# Applied only to 8812AU! Ath9k will ignore secondary camera datarate and use DATARATE=
+# 0=6.5Mbit (BPSK 1\2),		1=13Mbit (QPSK 1\2)
+# 2= 19.5MBit (QPSK 3/4), 	3=26Mbit (16-QAM 1\2)
+DATARATE_SECONDARY_8812AU=2
+
 # >>>>>>>>>>[TXPOWER-AIR/GROUND]-- For Atheros AR9271 or RTL8812/14AU Cards ONLY
 TxPowerAir=58
 TxPowerGround=58
@@ -25,6 +42,12 @@ TXPOWER=2000
 VIDEO_BLOCKS=8
 VIDEO_FECS=4
 VIDEO_BLOCKLENGTH=1024
+
+#Secondary camera (IP\USB)
+VIDEO_BLOCKS_SECONDARY=8
+VIDEO_FECS_SECONDARY=4
+
+
 
 # >>>>>>>>>>[DEBUGGING OR SSH]--
 # Set this to "Y" to enable collection of extra debug logs or to allow SSH. If you experience anyways
@@ -360,18 +383,18 @@ LoadFlirDriver=N
 # >>>>>>>>>>[IP/USB CAMERA PIPELINE OPTIONS]--*Uncomment corresponding per ip/usb camera type
 #USBCamera="gst-launch-1.0 uvch264src device=/dev/video0 initial-bitrate=\$1 average-bitrate=\$1 iframe-period=1000 name=src auto-start=true src.vidsrc ! queue ! video/x-h264,width=1280,height=720,framerate=30/1 ! h264parse ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
 
-#IPCameraHiRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=0.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
-#IPCameraLowRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=1.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
+IPCameraHiRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=0.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
+IPCameraLowRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=1.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
 
 # >>>>>>>>>>[FLIR CAMERA PIPELINE OPTIONS]--
 #FLIR HD (visible image) -  640 x 480 @ 9fps:
-#USBCamera="gst-launch-1.0 v4l2src device=/dev/video2 ! video/x-raw,width=640,height=480,framerate=10/1 ! omxh264enc control-rate=1 target-bitrate=600000 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
+#USBCamera="gst-launch-1.0 v4l2src device=/dev/video2 ! video/x-raw,width=640,height=480,framerate=10/1 ! omxh264enc control-rate=1 target-bitrate=600000 interval-intraframes=1 periodicty-idr=1 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
 
 #FLIR Thermal  - 160 x 128 @ 9fps:
-#USBCamera="gst-launch-1.0 v4l2src device=/dev/video3 ! video/x-raw,width=160,height=128,framerate=10/1 ! omxh264enc control-rate=1 target-bitrate=600000 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
+#USBCamera="gst-launch-1.0 v4l2src device=/dev/video3 ! video/x-raw,width=160,height=128,framerate=10/1 ! omxh264enc control-rate=1 target-bitrate=600000 interval-intraframes=1 periodicty-idr=1 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
 
 #gstreamer videotestsrc:
-#USBCamera="gst-launch-1.0 videotestsrc ! video/x-raw,width=160,height=120,framerate=30/1 ! omxh264enc control-rate=1 target-bitrate=600000 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
+USBCamera="gst-launch-1.0 videotestsrc ! video/x-raw,width=160,height=120,framerate=30/1 ! omxh264enc control-rate=1 target-bitrate=600000 interval-intraframes=1 periodicty-idr=1 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
 
 
 # >>>>>>>>>>[Adjust channel value using other channel.]--

@@ -10,41 +10,14 @@ pushd GIT
 
 MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
-log "Download Raspi2png"
-git clone https://github.com/AndrewFromMelbourne/raspi2png.git
-
 log "Download all Open.HD Sources"
-sudo git clone -b development https://github.com/HD-Fpv/Open.HD.git
+sudo git clone -b singlecamera https://github.com/HD-Fpv/Open.HD.git
 pushd Open.HD
 sudo git submodule update --init
 popd
 
-log "Download v4l2loopback"
-sudo git clone https://github.com/umlaeute/v4l2loopback.git
-
-#log "Download OMX"
-#sudo git clone https://gitlab.freedesktop.org/gstreamer/gst-omx.git
-
 log "Download OpenVG"
 sudo mv Open.HD/openvg/ openvg/
-# sudo git clone https://github.com/RespawnDespair/openvg-font.git openvg
-
-log "Download Mavlink router"
-sudo git clone -b rock64 https://github.com/estechnical/mavlink-router.git
-pushd mavlink-router
-sudo git submodule update --init
-#fix missing pymavlink
-pushd modules/mavlink
-sudo git clone --recurse-submodules https://github.com/user1321/pymavlink
-
-popd
-popd
-
-log "Download cmavnode"
-sudo git clone https://github.com/MonashUAS/cmavnode.git
-pushd cmavnode
-sudo git submodule update --init
-popd
 
 log "Download EZWFB - Base"
 # sudo git clone https://github.com/user1321/wifibroadcast-base.git
@@ -104,9 +77,25 @@ sudo mv Open.HD/JoystickIn/ JoystickIn/
 log "Download IMX290"
 sudo mv Open.HD/raspberrypi/ raspberrypi/
 
+log "Download UDPSplitter"
+sudo mv Open.HD/UDPSplitter/ UDPSplitter/
+
 
 sudo rm -rf Open.HD
 
 #return
 popd
+popd
+
+
+# Do this to the WORK folder of this stage
+pushd ${STAGE_WORK_DIR}
+
+log "Copy all WFB Sources to RPi image"
+
+MNT_DIR="${STAGE_WORK_DIR}/mnt"
+
+cp -r GIT/. "$MNT_DIR/home/pi/"
+
+#return
 popd
