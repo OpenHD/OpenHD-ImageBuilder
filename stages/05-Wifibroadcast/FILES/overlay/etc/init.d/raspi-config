@@ -27,7 +27,8 @@ case "$1" in
       #  echo 50 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
       #fi
 
-      /home/pi/wifibroadcast-splash/splash &
+      ##/home/pi/wifibroadcast-splash/splash &
+        /usr/bin/omxplayer --loop /home/pi/RemoteSettings/Ground/helper/DisplayProgram/video/BeforeSSync.mp4 > /dev/null 2>/dev/null &
 
       log_end_msg 0
     fi
