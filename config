@@ -39,3 +39,7 @@ CMAVNODE_BRANCH=master
 OPENHD_REPO=https://github.com/Hd-Fpv/Open.HD.git
 OPENHD_BRANCH=master
 
+LIFEPOWEREDPI_REPO=https://github.com/xorbit/LiFePO4wered-Pi.git
+LIFEPOWEREDPI_BRANCH=master
+
+
