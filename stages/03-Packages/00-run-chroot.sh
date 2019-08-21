@@ -70,6 +70,10 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install vim
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install fuse
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libusb-1.0-0-dev
 
+# install omxplayer. Used by SSync to display video
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq omxplayer
+
+
 # Remove packages that conflict with the workings of EZ-Wifibroadcast
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge wireless-regdb
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge wpasupplicant
