@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import time
+
 import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BCM)
@@ -14,14 +16,17 @@ input_state1 = GPIO.input(21)
 
 if (input_state0 == False) and (input_state1 == False):
 	print ('openhd-settings-4.txt')
+	time.sleep(2)
 	quit()
 
 if (input_state0 == False) and (input_state1 == True):
 	print ('openhd-settings-3.txt')
+	time.sleep(2)
 	quit()
 
 if (input_state0 == True) and (input_state1 == False):
 	print ('openhd-settings-2.txt')
+	time.sleep(2)
 	quit()
 
 if (input_state0 == True) and (input_state1 == True):
