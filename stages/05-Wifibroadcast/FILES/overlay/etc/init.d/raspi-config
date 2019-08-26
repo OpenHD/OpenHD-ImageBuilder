@@ -28,7 +28,7 @@ case "$1" in
       #fi
 
       ##/home/pi/wifibroadcast-splash/splash &
-        /usr/bin/omxplayer /home/pi/RemoteSettings/Ground/helper/DisplayProgram/video/BeforeSSync.mp4 > /dev/null 2>/dev/null &
+        #/usr/bin/omxplayer /home/pi/RemoteSettings/Ground/helper/DisplayProgram/video/BeforeSSync.mp4 > /dev/null 2>/dev/null &
 
       log_end_msg 0
     fi
