@@ -141,11 +141,13 @@ WIFI_HOTSPOT=auto
 
 # >>>>>>>>>>[HOTSPOT BAND/CHANNEL_MANUAL CONFIG]
 # NOTE with WIFI_HOTSPOT=auto your setting here will be over written.
-# Set to "a" for 5.8ghz, "g" for 2.4ghz
+# Set to "g" for 2.4ghz , "a" for 5.8ghz, 
 # Channels 1-11 for 2.4Ghz, 
 # Channels 36,40,44,48,52,56,60,64 for 5Ghz
 HOTSPOT_BAND=a
 HOTSPOT_CHANNEL=36
+# Set to number of seconds you wany hotspot to shutdown. Default is "0", run forever
+HOTSPOT_TIMEOUT=0
 
 # >>>>>>>>>>[ETHERNET HOTSPOT]--*Only used for PC/Mission Planner Ethernet connection
 # Set this to "Y" to enable Ethernet hotspot. This will forward the received video and 
