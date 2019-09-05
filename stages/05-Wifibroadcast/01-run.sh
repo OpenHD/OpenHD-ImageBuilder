@@ -11,7 +11,7 @@ pushd GIT
 MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
 log "Download all Open.HD Sources"
-sudo git clone -b development https://github.com/HD-Fpv/Open.HD.git
+sudo git clone -b development https://github.com/user1321/Open.HD.git
 pushd Open.HD
 sudo git submodule update --init
 popd
@@ -56,7 +56,7 @@ log "Download EZWFB - Splash"
 sudo mv Open.HD/wifibroadcast-splash/ wifibroadcast-splash/
 
 log "Download FLIR one"
-sudo git clone https://github.com/HD-Fpv/Open.HD_FlirOneDrv.git
+sudo git clone https://github.com/user1321/Open.HD_FlirOneDrv.git
 
 log "Download RemoteSettings"
 # sudo git clone -b user1321-5MhzAth9k https://github.com/user1321/RemoteSettings
