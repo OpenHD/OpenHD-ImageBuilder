@@ -127,6 +127,7 @@ log "VER ${KERNEL_VERSION}"
 log "Begin ${BASE_DIR}"
 
 # Iterate trough the steps
+find ./stages -name '*.sh' -type f | xargs chmod 775
 for STAGE_DIR in "${BASE_DIR}/stages/"*; do
 	if [ -d "${STAGE_DIR}" ]; then
 		run_stage

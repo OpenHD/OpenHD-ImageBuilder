@@ -1,0 +1,20 @@
+--- drivers/usb/serial/ch341.c	2019-06-23 18:09:52.000000000 +0300
++++ drivers/usb/serial/ch341.c	2019-01-29 12:30:10.000000000 +0200
+@@ -154,6 +154,7 @@
+ 	int r;
+ 	unsigned long factor;
+ 	short divisor;
++	priv->baud_rate = 100000;
+ 
+ 	if (!priv->baud_rate)
+ 		return -EINVAL;
+@@ -367,7 +368,8 @@
+ 	if (old_termios && !tty_termios_hw_change(&tty->termios, old_termios))
+ 		return;
+ 
+-	baud_rate = tty_get_baud_rate(tty);
++	//baud_rate = tty_get_baud_rate(tty);
++	baud_rate = 100000;
+ 
+ 	lcr = CH341_LCR_ENABLE_RX | CH341_LCR_ENABLE_TX;
+ 

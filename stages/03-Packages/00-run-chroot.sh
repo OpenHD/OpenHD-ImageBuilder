@@ -20,7 +20,7 @@ sudo apt-get update
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install python-pip
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install aircrack-ng
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gnuplot
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install udhcpd
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install dnsmasq
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install socat
 # DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install --assume-no wireshark-common
 # DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install tshark
@@ -52,6 +52,7 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install git libpcap-dev wiringpi
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libjpeg8-dev indent libfreetype6-dev ttf-dejavu-core
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install python-m2crypto
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install dos2unix
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install dosfstools
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install hostapd
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install pump
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libpng12-dev
@@ -68,6 +69,10 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install  i2c-tools
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install vim
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install fuse
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libusb-1.0-0-dev
+
+# install omxplayer. Used by SSync to display video
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install omxplayer
+
 
 # Remove packages that conflict with the workings of EZ-Wifibroadcast
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge wireless-regdb
