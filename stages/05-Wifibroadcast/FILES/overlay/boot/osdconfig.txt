@@ -5,18 +5,19 @@
 /* FRSKY -> Older Frsky protocol (Frsky D-series receivers)
 /* SMARTPORT -> Newer Frsky protocol (Frsky X-series receivers)
 /* VOT -> Eagletree Vector Open Telemetry
-/* ------------------------------------------------------------*/
+
 #define MAVLINK
 
 
+/* ------------------------------------------------------------*/
 /* MISC SETTINGS */
-/* --------------*/
+/* ------------------------------------------------------------*/
 
 #define IMPERIAL false
 #define COPTER true
 
 // Only on the OSD, the digits to the left of the decimal point are replaced with "00"
-#define HIDE_LATLON true
+#define HIDE_LATLON false
 
 //reverse where msl altitude and relative altitudes are displayed
 //false= relative alt on altitude ladder AND mean sea level altitude on small number display
@@ -33,31 +34,43 @@
 //SET CHINESE AS A LANGUAGE OPTION
 #define CHINESE false
 
+
+/* ------------------------------------------------------------*/
 /* DISPLAY */
-/* --------*/
+/* ------------------------------------------------------------*/
+
 #define COLOR 255,255,255,0.7 // Fill color. First three numbers RGB color, last number opacity. 1.0 = fully visible, 0.0 = fully opaque
+
 #define OUTLINECOLOR 0,0,0,0.5 // Outline color. First three numbers RGB color, last number opacity. 1.0 = fully visible, 0.0 = fully opaque
+
 #define OUTLINEWIDTH 1.2 // Outline width, default is 1, useable range from 1-3. Set to 0 to disable outline
+
 #define FONT "Archivo-Bold.ttf" // Font to use, case-sensitive!
+
 #define GLOBAL_SCALE 1.2 // Global scale factor, 1.2 is default, useable range is from about 0.5 to 2
+
 #define COLOR_WARNING 255,20,20,0.9
 #define COLOR_CAUTION 245,222,20,0.8
 #define COLOR_GOOD 43,240,36,0.7
 #define COLOR_DECLUTTER 255,255,255,0.0 // fully opaque
 
+
+/* ------------------------------------------------------------*/
 /* OSD elements positions, sizes and options */
-/* ------------------------------------------*/
 /* POS_X - from left to right (0-100)
 /* POS_Y - from bottom to top (0-100)
 /* SCALE - scale factor
-/* ------------------------------------------*/
+/* CAUTION and WARN- where you want element to change color
+/* DECLUTTER - if true then that element dissappears when aircraft arms
+/* ------------------------------------------------------------*/
+
 #define DOWNLINK_RSSI
 #define DOWNLINK_RSSI_POS_X 11
 #define DOWNLINK_RSSI_POS_Y 89
 #define DOWNLINK_RSSI_SCALE 1
 #define DOWNLINK_RSSI_FEC_BAR true // set to true to draw FEC bar display
 
-#define DOWNLINK_RSSI_DETAILED
+//#define DOWNLINK_RSSI_DETAILED
 #define DOWNLINK_RSSI_DETAILED_POS_X 25
 #define DOWNLINK_RSSI_DETAILED_POS_Y 89
 #define DOWNLINK_RSSI_DETAILED_SCALE 0.75
@@ -142,7 +155,7 @@
 #define SPEEDLADDER_SCALE 1.1
 #define SPEEDLADDER_USEAIRSPEED false //set to true to use GPS speed instead of airspeed 
 #define SPEEDLADDER_TREND_TIME 10 //(sensitivity)number of seconds speed trend predicts future speed
-#define SPEEDLADDER_LOW_LIMIT 0 // where the low speed que begins
+#define SPEEDLADDER_LOW_LIMIT 15 // where the low speed que begins
 
 #define YAWDISPLAY
 #define YAWDISPLAY_POS_X 50
@@ -300,4 +313,3 @@
 #define ALARM_24 true            //REVERSE_MOTOR          µç»ú·´×ª
 #define ALARM_25 true            //LOGGING                ÈÕÖ¾¼ÇÂ¼
 #define ALARM_26 true            //BATTERY                µç³Ø´«¸ÐÆ÷
-
