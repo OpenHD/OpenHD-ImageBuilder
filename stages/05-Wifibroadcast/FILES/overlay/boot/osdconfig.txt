@@ -5,6 +5,7 @@
 /* FRSKY -> Older Frsky protocol (Frsky D-series receivers)
 /* SMARTPORT -> Newer Frsky protocol (Frsky X-series receivers)
 /* VOT -> Eagletree Vector Open Telemetry
+/* ------------------------------------------------------------*/
 
 #define MAVLINK
 
