@@ -211,10 +211,10 @@
 #define COURSE_OVER_GROUND_POS_Y 65
 #define COURSE_OVER_GROUND_SCALE 0.8
 
-#define GPSSPEED
-#define GPSSPEED_POS_X 8
-#define GPSSPEED_POS_Y 58
-#define GPSSPEED_SCALE 0.8
+//#define GPSSPEED
+//#define GPSSPEED_POS_X 8
+//#define GPSSPEED_POS_Y 58
+//#define GPSSPEED_SCALE 0.8
 
 #define WARNING_POS_X 50
 #define WARNING_POS_Y 25
@@ -264,7 +264,7 @@
 #define THROTTLE_V2_SCALE 0.65
 #define THROTTLE_V2_COMPLEX true
 
-//#define HDOP                    //£¨ÐÂÔöÏîÄ¿£©GPSË®Æ½¾«¶È
+//#define HDOP                    //not broken out as own element yet
 //#define HDOP_POS_X 98
 //#define HDOP_POS_Y 95
 //#define HDOP_SCALE 0.6
@@ -285,8 +285,8 @@
 #define ANGLE2_SCALE 1
 
 #define ALARM                    //£¨ÐÂÔöÏîÄ¿£©¾¯¸æ,ÔÚ·É¿ØÄÚ´¦ÓÚÆôÓÃ×´Ì¬²¢ÇÒ¹ÊÕÏµÄ´«¸ÐÆ÷£¬»áÓÐºì×ÖÌáÊ¾¡£
-#define ALARM_POS_X 83
-#define ALARM_POS_Y 33
+#define ALARM_POS_X 50
+#define ALARM_POS_Y 1
 #define ALARM_SCALE 0.5          //¡ý½«ÏàÓ¦µÄ´«¸ÐÆ÷ÉèÖÃÎªfalse£¬¿ÉÒÔÇ¿ÖÆ¹Ø±ÕÆä¸æ¾¯
 #define ALARM_1 true             //3D_GYRO                ÍÓÂÝÒÇ
 #define ALARM_2 true             //3D_ACCEL               ¼ÓËÙ¶È¼Æ
