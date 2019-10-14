@@ -130,7 +130,7 @@
 #define ALTLADDER_SCALE 1.1
 #define ALTLADDER_WARN 5 // height above launch to warn (only for relative alt)
 #define ALTLADDER_CAUTION 10 // height above launch to caution (only for relative alt)
-#define ALTLADDER_VSI_TIME 10 //(sensitivity)number of seconds vsi predicts future alt
+#define ALTLADDER_VSI_TIME 20 //(sensitivity)number of seconds vsi predicts future alt
 
 #define MSLALT
 #define MSLALT_POS_X 93
@@ -141,23 +141,23 @@
 #define SPEEDLADDER_POS_X 16
 #define SPEEDLADDER_SCALE 1.1
 #define SPEEDLADDER_USEAIRSPEED false //set to true to use GPS speed instead of airspeed 
-#define SPEEDLADDER_TREND_TIME 10 //(sensitivity)number of seconds speed trend predicts future speed
+#define SPEEDLADDER_TREND_TIME 20 //(sensitivity)number of seconds speed trend predicts future speed
 #define SPEEDLADDER_LOW_LIMIT 0 // where the low speed que begins
 
 #define YAWDISPLAY
 #define YAWDISPLAY_POS_X 50
 #define YAWDISPLAY_POS_Y 81
 #define YAWDISPLAY_SCALE 1
-#define YAWDISPLAY_TREND_TIME 10 //(sensitivity)number of seconds speed trend predicts future yaw
+#define YAWDISPLAY_TREND_TIME 20 //(sensitivity)number of seconds speed trend predicts future yaw
 
 #define AHI
 #define AHI_SCALE 1
-#define AHI_LADDER true // set to true to draw ladders above and below the center horizon line
-#define AHI_INVERT_ROLL -1 // default -1, set to 1 if roll moves in the wrong direction
+#define AHI_LADDER false // set to true to draw ladders above and below the center horizon line
+#define AHI_INVERT_ROLL 1 // default -1, set to 1 if roll moves in the wrong direction
 #define AHI_INVERT_PITCH 1 // default -1, set to 1 if pitch moves in the wrong direction
 #define AHI_SWAP_ROLL_AND_PITCH true // set to true to swap roll and pitch (Frsky and Smartport only)
 #define AHI_ROLLANGLE false //display bank angle
-#define AHI_ROLLANGLE_INVERT -1 /reverse bank angle display with 1 or -1
+#define AHI_ROLLANGLE_INVERT -1 //reverse bank angle display with 1 or -1
 
 #define POSITION
 #define POSITION_POS_X 75
@@ -242,7 +242,7 @@
 #define THROTTLE_GAUGE true //set to false for number only
 #define THROTTLE_TARGET 20 //set to position tick and trigger green needle
 
-#define THROTTLE_V2               //this is ziprays throttle £¨ÐÂÔöÏîÄ¿£©ÓÍÃÅ
+//#define THROTTLE_V2               //this is ziprays throttle £¨ÐÂÔöÏîÄ¿£©ÓÍÃÅ
 #define THROTTLE_V2_POS_X 10.5
 #define THROTTLE_V2_POS_Y 28
 #define THROTTLE_V2_SCALE 0.65
@@ -296,5 +296,5 @@
 #define ALARM_22 true            //AHRS                   º½×Ë²Î¿¼ÏµÍ³AHRS
 #define ALARM_23 true            //TERRAIN                µØÐÎ
 #define ALARM_24 true            //REVERSE_MOTOR          µç»ú·´×ª
-#define ALARM_25 true            //LOGGING                ÈÕÖ¾¼ÇÂ¼
+//#define ALARM_25 true            //LOGGING                ÈÕÖ¾¼ÇÂ¼
 #define ALARM_26 true            //BATTERY                µç³Ø´«¸ÐÆ÷
