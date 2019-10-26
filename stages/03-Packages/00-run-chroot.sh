@@ -62,6 +62,9 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libsdl2-dev
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libsdl1.2-dev
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libav-tools
 
+# text to speech for QOpenHD
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libspeechd-dev flite1-dev flite speech-dispatcher-flite --no-install-recommends
+
 #Arducam Multi Camera Adapter Module V2.1
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install  i2c-tools
 
