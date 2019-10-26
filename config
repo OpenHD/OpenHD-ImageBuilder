@@ -43,3 +43,6 @@ LIFEPOWEREDPI_REPO=https://github.com/xorbit/LiFePO4wered-Pi.git
 LIFEPOWEREDPI_BRANCH=master
 
 
+QT_MAJOR_VERSION=5.13
+QT_MINOR_VERSION=1
+

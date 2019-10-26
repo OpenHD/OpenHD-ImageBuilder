@@ -74,6 +74,17 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libusb-1.0-0-dev
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install omxplayer
 
 
+# installs all dependencies for these packages so Qt itself can be built from source
+DEBIAN_FRONTEND=noninteractive sudo apt-get install build-essential \
+                                                    libfontconfig1-dev libdbus-1-dev \
+                                                    libfreetype6-dev libicu-dev libinput-dev \
+                                                    libxkbcommon-dev libsqlite3-dev libssl-dev libpng-dev \
+                                                    libjpeg-dev libglib2.0-dev libraspberrypi-dev \
+                                                    libasound2-dev pulseaudio libpulse-dev
+
+DEBIAN_FRONTEND=noninteractive sudo apt-get install libudev-dev libinput-dev libts-dev mtdev-tools
+
+
 # Remove packages that conflict with the workings of EZ-Wifibroadcast
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge wireless-regdb
 # DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge wpasupplicant
