@@ -98,10 +98,12 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge curl
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge iptables
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge triggerhappy
 
-# Clean Up
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq autoremove
 
 # Python essentials for mavlink router autoconf
 sudo pip install future
 #Python3 GPIO
 sudo apt-get -y install python3-rpi.gpio
+
+# Clean Up
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq clean
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq autoremove
