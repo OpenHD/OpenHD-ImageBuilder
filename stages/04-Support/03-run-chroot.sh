@@ -10,11 +10,9 @@ sudo systemctl disable regenerate_ssh_host_keys.service
 sudo systemctl disable cron.service
 sudo systemctl disable syslog.service
 sudo systemctl disable journald.service
-sudo systemctl disable logind.service
 sudo systemctl disable triggerhappy.service
 sudo systemctl disable avahi-daemon.service
 sudo systemctl disable ser2net.service
-sudo systemctl disable dbus.service
 sudo systemctl disable systemd-timesyncd.service
 sudo systemctl disable hciuart.service
 sudo systemctl disable anacron.service
@@ -40,13 +38,7 @@ systemctl stop systemd-journald.service
 systemctl disable systemd-journald.service
 systemctl mask systemd-journald.service
 
-systemctl stop systemd-login.service
-systemctl disable systemd-login.service
-systemctl mask systemd-login.service
 
-systemctl stop dbus.service
-systemctl disable dbus.service
-systemctl mask dbus.service
 
 #enable /dev/video0
 #sudo modprobe bcm2835-v4l2
