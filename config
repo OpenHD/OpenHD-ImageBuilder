@@ -39,3 +39,7 @@ CMAVNODE_BRANCH=master
 OPENHD_REPO=https://github.com/Hd-Fpv/Open.HD.git
 OPENHD_BRANCH=master
 
+
+QT_MAJOR_VERSION=5.13
+QT_MINOR_VERSION=1
+
