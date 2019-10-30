@@ -148,6 +148,8 @@ HOTSPOT_BAND=a
 HOTSPOT_CHANNEL=36
 # Set to number of seconds you wany hotspot to shutdown. Default is "0", run forever
 HOTSPOT_TIMEOUT=0
+# corresponds to 1dBm, when passed to iw dev wlan0 set txpower fixed ${HOTSPOT_TXPOWER}
+HOTSPOT_TXPOWER=100
 
 # >>>>>>>>>>[ETHERNET HOTSPOT]--*Only used for PC/Mission Planner Ethernet connection
 # Set this to "Y" to enable Ethernet hotspot. This will forward the received video and 
