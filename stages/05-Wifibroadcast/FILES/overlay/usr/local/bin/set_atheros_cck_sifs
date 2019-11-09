@@ -1,0 +1,23 @@
+#!/bin/bash
+
+usage(){
+    echo
+    echo "set_atheros_cck_sifs - Script to set Atheros module cck_sifs parameter"
+    echo
+    echo "Usage: $0 <set_atheros_cck_sifs> <cck_sifs>"
+    echo
+    echo "Example: set_atheros_cck_sifs 10"
+    echo
+    exit 1
+}
+
+[[ $# -eq 0 ]] && usage
+
+cp /etc/modprobe.d/ath9k_hw.conf /etc/modprobe.d/ath9k_hw.conf.old
+
+sed -i.bak -r -e's/cck_sifs=[^ ]+/cck_sifs='$1'/g' /etc/modprobe.d/ath9k_hw.conf
+
+sync
+echo
+echo "atheros cck_sifs set. You may power-off now or type \"reboot\" to restart"
+echo
