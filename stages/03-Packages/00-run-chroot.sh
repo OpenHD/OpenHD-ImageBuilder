@@ -76,7 +76,7 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install omxplayer
 
 # Remove packages that conflict with the workings of EZ-Wifibroadcast
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge wireless-regdb
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge wpasupplicant
+# DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge wpasupplicant
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge crda
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge cron
 
