@@ -36,15 +36,6 @@ DATARATE_SECONDARY_8812AU=2
 TxPowerAir=58
 TxPowerGround=58
 
-# >>>>>>>>>>[Atheros card parameters]-- These are used when loading the module itself
-aifs=2
-cwmin=0
-cwmax=3
-cck_sifs=10
-ofdm_sifs=16
-slottime=9
-thresh62=26
-
 # >>>>>>>>>>[TXPOWER-RALINK]-- (Not confirmed Working]
 TXPOWER=2000
 
