@@ -95,6 +95,12 @@ GIT_KERNEL_SHA1=$(cat $WORK_DIR/infofile | grep -Po '\b(Kernel: https:\/\/github
 KERNEL_VERSION_V7=$(cat $WORK_DIR/infofile | grep -Po '\b(Uname string: Linux version )\K(?<price>[^\ ]+)')
 KERNEL_VERSION=${KERNEL_VERSION_V7%"-v7+"}"+"
 
+# used in the stage 5 scripts to place a version file inside the image, and below after the
+# stages have run, in the name of the image itself
+BUILDER_VERSION=$(git describe --always --tags)
+export BUILDER_VERSION
+
+
 export BASE_DIR
 
 export CLEAN
@@ -134,9 +140,11 @@ for STAGE_DIR in "${BASE_DIR}/stages/"*; do
 	fi
 done
 
+# rename the image according to the build date, the builder/openhd repo versions
+OPENHD_VERSION=$(cat ${WORK_DIR}/openhd_version.txt)
 if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
 	mkdir -p "${DEPLOY_DIR}" || true
-	cp "${PREV_WORK_DIR}/IMAGE.img" "${DEPLOY_DIR}/${IMG_NAME}-${IMG_DATE}.img"
+	cp "${PREV_WORK_DIR}/IMAGE.img" "${DEPLOY_DIR}/${IMG_NAME}-${IMG_DATE}-${OPENHD_VERSION}.img"
 fi
 
 #  Clean up SKIP_STEP files since we finished the build
