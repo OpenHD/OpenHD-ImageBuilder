@@ -61,6 +61,7 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libfontconfig1-dev
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libsdl2-dev
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libsdl1.2-dev
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libav-tools
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install firmware-misc-nonfree
 
 #Arducam Multi Camera Adapter Module V2.1
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install  i2c-tools
