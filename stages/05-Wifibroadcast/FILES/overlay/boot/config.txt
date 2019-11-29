@@ -121,7 +121,8 @@ usb_mdio=0x7000
 # uncomment for I2C
 #dtparam=i2c1=on
 dtparam=i2c_arm=on
-dtparam=i2c_vc=on
+#uncomment below if using veye innomaker imx219 cam or HAT
+#dtparam=i2c_vc=on
 #
 # uncomment for SPI
 #dtparam=spi=on

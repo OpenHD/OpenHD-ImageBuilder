@@ -33,8 +33,8 @@ UseLDPC=N
 DATARATE_SECONDARY_8812AU=2
 
 # >>>>>>>>>>[TXPOWER-AIR/GROUND]-- For Atheros AR9271 or RTL8812/14AU Cards ONLY
-TxPowerAir=54
-TxPowerGround=54
+TxPowerAir=58
+TxPowerGround=58
 
 # >>>>>>>>>>[TXPOWER-RALINK]-- (Not confirmed Working]
 TXPOWER=2000
@@ -83,7 +83,7 @@ Bandwidth=20
 
 # >>>>>>>>>>[VIDEO BITRATE]-- "auto" recommended
 # Air Pi reads available bandwidth to determine bitrate.
-# *Set to a fixed value to disable automatic measuring
+# *Set to a fixed value to disable automatic measuring (Example: For 4.5mbit, Set: "4500000"
 VIDEO_BITRATE=auto
 
 # >>>>>>>>>>[BITRATE PERCENTAGE]-- "65 default"
@@ -91,7 +91,7 @@ VIDEO_BITRATE=auto
 # this to a lower value like 60% to avoid a delayed video stream.
 # On free channels you may set this to a higher value like 75% to get a higher
 # bitrate and thus image quality.
-BITRATE_PERCENT=65
+BITRATE_PERCENT=60
 
 # >>>>>>>>>>[CAMERA RESOLUTION]--
 # V1 cam: 1280x720: 30fps, 48fps. 1920x1080: 30fps
@@ -101,18 +101,20 @@ HEIGHT=720
 
 # >>>>>>>>>>[CAMERA FPS]--"48 default"
 # Choose between 30, 40, 48, 59.9, values above 60 are experimental
-FPS=48
+FPS=30
 
 # >>>>>>>>>>[KEYFRAME RATE]-- 
 # ***This is how often a "fresh-new" video frame is transmitted***
 # Lower values mean faster glitch-recovery, but also lower video quality.
 # With fps=48 and keyframerate=5, glitches will stay visible for around 100ms in worst case.
 # You can set this higher or lower according to your needs. Minimum value is 2.
-KEYFRAMERATE=5
+KEYFRAMERATE=10
 #
 # >>>>>>>>>>[RASPIVID CAMERA SETTINGS]--
 # There are dozens of paramaters, see the RPI forum for all settings.
 EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb horizon"
+# UNCOMMENT, AND USE THESE CAMERA SETTINGS FOR THE B101 OR SIMILAR HDMI-CSI ADAPTER
+#EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both"
 
 # >>>>>>>>>>[SAVE VIDEO-RAMdisk/Memory]--Set to "memory" to use RAMdisk for temporary video/screenshot/telemetry 
 # storage recording time to ~12-14 minutes, but is the safe way. If you need longer recording times, use "sdcard", to 
@@ -148,6 +150,8 @@ HOTSPOT_BAND=a
 HOTSPOT_CHANNEL=36
 # Set to number of seconds you wany hotspot to shutdown. Default is "0", run forever
 HOTSPOT_TIMEOUT=0
+# corresponds to 1dBm, when passed to iw dev wlan0 set txpower fixed ${HOTSPOT_TXPOWER}
+HOTSPOT_TXPOWER=100
 
 # >>>>>>>>>>[ETHERNET HOTSPOT]--*Only used for PC/Mission Planner Ethernet connection
 # Set this to "Y" to enable Ethernet hotspot. This will forward the received video and 
@@ -179,13 +183,13 @@ VIDEO_UDP_PORT2=5601
 CTS_PROTECTION=N
 
 # >>>>>>>>>>[USB RC RANGE OR ENCRYPTION]-- 
-# For Atheros Cards use "Range" + CTS=Y
-# For RTL8812AU or any other cards use "Encryption" + CTS=N
-# ***"Range" Uses the original EZ-wifibroadcast "joystick" code.  It is only confirmed
-# to reliably work with Atheros/AR9271/Ath9k cards, this setting should provide better range. 
+# For Atheros AND RTL8812AU Cards use "Range".
+# For any other cards use "Encryption" + CTS=N (NOT TESTED VERY MUCH)
+# ***"Range" Uses the original EZ-wifibroadcast "joystick" code. This setting should provide better range. 
+
 # ***"Encryption" Is a more secure means of RC uplink and works with any wifi cards but may
 # Result in higher packet loss at longer ranges.
-EncryptionOrRange=Encryption
+EncryptionOrRange=Range
 
 # >>>>>>>>>>[RC JOYSTICK MODE OVER OPEN.HD SETTINGS]
 # Set this to "mavlink" to enable R/C over Open.HD using mavlink protocol or "msp" for MSP
@@ -252,8 +256,8 @@ MAVLINK_FORWARDER=mavlink-routerd
 # This Camera Switcher feature must be used with the Arducam 4 camera Raspberry Pi multiplexer.  
 # If no camera switcher is detected, feature is automatically disabled.  if used, simply assign
 # desired RC Channel and pwm values for each camera.  Default settings are for 2 Cams A&B.
-IsCamera1Enabled=1
-IsCamera2Enabled=1
+IsCamera1Enabled=0
+IsCamera2Enabled=0
 IsCamera3Enabled=0
 IsCamera4Enabled=0
 #
@@ -383,8 +387,8 @@ LoadFlirDriver=N
 # >>>>>>>>>>[IP/USB CAMERA PIPELINE OPTIONS]--*Uncomment corresponding per ip/usb camera type
 #USBCamera="gst-launch-1.0 uvch264src device=/dev/video0 initial-bitrate=\$1 average-bitrate=\$1 iframe-period=1000 name=src auto-start=true src.vidsrc ! queue ! video/x-h264,width=1280,height=720,framerate=30/1 ! h264parse ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
 
-IPCameraHiRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=0.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
-IPCameraLowRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=1.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
+#IPCameraHiRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=0.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
+#IPCameraLowRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=1.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
 
 # >>>>>>>>>>[FLIR CAMERA PIPELINE OPTIONS]--
 #FLIR HD (visible image) -  640 x 480 @ 9fps:
@@ -394,7 +398,7 @@ IPCameraLowRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=a
 #USBCamera="gst-launch-1.0 v4l2src device=/dev/video3 ! video/x-raw,width=160,height=128,framerate=10/1 ! omxh264enc control-rate=1 target-bitrate=600000 interval-intraframes=1 periodicty-idr=1 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
 
 #gstreamer videotestsrc:
-USBCamera="gst-launch-1.0 videotestsrc ! video/x-raw,width=160,height=120,framerate=30/1 ! omxh264enc control-rate=1 target-bitrate=600000 interval-intraframes=1 periodicty-idr=1 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
+#USBCamera="gst-launch-1.0 videotestsrc ! video/x-raw,width=160,height=120,framerate=30/1 ! omxh264enc control-rate=1 target-bitrate=600000 interval-intraframes=1 periodicty-idr=1 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
 
 
 # >>>>>>>>>>[Adjust channel value using other channel.]--
