@@ -112,6 +112,8 @@ export GIT_KERNEL_SHA1
 export KERNEL_VERSION
 export KERNEL_VERSION_V7
 export APT_PROXY
+export OPENHD_REPO
+export OPENHD_BRANCH
 
 export STAGE
 export STAGE_DIR

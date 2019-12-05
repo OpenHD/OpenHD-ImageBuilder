@@ -11,8 +11,9 @@ pushd GIT
 MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
 log "Download all Open.HD Sources"
-sudo git clone -b master https://github.com/HD-Fpv/Open.HD.git
+sudo git clone -b master ${OPENHD_REPO}
 pushd Open.HD
+git checkout ${OPENHD_BRANCH}
 sudo git submodule update --init
 OPENHD_VERSION=$(git describe --always --tags)
 export OPENHD_VERSION
