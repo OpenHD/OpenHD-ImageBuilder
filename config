@@ -10,4 +10,6 @@ BASE_IMAGE="2018-10-09-raspbian-stretch-lite"
 # Amount of cores to use for compilation on host machine
 J_CORES=12
 
+OPENHD_REPO=https://github.com/Hd-Fpv/Open.HD.git
+OPENHD_BRANCH=master
 
