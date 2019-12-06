@@ -66,4 +66,5 @@ Every stage comprises one or more scripts. Scripts need to be named in the forma
 
 **chroot**? What's that? Well, it's a little complex, but basically it allows you to run statements within the image as if you were running the image on an actual Raspberry Pi. This is used to download and install the `apt-get` packages and several scripts to make the image ready for use with the OpenHD system. Please remember to use `sudo` in the `-chroot` scripts where approperiate.
 
-
+#### Branches
+You can define which Open.HD branch gets pulled from the script repo. define `OPENHD_BRANCH=` in config
