@@ -2,10 +2,10 @@
 IMG_NAME=Open.HD
 
 # Download location base image
-BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2018-10-11"
+BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-04-09"
 
 # File name base image
-BASE_IMAGE="2018-10-09-raspbian-stretch-lite"
+BASE_IMAGE="2019-04-08-raspbian-stretch-lite"
 
 # Amount of cores to use for compilation on host machine
 J_CORES=12
