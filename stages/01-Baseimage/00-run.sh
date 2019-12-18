@@ -16,10 +16,10 @@ else
 fi
 
 log "Unzip"
-unzip $BASE_IMAGE".zip"
+unzip ${BASE_IMAGE}.zip
 
 log "Rename to IMAGE.img"
-mv $BASE_IMAGE".img" "IMAGE.img"
+mv ${BASE_IMAGE}.img IMAGE.img
 
 # return
 popd
