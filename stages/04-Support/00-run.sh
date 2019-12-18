@@ -11,25 +11,22 @@ pushd GIT
 MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
 log "Download Raspi2png"
-git clone https://github.com/AndrewFromMelbourne/raspi2png.git
-
-log "Download v4l2loopback"
-sudo git clone https://github.com/umlaeute/v4l2loopback.git
+git clone -b ${RASPI2PNG_BRANCH} ${RASPI2PNG_REPO}
 
 log "Download Mavlink router"
-sudo git clone -b rock64 https://github.com/user1321/mavlink-router.git
+sudo git clone -b ${MAVLINK_ROUTER_BRANCH} ${MAVLINK_ROUTER_REPO}
 pushd mavlink-router
 sudo git submodule update --init
 
 #fix missing pymavlink
 pushd modules/mavlink
-sudo git clone --recurse-submodules https://github.com/user1321/pymavlink
+sudo git clone --recurse-submodules -b ${PYMAVLINK_BRANCH} ${PYMAVLINK_REPO}
 popd
 
 popd
 
 log "Download cmavnode"
-sudo git clone https://github.com/MonashUAS/cmavnode.git
+sudo git clone -b ${CMAVNODE_BRANCH} ${CMAVNODE_REPO}
 pushd cmavnode
 sudo git submodule update --init
 popd
