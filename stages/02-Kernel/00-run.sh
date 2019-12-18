@@ -7,7 +7,7 @@ log "Remove previous Kernel"
 rm -r linux || true
 
 log "Download the Raspberry Pi Kernel"
-git clone --depth=100 -b rpi-4.14.y https://github.com/raspberrypi/linux
+git clone --depth=100 -b ${PI_KERNEL_BRANCH} ${PI_KERNEL_REPO}
 
 pushd linux
 # Switch to specific commit
@@ -18,12 +18,11 @@ popd
 
 log "Download the rtl8812au drivers"
 rm -r rtl8812au || true
-# Fixed at v5.2.20 until 5.3.4 works for injection
-git clone -b v5.2.20 https://github.com/aircrack-ng/rtl8812au.git
+git clone -b ${RTL_8812AU_BRANCH} ${RTL_8812AU_REPO}
 
 log "Download the v4l2loopback module"
 rm -r v4l2loopback || true
-git clone https://github.com/RespawnDespair/v4l2loopback.git
+git clone -b ${V4L2LOOPBACK_BRANCH} ${V4L2LOOPBACK_REPO}
 
 #return 
 popd

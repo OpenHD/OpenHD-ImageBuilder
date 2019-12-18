@@ -10,6 +10,32 @@ BASE_IMAGE="2018-10-09-raspbian-stretch-lite"
 # Amount of cores to use for compilation on host machine
 J_CORES=12
 
+
+PI_TOOLS_REPO=https://github.com/raspberrypi/tools.git
+PI_TOOLS_BRANCH=master
+
+PI_KERNEL_REPO=https://github.com/raspberrypi/linux.git
+PI_KERNEL_BRANCH=rpi-4.14.y
+
+# Fixed at v5.2.20 until 5.3.4 works for injection
+RTL_8812AU_REPO=https://github.com/aircrack-ng/rtl8812au.git
+RTL_8812AU_BRANCH=v5.2.20
+
+V4L2LOOPBACK_REPO=https://github.com/RespawnDespair/v4l2loopback.git
+V4L2LOOPBACK_BRANCH=master
+
+RASPI2PNG_REPO=https://github.com/AndrewFromMelbourne/raspi2png.git
+RASPI2PNG_BRANCH=master
+
+MAVLINK_ROUTER_REPO=https://github.com/user1321/mavlink-router.git
+MAVLINK_ROUTER_BRANCH=rock64
+
+PYMAVLINK_REPO=https://github.com/user1321/pymavlink.git
+PYMAVLINK_BRANCH=master
+
+CMAVNODE_REPO=https://github.com/MonashUAS/cmavnode.git
+CMAVNODE_BRANCH=master
+
 OPENHD_REPO=https://github.com/Hd-Fpv/Open.HD.git
 OPENHD_BRANCH=master
 
