@@ -10,6 +10,9 @@ pushd GIT
 
 MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
+log "Download LiFePO4wered-pi"
+git clone -b ${LIFEPOWEREDPI_BRANCH} ${LIFEPOWEREDPI_REPO}
+
 log "Download Raspi2png"
 git clone -b ${RASPI2PNG_BRANCH} ${RASPI2PNG_REPO}
 
