@@ -1,6 +1,8 @@
 # Do this to the WORK folder of this stage
 pushd ${STAGE_WORK_DIR}
 
+MNT_DIR="${STAGE_WORK_DIR}/mnt"
+
 log "Removing old GIT dir"
 rm -r GIT || true
 
@@ -9,6 +11,18 @@ mkdir -p GIT
 pushd GIT
 
 MNT_DIR="${STAGE_WORK_DIR}/mnt"
+
+log "Installing Qt"
+
+if [ ! -f Qt${QT_MAJOR_VERSION}.${QT_MINOR_VERSION}.tar.gz ]; then
+	log "Download Qt ${QT_MAJOR_VERSION}.${QT_MINOR_VERSION}"
+	wget https://github.com/infincia/qt-raspberrypi/releases/download/${QT_MAJOR_VERSION}.${QT_MINOR_VERSION}/Qt${QT_MAJOR_VERSION}.${QT_MINOR_VERSION}.tar.gz
+fi
+
+tar xvf Qt${QT_MAJOR_VERSION}.${QT_MINOR_VERSION}.tar.gz
+
+mv Qt${QT_MAJOR_VERSION}.${QT_MINOR_VERSION} ${MNT_DIR}/opt/
+
 
 log "Download LiFePO4wered-pi"
 git clone -b ${LIFEPOWEREDPI_BRANCH} ${LIFEPOWEREDPI_REPO}
