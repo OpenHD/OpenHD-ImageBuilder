@@ -49,6 +49,4 @@ systemctl stop lifepo4wered-daemon
 killall -9 lifepo4wered-daemon
 cd ..
 
-apt-get --yes --force-yes install gstreamer1.0-alsa
-
-
+cd /home/pi
