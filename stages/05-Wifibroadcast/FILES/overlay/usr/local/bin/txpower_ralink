@@ -13,11 +13,9 @@ usage(){
 
 [[ $# -eq 0 ]] && usage
 
-mount -o remount,rw /
 mv /etc/modprobe.d/rt2800usb.conf /etc/modprobe.d/rt2800usb.conf.old
 sed -r -e's/txpower=[^ ]+/txpower='$1'/g' /etc/modprobe.d/rt2800usb.conf.old > /etc/modprobe.d/rt2800usb.conf
 sync
 echo
 echo "txpower set to $1. You may power-off now or type \"reboot\" to restart"
 echo
-mount -o remount,ro /
