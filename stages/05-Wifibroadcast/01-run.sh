@@ -93,6 +93,14 @@ sudo mv Open.HD/UDPSplitter/ UDPSplitter/
 
 sudo rm -rf Open.HD
 
+
+git clone -b ${QOPENHD_VERSION} ${QOPENHD_REPO} || exit 1
+cd QOpenHD
+git submodule update --init --recursive
+echo ${OPENHD_VERSION} > .openhd_version
+echo ${BUILDER_VERSION} > .builder_version
+cd ..
+
 #return
 popd
 popd

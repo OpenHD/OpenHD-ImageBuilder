@@ -68,6 +68,10 @@ ENABLE_SCREENSHOTS=N
 # Set to "Y" to enable ground OSD. set "N" to only display video. 
 DISPLAY_OSD=Y
 
+# set to "Y" to use the QOpenHD app instead of the original OSD
+ENABLE_QOPENHD=N
+
+
 # >>>>>>>>>>[5/10/20Mhz BANDWIDTH SETTINGS]--Default 20mhz
 # !!!!!!! ATHEROS CARDS ONLY  !!!!!!!!!!!!!!!!!!!!!
 # Users can choose between 20mhz, 10mhz or 5mhz bandwidth at the expense of 1/4 or 1/2 of total available 

@@ -1,0 +1,3 @@
+#!/bin/bash
+
+QT_QPA_EGLFS_HIDECURSOR=1 LD_PRELOAD="/opt/vc/lib/libGLESv2.so /opt/vc/lib/libEGL.so" /usr/local/bin/QOpenHD -platform eglfs
