@@ -13,7 +13,6 @@ usage(){
 
 [[ $# -eq 0 ]] && usage
 
-mount -o remount,rw /
 mv /etc/modprobe.d/ath9k_hw.conf /etc/modprobe.d/ath9k_hw.conf.old
 sed -r -e's/txpower=[^ ]+/txpower='$1'/g' /etc/modprobe.d/ath9k_hw.conf.old > /etc/modprobe.d/ath9k_hw.conf
 mv /etc/modprobe.d/rtl88XXau.conf /etc/modprobe.d/rtl88XXau.conf.old
@@ -24,4 +23,3 @@ sync
 echo
 echo "txpower set to $1. You may power-off now or type \"reboot\" to restart"
 echo
-mount -o remount,ro /
