@@ -8,6 +8,9 @@
 rm /lib/modules/4.14.71*/build
 rm /lib/modules/4.14.71*/source
 
+apt-mark hold raspberrypi-bootloader
+apt-mark hold raspberrypi-kernel
+
 # Install kernel-headers before apt-get update
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install raspberrypi-kernel-headers
 
