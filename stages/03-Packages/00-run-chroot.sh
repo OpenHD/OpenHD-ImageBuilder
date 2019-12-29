@@ -8,8 +8,15 @@
 rm /lib/modules/4.14.71*/build
 rm /lib/modules/4.14.71*/source
 
+apt-mark hold raspberrypi-bootloader
+apt-mark hold raspberrypi-kernel
+
 # Install kernel-headers before apt-get update
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install raspberrypi-kernel-headers
+
+# Install libraspberrypi-dev before apt-get update
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libraspberrypi-dev libraspberrypi-dev libraspberrypi-bin libraspberrypi0
+apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0
 
 # Latest package source
 # sudo rm -rf /var/lib/apt/lists/*
@@ -92,7 +99,7 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get install build-essential \
                                                     libfontconfig1-dev libdbus-1-dev \
                                                     libfreetype6-dev libicu-dev libinput-dev \
                                                     libxkbcommon-dev libsqlite3-dev libssl-dev libpng-dev \
-                                                    libjpeg-dev libglib2.0-dev libraspberrypi-dev \
+                                                    libjpeg-dev libglib2.0-dev \
                                                     libasound2-dev pulseaudio libpulse-dev
 
 DEBIAN_FRONTEND=noninteractive sudo apt-get install libudev-dev libinput-dev libts-dev mtdev-tools
