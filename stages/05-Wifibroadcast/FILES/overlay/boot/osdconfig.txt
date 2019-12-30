@@ -222,17 +222,17 @@
 #define TOTAL_TIME_SCALE 0.8
 
 
-#define HOME_RADAR             //£¨ÐÂÔöÏîÄ¿£©À×´ï£¬À×´ïÍ¼µÄÖÐÐÄÔÚÆÁÄ»ÖÐÐÄ
-#define HOME_RADAR_POS_X 60    //ÕâÀïµÄPOS_X²»±íÊ¾ºáÏòÎ»ÖÃ£¬±íÊ¾À×´ïÍ¼ºáÏòµÄ³¤¶È£¬ÆÁÄ»×Ü³¤¶ÈÎª100
-#define HOME_RADAR_POS_Y 65    //ÕâÀïµÄPOS_Y²»±íÊ¾×ÝÏòÎ»ÖÃ£¬±íÊ¾À×´ïÍ¼×ÝÏòµÄ³¤¶È£¬ÆÁÄ»×Ü¿í¶ÈÎª100
+#define HOME_RADAR             
+#define HOME_RADAR_POS_X 60   
+#define HOME_RADAR_POS_Y 65   
 #define HOME_RADAR_SCALE 0.8
-#define HOME_RADAR_USECOG true // ÄãµÄGPSÃ»ÓÐ´ÅÂÞÅÌ£¬ÉèÖÃÎªtrue£¬Ê¹ÓÃGPS¼ÆËãµÄ»úÍ·³¯Ïò£¬Ò»°ã¹Ì¶¨ÒíÓÃ¡£ÄãµÄGPSÓÐ´ÅÂÞÅÌ£¬ÉèÖÃÎªfalse£¬Ê¹ÓÃGPS´ÅÂÞÅÌµÄ³¯Ïò£¬Ò»°ã¶àÖáÓÃ£¬LTMÒ²ÉèÖÃÎªfalse¡£
+#define HOME_RADAR_USECOG true 
 
-#define RPA            //Roll Pitch £¨ÐÂÔöÏîÄ¿£©ºá¹öºÍ¸©Ñö½Ç¶È,Èç¹û×ËÌ¬ÒÇµÄÓÒ²à¿ªÆôÁËºá¹ö½Ç¶È£¬½¨Òé¹Ø±Õ´ËÏîÏÔÊ¾
+#define RPA            //Roll Pitch
 #define RPA_POS_X 97
 #define RPA_POS_Y 66
 #define RPA_SCALE 0.6
-#define RPA_INVERT_ROLL -1   // Ä¬ÈÏ -1, Èç¹ûÄãµÄºá¹ö½Ç¶È·´ÁË¾ÍÉèÖÃÎª1 
+#define RPA_INVERT_ROLL -1
 #define RPA_INVERT_PITCH 1
 
 #define THROTTLE
@@ -242,59 +242,59 @@
 #define THROTTLE_GAUGE true //set to false for number only
 #define THROTTLE_TARGET 20 //set to position tick and trigger green needle
 
-//#define THROTTLE_V2               //this is ziprays throttle £¨ÐÂÔöÏîÄ¿£©ÓÍÃÅ
+//#define THROTTLE_V2               //this is ziprays throttle
 #define THROTTLE_V2_POS_X 10.5
 #define THROTTLE_V2_POS_Y 28
 #define THROTTLE_V2_SCALE 0.65
 #define THROTTLE_V2_COMPLEX true //false for simple small throttle display
 
-//#define HDOP                    //NOT WORKING YET £¨ÐÂÔöÏîÄ¿£©GPSË®Æ½¾«¶È
+//#define HDOP                    //NOT WORKING YET
 //#define HDOP_POS_X 98
 //#define HDOP_POS_Y 95
 //#define HDOP_SCALE 0.6
 
-#define MISSION                    //WAYPOINT COUNTER £¨ÐÂÔöÏîÄ¿£©º½µãÈÎÎñ
+#define MISSION                    //WAYPOINT COUNTER
 #define MISSION_POS_X 35
 #define MISSION_POS_Y 1
 #define MISSION_SCALE 0.6
 
-#define ANGLE                    //Bank Angle £¨ÐÂÔöÏîÄ¿£©½Ç¶ÈÖ¸Ê¾Æ÷£¨Ô²»¡£©
+#define ANGLE                    //Bank Angle
 #define ANGLE_POS_X 50
 #define ANGLE_POS_Y 77
 #define ANGLE_SCALE 1
 
-#define ANGLE2                    //£¨ÐÂÔöÏîÄ¿£©½Ç¶ÈÖ¸Ê¾Æ÷£¨Ö¸Õë£©
+#define ANGLE2                    
 #define ANGLE2_POS_X 50
 #define ANGLE2_POS_Y 78
 #define ANGLE2_SCALE 1
 
-#define ALARM                    //£¨ÐÂÔöÏîÄ¿£©¾¯¸æ,ÔÚ·É¿ØÄÚ´¦ÓÚÆôÓÃ×´Ì¬²¢ÇÒ¹ÊÕÏµÄ´«¸ÐÆ÷£¬»áÓÐºì×ÖÌáÊ¾¡£
+#define ALARM                    
 #define ALARM_POS_X 83
 #define ALARM_POS_Y 33
-#define ALARM_SCALE 0.5          //¡ý½«ÏàÓ¦µÄ´«¸ÐÆ÷ÉèÖÃÎªfalse£¬¿ÉÒÔÇ¿ÖÆ¹Ø±ÕÆä¸æ¾¯
-#define ALARM_1 true             //3D_GYRO                ÍÓÂÝÒÇ
-#define ALARM_2 true             //3D_ACCEL               ¼ÓËÙ¶È¼Æ
-#define ALARM_3 true             //3D_MAG                 ´ÅÂÞÅÌ
-#define ALARM_4 true             //ABSOLUTE_PRESSURE      ¿ÕËÙ¼Æ¾²Ñ¹
-#define ALARM_5 true             //DIFFERENTIAL_PRESSURE  ¿ÕËÙ¼Æ¶¯Ñ¹
-#define ALARM_6 true             //GPS                    È«Çò¶¨Î»ÏµÍ³GPS
-#define ALARM_7 true             //OPTICAL_FLOW           ¹âÁ÷´«¸ÐÆ÷
-#define ALARM_8 true             //VISION_POSITION        ÊÓ¾õ´«¸ÐÆ÷
-#define ALARM_9 true             //LASER_POSITION         ¼¤¹â´«¸ÐÆ÷
-#define ALARM_10 true            //EXTERNAL_GROUND_TRUTH  (Vicon or Leica)£¬ÕâÊ²Ã´ÍæÒâ
-#define ALARM_11 true            //ANGULAR_RATE_CONTROL   ½ÇËÙÂÊ¿ØÖÆ
-#define ALARM_12 true            //ATTITUDE_STABILIZATION ×ËÌ¬ÎÈ¶¨
-#define ALARM_13 true            //YAW_POSITION           Æ«º½Î»ÖÃ
-#define ALARM_14 true            //Z_ALTITUDE_CONTROL     ZÖá¸ß¶È¿ØÖÆ
-#define ALARM_15 true            //XY_POSITION_CONTROL    X/YÖáÎ»ÖÃ¿ØÖÆ
-#define ALARM_16 true            //MOTOR_OUTPUTS          µç»úÊä³ö
-#define ALARM_17 true           //RC_RECEIVER            ½ÓÊÕ»ú
-#define ALARM_18 true            //3D_GYRO2               2ºÅÍÓÂÝÒÇ
-#define ALARM_19 true            //3D_ACCEL2              2ºÅ¼ÓËÙ¶È¼Æ
-#define ALARM_20 true            //3D_MAG2                2ºÅ´ÅÂÞÅÌ
-#define ALARM_21 true            //GEOFENCE               µØÀíÎ§À¸
-#define ALARM_22 true            //AHRS                   º½×Ë²Î¿¼ÏµÍ³AHRS
-#define ALARM_23 true            //TERRAIN                µØÐÎ
-#define ALARM_24 true            //REVERSE_MOTOR          µç»ú·´×ª
-//#define ALARM_25 true            //LOGGING                ÈÕÖ¾¼ÇÂ¼
-#define ALARM_26 true            //BATTERY                µç³Ø´«¸ÐÆ÷
+#define ALARM_SCALE 0.5          
+#define ALARM_1 true             //3D_GYRO
+#define ALARM_2 true             //3D_ACCEL
+#define ALARM_3 true             //3D_MAG
+#define ALARM_4 true             //ABSOLUTE_PRESSURE
+#define ALARM_5 true             //DIFFERENTIAL_PRESSURE
+#define ALARM_6 true             //GPS
+#define ALARM_7 true             //OPTICAL_FLOW
+#define ALARM_8 true             //VISION_POSITION
+#define ALARM_9 true             //LASER_POSITION
+#define ALARM_10 true            //EXTERNAL_GROUND_TRUTH  (Vicon or Leica)
+#define ALARM_11 true            //ANGULAR_RATE_CONTROL
+#define ALARM_12 true            //ATTITUDE_STABILIZATION
+#define ALARM_13 true            //YAW_POSITION
+#define ALARM_14 true            //Z_ALTITUDE_CONTROL
+#define ALARM_15 true            //XY_POSITION_CONTROL
+#define ALARM_16 true            //MOTOR_OUTPUTS
+#define ALARM_17 true            //RC_RECEIVER
+#define ALARM_18 true            //3D_GYRO2
+#define ALARM_19 true            //3D_ACCEL2
+#define ALARM_20 true            //3D_MAG2
+#define ALARM_21 true            //GEOFENCE
+#define ALARM_22 true            //AHRS
+#define ALARM_23 true            //TERRAIN
+#define ALARM_24 true            //REVERSE_MOTOR
+//#define ALARM_25 true            //LOGGING
+#define ALARM_26 true            //BATTERY
