@@ -147,6 +147,8 @@ dpkg -i GStreamer-${GSTREAMER_VERSION}/*.deb  || exit 1
 
 rm GStreamer-${GSTREAMER_VERSION}.tar.gz || true
 
+rm -rf GStreamer-${GSTREAMER_VERSION} || true
+
 # Python essentials for mavlink router autoconf
 sudo pip install future
 #Python3 GPIO
