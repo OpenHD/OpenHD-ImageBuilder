@@ -17,6 +17,8 @@ sudo ./autogen.sh && sudo ./configure CFLAGS='-g -O2' \
         --sysconfdir=/etc --localstatedir=/var --libdir=/usr/local/lib64 \
     --prefix=/usr/local
 sudo make install
+cd ..
+rm -rf mavlink-router
 
 # Install cmavnode
 cd /home/pi
