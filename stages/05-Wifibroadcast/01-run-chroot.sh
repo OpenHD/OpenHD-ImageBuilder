@@ -138,3 +138,6 @@ cd /home/pi/QOpenHD
 make -j5 || exit 1
 cp -a release/QOpenHD "/usr/local/bin/QOpenHD" || exit 1
 cd ..
+
+# install picamera
+apt-get --yes --force-yes install python3-picamera
