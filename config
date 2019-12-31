@@ -27,8 +27,8 @@ V4L2LOOPBACK_BRANCH=master
 RASPI2PNG_REPO=https://github.com/AndrewFromMelbourne/raspi2png.git
 RASPI2PNG_BRANCH=master
 
-MAVLINK_ROUTER_REPO=https://github.com/user1321/mavlink-router.git
-MAVLINK_ROUTER_BRANCH=rock64
+MAVLINK_ROUTER_REPO=https://github.com/OpenHD/mavlink-router.git
+MAVLINK_ROUTER_BRANCH=openhd
 
 PYMAVLINK_REPO=https://github.com/user1321/pymavlink.git
 PYMAVLINK_BRANCH=master
