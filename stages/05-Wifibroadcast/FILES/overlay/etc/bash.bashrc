@@ -61,8 +61,8 @@ set_bash_prompt(){
     PS1='\[\033[01;32m\]\u@\h${boot_fs_mode:+(boot:$boot_fs_mode,root:$root_fs_mode)}\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 }
 
-alias ro='mount -o remount,ro / ; mount -o remount,ro /boot'
-alias rw='mount -o remount,rw / ; mount -o remount,rw /boot' 
+alias ro='mount -o remount,ro /boot'
+alias rw='mount -o remount,rw /boot'
 
 # setup fancy prompt"
 PROMPT_COMMAND=set_bash_prompt
