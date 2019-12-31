@@ -8,6 +8,12 @@
 rm /lib/modules/4.14.71*/build
 rm /lib/modules/4.14.71*/source
 
+if [ ${APT_CACHER_NG_ENABLED} == "true" ]; then
+    echo "Acquire::http::Proxy \"${APT_CACHER_NG_URL}/\";" >> /etc/apt/apt.conf.d/10cache
+fi
+
+
+
 apt-mark hold raspberrypi-bootloader
 apt-mark hold raspberrypi-kernel
 
@@ -157,3 +163,7 @@ sudo apt-get -y install python3-rpi.gpio
 # Clean Up
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq clean
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq autoremove
+
+if [ ${APT_CACHER_NG_ENABLED} == "true" ]; then
+    rm /etc/apt/apt.conf.d/10cache
+fi
