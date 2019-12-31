@@ -72,3 +72,5 @@ if [ $? -eq 0 ]; then
   sudo sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
 fi
 
+apt -y autoremove
+apt -y clean
