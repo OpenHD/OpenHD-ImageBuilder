@@ -10,6 +10,9 @@ BASE_IMAGE="2018-10-09-raspbian-stretch-lite"
 # Amount of cores to use for compilation on host machine
 J_CORES=12
 
+APT_CACHER_NG_URL=http://127.0.0.1:3142
+APT_CACHER_NG_ENABLED=false
+
 
 PI_TOOLS_REPO=https://github.com/raspberrypi/tools.git
 PI_TOOLS_BRANCH=master
