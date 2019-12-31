@@ -12,7 +12,7 @@ sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support build-e
 Then git clone this repository to a suitable folder 
 
 ```
-git clone https://github.com/HD-Fpv/Open.HD_Image_Builder.git
+git clone https://github.com/OpenHD/Open.HD_Image_Builder.git
 cd Open.HD_Image_Builder
 ```
 
@@ -52,7 +52,7 @@ So after thinking about the problem and looking for projects who had tackled thi
 
 This concept applies to the OpenHD image creation as well. So i modified the core logic into this system:
 
-![flow](https://github.com/HD-Fpv/Open.HD_Image_Builder/raw/master/Builder%20flow.png "Flow")
+![flow](https://github.com/OpenHD/Open.HD_Image_Builder/raw/master/Builder%20flow.png "Flow")
 
 This allows us to run the build process once, and when we want to make a change in stage 3, we only run stage 3 and 4 again by removing the `SKIP` file from the `stages/03-Packages` and the `stages/04-Wifibroadcast` folders. The build system will copy the kernel `IMAGE.img` from stage 2 to stage 3 and re-run all the scripts in stage 3. The resulting image is copied to stage 4 and all those scripts are run. Finally, when there are no more stages, the `IMAGE.img` from the last stage is copied to the `deploy/ezwfb-{date}.img` file.
 
