@@ -99,7 +99,7 @@ VIDEO_TMP=memory
 # >>>>>>>>>>[Use openhdvid instead of raspivid]
 # Raspivid is the default and stable option, openhdvid is a new replacement for it that will allow live camera
 # parameter changes and other enhancements. It is not well tested yet.
-USE_OPENHDVID=N
+ENABLE_OPENHDVID=N
 
 
 # ======================================================================================
