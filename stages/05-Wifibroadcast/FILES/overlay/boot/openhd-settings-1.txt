@@ -125,6 +125,10 @@ EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb h
 # use the sdcard as the temporary video storage. Keep in mind though, that this might introduce video stutter and/or bad blocks. 
 VIDEO_TMP=memory
 
+# >>>>>>>>>>[Use openhdvid instead of raspivid]
+# Raspivid is the default and stable option, openhdvid is a new replacement for it that will allow live camera
+# parameter changes and other enhancements. It is not well tested yet.
+USE_OPENHDVID=N
 
 
 
