@@ -11,9 +11,9 @@ pushd GIT
 MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
 log "Download all Open.HD Sources"
-sudo git clone -b ${OPENHD_BRANCH} ${OPENHD_REPO}
+sudo git clone -b ${OPENHD_BRANCH} ${OPENHD_REPO} || exit 1
 pushd Open.HD
-sudo git submodule update --init
+sudo git submodule update --init || exit 1
 OPENHD_VERSION=$(git describe --always --tags)
 export OPENHD_VERSION
 popd
