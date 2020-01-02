@@ -15,8 +15,8 @@ cd /home/pi
 cd mavlink-router
 sudo ./autogen.sh && sudo ./configure CFLAGS='-g -O2' \
         --sysconfdir=/etc --localstatedir=/var --libdir=/usr/local/lib64 \
-    --prefix=/usr/local
-sudo make install
+    --prefix=/usr/local || exit 1
+sudo make install || exit 1
 cd ..
 rm -rf mavlink-router
 
@@ -24,9 +24,9 @@ rm -rf mavlink-router
 cd /home/pi
 cd cmavnode
 sudo mkdir build && cd build
-sudo cmake ..
-sudo make
-sudo make install
+sudo cmake .. || exit 1
+sudo make || exit 1
+sudo make install || exit 1
 cd /home/pi/ && rm -r cmavnode
 
 cd /home/pi/
