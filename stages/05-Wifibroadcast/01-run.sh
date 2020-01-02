@@ -101,7 +101,7 @@ sudo rm -rf Open.HD
 
 git clone -b ${QOPENHD_VERSION} ${QOPENHD_REPO} || exit 1
 cd QOpenHD
-git submodule update --init --recursive
+git submodule update --init --recursive || exit 1
 echo ${OPENHD_VERSION} > .openhd_version
 echo ${BUILDER_VERSION} > .builder_version
 cd ..
