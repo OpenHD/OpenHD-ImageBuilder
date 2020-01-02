@@ -84,9 +84,9 @@ log "Download JoystickIn"
 # sudo git clone https://github.com/user1321/JoystickIn
 sudo mv Open.HD/JoystickIn/ JoystickIn/
 
-sudo mkdir -p ${MNT_DIR}/usr/local/bin
-sudo mv Open.HD/openhd-camera/openhdvid ${MNT_DIR}/usr/local/bin/
-sudo chmod +x ${MNT_DIR}/usr/local/bin/openhdvid
+sudo mkdir -p ${MNT_DIR}/usr/local/bin || exit 1
+sudo mv Open.HD/openhd-camera/openhdvid ${MNT_DIR}/usr/local/bin/ || exit 1
+sudo chmod +x ${MNT_DIR}/usr/local/bin/openhdvid || exit 1
 
 
 log "Download IMX290"
