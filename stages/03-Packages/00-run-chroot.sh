@@ -63,6 +63,9 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libav-tools
 # text to speech for QOpenHD
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libspeechd-dev flite1-dev flite speech-dispatcher-flite --no-install-recommends
 
+# dependencies for OpenHDMicroservice
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install build-essential git python libboost-dev libboost-program-options-dev libboost-system-dev libasio-dev
+
 #Arducam Multi Camera Adapter Module V2.1
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install  i2c-tools
 
