@@ -46,7 +46,7 @@ gcc build/DAEMON/lifepo4wered-access.o build/DAEMON/lifepo4wered-data.o build/DA
 gcc build/SO/lifepo4wered-access.o build/SO/lifepo4wered-data.o -o build/SO/liblifepo4wered.so -shared
 gcc build/CLI/lifepo4wered-access.o build/CLI/lifepo4wered-data.o build/CLI/lifepo4wered-cli.o -o build/CLI/lifepo4wered-cli
 ./INSTALL.sh
-cp lifepowered-data.h /usr/local/include/
+cp lifepo4wered-data.h /usr/local/include/
 # the lifepo4wered-pi build scripts start the daemon, which we dont want as it causes issues with losetup
 systemctl stop lifepo4wered-daemon
 killall -9 lifepo4wered-daemon
