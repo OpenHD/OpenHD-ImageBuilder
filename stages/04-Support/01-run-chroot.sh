@@ -52,4 +52,10 @@ systemctl stop lifepo4wered-daemon
 killall -9 lifepo4wered-daemon
 cd ..
 
+# install OpenHDMicroservice
+cd /home/pi
+cd OpenHDMicroservice
+git submodule update --init || exit 1
+make install || exit 1
+
 cd /home/pi
