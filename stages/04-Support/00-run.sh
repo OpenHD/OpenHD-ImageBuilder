@@ -28,6 +28,9 @@ rm -f Qt${QT_MAJOR_VERSION}.${QT_MINOR_VERSION}.tar.gz
 log "Download LiFePO4wered-pi"
 git clone -b ${LIFEPOWEREDPI_BRANCH} ${LIFEPOWEREDPI_REPO} || exit 1
 
+log "Download OpenHDMicroservice"
+git clone -b ${OPENHDMICROSERVICE_BRANCH} ${OPENHDMICROSERVICE_REPO} || exit 1
+
 log "Download Raspi2png"
 git clone -b ${RASPI2PNG_BRANCH} ${RASPI2PNG_REPO} || exit 1
 
