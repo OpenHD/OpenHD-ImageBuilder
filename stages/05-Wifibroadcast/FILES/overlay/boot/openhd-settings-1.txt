@@ -385,6 +385,8 @@ SecondaryCamera=No
 #     Mode 2: LCD(HDMI) - RPi CSI camera, android phone - IP or USB camera. Bitrate = bitrate / 2 (20MHz) ,4(10Mhz) ,8(5Mhz). IPCameraLowRes is used  
 #     Mode 3: Adroid phone only -  IP or USB camera. IPCameraHiRes (20MHz) , or auto bitrate = initial-bitrate=\$1 USBCamera. (20MHz, 10Mhz /2, 5Mhz /4). 
 #             (To use fixed: initial-bitrate=200000)
+# Note: if set to 1-8, this will use one of the 8 RC axis from your transmitter. If set to 9-24, it will
+# use 2 consecutive buttons on the transmitter as a sort of fake 3-way switch.
 ChannelIPCamera=7
 
 # >>>>>>>>>>[OPTIONAL FLIR-USB CAMERA DRIVER SETUP]--
