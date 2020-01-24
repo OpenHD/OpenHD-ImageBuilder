@@ -3087,7 +3087,8 @@ CONFIG_FANOTIFY=y
 # CONFIG_QUOTA is not set
 # CONFIG_QUOTACTL is not set
 # CONFIG_AUTOFS4_FS is not set
-# CONFIG_FUSE_FS is not set
+CONFIG_FUSE_FS=m
+CONFIG_CUSE=n
 # CONFIG_OVERLAY_FS is not set
 
 #
