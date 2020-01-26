@@ -90,8 +90,8 @@ Bandwidth=20
 # 
 # Set to a fixed value to disable automatic measuring 
 # 
-# Note: the unit for this setting is kilobits, not megabits or bits!
-# For 4.5mbit, set to 4500
+# Note: the unit for this setting is megabits, not kilobits or bits!
+# For 4.5mbit, set to 4.5
 VIDEO_BITRATE=auto
 
 # >>>>>>>>>>[BITRATE PERCENTAGE]-- "65 default"
