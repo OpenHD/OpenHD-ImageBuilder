@@ -58,7 +58,11 @@ Bandwidth=20
 
 # >>>>>>>>>>[VIDEO BITRATE]-- "auto" recommended
 # Air Pi reads available bandwidth to determine bitrate.
-# *Set to a fixed value to disable automatic measuring
+# 
+# Set to a fixed value to disable automatic measuring 
+# 
+# Note: the unit for this setting is kilobits, not megabits or bits!
+# For 4.5mbit, set to 4500
 VIDEO_BITRATE=auto
 
 # >>>>>>>>>>[BITRATE PERCENTAGE]-- "65 default"
