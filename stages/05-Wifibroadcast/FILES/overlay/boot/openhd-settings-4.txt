@@ -5,11 +5,32 @@
 # ======================================================================================
 
 # >>>>>>>>>>[FREQUENCY FOR OPEN.HD]-- in MHz (See full Frequency List Below)
+# !!!***NOTE ABOUT RTL8812/14AU CARDS***!!!
+# REALTEK RTL8812/14AU CARDS DO NOT WORK WITH 2.4GHZ CHANNELS SO CHANGE FREQUENCY TO 5.8GHZ CHANNEL FROM LIST AT THE BOTTOM OF PAGE. 
 FREQ=2472
 
-# >>>>>>>>>>[DATARATE] Lower settings yield higher range and vice versa.
-# 1=5.5Mbit, 2=11Mbit, 3=12Mbit, 4=19.5Mbit/18Mbit, 5=24Mbit, 6=36Mbit
+# >>>>>>>>>>[DATARATE] Lower settings yield higher range and vice versa.  
+# Below are the datarate settings for Legacy B/G and MCS "N" modes. 
 DATARATE=4
+
+# 1 - 5.5   =    802.11b         1 - 6.5   =     MCS 0
+# 2 - 11    =    802.11b         2 - 13    =     MCS 1
+# 3 - 12    =    802.11g         3 - 13    =     MCS 1
+# 4 - 19.5  =    802.11n         4 - 19.5  =     MCS 2
+# 5 - 24    =    802.11g         5 - 26    =     MCS 3           
+# 6 - 36    =    802.11g         6 - 39    =     MCS 4
+
+# # >>>>>>>>>>[MCS ; Space Time Block Coding ; Low Density Parity Check]
+# Only tested MCS+STBC+LDPC with RTL8812AU cards. MCS=Y only should work with Atheros cards when STBC/LDPC=N 
+UseMCS=N
+UseSTBC=N
+UseLDPC=N
+
+# # >>>>>>>>>>[IP/USB CAMERA SECONDARY DATA RATES]
+# Applied only to 8812AU with 2nd IP/USB cam, all other setups, ignore! Ath9k will ignore secondary camera datarate and use DATARATE=
+# 0=6.5Mbit (BPSK 1\2),		1=13Mbit (QPSK 1\2)
+# 2= 19.5MBit (QPSK 3/4), 	3=26Mbit (16-QAM 1\2)
+DATARATE_SECONDARY_8812AU=2
 
 # >>>>>>>>>>[TXPOWER-AIR/GROUND]-- For Atheros AR9271 or RTL8812/14AU Cards ONLY
 TxPowerAir=58
@@ -26,9 +47,13 @@ VIDEO_BLOCKS=8
 VIDEO_FECS=4
 VIDEO_BLOCKLENGTH=1024
 
+#Secondary camera (IP\USB)
+VIDEO_BLOCKS_SECONDARY=8
+VIDEO_FECS_SECONDARY=4
+
 # >>>>>>>>>>[DEBUGGING OR SSH]--
 # Set this to "Y" to enable collection of extra debug logs or to allow SSH. If you experience anyways
-# issues.
+# issues. "Y" also turns on the display for the airpi
 DEBUG=N
 
 # >>>>>>>>>>[DISABLE SCREEN MESSAGES]--
@@ -42,6 +67,10 @@ ENABLE_SCREENSHOTS=N
 # >>>>>>>>>>[DISABLE OSD]--
 # Set to "Y" to enable ground OSD. set "N" to only display video. 
 DISPLAY_OSD=Y
+
+# set to "Y" to use the QOpenHD app instead of the original OSD
+ENABLE_QOPENHD=N
+
 
 # >>>>>>>>>>[5/10/20Mhz BANDWIDTH SETTINGS]--Default 20mhz
 # !!!!!!! ATHEROS CARDS ONLY  !!!!!!!!!!!!!!!!!!!!!
@@ -70,7 +99,7 @@ VIDEO_BITRATE=auto
 # this to a lower value like 60% to avoid a delayed video stream.
 # On free channels you may set this to a higher value like 75% to get a higher
 # bitrate and thus image quality.
-BITRATE_PERCENT=65
+BITRATE_PERCENT=60
 
 # >>>>>>>>>>[CAMERA RESOLUTION]--
 # V1 cam: 1280x720: 30fps, 48fps. 1920x1080: 30fps
@@ -79,24 +108,25 @@ WIDTH=1280
 HEIGHT=720
 
 # >>>>>>>>>>[CAMERA FPS]--"48 default"
-# Choose between 30, 40, 48, 59.9
-FPS=48
+# Choose between 30, 40, 48, 59.9, values above 60 are experimental
+FPS=30
 
 # >>>>>>>>>>[KEYFRAME RATE]-- 
 # ***This is how often a "fresh-new" video frame is transmitted***
 # Lower values mean faster glitch-recovery, but also lower video quality.
 # With fps=48 and keyframerate=5, glitches will stay visible for around 100ms in worst case.
 # You can set this higher or lower according to your needs. Minimum value is 2.
-KEYFRAMERATE=5
+KEYFRAMERATE=10
 #
 # >>>>>>>>>>[RASPIVID CAMERA SETTINGS]--
 # There are dozens of paramaters, see the RPI forum for all settings.
 EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb horizon"
+# UNCOMMENT, AND USE THESE CAMERA SETTINGS FOR THE B101 OR SIMILAR HDMI-CSI ADAPTER
+#EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both"
 
 # >>>>>>>>>>[SAVE VIDEO-RAMdisk/Memory]--Set to "memory" to use RAMdisk for temporary video/screenshot/telemetry 
 # storage recording time to ~12-14 minutes, but is the safe way. If you need longer recording times, use "sdcard", to 
 # use the sdcard as the temporary video storage. Keep in mind though, that this might introduce video stutter and/or bad blocks. 
-# VIDEO_FS set to "ext4" (Linux, which is recommended for performance) or "fat" (Windows)
 # you can also disable recording entirely by setting VIDEO_TMP=none
 VIDEO_TMP=memory
 
@@ -125,11 +155,15 @@ WIFI_HOTSPOT=auto
 
 # >>>>>>>>>>[HOTSPOT BAND/CHANNEL_MANUAL CONFIG]
 # NOTE with WIFI_HOTSPOT=auto your setting here will be over written.
-# Set to "a" for 5.8ghz, "g" for 2.4ghz
+# Set to "g" for 2.4ghz , "a" for 5.8ghz, 
 # Channels 1-11 for 2.4Ghz, 
 # Channels 36,40,44,48,52,56,60,64 for 5Ghz
 HOTSPOT_BAND=a
 HOTSPOT_CHANNEL=36
+# Set to number of seconds you wany hotspot to shutdown. Default is "0", run forever
+HOTSPOT_TIMEOUT=0
+# corresponds to 1dBm, when passed to iw dev wlan0 set txpower fixed ${HOTSPOT_TXPOWER}
+HOTSPOT_TXPOWER=100
 
 # >>>>>>>>>>[ETHERNET HOTSPOT]--*Only used for PC/Mission Planner Ethernet connection
 # Set this to "Y" to enable Ethernet hotspot. This will forward the received video and 
@@ -155,10 +189,27 @@ VIDEO_UDP_PORT2=5601
 # ======================================================================================
 
 # >>>>>>>>>>[CTS PROTECTION]--Use in areas with other wifi networks or Interference
-# Set "Y" in conjunction with "Range" RC
+# Set "Y" in conjunction with ATHEROS "Range" RC
 # Set "auto" for automatic detection. 
 # Set "N" to disable.
 CTS_PROTECTION=N
+
+# >>>>>>>>>>[USB RC RANGE OR ENCRYPTION]-- 
+# For Atheros AND RTL8812AU Cards use "Range".
+# For any other cards use "Encryption" + CTS=N (NOT TESTED VERY MUCH)
+# ***"Range" Uses the original EZ-wifibroadcast "joystick" code. This setting should provide better range. 
+
+# ***"Encryption" Is a more secure means of RC uplink and works with any wifi cards but may
+# Result in higher packet loss at longer ranges.
+EncryptionOrRange=Range
+
+# >>>>>>>>>>[RC JOYSTICK MODE OVER OPEN.HD SETTINGS]
+# Set this to "mavlink" to enable R/C over Open.HD using mavlink protocol or "msp" for MSP
+# protocol.
+# Set to "sumd" for Graupner SUMD, "ibus" for Flysky IBUS, "srxl" for Multiplex SRXL/XBUS
+# Mode B. Set to "disabled" to disable
+# **See joyconfig.txt for other settings, default settings work for Taranis in USB.
+RC=mavlink
 
 # >>>>>>>>>>[DEDICATED WIFI-CARD UPLINK/RC MAC ADDR.]-- If different types of Ground wifi cards are used.
 # Set this if you have 1 High-Power ground card plus 1 or more lower power cards so that
@@ -167,23 +218,6 @@ CTS_PROTECTION=N
 # ***Also Set for Bandwidth Switcher Function (Below)***
 #Ground RX card Primary
 PrimaryCardMAC=0
-
-# >>>>>>>>>>[RC JOYSTICK MODE OVER OPEN.HD SETTINGS]
-# Set this to "mavlink" to enable R/C over Open.HD using mavlink protocol or "msp" for MSP
-# protocol.
-# Set to "sumd" for Graupner SUMD, "ibus" for Flysky IBUS, "srxl" for Multiplex SRXL/XBUS
-# Mode B. Set to "disabled" to disable
-# **See joyconfig.txt for other settings, default settings work for Taranis in USB.
-RC=disabled
-
-# >>>>>>>>>>[USB RC RANGE OR ENCRYPTION]-- 
-# For Atheros Cards use "Range" + CTS=Y
-# For RTL8812AU or any other cards use "Encryption" + CTS=N
-# ***"Range" Uses the original EZ-wifibroadcast "joystick" code.  It is only confirmed
-# to reliably work with Atheros/AR9271/Ath9k cards, this setting should provide better range. 
-# ***"Encryption" Is a more secure means of RC uplink and works with any wifi cards but may
-# Result in higher packet loss at longer ranges.
-EncryptionOrRange=Encryption
 
 # >>>>>>>>>>[TELEMETRY WBC/OTHER]--
 # wbc = use wifibroadcast as telemetry up/downlink
@@ -234,8 +268,8 @@ MAVLINK_FORWARDER=mavlink-routerd
 # This Camera Switcher feature must be used with the Arducam 4 camera Raspberry Pi multiplexer.  
 # If no camera switcher is detected, feature is automatically disabled.  if used, simply assign
 # desired RC Channel and pwm values for each camera.  Default settings are for 2 Cams A&B.
-IsCamera1Enabled=1
-IsCamera2Enabled=1
+IsCamera1Enabled=0
+IsCamera2Enabled=0
 IsCamera3Enabled=0
 IsCamera4Enabled=0
 #
@@ -273,14 +307,12 @@ IMX290_mirrormode=0x00
 IMX290_denoise=0x00
 
 
-
-
 # ======================================================================================
 #                    <DEVELOPER-ENHANCEMENTS IN PROGRESS OPTIONS>
 # ======================================================================================
 
 # >>>>>>>>>>[MIRROR DSI AND HDMI DISPLAY]--See wiki for how-to
-MirrorDSI_To_HDMI=Y
+MirrorDSI_To_HDMI=N
 
 # >>>>>>>>>>[MSP TELEMETRY STUFF]--not supported yet, do not change
 FC_MSP_SERIALPORT=/dev/ttyUSB0
@@ -316,6 +348,7 @@ RELAY_NIC=112233445566
 RELAY_FREQ=5220
 
 # >>>>>>>>>>[CHANGE TMP VIDEO PARTITION TYPE]--
+# VIDEO_FS set to "ext4" (Linux, which is recommended for performance) or "fat" (Windows)
 VIDEO_FS=ext4
 
 # >>>>>>>>>>[CHANGE TMP VIDEO PARTITION TYPE]--
@@ -348,8 +381,6 @@ SmartSyncStayON_RC_Value=1300
 SmartSyncControlVia=joystick
 
 
-
-
 # ======================================================================================
 #                    <DEVELOPER-ENHANCEMENTS IN PROGRESS OPTIONS>
 # ======================================================================================
@@ -377,18 +408,18 @@ LoadFlirDriver=N
 # >>>>>>>>>>[IP/USB CAMERA PIPELINE OPTIONS]--*Uncomment corresponding per ip/usb camera type
 #USBCamera="gst-launch-1.0 uvch264src device=/dev/video0 initial-bitrate=\$1 average-bitrate=\$1 iframe-period=1000 name=src auto-start=true src.vidsrc ! queue ! video/x-h264,width=1280,height=720,framerate=30/1 ! h264parse ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
 
-IPCameraHiRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=0.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
-IPCameraLowRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=1.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
+#IPCameraHiRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=0.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
+#IPCameraLowRes="gst-launch-1.0 rtspsrc location=\"rtsp://192.168.0.10:554/user=admin&password=&channel=1&stream=1.sdp\" latency=0 ! udpsink port=5600 host=127.0.0.1"
 
 # >>>>>>>>>>[FLIR CAMERA PIPELINE OPTIONS]--
 #FLIR HD (visible image) -  640 x 480 @ 9fps:
-#USBCamera="gst-launch-1.0 v4l2src device=/dev/video2 ! video/x-raw,width=640,height=480,framerate=10/1 ! omxh264enc control-rate=1 target-bitrate=600000 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
+#USBCamera="gst-launch-1.0 v4l2src device=/dev/video2 ! video/x-raw,width=640,height=480,framerate=10/1 ! omxh264enc control-rate=1 target-bitrate=600000 interval-intraframes=1 periodicty-idr=1 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
 
 #FLIR Thermal  - 160 x 128 @ 9fps:
-#USBCamera="gst-launch-1.0 v4l2src device=/dev/video3 ! video/x-raw,width=160,height=128,framerate=10/1 ! omxh264enc control-rate=1 target-bitrate=600000 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
+#USBCamera="gst-launch-1.0 v4l2src device=/dev/video3 ! video/x-raw,width=160,height=128,framerate=10/1 ! omxh264enc control-rate=1 target-bitrate=600000 interval-intraframes=1 periodicty-idr=1 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
 
 #gstreamer videotestsrc:
-USBCamera="gst-launch-1.0 videotestsrc ! video/x-raw,width=160,height=120,framerate=30/1 ! omxh264enc control-rate=1 target-bitrate=600000 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
+#USBCamera="gst-launch-1.0 videotestsrc ! video/x-raw,width=160,height=120,framerate=30/1 ! omxh264enc control-rate=1 target-bitrate=600000 interval-intraframes=1 periodicty-idr=1 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
 
 
 # >>>>>>>>>>[Adjust channel value using other channel.]--
@@ -408,7 +439,7 @@ ActivateChannel=0
 Lora=0
 
 # >>>>>>>>>>[Adjust LCD screen backlight using touchscreen]--
-AdjustLCDBacklight=N
+AdjustLCDBacklight=Y
 # Time in seconds
 AutoDimTime=30
 # Values from 0 to 255, where 0 - off or 0%, 255 - or or 100%
@@ -416,7 +447,8 @@ AutoDimValue=255
 
 
 # >>>>>>>>>> [TTY CONSOLE]-- View Output of GroundPi Consoles and Scripts
-TTY_CONSOLE=1
+# set to "13" for a blank screen
+TTY_CONSOLE=13
 
 # ======================================================================================
 #                          FREQUENCY LIST AND OTHER Settings
