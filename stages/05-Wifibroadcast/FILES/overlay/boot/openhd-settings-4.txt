@@ -97,6 +97,7 @@ EXTRAPARAMS="-cd H264 -n -fl -ih -pf high -if both -ex sports -mm average -awb h
 # storage recording time to ~12-14 minutes, but is the safe way. If you need longer recording times, use "sdcard", to 
 # use the sdcard as the temporary video storage. Keep in mind though, that this might introduce video stutter and/or bad blocks. 
 # VIDEO_FS set to "ext4" (Linux, which is recommended for performance) or "fat" (Windows)
+# you can also disable recording entirely by setting VIDEO_TMP=none
 VIDEO_TMP=memory
 
 # >>>>>>>>>>[Use openhdvid instead of raspivid]
