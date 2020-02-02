@@ -142,3 +142,12 @@ rm -rf QOpenHD
 
 # install picamera
 apt-get --yes --force-yes install python3-picamera
+
+# install zerotier
+wget -O z.sh https://install.zerotier.com/
+chmod +x z.sh
+./z.sh 
+sudo cat /var/lib/zerotier-one/authtoken.secret >>.zeroTierOneAuthToken
+chmod 0600 .zeroTierOneAuthToken
+sudo apt install lsof
+

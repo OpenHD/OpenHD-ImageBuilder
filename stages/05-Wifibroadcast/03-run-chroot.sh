@@ -34,6 +34,26 @@ sudo mkfifo /root/mspfifo
 sudo systemctl enable wbcconfig.service
 sudo systemctl start wbcconfig.service
 
+# Disable ZeroTier service
+sudo systemctl disable zerotier-one
+# Add zerotier config file
+sudo touch /var/lib/zerotier-one/local.conf
+sudo echo '{
+        "settings": {
+                "interfacePrefixBlacklist": [ "eth0" ],
+                "interfacePrefixBlacklist": [ "wifihotspot0" ],
+                "interfacePrefixBlacklist": [ "c4e984d75e95" ],
+                "allowTcpFallbackRelay": false
+        }
+}
+
+{
+        "settings": {
+                "interfacePrefixBlacklist": [ "eth0","wifihotspot0","c4e984d75e95","lo" ],
+                "allowTcpFallbackRelay": false
+        }
+}
+' >> /var/lib/zerotier-one/local.conf
 
 # Copy tty autologin stuff
 cd /etc/systemd/system/getty.target.wants
