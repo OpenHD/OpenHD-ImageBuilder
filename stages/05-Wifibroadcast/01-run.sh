@@ -11,7 +11,7 @@ pushd GIT
 MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
 log "Download all Open.HD Sources"
-sudo git clone -b ${OPENHD_BRANCH} ${OPENHD_REPO} || exit 1
+sudo git clone  --depth=1 -b ${OPENHD_BRANCH} ${OPENHD_REPO} || exit 1
 pushd Open.HD
 sudo git submodule update --init || exit 1
 OPENHD_VERSION=$(git describe --always --tags)
@@ -66,7 +66,7 @@ log "Download EZWFB - Splash"
 sudo mv Open.HD/wifibroadcast-splash/ wifibroadcast-splash/
 
 log "Download FLIR one"
-sudo git clone -b ${OPENHD_FLIRONE_DRIVER_BRANCH} ${OPENHD_FLIRONE_DRIVER_REPO}
+sudo git clone --depth=1 -b ${OPENHD_FLIRONE_DRIVER_BRANCH} ${OPENHD_FLIRONE_DRIVER_REPO}
 
 log "Download RemoteSettings"
 # sudo git clone -b user1321-5MhzAth9k https://github.com/user1321/RemoteSettings
@@ -99,7 +99,7 @@ sudo mv Open.HD/UDPSplitter/ UDPSplitter/
 sudo rm -rf Open.HD
 
 
-git clone -b ${QOPENHD_VERSION} ${QOPENHD_REPO} || exit 1
+git clone --depth=1 -b ${QOPENHD_VERSION} ${QOPENHD_REPO} || exit 1
 cd QOpenHD
 git submodule update --init --recursive || exit 1
 echo ${OPENHD_VERSION} > .openhd_version
