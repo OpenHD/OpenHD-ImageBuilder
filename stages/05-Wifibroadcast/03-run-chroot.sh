@@ -34,6 +34,8 @@ sudo mkfifo /root/mspfifo
 sudo systemctl enable wbcconfig.service
 sudo systemctl start wbcconfig.service
 
+# Disable ZeroTier service
+#sudo systemctl disable zerotier-one
 
 # Copy tty autologin stuff
 cd /etc/systemd/system/getty.target.wants

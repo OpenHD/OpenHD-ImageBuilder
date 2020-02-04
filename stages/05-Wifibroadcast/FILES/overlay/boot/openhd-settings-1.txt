@@ -438,6 +438,14 @@ ActivateChannel=0
 # Values "0" or "1"
 Lora=0
 
+# >>>>>>>>>>[LTE]--Under Development
+# Enable LTE. Y or N
+LTE=Y
+# Must blacklist the LTE/ZEROTIER stick so it is not used for telemetry
+NIC_BLACKLIST=ztrf2varxz
+# Zerotier network ID
+ZEROTIER=1d71939404c3d2fd
+
 # >>>>>>>>>>[Adjust LCD screen backlight using touchscreen]--
 AdjustLCDBacklight=Y
 # Time in seconds
