@@ -10,7 +10,7 @@ pushd GIT
 
 MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
-log "Download all Open.HD Sources"
+log "Download all Open.HD Sources REPO=${OPENHD_REPO} BRANCH=${OPENHD_BRANCH}"
 sudo git clone  --depth=1 -b ${OPENHD_BRANCH} ${OPENHD_REPO} || exit 1
 pushd Open.HD
 sudo git submodule update --init || exit 1
