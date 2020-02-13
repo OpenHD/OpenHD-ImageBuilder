@@ -78,6 +78,9 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libusb-1.0-0-dev
 # mavlink-router build dependencies
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install python3-future
 
+# openhdvid dependency
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install python3-picamera
+
 # install omxplayer. Used by SSync to display video
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install omxplayer
 
