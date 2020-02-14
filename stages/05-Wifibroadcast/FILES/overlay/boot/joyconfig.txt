@@ -1,7 +1,12 @@
 // Axis number to channel number mapping. Joystick axis 0-7 maps to R/C channel 1-8.
 // Axis mapping is AETR1234
 
-#define JSSWITCHES	8	/// 8 for 8 axis + 8 switches = 16 channels / 16 for 8 + 16 = 24 channels to send
+// Switches are not configurable here, and they are only relevant when using Mavlink on a
+// very recent version of Ardupilot firmware (ArduCopter 3.7/4.0+)
+
+// When using Mavlink, there are a total of 8 axis channels and 10 buttons,
+// but when using any other RC protocol transmitted through Open.HD, only 8 axis
+// channels are passed through to the flight controller on the air side. 
 
 #define ROLL_AXIS      0
 #define PITCH_AXIS     1
