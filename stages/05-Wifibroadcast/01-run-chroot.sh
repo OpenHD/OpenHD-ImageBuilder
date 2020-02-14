@@ -24,10 +24,6 @@ cd wifibroadcast-base
 sudo make clean
 sudo make
 
-#install wifibroadcast-rc
-cd /home/pi
-cd wifibroadcast-rc
-sudo chmod +x build.sh
 
 #install wifibroadcast-status
 cd /home/pi
@@ -115,9 +111,6 @@ make
 
 sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/rctxUDP.sh
 sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/rctxUDP_IN
-
-sudo chmod 775 /home/pi/wifibroadcast-rc/rctxUDP.sh
-sudo chmod 775 /home/pi/wifibroadcast-rc/rctxUDP_IN
 
 cd /home/pi/wifibroadcast-rc-Ath9k
 sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/buildlora.sh
