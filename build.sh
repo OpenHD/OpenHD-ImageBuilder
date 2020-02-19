@@ -96,7 +96,7 @@ mkdir -p "${WORK_DIR}"
 
 
 
-if [[ "$IMAGE_TYPE" == "pi" || "$IMAGE_TYPE" == "pizero" || "$IMAGE_TYPE" == "pi2" || "$IMAGE_TYPE" == "pi3" ]]; then
+if [[ "$IMAGE_TYPE" == "pi" || "$IMAGE_TYPE" == "pizero" || "$IMAGE_TYPE" == "pi2" || "$IMAGE_TYPE" == "pi3" || "$IMAGE_TYPE" == "cm3" ]]; then
 	BASE_IMAGE_URL=${PI_STRETCH_BASE_IMAGE_URL}
 	BASE_IMAGE=${PI_STRETCH_BASE_IMAGE}
 	IMAGE_ARCH="pi"
