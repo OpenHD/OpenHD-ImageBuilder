@@ -5,7 +5,7 @@ pushd ${STAGE_WORK_DIR}
 
 if [ ! -d "linux" ]; then
     log "Download the kernel"
-    git clone --depth=1 -b ${KERNEL_BRANCH} ${KERNEL_REPO}
+    git clone --depth=100 -b ${KERNEL_BRANCH} ${KERNEL_REPO}
 fi
 
 pushd linux
