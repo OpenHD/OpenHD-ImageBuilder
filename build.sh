@@ -1,6 +1,12 @@
 #!/bin/bash -e
 # shellcheck disable=SC2119,SC1091
 
+IMAGE_TYPE=$1
+
+if [[ "${IMAGE_TYPE}" == "" ]]; then
+	IMAGE_TYPE="pi"
+fi
+
 run_stage(){
 	log "Begin ${STAGE_DIR}"
 	STAGE="$(basename "${STAGE_DIR}")"
@@ -88,12 +94,32 @@ export LOG_FILE="${WORK_DIR}/build.log"
 
 mkdir -p "${WORK_DIR}"
 
-# Get the dynamic information from the image
-curl $BASE_IMAGE_URL/$BASE_IMAGE".info" > $WORK_DIR/infofile
 
-GIT_KERNEL_SHA1=$(cat $WORK_DIR/infofile | grep -Po '\b(Kernel: https:\/\/github\.com\/raspberrypi\/linux\/tree\/\K)+(.*)$')
-KERNEL_VERSION_V7=$(cat $WORK_DIR/infofile | grep -Po '\b(Uname string: Linux version )\K(?<price>[^\ ]+)')
-KERNEL_VERSION=${KERNEL_VERSION_V7%"-v7+"}"+"
+
+if [[ "$IMAGE_TYPE" == "pi" || "$IMAGE_TYPE" == "pizero" || "$IMAGE_TYPE" == "pi2" || "$IMAGE_TYPE" == "pi3" ]]; then
+	BASE_IMAGE_URL=${PI_STRETCH_BASE_IMAGE_URL}
+	BASE_IMAGE=${PI_STRETCH_BASE_IMAGE}
+	IMAGE_ARCH="pi"
+	KERNEL_BRANCH=${PI_STRETCH_KERNEL_BRANCH}
+fi
+
+
+if [[ "$IMAGE_TYPE" == "cm3p" ]]; then
+	BASE_IMAGE_URL=${PICM3P_STRETCH_BASE_IMAGE_URL}
+	BASE_IMAGE=${PICM3P_STRETCH_BASE_IMAGE}
+	IMAGE_ARCH="pi"
+	KERNEL_BRANCH=${PICM3P_STRETCH_KERNEL_BRANCH}
+fi
+
+if [[ "$IMAGE_TYPE" == "pi" || "$IMAGE_TYPE" == "pizero" || "$IMAGE_TYPE" == "pi2" || "$IMAGE_TYPE" == "pi3" || "$IMAGE_TYPE" == "cm3p" ]]; then
+	# Get the dynamic information from the image
+	curl "${BASE_IMAGE_URL}/${BASE_IMAGE}.info" > $WORK_DIR/infofile
+
+	GIT_KERNEL_SHA1=$(cat $WORK_DIR/infofile | grep -Po '\b(Kernel: https:\/\/github\.com\/raspberrypi\/linux\/tree\/\K)+(.*)$')
+	KERNEL_VERSION_V7=$(cat $WORK_DIR/infofile | grep -Po '\b(Uname string: Linux version )\K(?<price>[^\ ]+)')
+	KERNEL_VERSION=${KERNEL_VERSION_V7%"-v7+"}"+"
+fi
+
 
 # used in the stage 5 scripts to place a version file inside the image, and below after the
 # stages have run, in the name of the image itself
@@ -102,6 +128,11 @@ export BUILDER_VERSION
 
 
 export BASE_DIR
+
+export IMAGE_TYPE
+export IMAGE_ARCH
+export BASE_IMAGE_URL
+export BASE_IMAGE
 
 export CLEAN
 export IMG_NAME
@@ -120,8 +151,8 @@ export QOPENHD_VERSION
 export PI_TOOLS_REPO
 export PI_TOOLS_BRANCH
 
-export PI_KERNEL_REPO
-export PI_KERNEL_BRANCH
+export KERNEL_REPO
+export KERNEL_BRANCH
 
 export RTL_8812AU_REPO
 export RTL_8812AU_BRANCH
