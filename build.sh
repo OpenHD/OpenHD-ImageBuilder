@@ -3,9 +3,35 @@
 
 IMAGE_TYPE=$1
 
+echo "Open.HD Image Builder"
+echo "------------------------------------------------------"
+echo ""
+
 if [[ "${IMAGE_TYPE}" == "" ]]; then
 	IMAGE_TYPE="pi"
+	echo "No model chosen, building standard pi image by default"
+	echo ""
+	echo "Usage: ./build.sh [pi | pizero | pi2 | pi3 | cm3 | cm3p]"
+	echo ""
+	echo "Options:"
+	echo ""
+	echo "    pi/pizero/pi2/pi3/cm3: standard image, supports Pi Zero, Pi 2, Pi 3, CM3"
+	echo ""
+	echo "                     cm3p: for Pi Compute Module 3+, testing only"
 fi
+
+
+if [[ "$IMAGE_TYPE" == "pi" || "$IMAGE_TYPE" == "pizero" || "$IMAGE_TYPE" == "pi2" || "$IMAGE_TYPE" == "pi3" || "$IMAGE_TYPE" == "cm3" ]]; then
+    echo "Building standard image"
+fi
+
+if [[ "$IMAGE_TYPE" == "cm3p" ]]; then
+    echo "Building Compute Module 3+ image"
+fi
+
+echo ""
+echo "------------------------------------------------------"
+
 
 run_stage(){
 	log "Begin ${STAGE_DIR}"
