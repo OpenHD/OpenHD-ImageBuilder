@@ -9,8 +9,6 @@ echo ""
 
 if [[ "${IMAGE_TYPE}" == "" ]]; then
 	IMAGE_TYPE="pi"
-	echo "No model chosen, building standard pi image by default"
-	echo ""
 	echo "Usage: ./build.sh [pi | pizero | pi2 | pi3 | cm3 | cm3p]"
 	echo ""
 	echo "Options:"
@@ -18,6 +16,9 @@ if [[ "${IMAGE_TYPE}" == "" ]]; then
 	echo "    pi/pizero/pi2/pi3/cm3: standard image, supports Pi Zero, Pi 2, Pi 3, CM3"
 	echo ""
 	echo "                     cm3p: for Pi Compute Module 3+, testing only"
+	echo ""
+	echo "------------------------------------------------------"
+	echo ""
 fi
 
 
