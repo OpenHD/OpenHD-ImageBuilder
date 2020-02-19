@@ -5,8 +5,8 @@
 #!/bin/bash
 
 # Remove bad and unnecessary symlinks 
-rm /lib/modules/4.14.71*/build
-rm /lib/modules/4.14.71*/source
+rm /lib/modules/*/build || true
+rm /lib/modules/*/source || true
 
 if [ "${APT_CACHER_NG_ENABLED}" == "true" ]; then
     echo "Acquire::http::Proxy \"${APT_CACHER_NG_URL}/\";" >> /etc/apt/apt.conf.d/10cache
