@@ -1,11 +1,18 @@
 # Output image name
 IMG_NAME=Open.HD
 
-# Download location base image
-BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2018-10-11"
+KERNEL_REPO=https://github.com/raspberrypi/linux.git
 
-# File name base image
-BASE_IMAGE="2018-10-09-raspbian-stretch-lite"
+
+PI_STRETCH_BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2018-10-11"
+PI_STRETCH_BASE_IMAGE="2018-10-09-raspbian-stretch-lite"
+PI_STRETCH_KERNEL_BRANCH=rpi-4.14.y
+
+PICM3P_STRETCH_BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-04-09"
+PICM3P_STRETCH_BASE_IMAGE="2019-04-08-raspbian-stretch-lite"
+PICM3P_STRETCH_KERNEL_BRANCH=rpi-4.14.y
+
+
 
 # Amount of cores to use for compilation on host machine
 J_CORES=12
@@ -16,9 +23,6 @@ APT_CACHER_NG_ENABLED=false
 
 PI_TOOLS_REPO=https://github.com/raspberrypi/tools.git
 PI_TOOLS_BRANCH=master
-
-PI_KERNEL_REPO=https://github.com/raspberrypi/linux.git
-PI_KERNEL_BRANCH=rpi-4.14.y
 
 # Fixed at v5.2.20 until 5.3.4 works for injection
 RTL_8812AU_REPO=https://github.com/aircrack-ng/rtl8812au.git
