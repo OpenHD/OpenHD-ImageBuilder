@@ -162,7 +162,8 @@ HOTSPOT_BAND=a
 HOTSPOT_CHANNEL=36
 # Set to number of seconds you wany hotspot to shutdown. Default is "0", run forever
 HOTSPOT_TIMEOUT=0
-# corresponds to 1dBm, when passed to iw dev wlan0 set txpower fixed ${HOTSPOT_TXPOWER}
+# hotspot transmit power in units of mBm, so 100 corresponds to 1dBm
+# to set full power, use HOTSPOT_TXPOWER=3100
 HOTSPOT_TXPOWER=100
 
 # >>>>>>>>>>[ETHERNET HOTSPOT]--*Only used for PC/Mission Planner Ethernet connection
