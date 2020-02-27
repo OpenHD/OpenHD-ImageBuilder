@@ -40,6 +40,12 @@ pushd mavlink-router
 sudo git submodule update --init --recursive  || exit 1
 popd
 
+log "Download Mavlink library"
+sudo git clone --depth=1 -b ${MAVLINK_BRANCH} ${MAVLINK_REPO} || exit 1
+pushd mavlink
+sudo git submodule update --init --recursive  || exit 1
+popd
+
 log "Download cmavnode"
 sudo git clone --depth=1 -b ${CMAVNODE_BRANCH} ${CMAVNODE_REPO} || exit 1
 pushd cmavnode
