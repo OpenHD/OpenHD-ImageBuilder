@@ -31,6 +31,9 @@ git clone --depth=1 -b ${LIFEPOWEREDPI_BRANCH} ${LIFEPOWEREDPI_REPO} || exit 1
 log "Download OpenHDMicroservice"
 git clone --depth=1 -b ${OPENHDMICROSERVICE_BRANCH} ${OPENHDMICROSERVICE_REPO} || exit 1
 
+log "Download OpenHDRouter"
+git clone --depth=1 -b ${OPENHDROUTER_BRANCH} ${OPENHDROUTER_REPO} || exit 1
+
 log "Download Raspi2png"
 git clone --depth=1 -b ${RASPI2PNG_BRANCH} ${RASPI2PNG_REPO} || exit 1
 
