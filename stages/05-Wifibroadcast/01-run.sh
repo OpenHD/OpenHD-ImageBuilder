@@ -32,12 +32,10 @@ sudo mv Open.HD/openvg/ openvg/
 log "Download EZWFB - Base"
 # sudo git clone https://github.com/user1321/wifibroadcast-base.git
 sudo mv Open.HD/wifibroadcast-base/ wifibroadcast-base/
-sudo cp -r Open.HD/mavlink/ wifibroadcast-base/mavlink/
 
 log "Download EZWFB - OSD"
 # sudo git clone https://github.com/user1321/wifibroadcast-osd-orig wifibroadcast-osd
 sudo mv Open.HD/wifibroadcast-osd/ wifibroadcast-osd/
-sudo cp -r Open.HD/mavlink/ wifibroadcast-osd/mavlink/
 
 log "Download EZWFB - RC"
 # sudo git clone -b user1321-5MHzAth9k https://github.com/user1321/wifibroadcast-rc-orig.git wifibroadcast-rc-Ath9k
