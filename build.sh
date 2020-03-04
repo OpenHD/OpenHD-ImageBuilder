@@ -229,8 +229,8 @@ export ROOTFS_DIR
 export PREV_ROOTFS_DIR
 export IMG_SUFFIX
 
-# shellcheck source=scripts/common
-source "${SCRIPT_DIR}/common"
+# shellcheck source=scripts/common.sh
+source "${SCRIPT_DIR}/common.sh"
 
 log "IMG ${BASE_IMAGE}"
 log "SHA ${GIT_KERNEL_SHA1}"
