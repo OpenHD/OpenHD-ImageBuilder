@@ -1,24 +1,60 @@
+// SETTINGS \\
+
+:doctype: book
+
+// -- Table of Contents
+
+:toc:
+:toclevels: 3
+:toc-title:  
+:toc-placement!:
+
+// -- Icons
+
+ifdef::env-github[]
+
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+
+ifdef::env-github[]
+:status:
+:outfilesuffix: .asciidoc
+endif::[]
+
+:sectanchors:
+:numbered:
+
+// SETTINGS END \\
+
 # Open.HD-Image-Builder
+
+// Table of Contents
+toc::[]
+
 Short version: This project takes a Raspbian-lite base image and modifies it into a Open.HD compatible image.
 For the long version, read on.
 
 ## Using
 In order to be able to run this you need a Debian or Ubuntu Linux machine with 30 Gb free space on the main partition, and with the following packages:
 
-```
+```sh
 sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support build-essential gcc-arm*
 ```
 
 Then git clone this repository to a suitable folder 
 
-```
+```sh
 git clone https://github.com/OpenHD/Open.HD_Image_Builder.git
 cd Open.HD_Image_Builder
 ```
 
 and run:
 
-```
+```sh
 sudo -s
 ./build.sh
 ```
@@ -34,7 +70,7 @@ The main issue offcourse being the first one.
 So, on to this, the new and improved 'staged' image builder.
 
 ### STAGES
-The core concept (and some code) was taken from [pi-gen](https://github.com/RPi-Distro/pi-gen), the Raspbian image generator.
+The core concept (and some code) was taken from link:https://github.com/RPi-Distro/pi-gen[pi-gen], the Raspbian image generator.
 Whenever we make a OpenHd image, we basically perform several steps in order:
 
 - Download the Raspbian lite image
@@ -52,7 +88,7 @@ So after thinking about the problem and looking for projects who had tackled thi
 
 This concept applies to the OpenHD image creation as well. So i modified the core logic into this system:
 
-![flow](https://github.com/OpenHD/Open.HD_Image_Builder/raw/master/Builder%20flow.png "Flow")
+image::https://github.com/OpenHD/Open.HD_Image_Builder/raw/master/Builder%20flow.png[Flow]
 
 This allows us to run the build process once, and when we want to make a change in stage 3, we only run stage 3 and 4 again by removing the `SKIP` file from the `stages/03-Packages` and the `stages/04-Wifibroadcast` folders. The build system will copy the kernel `IMAGE.img` from stage 2 to stage 3 and re-run all the scripts in stage 3. The resulting image is copied to stage 4 and all those scripts are run. Finally, when there are no more stages, the `IMAGE.img` from the last stage is copied to the `deploy/ezwfb-{date}.img` file.
 
