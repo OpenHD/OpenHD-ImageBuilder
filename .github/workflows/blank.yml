@@ -1,0 +1,21 @@
+name: openhd-ng-image-build
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: install-dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get -y install unzip qemu-user-static
+    - name: build
+      run: sudo ./build.sh
+    - name: upload-artifacts
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: Open.HD
+        path: deploy
