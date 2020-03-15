@@ -20,6 +20,16 @@ sudo make install || exit 1
 cd ..
 rm -rf mavlink-router
 
+# Install mavlink library
+cd /home/pi
+cd mavlink
+./rebuild_mavlink.sh
+cd ..
+rsync -av ./mavlink_generated/include/mavlink/v2.0/ /usr/local/include/mavlink/
+cd ..
+rm -rf mavlink || true
+rm -rf mavlink_generated || true
+
 # Install cmavnode
 cd /home/pi
 cd cmavnode
@@ -56,6 +66,12 @@ cd ..
 cd /home/pi
 cd OpenHDMicroservice
 git submodule update --init || exit 1
+make install || exit 1
+
+# install OpenHDRouter
+cd /home/pi
+cd OpenHDRouter
+git submodule update --init --recursive || exit 1
 make install || exit 1
 
 cd /home/pi

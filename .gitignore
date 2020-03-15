@@ -5,3 +5,4 @@ SKIP
 SKIP_STEP*
 SKIP_CH_STEP*
 buildlog.log
+.DS_Store
