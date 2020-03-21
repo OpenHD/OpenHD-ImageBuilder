@@ -22,6 +22,8 @@ popd
 # to allow tracing problems and changes back to the source, even if the image is renamed
 echo ${OPENHD_VERSION} > ${MNT_DIR}/openhd_version.txt
 echo ${BUILDER_VERSION} > ${MNT_DIR}/builder_version.txt
+echo ${OPENHD_VERSION} > ${MNT_DIR}/boot/openhd_version.txt
+echo ${BUILDER_VERSION} > ${MNT_DIR}/boot/builder_version.txt
 # copy the Open.HD repo version back down to the work folder so build.sh can retrieve it and use it
 # in the name of the image being built
 cp ${MNT_DIR}/openhd_version.txt ${STAGE_WORK_DIR}/../
