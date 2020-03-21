@@ -18,7 +18,7 @@ OPENHD_VERSION=$(git describe --always --tags)
 export OPENHD_VERSION
 popd
 
-# store the commit used for the Open.HD repo as we as the builder inside the image
+# store the commit used for the Open.HD repo as well as the builder inside the image
 # to allow tracing problems and changes back to the source, even if the image is renamed
 echo ${OPENHD_VERSION} > ${MNT_DIR}/openhd_version.txt
 echo ${BUILDER_VERSION} > ${MNT_DIR}/builder_version.txt
