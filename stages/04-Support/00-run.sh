@@ -10,8 +10,6 @@ mkdir -p GIT
 
 pushd GIT
 
-MNT_DIR="${STAGE_WORK_DIR}/mnt"
-
 log "Installing Qt"
 
 if [ ! -f Qt${QT_VERSION}-${QT_MINOR_RELEASE}-${DISTRO}.tar.gz ]; then
