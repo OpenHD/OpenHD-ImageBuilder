@@ -1,3 +1,3 @@
 #!/bin/bash
 
-LD_PRELOAD="/opt/vc/lib/libGLESv2.so /opt/vc/lib/libEGL.so" /usr/local/bin/QOpenHD -platform eglfs
+LD_PRELOAD="/opt/vc/lib/libGLESv2.so /opt/vc/lib/libEGL.so" QT_QPA_EGLFS_KMS_ATOMIC=1 /usr/local/bin/QOpenHD -platform eglfs
