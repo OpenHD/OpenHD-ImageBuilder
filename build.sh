@@ -245,7 +245,7 @@ done
 OPENHD_VERSION=$(cat ${WORK_DIR}/openhd_version.txt)
 if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
 	mkdir -p "${DEPLOY_DIR}" || true
-	cp "${PREV_WORK_DIR}/IMAGE.img" "${DEPLOY_DIR}/${IMG_NAME}-${OPENHD_VERSION}.img"
+	cp "${PREV_WORK_DIR}/IMAGE.img" "${DEPLOY_DIR}/${IMG_NAME}-${OPENHD_VERSION}-${DISTRO}.img"
 fi
 
 #  Clean up SKIP_STEP files since we finished the build
