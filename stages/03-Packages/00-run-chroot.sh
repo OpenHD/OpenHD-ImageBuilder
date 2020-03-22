@@ -62,6 +62,9 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libsdl1.2-dev
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libav-tools
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install firmware-misc-nonfree
 
+DEBIAN_FRONTEND=noninteractive sudo apt install -y libegl1-mesa libegl1-mesa-dev libgles2-mesa libgles2-mesa-dev libgbm-dev 
+
+
 # text to speech for QOpenHD
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libspeechd-dev flite1-dev flite speech-dispatcher-flite --no-install-recommends
 
