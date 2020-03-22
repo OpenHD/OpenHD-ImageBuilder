@@ -49,11 +49,6 @@ pushd mavlink
 sudo git submodule update --init --recursive  || exit 1
 popd
 
-log "Download cmavnode"
-sudo git clone --depth=1 -b ${CMAVNODE_BRANCH} ${CMAVNODE_REPO} || exit 1
-pushd cmavnode
-sudo git submodule update --init || exit 1
-popd
 
 #return
 popd

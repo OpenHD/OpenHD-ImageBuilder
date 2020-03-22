@@ -30,15 +30,6 @@ cd ..
 rm -rf mavlink || true
 rm -rf mavlink_generated || true
 
-# Install cmavnode
-cd /home/pi
-cd cmavnode
-sudo mkdir build && cd build
-sudo cmake .. || exit 1
-sudo make || exit 1
-sudo make install || exit 1
-cd /home/pi/ && rm -r cmavnode
-
 cd /home/pi/
 cd LiFePO4wered-Pi
 mkdir -p build/DAEMON
