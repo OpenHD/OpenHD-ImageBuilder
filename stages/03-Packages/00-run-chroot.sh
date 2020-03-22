@@ -30,7 +30,7 @@ apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0
 sudo apt-get update
 
 # Install essentials
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install python-pip
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install python-pip python-setuptools python-dev python3-dev
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install aircrack-ng
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gnuplot
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install dnsmasq
