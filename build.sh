@@ -107,22 +107,6 @@ if [ -f config ]; then
 	source config
 fi
 
-if [ -z "${IMG_NAME}" ]; then
-	echo "IMG_NAME not set" 1>&2
-	exit 1
-fi
-
-# Variables
-export IMG_DATE="${IMG_DATE:-"$(date +%Y-%m-%d)"}"
-
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-export SCRIPT_DIR="${BASE_DIR}/scripts"
-export WORK_DIR="${BASE_DIR}/work"
-export DEPLOY_DIR=${DEPLOY_DIR:-"${BASE_DIR}/deploy"}
-export LOG_FILE="${WORK_DIR}/build.log"
-
-mkdir -p "${WORK_DIR}"
-
 
 
 if [[ "$IMAGE_TYPE" == "pi" || "$IMAGE_TYPE" == "pizero" || "$IMAGE_TYPE" == "pi2" || "$IMAGE_TYPE" == "pi3" || "$IMAGE_TYPE" == "cm3" ]]; then
@@ -141,6 +125,25 @@ if [[ "$IMAGE_TYPE" == "cm3p" || "$IMAGE_TYPE" == "pi4" ]]; then
 	DISTRO="buster"
 	KERNEL_BRANCH=${PI_BUSTER_KERNEL_BRANCH}
 fi
+
+
+
+if [ -z "${IMG_NAME}" ]; then
+	echo "IMG_NAME not set" 1>&2
+	exit 1
+fi
+
+# Variables
+export IMG_DATE="${IMG_DATE:-"$(date +%Y-%m-%d)"}"
+
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export SCRIPT_DIR="${BASE_DIR}/scripts"
+export WORK_DIR="${BASE_DIR}/work"
+export DEPLOY_DIR=${DEPLOY_DIR:-"${BASE_DIR}/deploy"}
+export LOG_FILE="${WORK_DIR}/build.log"
+
+mkdir -p "${WORK_DIR}"
+
 
 # we use a branch-specific repo directory so that we don't have to blow it away just to build an
 # image for a different distro or board, we can just reset the stage
