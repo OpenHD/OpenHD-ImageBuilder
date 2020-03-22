@@ -1,21 +1,29 @@
 #!/bin/bash -e
 # shellcheck disable=SC2119,SC1091
 
-IMAGE_TYPE=$1
+if [ -f config ]; then
+	source config
+fi
+
+IMAGE_ARCH=$1
+DISTRO=$2
 
 echo "Open.HD Image Builder"
 echo "------------------------------------------------------"
 echo ""
 
-if [[ "${IMAGE_TYPE}" == "" ]]; then
-	IMAGE_TYPE="pi"
-	echo "Usage: ./build.sh [pi | pizero | pi2 | pi3 | pi4 | cm3 | cm3p]"
+
+if [[ "${IMAGE_ARCH}" == "" || ${DISTRO} == "" ]]; then
+	IMAGE_ARCH="pi"
+	DISTRO="stretch"
+
+	echo "Usage: ./build.sh pi [stretch | buster]"
 	echo ""
 	echo "Options:"
 	echo ""
-	echo "    pi/pizero/pi2/pi3/cm3: standard image, supports Pi Zero, Pi 2, Pi 3, CM3"
+	echo "                  pi stretch: standard image, supports Pi Zero, Pi 2, Pi 3, CM3"
 	echo ""
-	echo "                 cm3p/pi4: for Pi Compute Module 3+ and Pi 4, testing only"
+	echo "                   pi buster: testing image, for Pi Compute Module 3+ and Pi 4"
 	echo ""
 	echo ""
 	echo "------------------------------------------------------"
@@ -23,13 +31,21 @@ if [[ "${IMAGE_TYPE}" == "" ]]; then
 fi
 
 
-if [[ "$IMAGE_TYPE" == "pi" || "$IMAGE_TYPE" == "pizero" || "$IMAGE_TYPE" == "pi2" || "$IMAGE_TYPE" == "pi3" || "$IMAGE_TYPE" == "cm3" ]]; then
-    echo "Building standard image"
+if [[ "$IMAGE_ARCH" == "pi" && "${DISTRO}" == "stretch" ]]; then
+	echo "Building pi stretch image"
+
+	BASE_IMAGE_URL=${PI_STRETCH_BASE_IMAGE_URL}
+	BASE_IMAGE=${PI_STRETCH_BASE_IMAGE}
+	KERNEL_BRANCH=${PI_STRETCH_KERNEL_BRANCH}
 fi
 
 
-if [[  "$IMAGE_TYPE" == "cm3p" || "$IMAGE_TYPE" == "pi4" ]]; then
-    echo "Building Compute Module 3+ / Pi 4 image"
+if [[ "$IMAGE_ARCH" == "pi" && "${DISTRO}" == "buster" ]]; then
+	echo "Building pi buster image"
+
+	BASE_IMAGE_URL=${PI_BUSTER_BASE_IMAGE_URL}
+	BASE_IMAGE=${PI_BUSTER_BASE_IMAGE}
+	KERNEL_BRANCH=${PI_BUSTER_KERNEL_BRANCH}
 fi
 
 echo ""
@@ -106,29 +122,6 @@ if [ "$(id -u)" != "0" ]; then
 	exit 1
 fi
 
-if [ -f config ]; then
-	source config
-fi
-
-
-
-if [[ "$IMAGE_TYPE" == "pi" || "$IMAGE_TYPE" == "pizero" || "$IMAGE_TYPE" == "pi2" || "$IMAGE_TYPE" == "pi3" || "$IMAGE_TYPE" == "cm3" ]]; then
-	BASE_IMAGE_URL=${PI_STRETCH_BASE_IMAGE_URL}
-	BASE_IMAGE=${PI_STRETCH_BASE_IMAGE}
-	IMAGE_ARCH="pi"
-	DISTRO="stretch"
-	KERNEL_BRANCH=${PI_STRETCH_KERNEL_BRANCH}
-fi
-
-
-if [[ "$IMAGE_TYPE" == "cm3p" || "$IMAGE_TYPE" == "pi4" ]]; then
-	BASE_IMAGE_URL=${PI_BUSTER_BASE_IMAGE_URL}
-	BASE_IMAGE=${PI_BUSTER_BASE_IMAGE}
-	IMAGE_ARCH="pi"
-	DISTRO="buster"
-	KERNEL_BRANCH=${PI_BUSTER_KERNEL_BRANCH}
-fi
-
 
 
 if [ -z "${IMG_NAME}" ]; then
@@ -161,7 +154,6 @@ export BUILDER_VERSION
 
 export BASE_DIR
 
-export IMAGE_TYPE
 export IMAGE_ARCH
 export DISTRO
 export BASE_IMAGE_URL
