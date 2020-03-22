@@ -138,7 +138,7 @@ export IMG_DATE="${IMG_DATE:-"$(date +%Y-%m-%d)"}"
 
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export SCRIPT_DIR="${BASE_DIR}/scripts"
-export WORK_DIR="${BASE_DIR}/work"
+export WORK_DIR="${BASE_DIR}/work-${IMAGE_ARCH}-${DISTRO}"
 export DEPLOY_DIR=${DEPLOY_DIR:-"${BASE_DIR}/deploy"}
 export LOG_FILE="${WORK_DIR}/build.log"
 
