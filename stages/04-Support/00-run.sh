@@ -14,16 +14,18 @@ MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
 log "Installing Qt"
 
-if [ ! -f Qt${QT_MAJOR_VERSION}.${QT_MINOR_VERSION}.tar.gz ]; then
-	log "Download Qt ${QT_MAJOR_VERSION}.${QT_MINOR_VERSION}"
-	wget https://github.com/infincia/qt-raspberrypi/releases/download/${QT_MAJOR_VERSION}.${QT_MINOR_VERSION}/Qt${QT_MAJOR_VERSION}.${QT_MINOR_VERSION}.tar.gz || exit 1
+if [ ! -f Qt${QT_VERSION}-${QT_MINOR_RELEASE}-${DISTRO}.tar.gz ]; then
+	log "Download Qt ${QT_VERSION} for ${DISTRO} on ${IMAGE_ARCH}"
+	wget https://github.com/OpenHD/qt-raspberrypi/releases/download/${QT_VERSION}-${QT_MINOR_RELEASE}/Qt${QT_VERSION}-${QT_MINOR_RELEASE}-${DISTRO}.tar.gz || exit 1
 fi
 
-tar xvf Qt${QT_MAJOR_VERSION}.${QT_MINOR_VERSION}.tar.gz || exit 1
+tar xvf Qt${QT_VERSION}-${QT_MINOR_RELEASE}-${DISTRO}.tar.gz || exit 1
 
-mv Qt${QT_MAJOR_VERSION}.${QT_MINOR_VERSION} ${MNT_DIR}/opt/ || exit 1
+rm -rf ${MNT_DIR}/opt/Qt* || true
 
-rm -f Qt${QT_MAJOR_VERSION}.${QT_MINOR_VERSION}.tar.gz
+mv Qt${QT_VERSION} ${MNT_DIR}/opt/ || exit 1
+
+rm -f Qt${QT_VERSION}-${QT_MINOR_RELEASE}-${DISTRO}.tar.gz
 
 log "Download LiFePO4wered-pi"
 git clone --depth=1 -b ${LIFEPOWEREDPI_BRANCH} ${LIFEPOWEREDPI_REPO} || exit 1

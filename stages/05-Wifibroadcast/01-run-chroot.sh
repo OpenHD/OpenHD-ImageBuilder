@@ -124,7 +124,7 @@ chmod 755 /home/pi/wifibroadcast-misc/LCD/MouseListener
 
 
 cd /home/pi/QOpenHD
-/opt/Qt${QT_MAJOR_VERSION}.${QT_MINOR_VERSION}/bin/qmake || exit 1
+/opt/Qt${QT_VERSION}/bin/qmake || exit 1
 make -j5 || exit 1
 cp -a release/QOpenHD "/usr/local/bin/QOpenHD" || exit 1
 cd ..
