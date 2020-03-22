@@ -67,10 +67,6 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install firmware-misc-nonfree
 
 DEBIAN_FRONTEND=noninteractive sudo apt install -y libegl1-mesa libegl1-mesa-dev libgles2-mesa libgles2-mesa-dev libgbm-dev 
 
-
-# text to speech for QOpenHD
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libspeechd-dev flite1-dev flite speech-dispatcher-flite --no-install-recommends
-
 # dependencies for OpenHDMicroservice
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install build-essential git python libboost-dev libboost-program-options-dev libboost-system-dev libasio-dev
 
@@ -94,22 +90,17 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install omxplayer
 # libsodium, used by svpcom
 apt-get --yes --force-yes install libsodium-dev || exit 1
 
+# text to speech for QOpenHD
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libspeechd-dev flite1-dev flite speech-dispatcher-flite
 
-# installs all dependencies for these packages so Qt itself can be built from source
+# Qt dependencies
 DEBIAN_FRONTEND=noninteractive sudo apt-get install build-essential \
                                                     libfontconfig1-dev libdbus-1-dev \
                                                     libfreetype6-dev libicu-dev libinput-dev \
                                                     libxkbcommon-dev libsqlite3-dev libssl-dev libpng-dev \
                                                     libjpeg-dev libglib2.0-dev \
-                                                    libasound2-dev pulseaudio libpulse-dev
-
-DEBIAN_FRONTEND=noninteractive sudo apt-get install libudev-dev libinput-dev libts-dev mtdev-tools
-DEBIAN_FRONTEND=noninteractive sudo apt-get install libglib2.0-doc libdca0 libdvdnav4 libdvdread4 libfaad2 \
-                                                    libilmbase12 libkate1 libmms0 libmodplug1 libmpcdec6 \
-                                                    libopencv-calib3d2.4v5 libopencv-highgui2.4-deb0 libopencv-objdetect2.4v5 \
-                                                    libopencv-video2.4v5 libopenexr22 liborc-0.4-0 libsbc1 libsoundtouch1 libspandsp2 \
-                                                    libsrtp0 libvo-aacenc0 libvo-amrwbenc0 libwebrtc-audio-processing1 libwildmidi2 libzbar0 \
-                                                    libcdparanoia0 libvisual-0.4-0 libtag1v5
+                                                    libasound2-dev pulseaudio libpulse-dev libdouble-conversion-dev \
+                                                    libudev-dev libinput-dev libts-dev mtdev-tools
 
 
 # Remove packages that conflict with the workings of EZ-Wifibroadcast
