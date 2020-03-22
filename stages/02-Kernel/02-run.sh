@@ -8,11 +8,8 @@ log "Compile kernel For Pi 1, Pi Zero, Pi Zero W, or Compute Module"
 pushd ${LINUX_DIR}
 
 log "Copy Kernel config"
-if [[ "${KERNEL_BRANCH}" == "rpi-4.14.71-openhd" ]]; then
-    cp "${STAGE_DIR}/FILES/.config_db_v6_kernel_4_14_66" ./.config
-elif [[ "${KERNEL_BRANCH}" == "rpi-4.19.y-openhd" ]]; then
-    cp "${STAGE_DIR}/FILES/.config_db_v6_kernel_4_19" ./.config
-fi
+cp "${STAGE_DIR}/FILES/.config-${KERNEL_BRANCH}-v6" ./.config
+
 
 make clean
 

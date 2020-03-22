@@ -8,8 +8,8 @@ log "Compile kernel for Pi 4"
 pushd ${LINUX_DIR}
 
 log "Copy Kernel config"
+cp "${STAGE_DIR}/FILES/.config-${KERNEL_BRANCH}-v7l" ./.config
 
-cp "${STAGE_DIR}/FILES/.config_db_v7l_kernel_4_19" ./.config
 
 make clean
 
