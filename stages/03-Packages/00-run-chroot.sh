@@ -53,7 +53,7 @@ PYTHON3_DEPENDENCIES="python3-future python3-attr python3-picamera python3-rpi.g
 
 
 # Command line utilities used at runtime by the OpenHD scripts
-SCRIPT_DEPENDENCIES="wiringpi usbmount ser2net i2c-tools fuse socat dos2unix dosfstools libav-tools indent omxplayer"
+SCRIPT_DEPENDENCIES="wiringpi usbmount ser2net i2c-tools fuse socat dos2unix dosfstools ffmpeg indent omxplayer"
 
 
 FONT_SUPPORT="libfontconfig1-dev libfreetype6-dev ttf-dejavu-core"
