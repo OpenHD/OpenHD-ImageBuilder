@@ -10,7 +10,7 @@ if [[ "${DISTO}" == "buster" ]]; then
     pushd ${LINUX_DIR}
 
     log "Copy Kernel config"
-    cp "${STAGE_DIR}/FILES/.config-${KERNEL_BRANCH}-v7l" ./.config
+    cp "${STAGE_DIR}/FILES/.config-${KERNEL_BRANCH}-v7l" ./.config || exit 1
 
 
     make clean

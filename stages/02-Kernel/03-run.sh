@@ -8,7 +8,7 @@ log "Compile kernel for Pi 2, Pi 3, Pi 3+, or Compute Module 3/3+"
 pushd ${LINUX_DIR}
 
 log "Copy Kernel config"
-cp "${STAGE_DIR}/FILES/.config-${KERNEL_BRANCH}-v7" ./.config
+cp "${STAGE_DIR}/FILES/.config-${KERNEL_BRANCH}-v7" ./.config || exit 1
 
 
 make clean

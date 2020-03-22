@@ -8,7 +8,7 @@ log "Compile kernel For Pi 1, Pi Zero, Pi Zero W, or Compute Module"
 pushd ${LINUX_DIR}
 
 log "Copy Kernel config"
-cp "${STAGE_DIR}/FILES/.config-${KERNEL_BRANCH}-v6" ./.config
+cp "${STAGE_DIR}/FILES/.config-${KERNEL_BRANCH}-v6" ./.config || exit 1
 
 
 make clean
