@@ -1,18 +1,18 @@
 # Output image name
 IMG_NAME=Open.HD
 
-KERNEL_REPO=https://github.com/raspberrypi/linux.git
+KERNEL_REPO=https://github.com/OpenHD/linux.git
 
 
 PI_STRETCH_BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2018-10-11"
 PI_STRETCH_BASE_IMAGE="2018-10-09-raspbian-stretch-lite"
-PI_STRETCH_KERNEL_BRANCH=rpi-4.14.y
+PI_STRETCH_KERNEL_BRANCH=rpi-4.14.71-openhd
+PI_STRETCH_KERNEL_COMMIT="f7b90465e3a1c70394ad441eb8515fa0f80b9fb5"
 
-PICM3P_STRETCH_BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-04-09"
-PICM3P_STRETCH_BASE_IMAGE="2019-04-08-raspbian-stretch-lite"
-PICM3P_STRETCH_KERNEL_BRANCH=rpi-4.14.y
-
-
+PI_BUSTER_BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2020-02-14"
+PI_BUSTER_BASE_IMAGE="2020-02-13-raspbian-buster-lite"
+PI_BUSTER_KERNEL_BRANCH=rpi-4.19.y-openhd
+PI_BUSTER_KERNEL_COMMIT="beabba1829b5874d114433a76154922094da957f"
 
 # Amount of cores to use for compilation on host machine
 J_CORES=12
