@@ -46,8 +46,8 @@ CMAVNODE_BRANCH=master
 OPENHD_REPO=https://github.com/OpenHD/Open.HD.git
 OPENHD_BRANCH=master
 
-LIFEPOWEREDPI_REPO=https://github.com/xorbit/LiFePO4wered-Pi.git
-LIFEPOWEREDPI_BRANCH=master
+LIFEPOWEREDPI_REPO=https://github.com/OpenHD/LiFePO4wered-Pi.git
+LIFEPOWEREDPI_BRANCH=openhd1
 
 QOPENHD_REPO=https://github.com/OpenHD/QOpenHD.git
 QOPENHD_VERSION=nightly-2020-3-1
