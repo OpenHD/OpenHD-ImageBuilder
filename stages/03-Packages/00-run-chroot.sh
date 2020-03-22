@@ -42,6 +42,7 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install mc
 
 #DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gtk-doc-tools
 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install build-essential autotools-dev automake
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libtool
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install autoconf
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libsdl1.2-dev
