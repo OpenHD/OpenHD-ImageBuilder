@@ -88,31 +88,6 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install python3-picamera
 # install omxplayer. Used by SSync to display video
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install omxplayer
 
-# gstreamer 1.16.1 dependencies for QOpenHD
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install build-essential autotools-dev automake autoconf \
-                                    libtool autopoint libxml2-dev zlib1g-dev libglib2.0-dev \
-                                    pkg-config bison flex python3 git gtk-doc-tools libasound2-dev \
-                                    libgudev-1.0-dev libxt-dev libvorbis-dev libcdparanoia-dev \
-                                    libpango1.0-dev libtheora-dev libvisual-0.4-dev iso-codes \
-                                    libgtk-3-dev libraw1394-dev libiec61883-dev libavc1394-dev \
-                                    libv4l-dev libcairo2-dev libcaca-dev libspeex-dev libpng-dev \
-                                    libshout3-dev libjpeg-dev libaa1-dev libflac-dev libdv4-dev \
-                                    libtag1-dev libwavpack-dev libpulse-dev libsoup2.4-dev libbz2-dev \
-                                    libcdaudio-dev libdc1394-22-dev ladspa-sdk libass-dev \
-                                    libcurl4-gnutls-dev libdca-dev libdirac-dev libdvdnav-dev \
-                                    libexempi-dev libexif-dev libfaad-dev libgme-dev libgsm1-dev \
-                                    libiptcdata0-dev libkate-dev libmimic-dev libmms-dev \
-                                    libmodplug-dev libmpcdec-dev libofa0-dev libopus-dev \
-                                    librsvg2-dev librtmp-dev libschroedinger-dev libslv2-dev \
-                                    libsndfile1-dev libsoundtouch-dev libspandsp-dev \
-                                    libxvidcore-dev libzbar-dev libzvbi-dev liba52-0.7.4-dev \
-                                    libcdio-dev libdvdread-dev libmad0-dev libmp3lame-dev \
-                                    libmpeg2-4-dev libopencore-amrnb-dev libopencore-amrwb-dev \
-                                    libsidplay1-dev libtwolame-dev libx264-dev libusb-1.0 \
-                                    python-gi-dev yasm python3-dev libgirepository1.0-dev \
-                                    libopencv-dev libde265-0 libfluidsynth1 liblilv-0-0 libmjpegutils-2.1-0 \
-                                    libmpeg2encpp-2.1-0 libmplex2-2.1-0 libsbc1 libvo-aacenc0 libvo-amrwbenc0 \
-                                    libvulkan1 libwebrtc-audio-processing1 libwildmidi-dev libbs2b0 libopenal1
 
 # installs all dependencies for these packages so Qt itself can be built from source
 DEBIAN_FRONTEND=noninteractive sudo apt-get install build-essential \
@@ -156,18 +131,18 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge iptables
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge triggerhappy
 
 
-# we build a newer version of gstreamer with the qmlglsink element enabled, which raspbian packages don't have
-DEBIAN_FRONTEND=noninteractive sudo apt-get purge -y '*gstreamer*'
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libgstreamer1.0-0
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-plugins-base 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-plugins-good 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-plugins-bad 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-plugins-ugly 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-libav 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-tools 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-alsa 
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-pulseaudio
+DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-omx-rpi-config
 
-wget https://github.com/OpenHD/gst-raspberrypi/releases/download/${GSTREAMER_VERSION}/GStreamer-${GSTREAMER_VERSION}.tar.gz
-
-tar xvf GStreamer-${GSTREAMER_VERSION}.tar.gz
-
-dpkg -i GStreamer-${GSTREAMER_VERSION}/*.deb  || exit 1
-
-rm GStreamer-${GSTREAMER_VERSION}.tar.gz || true
-
-rm -rf GStreamer-${GSTREAMER_VERSION} || true
 
 # Python essentials for mavlink router autoconf
 sudo pip install future
