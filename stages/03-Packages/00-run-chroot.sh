@@ -32,7 +32,10 @@ sudo apt-get update
 # Install essentials
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install python-pip python-setuptools python-dev python3-dev
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install aircrack-ng
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gnuplot
+if [[ "${DISTO}" == "stretch" ]]; then
+    # on buster the gnuplot package pulls in 670MB of other stuff we don't want, it's a giant waste of space
+    DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gnuplot
+fi
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install dnsmasq
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install socat
 # DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install --assume-no wireshark-common
