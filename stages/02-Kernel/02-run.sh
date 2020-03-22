@@ -20,7 +20,7 @@ log "Saving kernel as ${STAGE_WORK_DIR}/kernel1.img"
 cp arch/arm/boot/zImage "${MNT_DIR}/boot/kernel.img"
 
 log "Copy the kernel modules For Pi 1, Pi Zero, Pi Zero W, or Compute Module"
-make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH="$MNT_DIR" modules_install
+make -j $J_CORES ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH="$MNT_DIR" modules_install
 
 log "Copy the DTBs For Pi 1, Pi Zero, Pi Zero W, or Compute Module"
 sudo cp arch/arm/boot/dts/*.dtb "${MNT_DIR}/boot/"
