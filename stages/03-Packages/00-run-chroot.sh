@@ -140,9 +140,6 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-alsa
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-pulseaudio
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install gstreamer1.0-omx-rpi-config
 
-
-# Python essentials for mavlink router autoconf
-sudo pip install future
 #Python3 GPIO
 sudo apt-get -y install python3-rpi.gpio
 
