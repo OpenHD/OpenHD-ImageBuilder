@@ -88,6 +88,9 @@ DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install python3-picamera
 # install omxplayer. Used by SSync to display video
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install omxplayer
 
+# libsodium, used by svpcom
+apt-get --yes --force-yes install libsodium-dev || exit 1
+
 
 # installs all dependencies for these packages so Qt itself can be built from source
 DEBIAN_FRONTEND=noninteractive sudo apt-get install build-essential \
