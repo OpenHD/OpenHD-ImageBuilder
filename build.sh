@@ -37,6 +37,9 @@ echo "------------------------------------------------------"
 
 
 run_stage(){
+	log ""
+	log ""
+	log "======================================================"
 	log "Begin ${STAGE_DIR}"
 	STAGE="$(basename "${STAGE_DIR}")"
 	STAGE_WORK_DIR="${WORK_DIR}/${STAGE}"
