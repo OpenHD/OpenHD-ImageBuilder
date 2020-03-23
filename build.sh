@@ -53,21 +53,22 @@ echo "------------------------------------------------------"
 
 
 run_stage(){
+    STAGE="$(basename "${STAGE_DIR}")"
+    STAGE_WORK_DIR="${WORK_DIR}/${STAGE}"
+
     log ""
     log ""
     log "======================================================"
-    log "Begin ${STAGE_DIR}"
-    STAGE="$(basename "${STAGE_DIR}")"
-    STAGE_WORK_DIR="${WORK_DIR}/${STAGE}"
+    log "Begin ${STAGE_WORK_DIR}"
     pushd "${STAGE_DIR}" > /dev/null
 
     # Create the Work folder
     mkdir -p "${STAGE_WORK_DIR}"
 
     # Check wether to skip or not
-    if [ ! -f "${STAGE_DIR}/SKIP" ]; then
+    if [ ! -f "${STAGE_WORK_DIR}/SKIP" ]; then
         # mount the image for this stage
-        if [ ! -f "${STAGE_DIR}/SKIP_IMAGE" ]; then
+        if [ ! -f "${STAGE_WORK_DIR}/SKIP_IMAGE" ]; then
             # Copy the image from the previous stage
             if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
                 unmount_image
@@ -82,7 +83,7 @@ run_stage(){
         for i in {00..99}; do
 
             if [ -x ${i}-run.sh ]; then
-                SKIP_STEP="${STAGE_DIR}/SKIP_STEP${i}"
+                SKIP_STEP="${STAGE_WORK_DIR}/SKIP_STEP${i}"
                 if [ ! -f "${SKIP_STEP}" ]; then
                     log "Begin ${STAGE_DIR}/${i}-run.sh"
                     ./${i}-run.sh
@@ -92,7 +93,7 @@ run_stage(){
             fi
 
             if [ -f ${i}-run-chroot.sh ]; then
-                SKIP_CH_STEP="${STAGE_DIR}/SKIP_CH_STEP${i}"
+                SKIP_CH_STEP="${STAGE_WORK_DIR}/SKIP_CH_STEP${i}"
                 if [ ! -f "${SKIP_CH_STEP}" ]; then
                     log "Begin ${STAGE_DIR}/${i}-run-chroot.sh"
                     on_chroot < ${i}-run-chroot.sh
@@ -105,18 +106,18 @@ run_stage(){
     fi
 
     # SKIP this stage next time
-    touch "${STAGE_DIR}/SKIP"
+    touch "${STAGE_WORK_DIR}/SKIP"
 
     PREV_STAGE="${STAGE}"
     PREV_STAGE_DIR="${STAGE_DIR}"
     PREV_WORK_DIR="${WORK_DIR}/${STAGE}"
 
-    if [ ! -f "${STAGE_DIR}/SKIP_IMAGE" ]; then
+    if [ ! -f "${STAGE_WORK_DIR}/SKIP_IMAGE" ]; then
         unmount_image
     fi
 
     popd > /dev/null
-    log "End ${STAGE_DIR}"
+    log "End ${STAGE_WORK_DIR}"
 }
 
 if [ "$(id -u)" != "0" ]; then
