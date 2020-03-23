@@ -2,30 +2,33 @@ set -e
 
 # Do this to the WORK folder of this stage
 pushd ${STAGE_WORK_DIR}
+MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
 log "Compile kernel For Pi 1, Pi Zero, Pi Zero W, or Compute Module"
-pushd linux
+pushd ${LINUX_DIR}
 
 log "Copy Kernel config"
-cp "${STAGE_DIR}/FILES/.config_db_v6_kernel_4_14_66" ./.config
+cp "${STAGE_DIR}/FILES/.config-${KERNEL_BRANCH}-v6" ./.config || exit 1
+
+
+make clean
 
 #KERNEL=kernel ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make bcmrpi_defconfig
-KERNEL=kernel ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make -j $J_CORES zImage modules dtbs
+yes "" | KERNEL=kernel ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- make -j $J_CORES zImage modules dtbs
 
 log "Saving kernel as ${STAGE_WORK_DIR}/kernel1.img"
-mv arch/arm/boot/zImage "${STAGE_WORK_DIR}/kernel1.img"
+cp arch/arm/boot/zImage "${MNT_DIR}/boot/kernel.img" || exit 1
 
 log "Copy the kernel modules For Pi 1, Pi Zero, Pi Zero W, or Compute Module"
-MNT_DIR="${STAGE_WORK_DIR}/mnt"
-make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH="$MNT_DIR" modules_install
-
-# out of linux 
-popd
+make -j $J_CORES ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- INSTALL_MOD_PATH="$MNT_DIR" modules_install
 
 log "Copy the DTBs For Pi 1, Pi Zero, Pi Zero W, or Compute Module"
-sudo cp linux/arch/arm/boot/dts/*.dtb "${MNT_DIR}/boot/"
-sudo cp linux/arch/arm/boot/dts/overlays/*.dtb* "${MNT_DIR}/boot/overlays/"
-sudo cp linux/arch/arm/boot/dts/overlays/README "${MNT_DIR}/boot/overlays/"
+sudo cp arch/arm/boot/dts/*.dtb "${MNT_DIR}/boot/" || exit 1
+sudo cp arch/arm/boot/dts/overlays/*.dtb* "${MNT_DIR}/boot/overlays/" || exit 1
+sudo cp arch/arm/boot/dts/overlays/README "${MNT_DIR}/boot/overlays/" || exit 1
+
+# out of linux source dir
+popd
 
 #return 
 popd

@@ -22,6 +22,8 @@ sudo systemctl disable ser2net.service
 sudo systemctl disable systemd-timesyncd.service
 sudo systemctl disable hciuart.service
 sudo systemctl disable exim4.service
+sudo systemctl mask hostapd.service
+sudo systemctl mask wpa_supplicant.service
 
 #Disable does not work on PLYMOUTH
 sudo systemctl mask plymouth-start.service

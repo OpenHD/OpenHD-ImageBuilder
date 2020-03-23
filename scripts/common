@@ -36,6 +36,10 @@ mount_image () {
 	LOOP_DEV="$(findmnt -nr -o source $MNT_DIR)"
 	resize2fs -f "$LOOP_DEV"
 
+	# disable dir_index due to a weird bug when running qemu in a 32-bit chroot on 64-bit x86 hardware, readdir() fails in strange ways
+	log "Disabling dir_index on ${LOOP_DEV}"
+	tune2fs -O ^dir_index ${LOOP_DEV} || true
+
     # mount the BOOT partition
     mountpoint -q "${MNT_DIR}/boot" || mount "$IMG_FILE" -o loop,offset=${BOOT_OFFSET},rw,sizelimit=${BOOT_LENGTH} "${MNT_DIR}/boot"
 }
@@ -46,12 +50,18 @@ unmount_image(){
 	sleep 1
 	
 	MNT_DIR="${STAGE_WORK_DIR}/mnt"
+	#LOOP_DEV="$(findmnt -nr -o source $MNT_DIR)"
+	
 	if mount | grep -q "$MNT_DIR/boot"; then
 		umount -l "$MNT_DIR/boot"
 	fi
 	if mount | grep -q "$MNT_DIR"; then
 		umount -l "$MNT_DIR/"
 	fi
+
+	#log "Re-enabling dir_index on ${LOOP_DEV}"
+	#tune2fs -O dir_index ${LOOP_DEV} || true
+	#e2fsck -D ${LOOP_DEV} || true
 }
 export -f unmount_image
 

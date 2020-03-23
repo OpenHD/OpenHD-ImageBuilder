@@ -15,5 +15,14 @@ BOOT_LOOP_DEV="$(findmnt -nr -o source $BOOT_MNT_DIR)"
 
 fatlabel "$BOOT_LOOP_DEV" "OPENHD"
 
+if [[ "${DISTO}" == "buster" ]]; then
+
+echo "
+[all]
+dtoverlay=vc4-fkms-v3d
+" >> ${BOOT_MNT_DIR}/config.txt
+
+fi
+
 #return
 popd

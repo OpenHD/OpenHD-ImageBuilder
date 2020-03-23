@@ -38,18 +38,18 @@ sudo systemctl start wbcconfig.service
 #sudo systemctl disable zerotier-one
 
 # Copy tty autologin stuff
-cd /etc/systemd/system/getty.target.wants
-sudo cp getty@tty1.service getty@tty2.service
-sudo cp getty@tty1.service getty@tty3.service
-sudo cp getty@tty1.service getty@tty4.service
-sudo cp getty@tty1.service getty@tty5.service
-sudo cp getty@tty1.service getty@tty6.service
-sudo cp getty@tty1.service getty@tty7.service
-sudo cp getty@tty1.service getty@tty8.service
-sudo cp getty@tty1.service getty@tty9.service
-sudo cp getty@tty1.service getty@tty10.service
-sudo cp getty@tty1.service getty@tty11.service
-sudo cp getty@tty1.service getty@tty12.service
+systemctl enable getty@tty1.service
+systemctl enable getty@tty2.service
+systemctl enable getty@tty3.service
+systemctl enable getty@tty4.service
+systemctl enable getty@tty5.service
+systemctl enable getty@tty6.service
+systemctl enable getty@tty7.service
+systemctl enable getty@tty8.service
+systemctl enable getty@tty9.service
+systemctl enable getty@tty10.service
+systemctl enable getty@tty11.service
+systemctl enable getty@tty12.service
 
 # Make files executable
 cd /etc/init.d/

@@ -30,15 +30,6 @@ cd ..
 rm -rf mavlink || true
 rm -rf mavlink_generated || true
 
-# Install cmavnode
-cd /home/pi
-cd cmavnode
-sudo mkdir build && cd build
-sudo cmake .. || exit 1
-sudo make || exit 1
-sudo make install || exit 1
-cd /home/pi/ && rm -r cmavnode
-
 cd /home/pi/
 cd LiFePO4wered-Pi
 mkdir -p build/DAEMON
@@ -65,13 +56,11 @@ cd ..
 # install OpenHDMicroservice
 cd /home/pi
 cd OpenHDMicroservice
-git submodule update --init || exit 1
 make install || exit 1
 
 # install OpenHDRouter
 cd /home/pi
 cd OpenHDRouter
-git submodule update --init --recursive || exit 1
 make install || exit 1
 
 cd /home/pi

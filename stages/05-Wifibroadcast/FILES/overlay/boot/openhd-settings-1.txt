@@ -255,11 +255,6 @@ ENABLE_SERIAL_TELEMETRY_OUTPUT=N
 TELEMETRY_OUTPUT_SERIALPORT_GROUND=/dev/serial0
 TELEMETRY_OUTPUT_SERIALPORT_GROUND_BAUDRATE=57600
 
-# >>>>>>>>>>[MAVLINK FORWARDER] Choose "mavlink-routerd" (default) or "cmavnode"
-MAVLINK_FORWARDER=mavlink-routerd
-
-
-
 
 #  ======================================================================================
 #                      <ADVANCED/ADDITIONAL HARDWARE SETTINGS>

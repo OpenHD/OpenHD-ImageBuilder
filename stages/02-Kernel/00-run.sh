@@ -3,12 +3,13 @@ set -e
 # Do this to the WORK folder of this stage
 pushd ${STAGE_WORK_DIR}
 
-if [ ! -d "linux" ]; then
+
+if [ ! -d "${LINUX_DIR}" ]; then
     log "Download the kernel"
-    git clone --depth=100 -b ${KERNEL_BRANCH} ${KERNEL_REPO}
+    git clone --depth=100 -b ${KERNEL_BRANCH} ${KERNEL_REPO} ${LINUX_DIR}
 fi
 
-pushd linux
+pushd ${LINUX_DIR}
 git reset --hard
 git pull
 

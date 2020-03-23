@@ -1,18 +1,18 @@
 # Output image name
 IMG_NAME=Open.HD
 
-KERNEL_REPO=https://github.com/raspberrypi/linux.git
+KERNEL_REPO=https://github.com/OpenHD/linux.git
 
 
 PI_STRETCH_BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2018-10-11"
 PI_STRETCH_BASE_IMAGE="2018-10-09-raspbian-stretch-lite"
-PI_STRETCH_KERNEL_BRANCH=rpi-4.14.y
+PI_STRETCH_KERNEL_BRANCH=rpi-4.14.71-openhd
+PI_STRETCH_KERNEL_COMMIT="f7b90465e3a1c70394ad441eb8515fa0f80b9fb5"
 
-PICM3P_STRETCH_BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2019-04-09"
-PICM3P_STRETCH_BASE_IMAGE="2019-04-08-raspbian-stretch-lite"
-PICM3P_STRETCH_KERNEL_BRANCH=rpi-4.14.y
-
-
+PI_BUSTER_BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2020-02-14"
+PI_BUSTER_BASE_IMAGE="2020-02-13-raspbian-buster-lite"
+PI_BUSTER_KERNEL_BRANCH=rpi-4.19.y-openhd
+PI_BUSTER_KERNEL_COMMIT="beabba1829b5874d114433a76154922094da957f"
 
 # Amount of cores to use for compilation on host machine
 J_CORES=12
@@ -46,11 +46,11 @@ CMAVNODE_BRANCH=master
 OPENHD_REPO=https://github.com/OpenHD/Open.HD.git
 OPENHD_BRANCH=master
 
-LIFEPOWEREDPI_REPO=https://github.com/xorbit/LiFePO4wered-Pi.git
-LIFEPOWEREDPI_BRANCH=master
+LIFEPOWEREDPI_REPO=https://github.com/OpenHD/LiFePO4wered-Pi.git
+LIFEPOWEREDPI_BRANCH=openhd1
 
 QOPENHD_REPO=https://github.com/OpenHD/QOpenHD.git
-QOPENHD_VERSION=nightly-2020-3-1
+QOPENHD_VERSION=master
 
 OPENHD_FLIRONE_DRIVER_REPO=https://github.com/OpenHD/Open.HD_FlirOneDrv.git
 OPENHD_FLIRONE_DRIVER_BRANCH=master
@@ -61,7 +61,5 @@ OPENHDMICROSERVICE_BRANCH=v0.1.4
 OPENHDROUTER_REPO=https://github.com/OpenHD/OpenHDRouter.git
 OPENHDROUTER_BRANCH=v0.1.2
 
-QT_MAJOR_VERSION=5.13
-QT_MINOR_VERSION=1
-
-GSTREAMER_VERSION=1.10.4-stretch
+QT_VERSION=5.13.1
+QT_MINOR_RELEASE=1

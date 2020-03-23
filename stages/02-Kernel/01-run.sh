@@ -22,21 +22,10 @@ cd ..
 
 log "Merge the RTL8812 driver into kernel"
 
-cp -a rtl8812au/. linux/drivers/net/wireless/realtek/rtl8812au/
+cp -a rtl8812au/. ${LINUX_DIR}/drivers/net/wireless/realtek/rtl8812au/
 
 log "Copy v4l2loopback driver into kernel"
-cp -a v4l2loopback/. linux/drivers/media/v4l2loopback/
-
-log "Patch the Kernel"
-pushd linux
-
-for PATCH_FILE in "${STAGE_DIR}/PATCHES/"*; do
-    log "Applying patch ${PATCH_FILE}"
-    patch -N -p0 < $PATCH_FILE
-done
-
-# out of linux 
-popd
+cp -a v4l2loopback/. ${LINUX_DIR}/drivers/media/v4l2loopback/
 
 #return 
 popd

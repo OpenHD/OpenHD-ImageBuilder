@@ -1,33 +1,51 @@
 #!/bin/bash -e
 # shellcheck disable=SC2119,SC1091
 
-IMAGE_TYPE=$1
+if [ -f config ]; then
+	source config
+fi
+
+IMAGE_ARCH=$1
+DISTRO=$2
 
 echo "Open.HD Image Builder"
 echo "------------------------------------------------------"
 echo ""
 
-if [[ "${IMAGE_TYPE}" == "" ]]; then
-	IMAGE_TYPE="pi"
-	echo "Usage: ./build.sh [pi | pizero | pi2 | pi3 | cm3 | cm3p]"
+
+if [[ "${IMAGE_ARCH}" == "" || ${DISTRO} == "" ]]; then
+	IMAGE_ARCH="pi"
+	DISTRO="stretch"
+
+	echo "Usage: ./build.sh pi [stretch | buster]"
 	echo ""
 	echo "Options:"
 	echo ""
-	echo "    pi/pizero/pi2/pi3/cm3: standard image, supports Pi Zero, Pi 2, Pi 3, CM3"
+	echo "                  pi stretch: standard image, supports Pi Zero, Pi 2, Pi 3, CM3"
 	echo ""
-	echo "                     cm3p: for Pi Compute Module 3+, testing only"
+	echo "                   pi buster: testing image, for Pi Compute Module 3+ and Pi 4"
+	echo ""
 	echo ""
 	echo "------------------------------------------------------"
 	echo ""
 fi
 
 
-if [[ "$IMAGE_TYPE" == "pi" || "$IMAGE_TYPE" == "pizero" || "$IMAGE_TYPE" == "pi2" || "$IMAGE_TYPE" == "pi3" || "$IMAGE_TYPE" == "cm3" ]]; then
-    echo "Building standard image"
+if [[ "$IMAGE_ARCH" == "pi" && "${DISTRO}" == "stretch" ]]; then
+	echo "Building pi stretch image"
+
+	BASE_IMAGE_URL=${PI_STRETCH_BASE_IMAGE_URL}
+	BASE_IMAGE=${PI_STRETCH_BASE_IMAGE}
+	KERNEL_BRANCH=${PI_STRETCH_KERNEL_BRANCH}
 fi
 
-if [[ "$IMAGE_TYPE" == "cm3p" ]]; then
-    echo "Building Compute Module 3+ image"
+
+if [[ "$IMAGE_ARCH" == "pi" && "${DISTRO}" == "buster" ]]; then
+	echo "Building pi buster image"
+
+	BASE_IMAGE_URL=${PI_BUSTER_BASE_IMAGE_URL}
+	BASE_IMAGE=${PI_BUSTER_BASE_IMAGE}
+	KERNEL_BRANCH=${PI_BUSTER_KERNEL_BRANCH}
 fi
 
 echo ""
@@ -35,6 +53,9 @@ echo "------------------------------------------------------"
 
 
 run_stage(){
+	log ""
+	log ""
+	log "======================================================"
 	log "Begin ${STAGE_DIR}"
 	STAGE="$(basename "${STAGE_DIR}")"
 	STAGE_WORK_DIR="${WORK_DIR}/${STAGE}"
@@ -101,9 +122,7 @@ if [ "$(id -u)" != "0" ]; then
 	exit 1
 fi
 
-if [ -f config ]; then
-	source config
-fi
+
 
 if [ -z "${IMG_NAME}" ]; then
 	echo "IMG_NAME not set" 1>&2
@@ -115,37 +134,16 @@ export IMG_DATE="${IMG_DATE:-"$(date +%Y-%m-%d)"}"
 
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export SCRIPT_DIR="${BASE_DIR}/scripts"
-export WORK_DIR="${BASE_DIR}/work"
+export WORK_DIR="${BASE_DIR}/work-${IMAGE_ARCH}-${DISTRO}"
 export DEPLOY_DIR=${DEPLOY_DIR:-"${BASE_DIR}/deploy"}
 export LOG_FILE="${WORK_DIR}/build.log"
 
 mkdir -p "${WORK_DIR}"
 
 
-
-if [[ "$IMAGE_TYPE" == "pi" || "$IMAGE_TYPE" == "pizero" || "$IMAGE_TYPE" == "pi2" || "$IMAGE_TYPE" == "pi3" || "$IMAGE_TYPE" == "cm3" ]]; then
-	BASE_IMAGE_URL=${PI_STRETCH_BASE_IMAGE_URL}
-	BASE_IMAGE=${PI_STRETCH_BASE_IMAGE}
-	IMAGE_ARCH="pi"
-	KERNEL_BRANCH=${PI_STRETCH_KERNEL_BRANCH}
-fi
-
-
-if [[ "$IMAGE_TYPE" == "cm3p" ]]; then
-	BASE_IMAGE_URL=${PICM3P_STRETCH_BASE_IMAGE_URL}
-	BASE_IMAGE=${PICM3P_STRETCH_BASE_IMAGE}
-	IMAGE_ARCH="pi"
-	KERNEL_BRANCH=${PICM3P_STRETCH_KERNEL_BRANCH}
-fi
-
-if [[ "$IMAGE_TYPE" == "pi" || "$IMAGE_TYPE" == "pizero" || "$IMAGE_TYPE" == "pi2" || "$IMAGE_TYPE" == "pi3" || "$IMAGE_TYPE" == "cm3p" ]]; then
-	# Get the dynamic information from the image
-	curl "${BASE_IMAGE_URL}/${BASE_IMAGE}.info" > $WORK_DIR/infofile
-
-	GIT_KERNEL_SHA1=$(cat $WORK_DIR/infofile | grep -Po '\b(Kernel: https:\/\/github\.com\/raspberrypi\/linux\/tree\/\K)+(.*)$')
-	KERNEL_VERSION_V7=$(cat $WORK_DIR/infofile | grep -Po '\b(Uname string: Linux version )\K(?<price>[^\ ]+)')
-	KERNEL_VERSION=${KERNEL_VERSION_V7%"-v7+"}"+"
-fi
+# we use a branch-specific repo directory so that we don't have to blow it away just to build an
+# image for a different distro or board, we can just reset the stage
+export LINUX_DIR="linux-${KERNEL_BRANCH}"
 
 
 # used in the stage 5 scripts to place a version file inside the image, and below after the
@@ -156,8 +154,8 @@ export BUILDER_VERSION
 
 export BASE_DIR
 
-export IMAGE_TYPE
 export IMAGE_ARCH
+export DISTRO
 export BASE_IMAGE_URL
 export BASE_IMAGE
 
@@ -167,8 +165,6 @@ export BASE_IMAGE_URL
 export BASE_IMAGE
 export J_CORES
 export GIT_KERNEL_SHA1
-export KERNEL_VERSION
-export KERNEL_VERSION_V7
 export APT_PROXY
 export OPENHD_REPO
 export OPENHD_BRANCH
@@ -214,9 +210,8 @@ export OPENHDROUTER_REPO
 export OPENHDMICROSERVICE_BRANCH
 export OPENHDMICROSERVICE_REPO
 
-export QT_MAJOR_VERSION
-export QT_MINOR_VERSION
-export GSTREAMER_VERSION
+export QT_VERSION
+export QT_MINOR_RELEASE
 
 
 export STAGE
@@ -234,8 +229,6 @@ source "${SCRIPT_DIR}/common"
 
 log "IMG ${BASE_IMAGE}"
 log "SHA ${GIT_KERNEL_SHA1}"
-log "V7  ${KERNEL_VERSION_V7}"
-log "VER ${KERNEL_VERSION}"
 log "Begin ${BASE_DIR}"
 
 # Iterate trough the steps
@@ -250,7 +243,7 @@ done
 OPENHD_VERSION=$(cat ${WORK_DIR}/openhd_version.txt)
 if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
 	mkdir -p "${DEPLOY_DIR}" || true
-	cp "${PREV_WORK_DIR}/IMAGE.img" "${DEPLOY_DIR}/${IMG_NAME}-${OPENHD_VERSION}.img"
+	cp "${PREV_WORK_DIR}/IMAGE.img" "${DEPLOY_DIR}/${IMG_NAME}-${OPENHD_VERSION}-${DISTRO}.img"
 fi
 
 #  Clean up SKIP_STEP files since we finished the build
