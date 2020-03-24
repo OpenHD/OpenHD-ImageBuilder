@@ -15,7 +15,7 @@ BOOT_LOOP_DEV="$(findmnt -nr -o source $BOOT_MNT_DIR)"
 
 fatlabel "$BOOT_LOOP_DEV" "OPENHD"
 
-if [[ "${DISTO}" == "buster" ]]; then
+if [[ "${DISTRO}" == "buster" ]]; then
 
 echo "
 [all]

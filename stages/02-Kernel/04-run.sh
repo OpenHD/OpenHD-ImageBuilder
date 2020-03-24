@@ -1,6 +1,6 @@
 set -e
 
-if [[ "${DISTO}" == "buster" ]]; then
+if [[ "${DISTRO}" == "buster" ]]; then
 
     # Do this to the WORK folder of this stage
     pushd ${STAGE_WORK_DIR}

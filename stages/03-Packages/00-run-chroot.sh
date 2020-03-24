@@ -29,7 +29,7 @@ apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0
 # sudo apt-get clean
 sudo apt-get update || exit 1
 
-if [[ "${DISTO}" == "stretch" ]]; then
+if [[ "${DISTRO}" == "stretch" ]]; then
     # on buster the gnuplot package pulls in 670MB of other stuff we don't want, it's a giant waste of space
     GNUPLOT="gnuplot"
 fi
