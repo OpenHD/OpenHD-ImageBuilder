@@ -71,8 +71,8 @@
 #define RSSI_POS_X 92
 #define RSSI_POS_Y 77
 #define RSSI_SCALE 1
-#define RSSI_WARN -40 // negative number
-#define RSSI_CAUTION -25
+#define RSSI_WARN 25 // percentage
+#define RSSI_CAUTION 40 // percentage
 #define RSSI_DECLUTTER 1 //1 for yes, 0 for no
 
 #define KBITRATE
