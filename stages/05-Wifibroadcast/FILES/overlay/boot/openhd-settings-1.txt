@@ -375,6 +375,10 @@ SmartSyncGround_Countdown=50
 SmartSyncOFF_RC_Value=1700
 SmartSyncStayON_RC_Value=1300
 SmartSyncControlVia=joystick
+# We strongly suggest leaving this on auto, but any frequency from the list at the bottom of this file will work.
+# If you change this it MUST be a frequency that works on your wifi cards, and it MUST match on the ground and air 
+# side or smartsync itself will not work
+SmartSync_Frequency=auto
 
 
 # ======================================================================================
