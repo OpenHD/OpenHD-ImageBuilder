@@ -48,9 +48,6 @@ gcc build/SO/lifepo4wered-access.o build/SO/lifepo4wered-data.o -o build/SO/libl
 gcc build/CLI/lifepo4wered-access.o build/CLI/lifepo4wered-data.o build/CLI/lifepo4wered-cli.o -o build/CLI/lifepo4wered-cli
 ./INSTALL.sh
 cp lifepo4wered-data.h /usr/local/include/
-# the lifepo4wered-pi build scripts start the daemon, which we dont want as it causes issues with losetup
-systemctl stop lifepo4wered-daemon
-killall -9 lifepo4wered-daemon
 cd ..
 
 # install OpenHDMicroservice
