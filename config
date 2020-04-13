@@ -44,7 +44,7 @@ CMAVNODE_REPO=https://github.com/MonashUAS/cmavnode.git
 CMAVNODE_BRANCH=master
 
 OPENHD_REPO=https://github.com/OpenHD/Open.HD.git
-OPENHD_BRANCH=nightly-2020-4-11
+OPENHD_BRANCH=nightly-2020-4-13
 
 LIFEPOWEREDPI_REPO=https://github.com/OpenHD/LiFePO4wered-Pi.git
 LIFEPOWEREDPI_BRANCH=openhd2
