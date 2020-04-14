@@ -31,6 +31,9 @@ RTL_8812AU_BRANCH=v5.2.20
 V4L2LOOPBACK_REPO=https://github.com/RespawnDespair/v4l2loopback.git
 V4L2LOOPBACK_BRANCH=master
 
+VEYE_REPO=https://github.com/OpenHD/veye_raspberrypi.git
+VEYE_BRANCH=openhd1
+
 RASPI2PNG_REPO=https://github.com/AndrewFromMelbourne/raspi2png.git
 RASPI2PNG_BRANCH=master
 
