@@ -34,8 +34,8 @@ V4L2LOOPBACK_BRANCH=master
 VEYE_REPO=https://github.com/OpenHD/veye_raspberrypi.git
 VEYE_BRANCH=openhd1
 
-RASPI2PNG_REPO=https://github.com/AndrewFromMelbourne/raspi2png.git
-RASPI2PNG_BRANCH=master
+RASPI2PNG_REPO=https://github.com/OpenHD/raspi2png.git
+RASPI2PNG_BRANCH=openhd1
 
 MAVLINK_REPO=https://github.com/infincia/mavlink.git
 MAVLINK_BRANCH=openhd2
