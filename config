@@ -20,6 +20,14 @@ J_CORES=12
 APT_CACHER_NG_URL=http://127.0.0.1:3142
 APT_CACHER_NG_ENABLED=false
 
+# The repos below are used during the build process, most of these will be going away very soon
+# when we have everything packaged up, but for now they're necessary. Yes it's not ideal, they could
+# be submodules, but submodules are harder for new contributors to deal with and this stuff won't be around
+# much longer anyway.
+#
+# Note that the branch names can be tags as well, and in cases where a repo does not have proper versions
+# upstream, we fork and apply our own in the form of openhd1, openhd2, etc, just to ensure that
+# a particular version is always used for a build.
 
 PI_TOOLS_REPO=https://github.com/raspberrypi/tools.git
 PI_TOOLS_BRANCH=master
