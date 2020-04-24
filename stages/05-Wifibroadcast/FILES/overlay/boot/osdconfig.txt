@@ -218,7 +218,6 @@
 #define TOTAL_TIME true // set to false if you dont want to see this
 #define TOTAL_TIME_POS_X 92
 #define TOTAL_TIME_POS_Y 13
-#define TOTAL_TIME_SCALE 1
 #define TOTAL_TIME_SCALE 0.8
 
 
