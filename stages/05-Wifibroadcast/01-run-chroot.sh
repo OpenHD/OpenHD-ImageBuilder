@@ -85,7 +85,6 @@ mv processUDP ../processUDP
 
 #Configure scripts
 chmod 755 -R /home/pi/RemoteSettings
-chmod 755 -R /home/pi/raspberrypi
 
 #install cameracontrol
 
