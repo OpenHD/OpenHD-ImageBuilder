@@ -112,6 +112,8 @@ cd /home/pi/wifibroadcast-rc-Ath9k
 sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/buildlora.sh
 sudo /home/pi/wifibroadcast-rc-Ath9k/buildlora.sh
 sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/lora
+cp /home/pi/wifibroadcast-rc-Ath9k/lora /usr/local/bin/
+
 sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/build.sh
 sudo /home/pi/wifibroadcast-rc-Ath9k/build.sh
 sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/rctx
