@@ -7,7 +7,7 @@
 # >>>>>>>>>>[FREQUENCY FOR OPEN.HD]-- in MHz (See full Frequency List Below)
 # !!!***NOTE ABOUT RTL8812/14AU CARDS***!!!
 # REALTEK RTL8812/14AU CARDS DO NOT WORK WITH 2.4GHZ CHANNELS SO CHANGE FREQUENCY TO 5.8GHZ CHANNEL FROM LIST AT THE BOTTOM OF PAGE. 
-FREQ=2472
+FREQ=2412
 
 # >>>>>>>>>>[DATARATE] Lower settings yield higher range and vice versa.  
 # Below are the datarate settings for Legacy B/G and MCS "N" modes. 
