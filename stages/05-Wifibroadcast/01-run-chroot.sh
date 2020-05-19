@@ -119,6 +119,10 @@ sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/rctx
 cp /home/pi/wifibroadcast-rc-Ath9k/rctx /usr/local/bin/
 
 
+cd /home/pi/wifibroadcast-osd
+make -j5 || exit 1
+cd ..
+
 
 cd /home/pi/wifibroadcast-misc/LCD
 sudo make
