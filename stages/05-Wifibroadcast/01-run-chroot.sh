@@ -133,4 +133,12 @@ cd /home/pi/QOpenHD
 make -j5 || exit 1
 cp -a release/QOpenHD "/usr/local/bin/QOpenHD" || exit 1
 cd ..
+
+cd /home/pi/QOpenHD/OpenHDBoot
+/opt/Qt${QT_VERSION}/bin/qmake || exit 1
+make -j5 || exit 1
+cp -a OpenHDBoot "/usr/local/bin/OpenHDBoot" || exit 1
+cd ..
+cd ..
+
 rm -rf QOpenHD
