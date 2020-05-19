@@ -105,13 +105,19 @@ chmod 755 version.py
 make
 ./wfb_keygen
 
-sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/rctxUDP.sh
-sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/rctxUDP_IN
+
 
 cd /home/pi/wifibroadcast-rc-Ath9k
 sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/buildlora.sh
 sudo /home/pi/wifibroadcast-rc-Ath9k/buildlora.sh
 sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/lora
+cp /home/pi/wifibroadcast-rc-Ath9k/lora /usr/local/bin/
+
+sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/build.sh
+sudo /home/pi/wifibroadcast-rc-Ath9k/build.sh
+sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/rctx
+cp /home/pi/wifibroadcast-rc-Ath9k/rctx /usr/local/bin/
+
 
 
 cd /home/pi/wifibroadcast-misc/LCD
