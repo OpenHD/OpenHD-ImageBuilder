@@ -20,7 +20,7 @@ and run:
 
 ```
 sudo -s
-./build.sh
+./build.sh pi stretch
 ```
 
 
