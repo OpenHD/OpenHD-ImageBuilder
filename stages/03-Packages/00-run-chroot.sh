@@ -68,8 +68,9 @@ DEVELOPMENT_UTILITIES="vim mc"
 MESA_DRM_STACK="libegl1-mesa libegl1-mesa-dev libgles2-mesa libgles2-mesa-dev libgbm-dev"
 
 
-MICROSERVICE_DEPENDENCIES="libboost-dev libboost-program-options-dev libboost-system-dev libasio-dev"
+MICROSERVICE_DEPENDENCIES="libboost-dev libboost-program-options-dev libboost-system-dev libasio-dev libboost-chrono-dev"
 
+RC_DEPENDENCIES="libboost-regex-dev libboost-filesystem-dev libboost-thread-dev"
 
 TEXTTOSPEECH_QOPENHD="libspeechd-dev flite1-dev flite speech-dispatcher-flite"
 
@@ -101,6 +102,7 @@ ${NETWORK_UTILITIES} \
 ${DEVELOPMENT_UTILITIES} \
 ${MESA_DRM_STACK} \
 ${MICROSERVICE_DEPENDENCIES} \
+${RC_DEPENDENCIES} \
 ${TEXTTOSPEECH_QOPENHD} \
 ${QT_DEPENDENCIES} \
 ${GSTREAMER} ${GNUPLOT} || exit 1

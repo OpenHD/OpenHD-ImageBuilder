@@ -85,7 +85,6 @@ mv processUDP ../processUDP
 
 #Configure scripts
 chmod 755 -R /home/pi/RemoteSettings
-chmod 755 -R /home/pi/raspberrypi
 
 #install cameracontrol
 
@@ -106,13 +105,23 @@ chmod 755 version.py
 make
 ./wfb_keygen
 
-sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/rctxUDP.sh
-sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/rctxUDP_IN
+
 
 cd /home/pi/wifibroadcast-rc-Ath9k
 sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/buildlora.sh
 sudo /home/pi/wifibroadcast-rc-Ath9k/buildlora.sh
 sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/lora
+cp /home/pi/wifibroadcast-rc-Ath9k/lora /usr/local/bin/
+
+sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/build.sh
+sudo /home/pi/wifibroadcast-rc-Ath9k/build.sh
+sudo chmod 775 /home/pi/wifibroadcast-rc-Ath9k/rctx
+cp /home/pi/wifibroadcast-rc-Ath9k/rctx /usr/local/bin/
+
+
+cd /home/pi/wifibroadcast-osd
+make -j5 || exit 1
+cd ..
 
 
 cd /home/pi/wifibroadcast-misc/LCD
@@ -128,4 +137,12 @@ cd /home/pi/QOpenHD
 make -j5 || exit 1
 cp -a release/QOpenHD "/usr/local/bin/QOpenHD" || exit 1
 cd ..
+
+cd /home/pi/QOpenHD/OpenHDBoot
+/opt/Qt${QT_VERSION}/bin/qmake || exit 1
+make -j5 || exit 1
+cp -a OpenHDBoot "/usr/local/bin/OpenHDBoot" || exit 1
+cd ..
+cd ..
+
 rm -rf QOpenHD

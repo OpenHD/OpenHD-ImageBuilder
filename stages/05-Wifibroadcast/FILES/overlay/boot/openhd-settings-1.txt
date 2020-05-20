@@ -414,10 +414,10 @@ LoadFlirDriver=N
 
 # >>>>>>>>>>[FLIR CAMERA PIPELINE OPTIONS]--
 #FLIR HD (visible image) -  640 x 480 @ 9fps:
-#USBCamera="gst-launch-1.0 v4l2src device=/dev/video2 ! video/x-raw,width=640,height=480,framerate=10/1 ! omxh264enc control-rate=1 target-bitrate=600000 interval-intraframes=1 periodicty-idr=1 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
+#USBCamera="gst-launch-1.0 v4l2src device=/dev/video2 ! video/x-raw,width=640,height=480,framerate=30/1 ! omxh264enc control-rate=1 target-bitrate=600000 interval-intraframes=1 periodicty-idr=1 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
 
 #FLIR Thermal  - 160 x 128 @ 9fps:
-#USBCamera="gst-launch-1.0 v4l2src device=/dev/video3 ! video/x-raw,width=160,height=128,framerate=10/1 ! omxh264enc control-rate=1 target-bitrate=600000 interval-intraframes=1 periodicty-idr=1 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
+#USBCamera="gst-launch-1.0 v4l2src device=/dev/video3 ! video/x-raw,width=160,height=128,framerate=30/1 ! omxh264enc control-rate=1 target-bitrate=600000 interval-intraframes=1 periodicty-idr=1 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"
 
 #gstreamer videotestsrc:
 #USBCamera="gst-launch-1.0 videotestsrc ! video/x-raw,width=160,height=120,framerate=30/1 ! omxh264enc control-rate=1 target-bitrate=600000 interval-intraframes=1 periodicty-idr=1 ! h264parse config-interval=3 ! rtph264pay ! udpsink host=127.0.0.1 port=5600"

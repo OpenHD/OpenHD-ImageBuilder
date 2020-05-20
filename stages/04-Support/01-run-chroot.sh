@@ -60,4 +60,11 @@ cd /home/pi
 cd OpenHDRouter
 make install || exit 1
 
+cd /home/pi/veye_raspberrypi/veye_raspcam/source
+chmod +x buildme
+./buildme
+cp veye_* /usr/local/bin/
+cp /home/pi/veye_raspberrypi/i2c_cmd/bin/* /usr/local/bin/
+chmod -R +x /usr/local/bin/*
+
 cd /home/pi

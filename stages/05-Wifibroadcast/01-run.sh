@@ -83,9 +83,6 @@ sudo mv Open.HD/openhd-camera/openhdvid ${MNT_DIR}/usr/local/bin/ || exit 1
 sudo chmod +x ${MNT_DIR}/usr/local/bin/openhdvid || exit 1
 
 
-log "Download IMX290"
-sudo mv Open.HD/raspberrypi/ raspberrypi/
-
 log "Download UDPSplitter"
 sudo mv Open.HD/UDPSplitter/ UDPSplitter/
 
