@@ -165,7 +165,7 @@ HOTSPOT_CHANNEL=36
 HOTSPOT_TIMEOUT=0
 # hotspot transmit power in units of mBm, so 100 corresponds to 1dBm
 # to set full power, use HOTSPOT_TXPOWER=3100
-HOTSPOT_TXPOWER=100
+HOTSPOT_TXPOWER=3100
 
 # >>>>>>>>>>[ETHERNET HOTSPOT]--*Only used for PC/Mission Planner Ethernet connection
 # Set this to "Y" to enable Ethernet hotspot. This will forward the received video and 
