@@ -9,6 +9,11 @@ In order to be able to run this you need a Debian or Ubuntu Linux machine with 3
 sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support build-essential gcc-arm*
 ```
 
+If any of the packages fails to install use:
+```
+sudo apt update
+``
+
 Then git clone this repository to a suitable folder 
 
 ```
