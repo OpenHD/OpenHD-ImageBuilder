@@ -8,8 +8,20 @@ fi
 IMAGE_ARCH=$1
 DISTRO=$2
 
-echo "Open.HD Image Builder"
-echo "------------------------------------------------------"
+# print a simple line across the entire width of the terminal like '------------'
+line (){
+  printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+}
+
+echo ""
+n=" ██████╗ ██████╗ ███████╗███╗   ██╗   ██╗  ██╗██████╗     ██╗███╗   ███╗ █████╗  ██████╗ ███████╗    ██████╗ ██╗   ██╗██╗██╗     ██████╗ ███████╗██████╗ " && echo "${n::${COLUMNS:-$(tput cols)}}" # some magic to cut the end on smaller terminals
+n="██╔═══██╗██╔══██╗██╔════╝████╗  ██║   ██║  ██║██╔══██╗    ██║████╗ ████║██╔══██╗██╔════╝ ██╔════╝    ██╔══██╗██║   ██║██║██║     ██╔══██╗██╔════╝██╔══██╗" && echo "${n::${COLUMNS:-$(tput cols)}}"
+n="██║   ██║██████╔╝█████╗  ██╔██╗ ██║   ███████║██║  ██║    ██║██╔████╔██║███████║██║  ███╗█████╗      ██████╔╝██║   ██║██║██║     ██║  ██║█████╗  ██████╔╝" && echo "${n::${COLUMNS:-$(tput cols)}}"
+n="██║   ██║██╔═══╝ ██╔══╝  ██║╚██╗██║   ██╔══██║██║  ██║    ██║██║╚██╔╝██║██╔══██║██║   ██║██╔══╝      ██╔══██╗██║   ██║██║██║     ██║  ██║██╔══╝  ██╔══██╗" && echo "${n::${COLUMNS:-$(tput cols)}}"
+n="╚██████╔╝██║     ███████╗██║ ╚████║██╗██║  ██║██████╔╝    ██║██║ ╚═╝ ██║██║  ██║╚██████╔╝███████╗    ██████╔╝╚██████╔╝██║███████╗██████╔╝███████╗██║  ██║" && echo "${n::${COLUMNS:-$(tput cols)}}"
+n=" ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═════╝     ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝    ╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═════╝ ╚══════╝╚═╝  ╚═╝" && echo "${n::${COLUMNS:-$(tput cols)}}"
+echo ""
+line
 echo ""
 
 
@@ -26,7 +38,7 @@ if [[ "${IMAGE_ARCH}" == "" || ${DISTRO} == "" ]]; then
     echo "                   pi buster: testing image, for Pi Compute Module 3+ and Pi 4"
     echo ""
     echo ""
-    echo "------------------------------------------------------"
+    line
     echo ""
 fi
 
@@ -49,7 +61,7 @@ if [[ "$IMAGE_ARCH" == "pi" && "${DISTRO}" == "buster" ]]; then
 fi
 
 echo ""
-echo "------------------------------------------------------"
+line
 
 
 run_stage(){
@@ -227,8 +239,8 @@ export ROOTFS_DIR
 export PREV_ROOTFS_DIR
 export IMG_SUFFIX
 
-# shellcheck source=scripts/common
-source "${SCRIPT_DIR}/common"
+# shellcheck source=scripts/common.sh
+source "${SCRIPT_DIR}/common.sh"
 
 log "IMG ${BASE_IMAGE}"
 log "SHA ${GIT_KERNEL_SHA1}"
