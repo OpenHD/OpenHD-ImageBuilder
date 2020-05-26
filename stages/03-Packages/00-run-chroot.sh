@@ -86,7 +86,7 @@ GSTREAMER="libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good
 
 
 PURGE="wireless-regdb crda cron apt-transport-https aptitude aptitude-common apt-listchanges
-       avahi-daemon cifs-utils curl iptables triggerhappy"
+       avahi-daemon cifs-utils curl iptables triggerhappy man-db"
 
 
 DEBIAN_FRONTEND=noninteractive sudo apt-get -y --no-install-recommends install \
