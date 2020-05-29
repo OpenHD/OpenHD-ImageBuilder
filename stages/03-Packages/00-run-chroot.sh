@@ -61,6 +61,8 @@ FONT_SUPPORT="libfontconfig1-dev libfreetype6-dev ttf-dejavu-core"
 
 NETWORK_UTILITIES="hostapd iw pump dnsmasq aircrack-ng"
 
+FIRMWARE="firmware-ralink"
+
 
 DEVELOPMENT_UTILITIES="vim mc"
 
@@ -99,6 +101,7 @@ ${PYTHON3_DEPENDENCIES} \
 ${SCRIPT_DEPENDENCIES} \
 ${FONT_SUPPORT} \
 ${NETWORK_UTILITIES} \
+${FIRMWARE} \
 ${DEVELOPMENT_UTILITIES} \
 ${MESA_DRM_STACK} \
 ${MICROSERVICE_DEPENDENCIES} \
