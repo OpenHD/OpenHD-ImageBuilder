@@ -132,17 +132,15 @@ chmod 755 /home/pi/wifibroadcast-misc/LCD/MouseListener
  rm /etc/init.d/dhcpcd
 
 
-cd /home/pi/QOpenHD
-/opt/Qt${QT_VERSION}/bin/qmake || exit 1
-make -j5 || exit 1
-cp -a release/QOpenHD "/usr/local/bin/QOpenHD" || exit 1
-cd ..
+#
+# this is a temporary step to reduce the image build time just like the qt package.
+# in 2.1 we will use real deb packages
+cd /home/pi/
+QOPENHD_PACKAGE="QOpenHD-${QOPENHD_VERSION}-${IMAGE_ARCH}-${DISTRO}-Qt${QT_VERSION}-${QT_MINOR_RELEASE}.tar.gz"
+QOPENHD_PACKAGE_URL="${QOPENHD_REPO%.*}/releases/download/${QOPENHD_VERSION}/${QOPENHD_PACKAGE}"
+wget ${QOPENHD_PACKAGE_URL} || exit 1
+tar xvf ${QOPENHD_PACKAGE} || exit 1
+mv QOpenHD /usr/local/bin/ || exit 1
+mv OpenHDBoot /usr/local/bin/ || exit 1
+rm ${QOPENHD_PACKAGE} || exit 1
 
-cd /home/pi/QOpenHD/OpenHDBoot
-/opt/Qt${QT_VERSION}/bin/qmake || exit 1
-make -j5 || exit 1
-cp -a OpenHDBoot "/usr/local/bin/OpenHDBoot" || exit 1
-cd ..
-cd ..
-
-rm -rf QOpenHD
