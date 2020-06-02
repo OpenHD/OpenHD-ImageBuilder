@@ -11,8 +11,8 @@ PI_STRETCH_KERNEL_COMMIT="f7b90465e3a1c70394ad441eb8515fa0f80b9fb5"
 
 PI_BUSTER_BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2020-05-28"
 PI_BUSTER_BASE_IMAGE="2020-05-27-raspios-buster-lite-armhf"
-PI_BUSTER_KERNEL_BRANCH=rpi-4.19.y-openhd
-PI_BUSTER_KERNEL_COMMIT="beabba1829b5874d114433a76154922094da957f"
+PI_BUSTER_KERNEL_BRANCH=rpi-4.19.122-openhd
+PI_BUSTER_KERNEL_COMMIT="0bf946db01701cdeeba0be32207b7df3aa3520fa"
 
 # Amount of cores to use for compilation on host machine
 J_CORES=12
