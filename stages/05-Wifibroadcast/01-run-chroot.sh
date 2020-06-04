@@ -90,7 +90,7 @@ chmod 755 -R /home/pi/RemoteSettings
 
 chmod 755 /home/pi/cameracontrol/cameracontrolUDP.py
 chmod 755 /home/pi/cameracontrol/LoadFlirDriver.sh
-pip install psutil
+pip install psutil || exit 1
 
 cd /home/pi/cameracontrol/RCParseChSrc
 
