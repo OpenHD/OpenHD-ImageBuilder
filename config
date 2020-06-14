@@ -58,7 +58,7 @@ LIFEPOWEREDPI_REPO=https://github.com/OpenHD/LiFePO4wered-Pi.git
 LIFEPOWEREDPI_BRANCH=openhd2
 
 QOPENHD_REPO=https://github.com/OpenHD/QOpenHD.git
-QOPENHD_VERSION=v0.4.0b4
+QOPENHD_VERSION=0.4.0b5
 
 OPENHD_FLIRONE_DRIVER_REPO=https://github.com/OpenHD/Open.HD_FlirOneDrv.git
 OPENHD_FLIRONE_DRIVER_BRANCH=master
