@@ -50,16 +50,6 @@ gcc build/CLI/lifepo4wered-access.o build/CLI/lifepo4wered-data.o build/CLI/life
 cp lifepo4wered-data.h /usr/local/include/
 cd ..
 
-# install OpenHDMicroservice
-cd /home/pi
-cd OpenHDMicroservice
-make install || exit 1
-
-# install OpenHDRouter
-cd /home/pi
-cd OpenHDRouter
-make install || exit 1
-
 cd /home/pi/veye_raspberrypi/veye_raspcam/source
 chmod +x buildme
 ./buildme
