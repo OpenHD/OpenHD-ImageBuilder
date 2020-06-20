@@ -37,7 +37,12 @@ apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberry
 # sudo apt-get clean
 sudo apt-get update || exit 1
 
-OPENHD_PACKAGES="openhd-linux-pi openhd-qt qopenhd openhd-router openhd-microservice mavlink-router raspi2png lifepoweredpi"
+OPENHD_PACKAGES="openhd-linux-pi 
+                 openhd-qt qopenhd 
+                 openhd-router openhd-microservice 
+                 mavlink-router 
+                 raspi2png 
+                 lifepoweredpi"
 
 if [[ "${DISTRO}" == "stretch" ]]; then
     # on buster the gnuplot package pulls in 670MB of other stuff we don't want, it's a giant waste of space
