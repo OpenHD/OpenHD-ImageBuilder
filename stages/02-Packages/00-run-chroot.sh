@@ -42,7 +42,8 @@ OPENHD_PACKAGES="openhd-linux-pi
                  openhd-router openhd-microservice 
                  mavlink-router 
                  raspi2png 
-                 lifepoweredpi"
+                 lifepoweredpi 
+                 veye-raspberrypi"
 
 if [[ "${DISTRO}" == "stretch" ]]; then
     # on buster the gnuplot package pulls in 670MB of other stuff we don't want, it's a giant waste of space

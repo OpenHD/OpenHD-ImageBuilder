@@ -186,9 +186,6 @@ export OPENHD_BRANCH
 export PI_TOOLS_REPO
 export PI_TOOLS_BRANCH
 
-export VEYE_REPO
-export VEYE_BRANCH
-
 export MAVLINK_REPO
 export MAVLINK_BRANCH
 

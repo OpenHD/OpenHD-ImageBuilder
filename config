@@ -25,9 +25,6 @@ APT_CACHER_NG_ENABLED=false
 PI_TOOLS_REPO=https://github.com/raspberrypi/tools.git
 PI_TOOLS_BRANCH=master
 
-VEYE_REPO=https://github.com/OpenHD/veye_raspberrypi.git
-VEYE_BRANCH=openhd1
-
 MAVLINK_REPO=https://github.com/infincia/mavlink.git
 MAVLINK_BRANCH=openhd3
 

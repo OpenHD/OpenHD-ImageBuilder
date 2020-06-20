@@ -16,9 +16,6 @@ pushd mavlink
 sudo git submodule update --init --recursive  || exit 1
 popd
 
-log "Download VEYE support library"
-sudo git clone --depth=1 -b ${VEYE_BRANCH} ${VEYE_REPO} || exit 1
-
 #return
 popd
 
