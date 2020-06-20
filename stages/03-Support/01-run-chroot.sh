@@ -10,16 +10,6 @@ cd raspi2png
 sudo make
 sudo make install
 
-# Install mavlink-router
-cd /home/pi
-cd mavlink-router
-sudo ./autogen.sh && sudo ./configure CFLAGS='-g -O2' \
-        --sysconfdir=/etc --localstatedir=/var --libdir=/usr/local/lib64 \
-    --prefix=/usr/local || exit 1
-sudo make install || exit 1
-cd ..
-rm -rf mavlink-router
-
 # Install mavlink library
 cd /home/pi
 cd mavlink

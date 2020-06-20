@@ -34,9 +34,6 @@ RASPI2PNG_BRANCH=openhd1
 MAVLINK_REPO=https://github.com/infincia/mavlink.git
 MAVLINK_BRANCH=openhd3
 
-MAVLINK_ROUTER_REPO=https://github.com/OpenHD/mavlink-router.git
-MAVLINK_ROUTER_BRANCH=openhd1
-
 OPENHD_REPO=https://github.com/OpenHD/Open.HD.git
 OPENHD_BRANCH=2.0.0rc7
 

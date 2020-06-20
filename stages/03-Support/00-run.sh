@@ -16,12 +16,6 @@ git clone --depth=1 -b ${LIFEPOWEREDPI_BRANCH} ${LIFEPOWEREDPI_REPO} || exit 1
 log "Download Raspi2png"
 git clone --depth=1 -b ${RASPI2PNG_BRANCH} ${RASPI2PNG_REPO} || exit 1
 
-log "Download Mavlink router"
-sudo git clone --depth=1 -b ${MAVLINK_ROUTER_BRANCH} ${MAVLINK_ROUTER_REPO} || exit 1
-pushd mavlink-router
-sudo git submodule update --init --recursive  || exit 1
-popd
-
 log "Download Mavlink library"
 sudo git clone --depth=1 -b ${MAVLINK_BRANCH} ${MAVLINK_REPO} || exit 1
 pushd mavlink
