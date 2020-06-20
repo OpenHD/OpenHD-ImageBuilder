@@ -63,9 +63,6 @@ log "Download EZWFB - Splash"
 # sudo git clone https://github.com/RespawnDespair/wifibroadcast-splash.git
 sudo mv Open.HD/wifibroadcast-splash/ wifibroadcast-splash/
 
-log "Download FLIR one"
-sudo git clone --depth=1 -b ${OPENHD_FLIRONE_DRIVER_BRANCH} ${OPENHD_FLIRONE_DRIVER_REPO}
-
 log "Download RemoteSettings"
 # sudo git clone -b user1321-5MhzAth9k https://github.com/user1321/RemoteSettings
 sudo mv Open.HD/RemoteSettings/ RemoteSettings/

@@ -30,6 +30,3 @@ MAVLINK_BRANCH=openhd3
 
 OPENHD_REPO=https://github.com/OpenHD/Open.HD.git
 OPENHD_BRANCH=2.0.0rc7
-
-OPENHD_FLIRONE_DRIVER_REPO=https://github.com/OpenHD/Open.HD_FlirOneDrv.git
-OPENHD_FLIRONE_DRIVER_BRANCH=master

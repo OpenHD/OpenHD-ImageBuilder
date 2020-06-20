@@ -11,13 +11,6 @@ sudo make clean
 sudo make library
 sudo make install
 
-# Install FLIROne Driver
-cd /home/pi
-cd Open.HD_FlirOneDrv
-cd flir8p1-gpl
-sudo make
-sudo chmod +x flir8p1
-
 # install wifibroadcast base
 cd /home/pi
 cd wifibroadcast-base
