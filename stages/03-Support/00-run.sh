@@ -13,9 +13,6 @@ pushd GIT
 log "Download LiFePO4wered-pi"
 git clone --depth=1 -b ${LIFEPOWEREDPI_BRANCH} ${LIFEPOWEREDPI_REPO} || exit 1
 
-log "Download Raspi2png"
-git clone --depth=1 -b ${RASPI2PNG_BRANCH} ${RASPI2PNG_REPO} || exit 1
-
 log "Download Mavlink library"
 sudo git clone --depth=1 -b ${MAVLINK_BRANCH} ${MAVLINK_REPO} || exit 1
 pushd mavlink

@@ -41,8 +41,7 @@ sudo cp .profile /root/
 cd /home/pi
 cd wifibroadcast-misc
 sudo chmod +x ftee
-#raspi2png was not working and had to be compiled
-#sudo chmod +x raspi2png
+
 
 #install wifibroadcast-splash
 cd /home/pi

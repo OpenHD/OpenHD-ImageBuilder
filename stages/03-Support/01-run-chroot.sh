@@ -4,12 +4,6 @@
 
 #!/bin/bash
 
-#Install Raspi2png
-cd /home/pi
-cd raspi2png
-sudo make
-sudo make install
-
 # Install mavlink library
 cd /home/pi
 cd mavlink
