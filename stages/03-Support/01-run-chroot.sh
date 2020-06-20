@@ -14,26 +14,6 @@ cd ..
 rm -rf mavlink || true
 rm -rf mavlink_generated || true
 
-cd /home/pi/
-cd LiFePO4wered-Pi
-mkdir -p build/DAEMON
-mkdir -p build/CLI
-mkdir -p build/SO
-gcc -c lifepo4wered-access.c -o build/DAEMON/lifepo4wered-access.o -std=c99 -Wall -O2
-gcc -c lifepo4wered-data.c -o build/DAEMON/lifepo4wered-data.o -std=c99 -Wall -O2
-gcc -c lifepo4wered-daemon.c -o build/DAEMON/lifepo4wered-daemon.o -std=c99 -Wall -O2
-gcc -c lifepo4wered-access.c -o build/SO/lifepo4wered-access.o -std=c99 -Wall -O2 -fpic
-gcc -c lifepo4wered-data.c -o build/SO/lifepo4wered-data.o -std=c99 -Wall -O2 -fpic
-gcc -c lifepo4wered-access.c -o build/CLI/lifepo4wered-access.o -std=c99 -Wall -O2
-gcc -c lifepo4wered-data.c -o build/CLI/lifepo4wered-data.o -std=c99 -Wall -O2
-gcc -c lifepo4wered-cli.c -o build/CLI/lifepo4wered-cli.o -std=c99 -Wall -O2
-gcc build/DAEMON/lifepo4wered-access.o build/DAEMON/lifepo4wered-data.o build/DAEMON/lifepo4wered-daemon.o -o build/DAEMON/lifepo4wered-daemon
-gcc build/SO/lifepo4wered-access.o build/SO/lifepo4wered-data.o -o build/SO/liblifepo4wered.so -shared
-gcc build/CLI/lifepo4wered-access.o build/CLI/lifepo4wered-data.o build/CLI/lifepo4wered-cli.o -o build/CLI/lifepo4wered-cli
-./INSTALL.sh
-cp lifepo4wered-data.h /usr/local/include/
-cd ..
-
 cd /home/pi/veye_raspberrypi/veye_raspcam/source
 chmod +x buildme
 ./buildme
