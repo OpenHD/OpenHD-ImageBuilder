@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-for stage in 01-Baseimage 02-Packages 03-Support 04-Wifibroadcast
+for stage in 01-Baseimage 02-Packages 03-Preconfiguration
 do
     umount work*/$stage/mnt/boot
     umount work*/$stage/mnt/dev/pts
