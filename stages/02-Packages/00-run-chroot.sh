@@ -8,6 +8,9 @@
 rm /lib/modules/*/build || true
 rm /lib/modules/*/source || true
 
+rm /boot/config.txt
+rm /boot/cmdline.txt
+
 if [ "${APT_CACHER_NG_ENABLED}" == "true" ]; then
     echo "Acquire::http::Proxy \"${APT_CACHER_NG_URL}/\";" >> /etc/apt/apt.conf.d/10cache
 fi
