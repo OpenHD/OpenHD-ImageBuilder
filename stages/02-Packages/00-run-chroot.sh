@@ -84,5 +84,7 @@ if [ ${APT_CACHER_NG_ENABLED} == "true" ]; then
     rm /etc/apt/apt.conf.d/10cache
 fi
 
+pip install psutil || exit 1
+
 rm /etc/apt/sources.list.d/openhd-2-0.list
 
