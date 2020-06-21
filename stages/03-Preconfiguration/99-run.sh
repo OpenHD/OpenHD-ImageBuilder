@@ -1,6 +1,9 @@
 # Do this to the WORK folder of this stage
 pushd ${STAGE_WORK_DIR}
 
+cp ${STAGE_WORK_DIR}/mnt/openhd_version.txt ${WORK_DIR}/openhd_version.txt
+
+
 MNT_DIR="${STAGE_WORK_DIR}/mnt"
 sudo cp "$MNT_DIR/root/ld.so.preload" "$MNT_DIR/etc/ld.so.preload"
 

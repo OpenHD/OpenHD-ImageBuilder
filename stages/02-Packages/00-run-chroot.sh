@@ -88,3 +88,12 @@ pip install psutil || exit 1
 
 rm /etc/apt/sources.list.d/openhd-2-0.list
 
+MNT_DIR="${STAGE_WORK_DIR}/mnt"
+
+#
+# Write the openhd package version back to the base of the image and
+# in the work dir so the builder can use it in the image name
+export OPENHD_VERSION=$(dpkg -s openhd | grep "^Version" | awk '{ print $2 }')
+
+echo ${OPENHD_VERSION} > /openhd_version.txt
+echo ${OPENHD_VERSION} > /boot/openhd_version.txt
