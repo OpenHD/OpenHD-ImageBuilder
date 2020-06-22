@@ -37,13 +37,11 @@ sudo systemctl disable journald.service
 sudo systemctl disable triggerhappy.service
 sudo systemctl disable avahi-daemon.service
 sudo systemctl disable ser2net.service
-sudo systemctl disable systemd-timesyncd.service
 sudo systemctl disable hciuart.service
 sudo systemctl disable anacron.service
 sudo systemctl disable syslog.service
 sudo systemctl disable triggerhappy.service
 sudo systemctl disable ser2net.service
-sudo systemctl disable systemd-timesyncd.service
 sudo systemctl disable hciuart.service
 sudo systemctl disable exim4.service
 sudo systemctl mask hostapd.service
