@@ -22,8 +22,6 @@ fi
 apt-get install -y apt-transport-https
 curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-0/cfg/gpg/gpg.B9F0E99CF5787237.key' | apt-key add -
 
-# this gets removed after packages are installed to ensure that openhd 2.0 images dont't change once written to a card,
-# in-place upgrades will be in openhd 2.1 and require more testing before we enable it
 
 echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-0/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-0.list
 
@@ -90,7 +88,6 @@ fi
 
 pip install psutil || exit 1
 
-rm /etc/apt/sources.list.d/openhd-2-0.list
 
 MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
