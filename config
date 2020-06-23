@@ -1,73 +1,11 @@
 # Output image name
 IMG_NAME=Open.HD
 
-KERNEL_REPO=https://github.com/OpenHD/linux.git
-
-
 PI_STRETCH_BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2018-10-11"
 PI_STRETCH_BASE_IMAGE="2018-10-09-raspbian-stretch-lite"
-PI_STRETCH_KERNEL_BRANCH=rpi-4.14.71-openhd
-PI_STRETCH_KERNEL_COMMIT="f7b90465e3a1c70394ad441eb8515fa0f80b9fb5"
 
 PI_BUSTER_BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2020-05-28"
 PI_BUSTER_BASE_IMAGE="2020-05-27-raspios-buster-lite-armhf"
-PI_BUSTER_KERNEL_BRANCH=rpi-4.19.122-openhd
-PI_BUSTER_KERNEL_COMMIT="0bf946db01701cdeeba0be32207b7df3aa3520fa"
-
-# Amount of cores to use for compilation on host machine
-J_CORES=12
 
 APT_CACHER_NG_URL=http://127.0.0.1:3142
 APT_CACHER_NG_ENABLED=false
-
-# The repos below are used during the build process, most of these will be going away very soon
-# when we have everything packaged up, but for now they're necessary. Yes it's not ideal, they could
-# be submodules, but submodules are harder for new contributors to deal with and this stuff won't be around
-# much longer anyway.
-#
-# Note that the branch names can be tags as well, and in cases where a repo does not have proper versions
-# upstream, we fork and apply our own in the form of openhd1, openhd2, etc, just to ensure that
-# a particular version is always used for a build.
-
-PI_TOOLS_REPO=https://github.com/raspberrypi/tools.git
-PI_TOOLS_BRANCH=master
-
-# Fixed at v5.2.20 until 5.3.4 works for injection
-RTL_8812AU_REPO=https://github.com/aircrack-ng/rtl8812au.git
-RTL_8812AU_BRANCH=v5.2.20
-
-V4L2LOOPBACK_REPO=https://github.com/OpenHD/v4l2loopback.git
-V4L2LOOPBACK_BRANCH=openhd1
-
-VEYE_REPO=https://github.com/OpenHD/veye_raspberrypi.git
-VEYE_BRANCH=openhd1
-
-RASPI2PNG_REPO=https://github.com/OpenHD/raspi2png.git
-RASPI2PNG_BRANCH=openhd1
-
-MAVLINK_REPO=https://github.com/infincia/mavlink.git
-MAVLINK_BRANCH=openhd3
-
-MAVLINK_ROUTER_REPO=https://github.com/OpenHD/mavlink-router.git
-MAVLINK_ROUTER_BRANCH=openhd1
-
-OPENHD_REPO=https://github.com/OpenHD/Open.HD.git
-OPENHD_BRANCH=2.0.0rc7
-
-LIFEPOWEREDPI_REPO=https://github.com/OpenHD/LiFePO4wered-Pi.git
-LIFEPOWEREDPI_BRANCH=openhd2
-
-QOPENHD_REPO=https://github.com/OpenHD/QOpenHD.git
-QOPENHD_VERSION=0.4.0b5
-
-OPENHD_FLIRONE_DRIVER_REPO=https://github.com/OpenHD/Open.HD_FlirOneDrv.git
-OPENHD_FLIRONE_DRIVER_BRANCH=master
-
-OPENHDMICROSERVICE_REPO=https://github.com/OpenHD/OpenHDMicroservice.git
-OPENHDMICROSERVICE_BRANCH=v0.1.10
-
-OPENHDROUTER_REPO=https://github.com/OpenHD/OpenHDRouter.git
-OPENHDROUTER_BRANCH=v0.1.3
-
-QT_VERSION=5.15.0
-QT_MINOR_RELEASE=1
