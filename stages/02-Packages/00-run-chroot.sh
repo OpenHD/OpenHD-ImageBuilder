@@ -39,7 +39,7 @@ apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberry
 # sudo apt-get clean
 sudo apt-get update || exit 1
 
-OPENHD_PACKAGES="openhd
+OPENHD_PACKAGES="openhd=2.0.0rc8
                  openhd-linux-pi 
                  openhd-qt qopenhd 
                  openhd-router openhd-microservice 
