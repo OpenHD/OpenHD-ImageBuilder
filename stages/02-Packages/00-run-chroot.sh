@@ -49,11 +49,6 @@ OPENHD_PACKAGES="openhd=2.0.0rc9
                  veye-raspberrypi
                  flirone-driver"
 
-if [[ "${DISTRO}" == "stretch" ]]; then
-    # on buster the gnuplot package pulls in 670MB of other stuff we don't want, it's a giant waste of space
-    GNUPLOT="gnuplot"
-fi
-
 
 # Python interpreters, we won't need python2 much longer
 PYTHON2="python-pip python-dev python-setuptools"
