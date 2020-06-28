@@ -39,16 +39,7 @@ apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberry
 # sudo apt-get clean
 sudo apt-get update || exit 1
 
-OPENHD_PACKAGES="openhd=2.0.0rc9
-                 openhd-linux-pi 
-                 openhd-qt qopenhd 
-                 openhd-router openhd-microservice 
-                 mavlink-router 
-                 raspi2png 
-                 lifepoweredpi 
-                 veye-raspberrypi
-                 flirone-driver"
-
+OPENHD_PACKAGES="openhd=2.0.0rc9"
 
 # Python interpreters, we won't need python2 much longer
 PYTHON2="python-pip python-dev python-setuptools"
