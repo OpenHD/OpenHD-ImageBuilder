@@ -29,6 +29,7 @@ apt purge raspberrypi-bootloader raspberrypi-kernel
 
 apt-mark hold raspberrypi-bootloader
 apt-mark hold raspberrypi-kernel
+apt-mark hold systemd
 
 # Install libraspberrypi-dev before apt-get update
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libraspberrypi-doc libraspberrypi-dev libraspberrypi-dev libraspberrypi-bin libraspberrypi0 firmware-misc-nonfree || exit 1
