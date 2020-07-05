@@ -25,15 +25,15 @@ curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-0/cfg/gpg/gpg.B9F0E9
 
 echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-0/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-0.list
 
-apt purge raspberrypi-bootloader raspberrypi-kernel
 
-apt-mark hold raspberrypi-bootloader
 apt-mark hold raspberrypi-kernel
 apt-mark hold systemd
 
 # Install libraspberrypi-dev before apt-get update
 DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libraspberrypi-doc libraspberrypi-dev libraspberrypi-dev libraspberrypi-bin libraspberrypi0 firmware-misc-nonfree || exit 1
 apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc
+
+apt purge raspberrypi-kernel
 
 # Latest package source
 # sudo rm -rf /var/lib/apt/lists/*
