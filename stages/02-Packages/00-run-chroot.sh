@@ -40,7 +40,7 @@ apt purge raspberrypi-kernel
 # sudo apt-get clean
 sudo apt-get update || exit 1
 
-OPENHD_PACKAGES="openhd=2.0.0rc10 openhd-linux-pi"
+OPENHD_PACKAGES="openhd=2.0.0rc11 openhd-linux-pi"
 
 # Python interpreters, we won't need python2 much longer
 PYTHON2="python-pip python-dev python-setuptools"
