@@ -85,9 +85,6 @@ systemctl enable getty@tty10.service
 systemctl enable getty@tty11.service
 systemctl enable getty@tty12.service
 
-#disable sync option for usbmount
-sudo sed -i 's/sync,//g' /etc/usbmount/usbmount.conf
-
 #change hostname
 CURRENT_HOSTNAME=`sudo cat /etc/hostname | sudo tr -d " \t\n\r"`
 NEW_HOSTNAME="openhd"
