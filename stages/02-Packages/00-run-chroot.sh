@@ -30,7 +30,7 @@ apt-mark hold raspberrypi-kernel
 apt-mark hold systemd
 
 # Install libraspberrypi-dev before apt-get update
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install libraspberrypi-doc libraspberrypi-dev libraspberrypi-dev libraspberrypi-bin libraspberrypi0 firmware-misc-nonfree || exit 1
+DEBIAN_FRONTEND=noninteractive apt-get -yq install libraspberrypi-doc libraspberrypi-dev libraspberrypi-dev libraspberrypi-bin libraspberrypi0 firmware-misc-nonfree || exit 1
 apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc
 
 apt purge raspberrypi-kernel firmware-atheros
@@ -38,7 +38,7 @@ apt purge raspberrypi-kernel firmware-atheros
 # Latest package source
 # sudo rm -rf /var/lib/apt/lists/*
 # sudo apt-get clean
-sudo apt-get update || exit 1
+apt-get update || exit 1
 
 OPENHD_PACKAGES="openhd=2.0.0rc11 openhd-linux-pi"
 
@@ -55,7 +55,7 @@ DEVELOPMENT_UTILITIES="vim mc"
 PURGE="wireless-regdb crda cron avahi-daemon cifs-utils curl iptables triggerhappy man-db"
 
 
-DEBIAN_FRONTEND=noninteractive sudo apt-get -y --no-install-recommends install \
+DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
 ${OPENHD_PACKAGES} \
 ${PYTHON2} \
 ${PYTHON3} \
@@ -64,10 +64,10 @@ ${PYTHON3_DEPENDENCIES} \
 ${DEVELOPMENT_UTILITIES} \
 ${GNUPLOT} || exit 1
 
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq purge ${PURGE} || exit 1
+DEBIAN_FRONTEND=noninteractive apt-get -yq purge ${PURGE} || exit 1
 
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq clean || exit 1
-DEBIAN_FRONTEND=noninteractive sudo apt-get -yq autoremove || exit 1
+DEBIAN_FRONTEND=noninteractive apt-get -yq clean || exit 1
+DEBIAN_FRONTEND=noninteractive apt-get -yq autoremove || exit 1
 
 if [ ${APT_CACHER_NG_ENABLED} == "true" ]; then
     rm /etc/apt/apt.conf.d/10cache
