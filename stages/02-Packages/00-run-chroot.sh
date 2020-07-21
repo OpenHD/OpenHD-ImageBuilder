@@ -35,9 +35,6 @@ apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberry
 
 apt purge raspberrypi-kernel firmware-atheros
 
-# Latest package source
-# sudo rm -rf /var/lib/apt/lists/*
-# sudo apt-get clean
 apt-get update || exit 1
 
 OPENHD_PACKAGES="openhd=2.0.0rc11 openhd-linux-pi"
