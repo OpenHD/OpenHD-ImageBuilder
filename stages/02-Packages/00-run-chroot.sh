@@ -49,7 +49,7 @@ PYTHON3_DEPENDENCIES="python3-future python3-attr python3-picamera python3-rpi.g
 
 DEVELOPMENT_UTILITIES="vim mc"
 
-PURGE="wireless-regdb crda cron avahi-daemon cifs-utils curl iptables triggerhappy man-db"
+PURGE="wireless-regdb crda cron avahi-daemon cifs-utils curl iptables triggerhappy man-db dphys-swapfile"
 
 
 DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
