@@ -37,7 +37,7 @@ apt purge raspberrypi-kernel firmware-atheros
 
 apt-get update || exit 1
 
-OPENHD_PACKAGES="openhd=2.0.0rc14 openhd-linux-pi=20200802.1"
+OPENHD_PACKAGES="openhd=2.0.0rc15 openhd-linux-pi=20200802.1"
 
 # Python interpreters, we won't need python2 much longer
 PYTHON2="python-pip python-dev python-setuptools"
