@@ -20,10 +20,10 @@ if [ "${IMAGE_ARCH}" == "pi" ]; then
 fi
 
 apt-get install -y apt-transport-https
-curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-0/cfg/gpg/gpg.B9F0E99CF5787237.key' | apt-key add -
+curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1/cfg/gpg/gpg.B9F0E99CF5787237.key' | apt-key add -
 
 
-echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-0/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-0.list
+echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1.list
 
 apt-mark hold firmware-atheros
 apt-mark hold raspberrypi-kernel
