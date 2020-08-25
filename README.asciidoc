@@ -57,13 +57,23 @@ git clone https://github.com/OpenHD/Open.HD_Image_Builder.git
 cd Open.HD_Image_Builder
 ```
 
-and run:
+Elevate your prompt:
 
 ```sh
 sudo -s
+```
+
+And run:
+
+```sh
 ./build.sh pi stretch
 ```
 
+or
+
+```sh
+./build.sh pi buster
+```
 
 ## More information (what's going on?)
 The earlier version of this builder did all of the work from a single script, while that is basically fine, there were some issues with the approach taken:
