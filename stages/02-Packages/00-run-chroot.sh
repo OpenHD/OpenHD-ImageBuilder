@@ -19,7 +19,7 @@ if [ "${IMAGE_ARCH}" == "pi" ]; then
     OS="raspbian"
 fi
 
-apt-get install -y apt-transport-https
+apt-get install -y apt-transport-https curl
 
 git describe --exact-match HEAD > /dev/null 2>&1
 if [[ $? -eq 0 ]]; then
