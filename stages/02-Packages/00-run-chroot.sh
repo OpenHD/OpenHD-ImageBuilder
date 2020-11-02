@@ -11,8 +11,8 @@ rm /lib/modules/*/source || true
 rm /boot/config.txt
 rm /boot/cmdline.txt
 
-if [ "${APT_CACHER_NG_ENABLED}" == "true" ]; then
-    echo "Acquire::http::Proxy \"${APT_CACHER_NG_URL}/\";" >> /etc/apt/apt.conf.d/10cache
+if [ "${SQUID_DEB_PROXY_ENABLED}" == "true" ]; then
+    echo "Acquire::http::Proxy \"${SQUID_DEB_PROXY_URL}/\";" >> /etc/apt/apt.conf.d/10cache
 fi
 
 if [ "${IMAGE_ARCH}" == "pi" ]; then
@@ -67,7 +67,7 @@ DEBIAN_FRONTEND=noninteractive apt-get -yq purge ${PURGE} || exit 1
 DEBIAN_FRONTEND=noninteractive apt-get -yq clean || exit 1
 DEBIAN_FRONTEND=noninteractive apt-get -yq autoremove || exit 1
 
-if [ ${APT_CACHER_NG_ENABLED} == "true" ]; then
+if [ ${SQUID_DEB_PROXY_ENABLED} == "true" ]; then
     rm /etc/apt/apt.conf.d/10cache
 fi
 
