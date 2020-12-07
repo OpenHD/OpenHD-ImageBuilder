@@ -6,6 +6,8 @@ export -f log
 mount_image () {
     IMG_FILE="${STAGE_WORK_DIR}/IMAGE.img"
 
+    log "Mounting image file: ${IMG_FILE}"
+
     PARTED_OUT=$(parted -s "${IMG_FILE}" unit b print)
 
     if [[ "${HAVE_BOOT_PARTITION}" == "true" ]]; then
@@ -45,8 +47,11 @@ mount_image () {
     # give it some time
     sleep 5
 
+    log "Resizing root to fill partition"
+
     # Resize to full size
     LOOP_DEV="$(findmnt -nr -o source $MNT_DIR)"
+    log "loop_dev: ${LOOP_DEV}"
     resize2fs -f "$LOOP_DEV"
 
     # disable dir_index due to a weird bug when running qemu in a 32-bit chroot on 64-bit x86 hardware, readdir() fails in strange ways
@@ -62,6 +67,8 @@ mount_image () {
         # mount the conf partition
         mountpoint -q "${MNT_DIR}/conf" || mount "$IMG_FILE" -o loop,offset=${CONF_OFFSET},rw,sizelimit=${CONF_LENGTH} "${MNT_DIR}/conf"
     fi
+
+    log "Finished mounting"
 }
 export -f mount_image
 
@@ -92,6 +99,8 @@ export -f unmount_image
 
 on_chroot() {
     MNT_DIR="${STAGE_WORK_DIR}/mnt"
+
+    echo "Binding host partitions on ${MNT_DIR}"
 
     if ! mount | grep -q "${MNT_DIR}/proc)"; then
         mount -t proc proc "${MNT_DIR}/proc"
