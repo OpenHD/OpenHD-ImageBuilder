@@ -41,13 +41,11 @@ apt-get update || exit 1
 
 
 
-DEVELOPMENT_UTILITIES="vim mc"
 
 PURGE="wireless-regdb crda cron avahi-daemon cifs-utils curl iptables triggerhappy man-db dphys-swapfile logrotate"
 
 
 DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
-${DEVELOPMENT_UTILITIES} \
 ${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
 ${GNUPLOT} || exit 1
