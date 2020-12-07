@@ -71,9 +71,6 @@ if [ ${APT_CACHER_NG_ENABLED} == "true" ]; then
     rm /etc/apt/apt.conf.d/10cache
 fi
 
-pip install psutil || exit 1
-pip3 install psutil || exit 1
-
 
 MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
