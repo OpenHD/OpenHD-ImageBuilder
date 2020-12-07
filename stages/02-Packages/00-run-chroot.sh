@@ -28,7 +28,14 @@ if [[ "${OS}" == "raspbian" ]]; then
 fi
 
 
+if [[ "${OS}" == "armbian" ]]; then
+    PLATFORM_PACKAGES=""
+fi
 
+
+if [[ "${OS}" == "ubuntu" ]]; then
+    PLATFORM_PACKAGES=""
+fi
 
 
 if [[ "${HAS_CUSTOM_KERNEL}" == "true" ]]; then
