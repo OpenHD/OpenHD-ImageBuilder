@@ -1,0 +1,11 @@
+BASE_IMAGE_URL="http://download.openhdfpv.com"
+BASE_IMAGE="jetson-nano-4gb-32.4.4-8gb.img.gz"
+BASE_IMAGE_SHA256="74325854bd7b5e77b0f7b2aa07df9da2b576d76716c56b8ac3e465867761282b"
+OS="ubuntu"
+DISTRO="bionic"
+HAS_CUSTOM_KERNEL=false
+HAVE_BOOT_PART=false
+HAVE_CONF_PART=true
+ROOT_PART=1
+CONF_PART=15
+BIT="64"
