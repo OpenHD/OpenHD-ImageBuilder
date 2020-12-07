@@ -31,6 +31,9 @@ fi
 
 
 
+if [[ "${HAS_CUSTOM_KERNEL}" == "true" ]]; then
+    PLATFORM_PACKAGES="${PLATFORM_PACKAGES} ${KERNEL_PACKAGE}"
+fi
 
 
 apt-get update || exit 1
