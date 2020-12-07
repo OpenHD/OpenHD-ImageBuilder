@@ -39,13 +39,7 @@ echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1/deb/${OS} ${DISTRO} 
 apt-get update || exit 1
 
 
-# Python interpreters, we won't need python2 much longer
-PYTHON2="python-pip python-dev python-setuptools"
-PYTHON3="python3-pip python3-dev python3-setuptools"
 
-# Python dependencies used by our own code
-PYTHON2_DEPENDENCIES="python-future python-attr python-m2crypto python-rpi.gpio"
-PYTHON3_DEPENDENCIES="python3-future python3-attr python3-picamera python3-rpi.gpio"
 
 DEVELOPMENT_UTILITIES="vim mc"
 
@@ -53,10 +47,6 @@ PURGE="wireless-regdb crda cron avahi-daemon cifs-utils curl iptables triggerhap
 
 
 DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
-${PYTHON2} \
-${PYTHON3} \
-${PYTHON2_DEPENDENCIES} \
-${PYTHON3_DEPENDENCIES} \
 ${DEVELOPMENT_UTILITIES} \
 ${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
