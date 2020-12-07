@@ -25,35 +25,14 @@ echo ""
 
 
 if [[ "${IMAGE_TYPE}" == "" ]]; then
-    IMAGE_TYPE="pi-stretch"
-
     echo "Usage: ./build.sh pi-stretch"
     echo ""
-    echo "Options:"
+    echo "Target boards:"
     echo ""
-    echo "Note: these are board specific rather than architecture specific, because most boards require"
-    echo "      a specific kernel, bootloader, device tree, and sometimes different packages installed, even"
-    echo "      within a single distro on a specific architecture. This builder is the point where we make"
-    echo "      those kinds of changes for an image"
-    echo ""
-    echo "                  pi-stretch: Pi Zero, Pi 2, Pi 3, CM3"
-    echo ""
-    echo "                   pi-buster: Pi Compute Module 3+ and Pi 4"
-    echo ""
-    echo "          jetson-nano-2gb-bionic: NVidia Jetson Nano 2GB Dev Kit"
-    echo "" 
-    echo "          jetson-nano-4gb-bionic: NVidia Jetson Nano 4GB Dev Kit"
-    echo "" 
-    echo "           jetson-tx1-bionic: NVidia Jetson TX1"
-    echo "" 
-    echo "           jetson-tx2-bionic: NVidia Jetson TX2"
-    echo ""
-    echo "          nanopi-neo2-buster: NanoPi Neo2"
-    echo ""
-    echo "          nanopi-neo3-buster: NanoPi Neo3"
-    echo ""
+    ls -1 images/
     line
     echo ""
+    exit 1
 fi
 
 if [[ ! -f ./images/${IMAGE_TYPE} ]]; then
