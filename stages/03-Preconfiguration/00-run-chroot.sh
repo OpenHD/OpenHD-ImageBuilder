@@ -67,13 +67,6 @@ systemctl disable systemd-journald.service
 systemctl mask systemd-journald.service
 
 
-
-#enable /dev/video0
-#sudo modprobe bcm2835-v4l2
-
-
-
-
 sudo rm /etc/init.d/resize2fs_once
 
 # Disable ZeroTier service
