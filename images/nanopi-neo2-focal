@@ -1,0 +1,10 @@
+BASE_IMAGE_URL="http://download.openhdfpv.com"
+BASE_IMAGE="Armbian_20.08_Nanopineo2_focal_current_5.7.15.img.xz"
+BASE_IMAGE_SHA256="c89466893a48990d5eb421208689ce439e8b41bf5862766fdbb315c1d1b5dc89"
+OS="debian"
+DISTRO="focal"
+HAS_CUSTOM_KERNEL=false
+HAVE_BOOT_PART=false
+HAVE_CONF_PART=false
+ROOT_PART=1
+BIT="64"
