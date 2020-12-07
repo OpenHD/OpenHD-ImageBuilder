@@ -8,16 +8,31 @@ mount_image () {
 
     PARTED_OUT=$(parted -s "${IMG_FILE}" unit b print)
 
-    BOOT_OFFSET=$(echo "$PARTED_OUT" | grep -e '^ 1'| xargs echo -n | cut -d" " -f 2 | tr -d B)
-    BOOT_LENGTH=$(echo "$PARTED_OUT" | grep -e '^ 1'| xargs echo -n | cut -d" " -f 4 | tr -d B)
+    if [[ "${HAVE_BOOT_PARTITION}" == "true" ]]; then
+        log "Mounting boot partition: ${BOOT_PART}"
 
-    ROOT_OFFSET=$(echo "$PARTED_OUT" | grep -e '^ 2'| xargs echo -n | cut -d" " -f 2 | tr -d B)
-    ROOT_LENGTH=$(echo "$PARTED_OUT" | grep -e '^ 2'| xargs echo -n | cut -d" " -f 4 | tr -d B)
+        BOOT_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${BOOT_PART}" | xargs echo -n | cut -d" " -f 2 | tr -d B)
+        BOOT_LENGTH=$(echo "$PARTED_OUT" | grep -e "^ ${BOOT_PART}" | xargs echo -n | cut -d" " -f 4 | tr -d B)
+        BOOT_DEV=$(losetup --show -f -o "${BOOT_OFFSET}" --sizelimit "${BOOT_LENGTH}" "${IMG_FILE}")
+        log "/boot: offset $BOOT_OFFSET, length $BOOT_LENGTH"
+    fi
 
-    BOOT_DEV=$(losetup --show -f -o "${BOOT_OFFSET}" --sizelimit "${BOOT_LENGTH}" "${IMG_FILE}")
+    if [[ "${HAVE_CONF_PARTITION}" == "true" ]]; then
+        log "Mounting conf partition: ${CONF_PART}"
+
+        CONF_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${CONF_PART}" | xargs echo -n | cut -d" " -f 2 | tr -d B)
+        CONF_LENGTH=$(echo "$PARTED_OUT" | grep -e "^ ${CONF_PART}" | xargs echo -n | cut -d" " -f 4 | tr -d B)
+        CONF_DEV=$(losetup --show -f -o "${CONF_OFFSET}" --sizelimit "${CONF_LENGTH}" "${IMG_FILE}")
+        log "/conf: offset $CONF_OFFSET, length $CONF_LENGTH"
+    fi
+
+    log "Mounting root partition: ${ROOT_PART}"
+
+    ROOT_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${ROOT_PART}" | xargs echo -n | cut -d" " -f 2 | tr -d B)
+    ROOT_LENGTH=$(echo "$PARTED_OUT" | grep -e "^ ${ROOT_PART}" | xargs echo -n | cut -d" " -f 4 | tr -d B)
     ROOT_DEV=$(losetup --show -f -o "${ROOT_OFFSET}" --sizelimit "${ROOT_LENGTH}" "${IMG_FILE}")
 
-    log "/boot: offset $BOOT_OFFSET, length $BOOT_LENGTH"
+
     log "/:     offset $ROOT_OFFSET, length $ROOT_LENGTH"
 
     # Make sure the mount point is there
@@ -38,8 +53,15 @@ mount_image () {
     log "Disabling dir_index on ${LOOP_DEV}"
     tune2fs -O ^dir_index ${LOOP_DEV} || true
 
-    # mount the BOOT partition
-    mountpoint -q "${MNT_DIR}/boot" || mount "$IMG_FILE" -o loop,offset=${BOOT_OFFSET},rw,sizelimit=${BOOT_LENGTH} "${MNT_DIR}/boot"
+    if [[ "${HAVE_BOOT_PARTITION}" == "true" ]]; then
+        # mount the BOOT partition
+        mountpoint -q "${MNT_DIR}/boot" || mount "$IMG_FILE" -o loop,offset=${BOOT_OFFSET},rw,sizelimit=${BOOT_LENGTH} "${MNT_DIR}/boot"
+    fi
+
+    if [[ "${HAVE_CONF_PARTITION}" == "true" ]]; then
+        # mount the conf partition
+        mountpoint -q "${MNT_DIR}/conf" || mount "$IMG_FILE" -o loop,offset=${CONF_OFFSET},rw,sizelimit=${CONF_LENGTH} "${MNT_DIR}/conf"
+    fi
 }
 export -f mount_image
 
@@ -52,6 +74,10 @@ unmount_image(){
     
     if mount | grep -q "$MNT_DIR/boot"; then
         umount -l "$MNT_DIR/boot"
+    fi
+
+    if mount | grep -q "$MNT_DIR/conf"; then
+        umount -l "$MNT_DIR/conf"
     fi
 
     if mount | grep -q "$MNT_DIR"; then

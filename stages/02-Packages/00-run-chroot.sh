@@ -8,15 +8,23 @@
 rm /lib/modules/*/build || true
 rm /lib/modules/*/source || true
 
-rm /boot/config.txt
-rm /boot/cmdline.txt
 
 if [ "${APT_CACHER_NG_ENABLED}" == "true" ]; then
     echo "Acquire::http::Proxy \"${APT_CACHER_NG_URL}/\";" >> /etc/apt/apt.conf.d/10cache
 fi
 
-if [ "${IMAGE_ARCH}" == "pi" ]; then
-    OS="raspbian"
+if [[ "${OS}" == "raspbian" ]]; then
+    rm /boot/config.txt
+    rm /boot/cmdline.txt
+    apt-mark hold firmware-atheros || exit 1
+    apt purge firmware-atheros || exit 1
+    apt -yq install firmware-misc-nonfree || exit 1
+    apt-mark hold raspberrypi-kernel
+    # Install libraspberrypi-dev before apt-get update
+    DEBIAN_FRONTEND=noninteractive apt-get -yq install libraspberrypi-doc libraspberrypi-dev libraspberrypi-dev libraspberrypi-bin libraspberrypi0 || exit 1
+    apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc
+    apt purge raspberrypi-kernel
+    PLATFORM_PACKAGES=""
 fi
 
 apt-get install -y apt-transport-https
@@ -25,19 +33,11 @@ curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1/cfg/gpg/gpg.B9F0E9
 
 echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1.list
 
-apt-mark hold firmware-atheros
-apt-mark hold raspberrypi-kernel
-apt-mark hold systemd
 
-# Install libraspberrypi-dev before apt-get update
-DEBIAN_FRONTEND=noninteractive apt-get -yq install libraspberrypi-doc libraspberrypi-dev libraspberrypi-dev libraspberrypi-bin libraspberrypi0 firmware-misc-nonfree || exit 1
-apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc
 
-apt purge raspberrypi-kernel firmware-atheros
 
 apt-get update || exit 1
 
-OPENHD_PACKAGES="openhd openhd-linux-pi=20200811.1"
 
 # Python interpreters, we won't need python2 much longer
 PYTHON2="python-pip python-dev python-setuptools"
@@ -53,12 +53,13 @@ PURGE="wireless-regdb crda cron avahi-daemon cifs-utils curl iptables triggerhap
 
 
 DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
-${OPENHD_PACKAGES} \
 ${PYTHON2} \
 ${PYTHON3} \
 ${PYTHON2_DEPENDENCIES} \
 ${PYTHON3_DEPENDENCIES} \
 ${DEVELOPMENT_UTILITIES} \
+${OPENHD_PACKAGE} \
+${PLATFORM_PACKAGES} \
 ${GNUPLOT} || exit 1
 
 DEBIAN_FRONTEND=noninteractive apt-get -yq purge ${PURGE} || exit 1

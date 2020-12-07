@@ -5,8 +5,7 @@ if [ -f config ]; then
     source config
 fi
 
-IMAGE_ARCH=$1
-DISTRO=$2
+IMAGE_TYPE=$1
 
 # print a simple line across the entire width of the terminal like '------------'
 line (){
@@ -25,38 +24,44 @@ line
 echo ""
 
 
-if [[ "${IMAGE_ARCH}" == "" || ${DISTRO} == "" ]]; then
-    IMAGE_ARCH="pi"
-    DISTRO="stretch"
+if [[ "${IMAGE_TYPE}" == "" ]]; then
+    IMAGE_TYPE="pi-stretch"
 
-    echo "Usage: ./build.sh pi [stretch | buster]"
+    echo "Usage: ./build.sh pi-stretch"
     echo ""
     echo "Options:"
     echo ""
-    echo "                  pi stretch: standard image, supports Pi Zero, Pi 2, Pi 3, CM3"
+    echo "Note: these are board specific rather than architecture specific, because most boards require"
+    echo "      a specific kernel, bootloader, device tree, and sometimes different packages installed, even"
+    echo "      within a single distro on a specific architecture. This builder is the point where we make"
+    echo "      those kinds of changes for an image"
     echo ""
-    echo "                   pi buster: testing image, for Pi Compute Module 3+ and Pi 4"
+    echo "                  pi-stretch: Pi Zero, Pi 2, Pi 3, CM3"
     echo ""
+    echo "                   pi-buster: Pi Compute Module 3+ and Pi 4"
+    echo ""
+    echo "          jetson-nano-2gb-bionic: NVidia Jetson Nano 2GB Dev Kit"
+    echo "" 
+    echo "          jetson-nano-4gb-bionic: NVidia Jetson Nano 4GB Dev Kit"
+    echo "" 
+    echo "           jetson-tx1-bionic: NVidia Jetson TX1"
+    echo "" 
+    echo "           jetson-tx2-bionic: NVidia Jetson TX2"
+    echo ""
+    echo "          nanopi-neo2-buster: NanoPi Neo2"
+    echo ""
+    echo "          nanopi-neo3-buster: NanoPi Neo3"
     echo ""
     line
     echo ""
 fi
 
-
-if [[ "$IMAGE_ARCH" == "pi" && "${DISTRO}" == "stretch" ]]; then
-    echo "Building pi stretch image"
-
-    BASE_IMAGE_URL=${PI_STRETCH_BASE_IMAGE_URL}
-    BASE_IMAGE=${PI_STRETCH_BASE_IMAGE}
+if [[ ! -f ./images/${IMAGE_TYPE} ]]; then
+    echo "Invalid image type: ${IMAGE_TYPE}"
+    exit 1
 fi
 
-
-if [[ "$IMAGE_ARCH" == "pi" && "${DISTRO}" == "buster" ]]; then
-    echo "Building pi buster image"
-
-    BASE_IMAGE_URL=${PI_BUSTER_BASE_IMAGE_URL}
-    BASE_IMAGE=${PI_BUSTER_BASE_IMAGE}
-fi
+source ./images/${IMAGE_TYPE}
 
 echo ""
 line
@@ -139,7 +144,7 @@ export IMG_DATE="${IMG_DATE:-"$(date +%Y-%m-%d)"}"
 
 BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export SCRIPT_DIR="${BASE_DIR}/scripts"
-export WORK_DIR="${BASE_DIR}/work-${IMAGE_ARCH}-${DISTRO}"
+export WORK_DIR="${BASE_DIR}/work-${IMAGE_TYPE}-${OS}-${DISTRO}"
 export DEPLOY_DIR=${DEPLOY_DIR:-"${BASE_DIR}/deploy"}
 export LOG_FILE="${WORK_DIR}/build.log"
 
@@ -147,15 +152,19 @@ mkdir -p "${WORK_DIR}"
 
 export BASE_DIR
 
-export IMAGE_ARCH
+export BASE_IMAGE_SHA256
+
+export HAVE_BOOT_PART
+export OPENHD_PACKAGE
+export KERNEL_PACKAGE
+export OS
+export IMAGE_TYPE
 export DISTRO
 export BASE_IMAGE_URL
 export BASE_IMAGE
 
 export CLEAN
 export IMG_NAME
-export BASE_IMAGE_URL
-export BASE_IMAGE
 
 export APT_CACHER_NG_URL
 export APT_CACHER_NG_ENABLED

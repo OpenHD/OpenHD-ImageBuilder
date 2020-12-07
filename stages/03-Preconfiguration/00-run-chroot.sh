@@ -4,7 +4,7 @@
 
 #!/bin/bash
 
-if [[ "${DISTRO}" == "stretch" ]]; then
+if [[ "${OS}" == "raspbian" && "${DISTRO}" == "stretch" ]]; then
     # fix broadcom opengl  library names without breaking anything else
     ln -sf /opt/vc/lib/libbrcmEGL.so /opt/vc/lib/libEGL.so
     ln -sf /opt/vc/lib/libEGL.so /opt/vc/lib/libEGL.so.1
@@ -18,6 +18,14 @@ if [[ "${DISTRO}" == "stretch" ]]; then
     ln -sf /opt/vc/lib/pkgconfig/brcmvg.pc     /opt/vc/lib/pkgconfig/vg.pc
 fi
 
+
+
+# On platforms that already have a separate boot partition we just put the config files on there, but some
+# platforms don't have or need a boot partition, so on those we have a separate /conf partition. All
+# openhd components look to /conf, so a symlink works well here. We may end up using separate /conf on everything.
+if [[ "${HAVE_CONF_PARTITION}" == "false" ]] && [[ "${HAVE_BOOT_PARTITION}" == "true" ]]; then
+    ln -s /boot /conf
+fi
 
 
 #Ensure the runlevel is multi-target (3) could possibly be lower...
