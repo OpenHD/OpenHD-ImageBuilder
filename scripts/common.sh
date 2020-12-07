@@ -55,8 +55,10 @@ mount_image () {
     resize2fs -f "$LOOP_DEV"
 
     # disable dir_index due to a weird bug when running qemu in a 32-bit chroot on 64-bit x86 hardware, readdir() fails in strange ways
-    log "Disabling dir_index on ${LOOP_DEV}"
-    tune2fs -O ^dir_index ${LOOP_DEV} || true
+    if [[ "${BIT}" == "32" ]]; then
+        log "Disabling dir_index on ${LOOP_DEV}"
+        tune2fs -O ^dir_index ${LOOP_DEV} || true
+    fi
 
     if [[ "${HAVE_BOOT_PARTITION}" == "true" ]]; then
         # mount the BOOT partition
