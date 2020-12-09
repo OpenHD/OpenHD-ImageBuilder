@@ -84,17 +84,20 @@ The earlier version of this builder did all of the work from a single script, wh
 The main issue offcourse being the first one.
 So, on to this, the new and improved 'staged' image builder.
 
+**Note:** if a build fails for some reason, be sure to run the cleanup script so that any temporarily mounted images are cleaned up:
+
+    ./clean-fail.sh
+
 ### STAGES
 The core concept (and some code) was taken from link:https://github.com/RPi-Distro/pi-gen[pi-gen], the Raspbian image generator.
+
 Whenever we make a OpenHd image, we basically perform several steps in order:
 
-- Download the Raspbian lite image
-- Increase the size of the partition
-- Download, patch and compile the Linux kernel
-- Update the image with the patched kernel
-- Update the image with several apt-get packages
-- Copy the OpenHD code onto the image and compile
-- Copy several configuration files
+- Download a base image
+- Increase the size of the root partition if necessary
+- Preinstall the OpenHD Packages
+- Update the `/boot` or `/conf` partition name
+- Set the system hostname
 - Cleanup
 
 *Remember, this was all done in a single script, and an error in the cleanup step basically meant running it all again.*
@@ -105,7 +108,7 @@ This concept applies to the OpenHD image creation as well. So i modified the cor
 
 image::https://github.com/OpenHD/Open.HD_Image_Builder/raw/master/Builder%20flow.png[Flow]
 
-This allows us to run the build process once, and when we want to make a change in stage 3, we only run stage 3 and 4 again by removing the `SKIP` file from the `stages/03-Packages` and the `stages/04-Wifibroadcast` folders. The build system will copy the kernel `IMAGE.img` from stage 2 to stage 3 and re-run all the scripts in stage 3. The resulting image is copied to stage 4 and all those scripts are run. Finally, when there are no more stages, the `IMAGE.img` from the last stage is copied to the `deploy/ezwfb-{date}.img` file.
+This allows us to run the build process once, and when we want to make a change in stage 3, we only run stage 3 and 4 again by removing the `SKIP` file from the `stages/03-Packages` and the `stages/04-Wifibroadcast` folders. The build system will copy the kernel `IMAGE.img` from stage 2 to stage 3 and re-run all the scripts in stage 3. The resulting image is copied to stage 4 and all those scripts are run. Finally, when there are no more stages, the `IMAGE.img` from the last stage is copied to the `./deploy` directory and renamed to include the target board and OpenHD version.
 
 #### Skipping
 By placing a `SKIP` file in the stage folder, the entire stage will be skipped by the build system. Please be aware there is no sanity check in place, removing the `SKIP` file from stage 3 while leaving the `SKIP` file in stage 4 will produce an image based on the previous run, ignoring the modifications done in step 3.
@@ -115,7 +118,4 @@ It is also possible to put a `SKIP-IMAGE` file into a stage, this will disable a
 #### Scripts
 Every stage comprises one or more scripts. Scripts need to be named in the format `XX-run.sh` or `XX-run-chroot.sh`. The order is determined by the XX part, where any `-chroot` script is run **AFTER** the non-chroot script.
 
-**chroot**? What's that? Well, it's a little complex, but basically it allows you to run statements within the image as if you were running the image on an actual Raspberry Pi. This is used to download and install the `apt-get` packages and several scripts to make the image ready for use with the OpenHD system. Please remember to use `sudo` in the `-chroot` scripts where approperiate.
-
-#### Branches
-You can define which Open.HD branch gets pulled from the script repo. define `OPENHD_BRANCH=` in config
+**chroot**? What's that? Well, it's a little complex, but basically it allows you to run statements within the image as if you were running the image on an actual target board like the Raspberry Pi. This is used to download and install the `apt-get` packages and several scripts to make the image ready for use with the OpenHD system. Please remember to use `sudo` in the `-chroot` scripts where approperiate.
