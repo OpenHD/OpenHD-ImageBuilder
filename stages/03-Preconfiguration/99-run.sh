@@ -6,10 +6,6 @@ cp ${STAGE_WORK_DIR}/mnt/openhd_version.txt ${WORK_DIR}/openhd_version.txt
 
 MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
-
-cp -r "${STAGE_DIR}/FILES/overlay/." "$MNT_DIR"
-
-
 if [[ "${HAVE_CONF_PARTITION}" == "false" ]] && [[ "${HAVE_BOOT_PARTITION}" == "true" ]]; then
 # Rename the DOS partition
     BOOT_MNT_DIR="${STAGE_WORK_DIR}/mnt/boot"
