@@ -141,6 +141,7 @@ export IMAGE_TYPE
 export DISTRO
 export BASE_IMAGE_URL
 export BASE_IMAGE
+export TESTING
 
 export CLEAN
 export IMG_NAME
