@@ -21,7 +21,7 @@ log "Unarchive base image"
 
 if [[ ${BASE_IMAGE: -4} == ".zip" ]]; then
     unzip ${BASE_IMAGE}
-    mv ${BASE_IMAGE%.zip} IMAGE.img
+    mv ${BASE_IMAGE%.zip}.img IMAGE.img
 elif [ ${BASE_IMAGE: -7} == ".img.xz" ]; then
     xz -k -d ${BASE_IMAGE}
     mv ${BASE_IMAGE%.xz} IMAGE.img
