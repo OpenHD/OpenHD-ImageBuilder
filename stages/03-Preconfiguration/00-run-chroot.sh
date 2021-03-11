@@ -80,6 +80,12 @@ if [ $? -eq 0 ]; then
   sudo sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
 fi
 
+if [[ "${HAVE_CONF_PARTITION}" == "false" ]] && [[ "${HAVE_BOOT_PARTITION}" == "true" ]]; then
+    # the system expects things to be in /conf now, but on some platforms we use the boot
+    # partition instead of making another one, we may change this in the future
+    ln -s /boot /conf
+fi
+
 apt -y autoremove
 apt -y clean
 
