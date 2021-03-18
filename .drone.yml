@@ -1,0 +1,29 @@
+kind: pipeline
+type: docker
+name: jetson-nano-2gb-bionic
+platform:
+  os: linux
+  arch: arm64
+image_pull_secrets:
+- dockerconfigjson
+steps:
+- name: fetch
+  image: arm64v8/alpine:3.12
+  commands:
+  - apk add git
+  - git fetch --tags
+  - git submodule update --init --recursive --remote
+- name: build
+  image: plugins/docker
+  environment:
+    IMAGE_TYPE: jetson-nano-2gb-bionic
+  settings:
+      repo: openhd/openhd
+      dry_run: true
+      username:
+        from_secret: docker_openhd_username
+      password:
+        from_secret: docker_openhd_password
+      dockerfile: Dockerfile
+      build_args_from_env:
+        - IMAGE_TYPE
