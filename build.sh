@@ -6,6 +6,7 @@ if [ -f config ]; then
 fi
 
 IMAGE_TYPE=$1
+TESTING=$2
 
 # print a simple line across the entire width of the terminal like '------------'
 line (){
