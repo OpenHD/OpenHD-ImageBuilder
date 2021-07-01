@@ -19,12 +19,23 @@ if [ "${IMAGE_ARCH}" == "pi" ]; then
     OS="raspbian"
 fi
 
+apt-get update || exit 1
 
 apt-get install -y apt-transport-https curl
 
 curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-0/cfg/gpg/gpg.B9F0E99CF5787237.key' | apt-key add -
+curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-0-testing/cfg/gpg/gpg.F856E94C65F425D6.key' | apt-key add -
 
-echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-0/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-0.list
+if [[ "${TESTING}" == "" ]]; then
+    echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-0/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-0.list
+
+fi
+
+if [[ "${TESTING}" == "testing" ]]; then
+    echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-0-testing/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-0.list    
+fi
+
+OPENHD_PACKAGES="openhd=${OPENHD_PACKAGE}"
 
 apt-mark hold firmware-atheros
 apt-mark hold raspberrypi-kernel
@@ -38,7 +49,6 @@ apt purge raspberrypi-kernel firmware-atheros
 
 apt-get update || exit 1
 
-OPENHD_PACKAGES="openhd=2.0.8"
 
 # Python interpreters, we won't need python2 much longer
 PYTHON2="python-pip python-dev python-setuptools"
