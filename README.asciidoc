@@ -61,8 +61,19 @@ and run:
 
 ```sh
 sudo -s
-./build.sh pi stretch
+./build.sh pi buster 2.0.10
 ```
+
+The above command will change depending on the package you would like to build and whether it is from the main or testing repository in cloudsmith.io.
+
+./build.sh pi [stretch | buster] [package number] ?testing
+
+The package numbers can be retrieved from the cloudsmith.io repository here: https://cloudsmith.io/~openhd/repos/
+An example build for a testing package would be:
+
+./build.sh pi buster 2.0.9-4-gd238296 testing
+
+This will build a testing image and all updates will be against the 2-0-testing repository.
 
 
 ## More information (what's going on?)

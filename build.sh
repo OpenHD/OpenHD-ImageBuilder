@@ -7,6 +7,8 @@ fi
 
 IMAGE_ARCH=$1
 DISTRO=$2
+OPENHD_PACKAGE=$3
+TESTING=$4
 
 # print a simple line across the entire width of the terminal like '------------'
 line (){
@@ -29,7 +31,7 @@ if [[ "${IMAGE_ARCH}" == "" || ${DISTRO} == "" ]]; then
     IMAGE_ARCH="pi"
     DISTRO="stretch"
 
-    echo "Usage: ./build.sh pi [stretch | buster]"
+    echo "Usage: ./build.sh pi [stretch | buster] [package number] [testing]"
     echo ""
     echo "Options:"
     echo ""
@@ -56,6 +58,17 @@ if [[ "$IMAGE_ARCH" == "pi" && "${DISTRO}" == "buster" ]]; then
 
     BASE_IMAGE_URL=${PI_BUSTER_BASE_IMAGE_URL}
     BASE_IMAGE=${PI_BUSTER_BASE_IMAGE}
+fi
+
+if [ "$OPENHD_PACKAGE" == "" ]; then
+    OPENHD_PACKAGE="2.0.8"
+fi
+
+echo ""
+line
+
+if [ "$TESTING" == "testing" ]; then
+    echo "Building from testing image"
 fi
 
 echo ""
@@ -156,6 +169,8 @@ export CLEAN
 export IMG_NAME
 export BASE_IMAGE_URL
 export BASE_IMAGE
+export TESTING
+export OPENHD_PACKAGE
 
 export SQUID_DEB_PROXY_URL
 export SQUID_DEB_PROXY_ENABLED
