@@ -52,17 +52,16 @@ sudo apt update
 
 Then git clone this repository to a suitable folder 
 
-```sh
-git clone https://github.com/OpenHD/Open.HD_Image_Builder.git
-cd Open.HD_Image_Builder
-```
+
+`git clone https://github.com/OpenHD/Open.HD_Image_Builder.git`
+`cd Open.HD_Image_Builder`
+
 
 and run:
 
-```sh
 `sudo -s`
 `./build.sh pi buster 2.0.10`
-```
+
 
 The above command will change depending on the package you would like to build and whether it is from the main or testing repository in cloudsmith.io.
 
