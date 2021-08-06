@@ -66,13 +66,13 @@ sudo -s
 And run:
 
 ```sh
-./build.sh pi stretch
+./build.sh pi-stretch
 ```
 
 or
 
 ```sh
-./build.sh pi buster
+./build.sh pi-buster
 ```
 
 ## More information (what's going on?)
