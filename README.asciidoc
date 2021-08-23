@@ -66,7 +66,7 @@ sudo -s
 And run:
 
 ```sh
-./build.sh pi stretch
+./build.sh jetson-nano-2gb-bionic testing
 ```
 
 or
