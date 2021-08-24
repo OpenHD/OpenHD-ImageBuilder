@@ -72,7 +72,7 @@ And run:
 or
 
 ```sh
-./build.sh pi buster
+./build.sh pi-buster
 ```
 
 ## More information (what's going on?)
