@@ -10,7 +10,7 @@ mount_image () {
 
     PARTED_OUT=$(parted -s "${IMG_FILE}" unit b print)
 
-    if [[ "${HAVE_BOOT_PARTITION}" == "true" ]]; then
+    if [[ "${HAVE_BOOT_PART}" == "true" ]]; then
         log "Mounting boot partition: ${BOOT_PART}"
 
         BOOT_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${BOOT_PART}" | xargs echo -n | cut -d" " -f 2 | tr -d B)
@@ -19,7 +19,7 @@ mount_image () {
         log "/boot: offset $BOOT_OFFSET, length $BOOT_LENGTH"
     fi
 
-    if [[ "${HAVE_CONF_PARTITION}" == "true" ]]; then
+    if [[ "${HAVE_CONF_PART}" == "true" ]]; then
         log "Mounting conf partition: ${CONF_PART}"
 
         CONF_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${CONF_PART}" | xargs echo -n | cut -d" " -f 2 | tr -d B)
@@ -60,12 +60,12 @@ mount_image () {
         tune2fs -O ^dir_index ${LOOP_DEV} || true
     fi
 
-    if [[ "${HAVE_BOOT_PARTITION}" == "true" ]]; then
+    if [[ "${HAVE_BOOT_PART}" == "true" ]]; then
         # mount the BOOT partition
         mountpoint -q "${MNT_DIR}/boot" || mount "$IMG_FILE" -o loop,offset=${BOOT_OFFSET},rw,sizelimit=${BOOT_LENGTH} "${MNT_DIR}/boot"
     fi
 
-    if [[ "${HAVE_CONF_PARTITION}" == "true" ]]; then
+    if [[ "${HAVE_CONF_PART}" == "true" ]]; then
         # mount the conf partition
         mountpoint -q "${MNT_DIR}/conf" || mount "$IMG_FILE" -o loop,offset=${CONF_OFFSET},rw,sizelimit=${CONF_LENGTH} "${MNT_DIR}/conf"
     fi

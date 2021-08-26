@@ -39,20 +39,20 @@ if [[ "${OS}" == "ubuntu" ]]; then
     echo "OS is ubuntu"
     PLATFORM_PACKAGES=""
 
-echo "-------------------------SHOW nvideo source list-------------------------------"
-#the original image references t120... seems to be a typo for sources
-rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
-echo "deb https://repo.download.nvidia.com/jetson/common r32.4 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
-echo "deb https://repo.download.nvidia.com/jetson/t210 r32.4 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+    echo "-------------------------SHOW nvideo source list-------------------------------"
+    #the original image references t120... seems to be a typo for sources
+    rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
+    echo "deb https://repo.download.nvidia.com/jetson/common r32.4 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
+    echo "deb https://repo.download.nvidia.com/jetson/t210 r32.4 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
 
-sudo cat /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
-#the wrong source list is here... t120..should be t210
-#sudo rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+    sudo cat /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+    #the wrong source list is here... t120..should be t210
+    #sudo rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
 fi
 
 
 if [[ "${HAS_CUSTOM_KERNEL}" == "true" ]]; then
-    echo "has a custom kernel"
+    echo "-----------------------has a custom kernel----------------------------------"
     PLATFORM_PACKAGES="${PLATFORM_PACKAGES} ${KERNEL_PACKAGE}"
 fi
 
@@ -62,12 +62,11 @@ fi
 #sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
 
 
-echo "-------------------------GETTING UPDATE-------------------------------"
+echo "-------------------------GETTING FIRST UPDATE------------------------------------"
 
-apt-get update || exit 1  
-#apt-get update
+apt-get update --allow-releaseinfo-change || exit 1  
 
-echo "-------------------------DONE GETTING UPDATE-------------------------------"
+echo "-------------------------DONE GETTING FIRST UPDATE-------------------------------"
 
 apt-get install -y apt-transport-https curl
 curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1/cfg/gpg/gpg.0AD501344F75A993.key' | apt-key add -
@@ -80,8 +79,11 @@ if [[ "${TESTING}" == "testing" ]]; then
     echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1-testing/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1-testing.list
 fi
 
-#apt-get update || exit 1
-apt-get update
+echo "-------------------------GETTING SECOND UPDATE------------------------------------"
+
+apt-get update --allow-releaseinfo-change || exit 1
+
+echo "-------------------------DONE GETTING SECOND UPDATE------------------------------------"
 
 echo "Purge packages that interfer/we dont need..."
 
