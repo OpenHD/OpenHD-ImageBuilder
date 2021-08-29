@@ -61,7 +61,6 @@ fi
 #sudo cat /etc/apt/sources.list
 #sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
 
-
 echo "-------------------------GETTING FIRST UPDATE------------------------------------"
 
 apt-get update --allow-releaseinfo-change || exit 1  
