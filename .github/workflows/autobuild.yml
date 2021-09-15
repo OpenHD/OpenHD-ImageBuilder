@@ -18,6 +18,7 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TARGET: [pi-buster, jetson-nano-2gb-bionic] # <-- Add targets here!
+        TESTING: [testing, ""]
 
     steps:
     - name: Setup env
@@ -31,15 +32,15 @@ jobs:
     - name: dep
       run: sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support
     - name: configure
-      run: sudo ./build.sh ${{ matrix.TARGET }} testing
+      run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
     ########################################
 
 
     - name: Compose release filename
       # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions
-      run: echo "artifact_name=OpenHD-image-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
+      run: echo "artifact_name=OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
         
-    - name: Pack image for ${{ matrix.TARGET }}
+    - name: Pack image for ${{ matrix.TARGET }} ${{ matrix.TESTING }}
       uses: 'actions/upload-artifact@v2'
       with:
         name: "${{ env.artifact_name }}"
