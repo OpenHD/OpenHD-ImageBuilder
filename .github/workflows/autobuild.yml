@@ -1,0 +1,49 @@
+name: Automatic image build
+
+on:
+  push:
+    branches: [ master, "2.0" ]
+  pull_request:
+    branches: [ master, "2.0" ]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *' # run at 2 AM UTC
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false # Don't fail all if any of the jobs is failing
+      matrix:
+        TESTING: ["", testing]
+        TARGET: [pi-buster, jetson-nano-2gb-bionic] # <-- Add targets here!
+
+    steps:
+    - name: Setup env
+      run: |
+        echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
+        echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+    
+    
+    ### ONLY THIS RELEVANT FOR BUILDING ###
+    - uses: actions/checkout@v2
+    - name: dep
+      run: sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support
+    - name: configure
+      run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
+    ########################################
+
+
+    - name: Compose release filename
+      # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions
+      run: echo "artifact_name=OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
+        
+    - name: Pack image for ${{ matrix.TARGET }} ${{ matrix.TESTING }}
+      uses: 'actions/upload-artifact@v2'
+      with:
+        name: "${{ env.artifact_name }}"
+        path: |
+          ./deploy/*.img
+          if-no-files-found: error
