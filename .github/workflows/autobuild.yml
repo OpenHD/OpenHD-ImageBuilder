@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        TESTING: ["", testing]
+        TESTING: [""]
         TARGET: [pi-buster, jetson-nano-2gb-bionic] # <-- Add targets here!
 
     steps:
