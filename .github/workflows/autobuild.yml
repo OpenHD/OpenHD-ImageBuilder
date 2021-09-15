@@ -46,3 +46,13 @@ jobs:
         path: |
           ./deploy/*.img
           if-no-files-found: error
+          
+    - name: Deploy release
+      uses: marvinpinto/action-automatic-releases@latest
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: 'nightly'
+        title: "Nightly: ${{ matrix.TARGET }}" 
+        prerelease: true
+        files: |
+          ./deploy/*.img
