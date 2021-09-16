@@ -6,7 +6,7 @@ cp ${STAGE_WORK_DIR}/mnt/openhd_version.txt ${WORK_DIR}/openhd_version.txt
 
 MNT_DIR="${STAGE_WORK_DIR}/mnt"
 
-if [[ "${HAVE_CONF_FAKE}" == "false" ]] && [[ "${HAVE_BOOT_PART}" == "true" ]]; then
+if [[ "${HAVE_CONF_PART}" == "false" ]] && [[ "${HAVE_BOOT_PART}" == "true" ]]; then
 # Rename the DOS partition
     BOOT_MNT_DIR="${STAGE_WORK_DIR}/mnt/boot"
     BOOT_LOOP_DEV="$(findmnt -nr -o source $BOOT_MNT_DIR)"
