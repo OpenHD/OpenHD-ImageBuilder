@@ -182,8 +182,12 @@ done
 # rename the image according to the build date, the builder/openhd repo versions
 OPENHD_VERSION=$(cat ${WORK_DIR}/openhd_version.txt)
 if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
+    IMAGE_PATH_NAME="${DEPLOY_DIR}/${IMG_NAME}-${OPENHD_VERSION}-${IMAGE_TYPE}.img"
+    log ""
+    log "======================================================"
+    log "Deploy image to: ${IMAGE_PATH_NAME}"
     mkdir -p "${DEPLOY_DIR}" || true
-    cp "${PREV_WORK_DIR}/IMAGE.img" "${DEPLOY_DIR}/${IMG_NAME}-${OPENHD_VERSION}-${IMAGE_TYPE}.img"
+    cp "${PREV_WORK_DIR}/IMAGE.img" ${IMAGE_PATH_NAME}
 fi
 
 cd ${BASE_DIR}
