@@ -1,5 +1,4 @@
-name: Automatic image build ${GITHUB_REF##*/}
-
+name: Automatic image build [2.0]
 on:
   push:
     branches: [ master, "2.0" ]
