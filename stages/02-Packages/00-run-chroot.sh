@@ -19,7 +19,7 @@ if [ "${IMAGE_ARCH}" == "pi" ]; then
     OS="raspbian"
 fi
 
-apt-get update || exit 1
+apt-get update --allow-releaseinfo-change || exit 1
 
 apt-get install -y apt-transport-https curl
 
@@ -47,7 +47,7 @@ apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberry
 
 apt purge raspberrypi-kernel firmware-atheros
 
-apt-get update || exit 1
+apt-get update --allow-releaseinfo-change || exit 1
 
 
 # Python interpreters, we won't need python2 much longer
