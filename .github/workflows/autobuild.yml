@@ -1,4 +1,4 @@
-name: Automatic image build ${GITHUB_REF##*/}
+name: Automatic image build [master]
 
 on:
   push:
