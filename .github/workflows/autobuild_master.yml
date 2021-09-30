@@ -2,9 +2,9 @@ name: Automatic image build [master]
 
 on:
   push:
-    branches: [ master, "2.0" ]
+    branches: [ master ]
   pull_request:
-    branches: [ master, "2.0" ]
+    branches: [ master ]
   workflow_dispatch:
   schedule:
     - cron: '0 2 * * *' # run at 2 AM UTC
