@@ -19,7 +19,7 @@ if [ "${IMAGE_ARCH}" == "pi" ]; then
     OS="raspbian"
 fi
 
-apt-get update || exit 1
+apt-get update --allow-releaseinfo-change || exit 1
 
 apt-get install -y apt-transport-https curl
 
@@ -35,7 +35,8 @@ if [[ "${TESTING}" == "testing" ]]; then
     echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-0-testing/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-0.list    
 fi
 
-OPENHD_PACKAGES="openhd=${OPENHD_PACKAGE}"
+#if need to add a specific commit for openhd: openhd=your_commit
+OPENHD_PACKAGES="openhd"
 
 apt-mark hold firmware-atheros
 apt-mark hold raspberrypi-kernel
@@ -47,7 +48,7 @@ apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberry
 
 apt purge raspberrypi-kernel firmware-atheros
 
-apt-get update || exit 1
+apt-get update --allow-releaseinfo-change || exit 1
 
 
 # Python interpreters, we won't need python2 much longer
