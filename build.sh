@@ -7,8 +7,7 @@ fi
 
 IMAGE_ARCH=$1
 DISTRO=$2
-OPENHD_PACKAGE=$3
-TESTING=$4
+TESTING=$3
 
 # print a simple line across the entire width of the terminal like '------------'
 line (){
@@ -58,10 +57,6 @@ if [[ "$IMAGE_ARCH" == "pi" && "${DISTRO}" == "buster" ]]; then
 
     BASE_IMAGE_URL=${PI_BUSTER_BASE_IMAGE_URL}
     BASE_IMAGE=${PI_BUSTER_BASE_IMAGE}
-fi
-
-if [ "$OPENHD_PACKAGE" == "" ]; then
-    OPENHD_PACKAGE="2.0.8"
 fi
 
 echo ""

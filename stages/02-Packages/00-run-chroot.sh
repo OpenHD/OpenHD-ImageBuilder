@@ -35,7 +35,8 @@ if [[ "${TESTING}" == "testing" ]]; then
     echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-0-testing/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-0.list    
 fi
 
-OPENHD_PACKAGES="openhd=${OPENHD_PACKAGE}"
+#if need to add a specific commit for openhd: openhd=your_commit
+OPENHD_PACKAGES="openhd"
 
 apt-mark hold firmware-atheros
 apt-mark hold raspberrypi-kernel
