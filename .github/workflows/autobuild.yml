@@ -18,7 +18,7 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TARGET: [pi] # <-- Add targets here!
-        DISTRO: [buster, stretch]
+        DISTRO: [buster]
         TESTING: ["", testing]
         
     steps:
