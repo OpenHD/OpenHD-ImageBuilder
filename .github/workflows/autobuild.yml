@@ -1,4 +1,4 @@
-name: Automatic image build [master]
+name: Automatic image build
 
 on:
   push:
