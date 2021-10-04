@@ -1,4 +1,4 @@
-name: Automatic image build [2.0]
+name: Automatic image build
 on:
   push:
     branches: [ "2.0" ]
