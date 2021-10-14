@@ -1,4 +1,4 @@
-name: Automatic image build
+name: Image build on event
 
 on:
   push:
@@ -6,8 +6,8 @@ on:
   pull_request:
     branches: [ master ]
   workflow_dispatch:
-  schedule:
-    - cron: '0 2 * * *' # run at 2 AM UTC
+#  schedule:
+#    - cron: '0 2 * * *' # run at 2 AM UTC
 
 jobs:
   build:
