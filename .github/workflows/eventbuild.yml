@@ -2,9 +2,9 @@ name: Image build on event
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, "2.0" ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, "2.0" ]
   workflow_dispatch:
 #  schedule:
 #    - cron: '0 2 * * *' # run at 2 AM UTC
