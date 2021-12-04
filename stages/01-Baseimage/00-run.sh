@@ -21,17 +21,15 @@ log "Unarchive base image"
 
 if [[ ${BASE_IMAGE: -4} == ".zip" ]]; then
     unzip ${BASE_IMAGE}
-    mv ${BASE_IMAGE%.zip}.img IMAGE.img
 elif [ ${BASE_IMAGE: -7} == ".img.xz" ]; then
     xz -k -d ${BASE_IMAGE}
-    mv ${BASE_IMAGE%.xz} IMAGE.img
 elif [ ${BASE_IMAGE: -4} == ".bz2" ]; then
     bunzip2 -k -d ${BASE_IMAGE}
-    mv ${BASE_IMAGE%.bz2} IMAGE.img
 elif [ ${BASE_IMAGE: -3} == ".gz" ]; then
     gunzip -k ${BASE_IMAGE}
-    mv ${BASE_IMAGE%.gz} IMAGE.img
 fi
+
+mv *.[iI][mM][gG] IMAGE.img
 
 # return
 popd
