@@ -1,6 +1,6 @@
-BASE_IMAGE_URL="http://download.openhdfpv.com"
-BASE_IMAGE="jetson-nano-4gb-32.4.4-8gb.img.gz"
-BASE_IMAGE_SHA256="74325854bd7b5e77b0f7b2aa07df9da2b576d76716c56b8ac3e465867761282b"
+BASE_IMAGE_URL="https://developer.nvidia.com/embedded/l4t/r32_release_v6.1/jetson_xavier_nx"
+BASE_IMAGE="jetson-nx-jp46-sd-card-image.zip"
+BASE_IMAGE_SHA256="202c14ef9bd36da48ffdd157f03699a8c896d5bf5ce65d74971cd81761038f35"
 OS="ubuntu"
 DISTRO="bionic"
 HAS_CUSTOM_KERNEL=false
