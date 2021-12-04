@@ -60,18 +60,18 @@ Then git clone this repository to a suitable folder
 and run:
 
 `sudo -s`
-`./build.sh pi buster`
+`./build.sh pi-buster`
 
 
 The above command will change depending on the package you would like to build and whether it is from the main or testing repository in cloudsmith.io.
 NOTE: STRETCH HAS MOSTLY BEEN DEPRECIATED
 
-./build.sh pi [stretch | buster] ?testing
+./build.sh pi-[stretch | buster] ?testing
 
 The package numbers can be retrieved from the cloudsmith.io repository here: https://cloudsmith.io/~openhd/repos/
 An example build for a testing package would be:
 
-`./build.sh pi buster testing`
+`./build.sh pi-buster testing`
 
 This will build a testing image and all updates will be against the 2-0-testing repository.
 
