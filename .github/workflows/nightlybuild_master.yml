@@ -14,7 +14,7 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TESTING: ["", testing]
-        TARGET: [pi-buster, pi-bullseye, jetson-nano-2gb-bionic] # <-- Add targets here!
+        TARGET: [pi-buster, pi-bullseye, jetson-nano-2gb-bionic, jetson-nano-4gb-bionic] # <-- Add targets here!
 
     steps:
     - name: Setup env
