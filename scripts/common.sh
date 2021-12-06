@@ -138,6 +138,8 @@ on_chroot() {
     fi
 
     if ! mount | grep -q "${MNT_DIR}/etc/resolv.conf)"; then
+        rm "${MNT_DIR}/etc/resolv.conf"
+        echo "nameserver 1.1.1.1" > "${MNT_DIR}/etc/resolv.conf"
         mount --bind /etc/resolv.conf "${MNT_DIR}/etc/resolv.conf"
     fi
 
