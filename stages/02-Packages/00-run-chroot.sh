@@ -41,15 +41,19 @@ if [[ "${OS}" == "ubuntu" ]]; then
 
     echo "-------------------------SHOW nvideo source list-------------------------------"
     #the original image references t120... seems to be a typo for sources
-    rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
-    echo "deb https://repo.download.nvidia.com/jetson/common r32.4 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
-    echo "deb https://repo.download.nvidia.com/jetson/t210 r32.4 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+    #when pulling a complete nvidia image renaming sources probably is not necessary. Also the source version should match the image
+    #rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
+    #echo "deb https://repo.download.nvidia.com/jetson/common r32.4 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
+    #echo "deb https://repo.download.nvidia.com/jetson/t210 r32.4 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+    sudo cat /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+    
+    #remove some nvidia packages... if building from nvidia base image
     sudo apt-get purge libreoffice* && sudo apt-get clean
     sudo apt-get autoremove
-    sudo apt-get update -y
-    sudo cat /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
-    #the wrong source list is here... t120..should be t210
-    #sudo rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+    #appears redundandt as update is called twice below
+    #sudo apt-get update -y 
+
+
 fi
 
 
