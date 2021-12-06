@@ -40,11 +40,11 @@ if [[ "${OS}" == "ubuntu" ]]; then
     PLATFORM_PACKAGES=""
 
     echo "-------------------------SHOW nvideo source list-------------------------------"
-    #the original image references t120... seems to be a typo for sources
-    #when pulling a complete nvidia image renaming sources probably is not necessary. Also the source version should match the image
-    #rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
-    #echo "deb https://repo.download.nvidia.com/jetson/common r32.4 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
-    #echo "deb https://repo.download.nvidia.com/jetson/t210 r32.4 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+    #it appears some variable for source list gets missed when building images like this.. 
+    #by deleting and rewriting source list entry it fixes it.
+    rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
+    echo "deb https://repo.download.nvidia.com/jetson/common r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
+    echo "deb https://repo.download.nvidia.com/jetson/t210 r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
     sudo cat /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
     
     #remove some nvidia packages... if building from nvidia base image
