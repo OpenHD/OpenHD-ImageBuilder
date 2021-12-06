@@ -44,7 +44,9 @@ if [[ "${OS}" == "ubuntu" ]]; then
     rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
     echo "deb https://repo.download.nvidia.com/jetson/common r32.4 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
     echo "deb https://repo.download.nvidia.com/jetson/t210 r32.4 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
-
+    sudo apt-get purge libreoffice* && sudo apt-get clean
+    sudo apt-get autoremove
+    sudo apt-get update -y
     sudo cat /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
     #the wrong source list is here... t120..should be t210
     #sudo rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
