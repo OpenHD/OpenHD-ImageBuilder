@@ -1,11 +1,11 @@
-BASE_IMAGE_URL="http://download.openhdfpv.com"
-BASE_IMAGE="jetson-nano-2gb-32.4.4-8gb.img.gz"
+BASE_IMAGE_URL="https://developer.download.nvidia.com/embedded/L4T/r32_Release_v6.1/Jetson_Nano_2GB/"
+BASE_IMAGE="jetson-nano-2gb-jp46-sd-card-image.zip"
 BASE_IMAGE_SHA256="705f5dacf427b7c621db0048fd7117a9a300a50fac96f89e170b78455aa9209a"
 OS="ubuntu"
 DISTRO="bionic"
 HAS_CUSTOM_KERNEL=false
 HAVE_BOOT_PART=false
-HAVE_CONF_PART=true
+HAVE_CONF_PART=false
 ROOT_PART=1
 CONF_PART=15
 BIT="64"
