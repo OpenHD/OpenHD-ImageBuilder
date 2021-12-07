@@ -48,8 +48,15 @@ if [[ "${OS}" == "ubuntu" ]]; then
     sudo cat /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
     
     #remove some nvidia packages... if building from nvidia base image
-    sudo apt-get purge libreoffice* && sudo apt-get clean
-    sudo apt-get autoremove
+    sudo apt remove ubuntu-desktop
+    sudo apt remove libreoffice-writer chromium-browser chromium* yelp unity thunderbird rhythmbox nautilus gnome-software
+    sudo apt remove ubuntu-artwork ubuntu-sounds ubuntu-wallpapers ubuntu-wallpapers-bionic
+    sudo apt remove vlc-data gdm
+    sudo apt remove unity-settings-daemon packagekit wamerican mysql-common libgdm1
+    sudo apt remove ubuntu-release-upgrader-gtk ubuntu-web-launchers
+    sudo apt remove --purge libreoffice*
+    gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
+    sudo apt autoremove
     #appears redundandt as update is called twice below
     #sudo apt-get update -y 
 
