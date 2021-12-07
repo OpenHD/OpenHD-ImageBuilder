@@ -1,4 +1,4 @@
-BASE_IMAGE_URL="https://developer.download.nvidia.com/embedded/L4T/r32_Release_v6.1/Jeston_Nano/"
+BASE_IMAGE_URL="https://developer.download.nvidia.com/embedded/L4T/r32_Release_v6.1/Jeston_Nano"
 BASE_IMAGE="jetson-nano-jp46-sd-card-image.zip"
 BASE_IMAGE_SHA256="202c14ef9bd36da48ffdd157f03699a8c896d5bf5ce65d74971cd81761038f35"
 OS="ubuntu"
