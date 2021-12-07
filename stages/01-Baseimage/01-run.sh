@@ -53,11 +53,12 @@ d
 1
 n
 1
-${ROOT_OFFSET}
-
-
+28672
+31000000
+n
 w
 EOF
+resize2fs /dev/mmcblk0p1
 fi
 
 rm temp.img
