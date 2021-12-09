@@ -3,10 +3,11 @@
 # Do not use log here, it will end up in the image
 
 #!/bin/bash
-
-# Remove bad and unnecessary symlinks 
-rm /lib/modules/*/build || true
-rm /lib/modules/*/source || true
+if [[ "${OS}" != "ubuntu" ]]; then
+    # Remove bad and unnecessary symlinks if system is not ubuntu
+    rm /lib/modules/*/build || true
+    rm /lib/modules/*/source || true
+fi
 
 
 if [ "${APT_CACHER_NG_ENABLED}" == "true" ]; then
@@ -46,7 +47,7 @@ if [[ "${OS}" == "ubuntu" ]]; then
     echo "deb https://repo.download.nvidia.com/jetson/common r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
     echo "deb https://repo.download.nvidia.com/jetson/t210 r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
     sudo cat /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
-    
+
     #remove some nvidia packages... if building from nvidia base image
     sudo apt remove ubuntu-desktop
     sudo apt remove libreoffice-writer chromium-browser chromium* yelp unity thunderbird rhythmbox nautilus gnome-software
@@ -102,6 +103,16 @@ echo "Purge packages that interfer/we dont need..."
 PURGE="wireless-regdb crda cron avahi-daemon cifs-utils curl iptables triggerhappy man-db dphys-swapfile logrotate"
 
 echo "install openhd version-${OPENHD_PACKAGE}"
+if [[ "${OS}" == "ubuntu" ]]; then
+    echo "install some Jetson essential apps and rtl8812au driver from sources"
+    sudo apt install -y git nano python-pip jtop build-essential libelf-dev
+    pip install -U jetson-stats
+    sudo apt-get install linux-headers-`uname -r`
+    sudo cd ../../ && git clone https://github.com/svpcom/rtl8812au.git
+    cd rtl* && make && make install
+    cp -r /rtl8812au/88XXau_wfb.ko /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/
+    mv /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/rtl8812au.ko /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/rtl8812au.ko.bak
+fi
 
 DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
 ${OPENHD_PACKAGE} \
