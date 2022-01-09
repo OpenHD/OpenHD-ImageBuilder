@@ -4,8 +4,8 @@ IMG_NAME=Open.HD
 PI_STRETCH_BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspbian_lite/images/raspbian_lite-2018-10-11"
 PI_STRETCH_BASE_IMAGE="2018-10-09-raspbian-stretch-lite"
 
-PI_BUSTER_BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2020-05-28"
-PI_BUSTER_BASE_IMAGE="2020-05-27-raspios-buster-lite-armhf"
+PI_BUSTER_BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2021-12-02"
+PI_BUSTER_BASE_IMAGE="2021-12-02-raspios-buster-armhf-lite"
 
 SQUID_DEB_PROXY_URL=http://127.0.0.1:8000
 SQUID_DEB_PROXY_ENABLED=false
