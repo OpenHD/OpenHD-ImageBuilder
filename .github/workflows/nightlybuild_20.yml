@@ -7,8 +7,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
-    
+    runs-on: ubuntu-20.04   
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
@@ -27,6 +26,8 @@ jobs:
     
     
     ### ONLY THIS RELEVANT FOR BUILDING ###
+    - name: update
+      run: sudo apt-get update
     - name: dep
       run: sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support
     - name: configure
