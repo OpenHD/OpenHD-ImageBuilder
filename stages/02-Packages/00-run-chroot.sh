@@ -23,7 +23,7 @@ if [[ "${OS}" == "raspbian" ]]; then
     apt -yq install firmware-misc-nonfree || exit 1
     apt-mark hold raspberrypi-kernel
     # Install libraspberrypi-dev before apt-get update
-    DEBIAN_FRONTEND=noninteractive apt-get -yq install libraspberrypi-doc libraspberrypi-dev libraspberrypi-dev libraspberrypi-bin libraspberrypi0 || exit 1
+    DEBIAN_FRONTEND=noninteractive apt -yq install libraspberrypi-doc libraspberrypi-dev libraspberrypi-dev libraspberrypi-bin libraspberrypi0 || exit 1
     apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc
     apt purge raspberrypi-kernel
     PLATFORM_PACKAGES=""
@@ -48,20 +48,17 @@ if [[ "${OS}" == "ubuntu" ]]; then
     echo "deb https://repo.download.nvidia.com/jetson/t210 r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
     sudo cat /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
 
-    #remove some nvidia packages... if building from nvidia base image
+    #remove some nvidia packages... if building from nvidia base image 
+	#gdm isn't used, remove lightdm instead, removed new line in #60
     sudo apt remove ubuntu-desktop
     sudo apt remove libreoffice-writer chromium-browser chromium* yelp unity thunderbird rhythmbox nautilus gnome-software
     sudo apt remove ubuntu-artwork ubuntu-sounds ubuntu-wallpapers ubuntu-wallpapers-bionic
-    sudo apt remove vlc-data gdm
+    sudo apt remove vlc-data lightdm
     sudo apt remove unity-settings-daemon packagekit wamerican mysql-common libgdm1
     sudo apt remove ubuntu-release-upgrader-gtk ubuntu-web-launchers
-    sudo apt remove --purge libreoffice*
-    gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
+    sudo apt remove --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
     sudo apt autoremove
-    #appears redundandt as update is called twice below
-    #sudo apt-get update -y 
-
-
+    
 fi
 
 
@@ -77,11 +74,11 @@ fi
 
 echo "-------------------------GETTING FIRST UPDATE------------------------------------"
 
-apt-get update --allow-releaseinfo-change || exit 1  
+apt update --allow-releaseinfo-change || exit 1  
 
 echo "-------------------------DONE GETTING FIRST UPDATE-------------------------------"
 
-apt-get install -y apt-transport-https curl
+apt install -y apt-transport-https curl
 curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1/cfg/gpg/gpg.0AD501344F75A993.key' | apt-key add -
 curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1-testing/cfg/gpg/gpg.58A6C96C088A96BF.key' | apt-key add -
 
@@ -94,35 +91,38 @@ fi
 
 echo "-------------------------GETTING SECOND UPDATE------------------------------------"
 
-apt-get update --allow-releaseinfo-change || exit 1
+apt update --allow-releaseinfo-change || exit 1
 
 echo "-------------------------DONE GETTING SECOND UPDATE------------------------------------"
 
 echo "Purge packages that interfer/we dont need..."
 
-PURGE="wireless-regdb crda cron avahi-daemon cifs-utils curl iptables triggerhappy man-db dphys-swapfile logrotate"
+PURGE="wireless-regdb cron avahi-daemon curl iptables man-db logrotate"
+#jtop was replaced with jetson-stats, so no need to install it, also replaced kernel headers, since there are no specific tegra ones
+
+export DEBIAN_FRONTEND=noninteractive
 
 echo "install openhd version-${OPENHD_PACKAGE}"
 if [[ "${OS}" == "ubuntu" ]]; then
     echo "install some Jetson essential apps and rtl8812au driver from sources"
-    sudo apt install -y git nano python-pip jtop build-essential libelf-dev
+    sudo apt install -y git nano python-pip build-essential libelf-dev
     pip install -U jetson-stats
-    sudo apt-get install linux-headers-`uname -r`
-    sudo cd ../../ && git clone https://github.com/svpcom/rtl8812au.git
+    sudo apt install -y linux-headers-generic
+    cd ../../ && git clone https://github.com/svpcom/rtl8812au.git
     cd rtl* && make && make install
     cp -r /rtl8812au/88XXau_wfb.ko /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/
     mv /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/rtl8812au.ko /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/rtl8812au.ko.bak
 fi
 
-DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install \
+apt update
+apt -y --no-install-recommends install \
 ${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
 ${GNUPLOT} || exit 1
 
-DEBIAN_FRONTEND=noninteractive apt-get -yq purge ${PURGE} || exit 1
-
-DEBIAN_FRONTEND=noninteractive apt-get -yq clean || exit 1
-DEBIAN_FRONTEND=noninteractive apt-get -yq autoremove || exit 1
+apt -yq purge ${PURGE} || exit 1
+apt -yq clean || exit 1
+apt -yq autoremove || exit 1
 
 if [ ${APT_CACHER_NG_ENABLED} == "true" ]; then
     rm /etc/apt/apt.conf.d/10cache
