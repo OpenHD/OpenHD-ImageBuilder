@@ -62,9 +62,8 @@ Elevate your prompt:
 ```sh
 sudo -s
 ```
-
+NOTE: IF YOU DO NOT RUN "testing" you only get the last stable release packages (which is probably old) PLEASE RUN "testing" to define that source from cloudsmith package source.
 And run:
-
 ```sh
 ./build.sh jetson-nano-2gb-bionic testing
 ```
@@ -72,7 +71,7 @@ And run:
 or
 
 ```sh
-./build.sh pi-buster
+./build.sh pi-buster testing
 ```
 
 ## More information (what's going on?)
