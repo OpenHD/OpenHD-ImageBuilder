@@ -62,7 +62,7 @@ Elevate your prompt:
 ```sh
 sudo -s
 ```
-* NOTE: IF YOU DO NOT RUN "testing" you only get the last stable release packages (which is probably old) PLEASE RUN "testing" to define that source from cloudsmith package source. 
+**Note: IF YOU DO NOT RUN "testing" you only get the last stable release packages (which is probably old) PLEASE RUN "testing" to define that source from cloudsmith package source**
 
 And run:
 ```sh
