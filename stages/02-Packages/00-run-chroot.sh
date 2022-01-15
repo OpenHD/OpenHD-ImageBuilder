@@ -108,10 +108,14 @@ if [[ "${OS}" == "ubuntu" ]]; then
     sudo apt install -y git nano python-pip build-essential libelf-dev
     pip install -U jetson-stats
     sudo apt install -y linux-headers-generic
-    cd ../../ && git clone https://github.com/svpcom/rtl8812au.git
-    cd rtl* && make && make install
-    cp -r /rtl8812au/88XXau_wfb.ko /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/
-    mv /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/rtl8812au.ko /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/rtl8812au.ko.bak
+    cd /opt/
+    git clone https://github.com/svpcom/rtl8812au.git
+    
+    cd rtl*
+    make > make.txt
+    make install > install.txt
+    cp -r /rtl8812au/88XXau_wfb.ko /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/ > copy.txt
+    mv /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/rtl8812au.ko /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/rtl8812au.ko.bak > backup.txt
 fi
 
 apt update
