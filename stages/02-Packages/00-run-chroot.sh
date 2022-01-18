@@ -104,18 +104,20 @@ export DEBIAN_FRONTEND=noninteractive
 
 echo "install openhd version-${OPENHD_PACKAGE}"
 if [[ "${OS}" == "ubuntu" ]]; then
-    echo "install some Jetson essential apps and rtl8812au driver from sources"
+    echo "Install some Jetson essential libraries and compile rtl8812au driver from sources"
     sudo apt install -y git nano python-pip build-essential libelf-dev
     pip install -U jetson-stats
-    sudo apt install -y linux-headers-generic
-    cd /opt/
+    sudo apt-get install linux-headers-4.15.0-166
+    sudo apt-get install linux-headers-4.18.0.25-generic
     git clone https://github.com/svpcom/rtl8812au.git
-    
-    cd rtl*
-    make > make.txt
-    make install > install.txt
-    cp -r /rtl8812au/88XXau_wfb.ko /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/ > copy.txt
-    mv /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/rtl8812au.ko /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/rtl8812au.ko.bak > backup.txt
+    cd rtl8812au
+    sudo sed -i 's/CONFIG_PLATFORM_I386_PC = y/CONFIG_PLATFORM_I386_PC = n/' Makefile
+    sudo sed -i 's/CONFIG_PLATFORM_ARM_NV_NANO = n/CONFIG_PLATFORM_ARM_NV_NANO = y/' Makefile
+    make KVER=4.9.253-tegra all && make install KVER=4.9.253-tegra all
+    cp -r 88XXau_wfb.ko /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/
+    cd ..
+    cd /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/
+    mv rtl8812au.ko rtl8812au.ko.bak
 fi
 
 apt update
