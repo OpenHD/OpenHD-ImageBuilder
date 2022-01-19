@@ -21,13 +21,19 @@ jobs:
         TARGET: [jetson-nano-2gb-bionic] # <-- Add targets here!
 
     steps:
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 512
+        swap-size-mb: 1024
+        remove-dotnet: 'true'
     - name: Setup env
       run: |
         echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
         echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
     
     
-    ### ONLY THIS RELEVANT FOR BUILDING ###
+    ### ONLY THIS RELEVANT FOR BUILDING ###    
     - uses: actions/checkout@v2
     - name: update
       run: sudo apt-get update
