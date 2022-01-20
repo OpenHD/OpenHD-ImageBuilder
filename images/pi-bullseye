@@ -1,6 +1,6 @@
-BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2021-11-08"
-BASE_IMAGE="2021-10-30-raspios-bullseye-armhf-lite.zip"
-BASE_IMAGE_SHA256="008d7377b8c8b853a6663448a3f7688ba98e2805949127a1d9e8859ff96ee1a9"
+BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2021-11-08/"
+BASE_IMAGE="2021-10-30-raspios-bullseye-arm64-lite.zip"
+BASE_IMAGE_SHA256="c88109027eac44b9ff37a7f3eb1873cdf6d7ca61a0264ec0e95870ca96afd242"
 OS="raspbian"
 DISTRO="bullseye"
 HAS_CUSTOM_KERNEL=false
@@ -8,4 +8,4 @@ HAVE_BOOT_PART=true
 HAVE_CONF_PART=false
 BOOT_PART=1
 ROOT_PART=2
-BIT="32"
+BIT="64"
