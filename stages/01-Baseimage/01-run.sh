@@ -33,11 +33,11 @@ fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
 
-    log "Create 12Gb empty image"
-    dd if=/dev/zero of=temp.img bs=1 count=1 seek=12G
+    log "Create 4Gb empty image"
+    dd if=/dev/zero of=temp.img bs=1 count=1 seek=4G
 
 
-    log "Enlarge the downloaded image by 12Gb"
+    log "Enlarge the downloaded image by 4Gb"
     cat temp.img >> IMAGE.img
 
     log "fdisk magic to enlarge the main partition"
@@ -55,7 +55,7 @@ d
 n
 1
 28672
-51935198
+31457280
 n
 w
 EOF
