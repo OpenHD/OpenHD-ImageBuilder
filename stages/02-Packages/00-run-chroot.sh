@@ -120,7 +120,7 @@ if [[ "${OS}" == "ubuntu" ]]; then
     mv rtl8812au.ko rtl8812au.ko.bak
 fi
 
-apt update
+apt update && apt upgrade
 apt -y --no-install-recommends install \
 ${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
