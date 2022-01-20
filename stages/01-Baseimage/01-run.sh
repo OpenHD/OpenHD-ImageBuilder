@@ -33,14 +33,14 @@ fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
 
-    log "Create 12Gb empty image"
-    dd if=/dev/zero of=temp.img bs=1 count=1 seek=12G
+    log "Create empty image"
+    dd if=/dev/zero of=temp.img bs=1 count=1 seek=2G
 
 
-    log "Enlarge the downloaded image by 12Gb"
+    log "Enlarge the downloaded image by 2Gb"
     cat temp.img >> IMAGE.img
 
-    log "fdisk magic to enlarge the main partition"
+    log "fdisk to enlarge the main partition"
 
     PARTED_OUT=$(parted -s IMAGE.img unit s print)
     ROOT_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${ROOT_PART}"| xargs echo -n \
@@ -55,7 +55,7 @@ d
 n
 1
 28672
-51935198
+30457280
 n
 w
 EOF
