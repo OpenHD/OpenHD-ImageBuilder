@@ -33,32 +33,31 @@ fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
 
-    log "Create 4Gb empty image"
-    dd if=/dev/zero of=temp.img bs=1 count=1 seek=4G
+    log "Create empty image"
+    dd if=/dev/zero of=temp.img bs=1 count=1 seek=2G
 
 
-    log "Enlarge the downloaded image by 4Gb"
+    log "Enlarge the downloaded image"
     cat temp.img >> IMAGE.img
 
-    log "fdisk magic to enlarge the main partition"
+    log "fdisk to enlarge the main partition"
 
     PARTED_OUT=$(parted -s IMAGE.img unit s print)
     ROOT_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${ROOT_PART}"| xargs echo -n \
         | cut -d" " -f 2 | tr -d s)
 
     echo "ROOT OFFSET: $ROOT_OFFSET"
-    echo "IF EDITING THIS SCRIPT THE SPACES MATER FOR FDISK COMMANDS"
+    echo "IF EDITING THIS SCRIPT THE SPACES MATER FOR FDISK COMMANDS" 
+        #Jetson needs more space
     fdisk IMAGE.img <<EOF
 d
 1
 n
 1
-28672
-31457280
-n
+${ROOT_OFFSET}
+
 w
 EOF
-resize2fs /dev/mmcblk0p1
 fi
 
 rm temp.img
