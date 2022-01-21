@@ -7,6 +7,7 @@ fi
 
 IMAGE_TYPE=$1
 TESTING=$2
+SMALL=$3
 
 # print a simple line across the entire width of the terminal like '------------'
 line (){
@@ -69,6 +70,10 @@ run_stage(){
                 unmount_image
                 cp "${PREV_WORK_DIR}/IMAGE.img" "${STAGE_WORK_DIR}/IMAGE.img"
                 mount_image
+                if [[ "${SMALL}" == "small" ]]; then
+                echo "deleteing last work dir...SMALL option"
+                rm -r "${PREV_WORK_DIR}"
+                fi
             else
                 log "[ERROR] No image to copy in ${PREV_WORK_DIR}/"
             fi
@@ -148,6 +153,7 @@ export DISTRO
 export BASE_IMAGE_URL
 export BASE_IMAGE
 export TESTING
+export SMALL
 
 export CLEAN
 export IMG_NAME
