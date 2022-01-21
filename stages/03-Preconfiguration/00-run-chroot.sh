@@ -72,9 +72,8 @@ fi
 sudo systemctl disable systemd-update-utmp.service
 sudo systemctl disable networking.service
 
-#Mask difficult to disable services
-if [[ "${OS}" != "ubuntu" ]]; then
-    echo "OS is NOT ubuntu..stopping-disbale-mask journald"
+if [[ "${TESTING}" != "testing" ]]; then
+    echo "NOT TESTING stopping-disbale-mask journald"
     systemctl stop systemd-journald.service
     systemctl disable systemd-journald.service
     systemctl mask systemd-journald.service
