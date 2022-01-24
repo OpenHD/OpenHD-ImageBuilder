@@ -110,7 +110,7 @@ echo "install openhd version-${OPENHD_PACKAGE}"
 if [[ "${OS}" == "ubuntu" ]]; then
     echo "Install some Jetson essential libraries and compile rtl8812au driver from sources"
     sudo apt install -y git nano python-pip build-essential libelf-dev
-    pip install -U jetson-stats
+    sudo -H pip install -U jetson-stats
     sudo apt-get install linux-headers-4.15.0-166
     sudo apt-get install linux-headers-4.18.0.25-generic
     git clone https://github.com/svpcom/rtl8812au.git
