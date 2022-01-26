@@ -1,2 +1,2 @@
 #!/bin/bash
-./build.sh $1 $2 |& tee buildlog.log
+./build.sh $1 $2 $3 |& tee buildlog.log
