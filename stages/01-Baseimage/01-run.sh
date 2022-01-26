@@ -59,6 +59,7 @@ ${ROOT_OFFSET}
 w
 EOF
 fi
+sgdisk -c 1:APP IMAGE.img
 
 rm temp.img
 
