@@ -6,13 +6,27 @@ log "Check any previous images"
 SHA=$(sha256sum ${BASE_IMAGE})
 echo "SHA: ${SHA}"
 
+if [[ "${HAS_CUSTOM_BASE}" == true ]]; then    
+
+echo "Downloading custom build base image for Jetson 4GB"
+bash ../../scripts/gdrive.sh ${BASE_IMAGE_URL}
+SHA=$(sha256sum ${BASE_IMAGE})
+echo "SHA: ${SHA}"
+fi
+
+
+
 if [[ "${SHA}" != "${BASE_IMAGE_SHA256}  ${BASE_IMAGE}" ]]; then    
     rm *.zip
     rm *.img    
     rm *.xz
-    
-    log "Download base Image"
-    wget $BASE_IMAGE_URL/$BASE_IMAGE
+    rm *.7z
+	
+	if [[ "${BASE_IMAGE}" != "true" ]]; then    
+
+    		log "Download base Image"
+    		wget $BASE_IMAGE_URL/$BASE_IMAGE
+	fi
 fi
 
 
@@ -27,6 +41,9 @@ elif [ ${BASE_IMAGE: -4} == ".bz2" ]; then
     bunzip2 -k -d ${BASE_IMAGE}
 elif [ ${BASE_IMAGE: -3} == ".gz" ]; then
     gunzip -k ${BASE_IMAGE}
+elif [ ${BASE_IMAGE: -3} == ".7z" ]; then
+    7z e ${BASE_IMAGE}
+
 fi
 
 mv *.[iI][mM][gG] IMAGE.img
