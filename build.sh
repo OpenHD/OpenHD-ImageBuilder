@@ -154,6 +154,7 @@ export BASE_IMAGE_URL
 export BASE_IMAGE
 export TESTING
 export SMALL
+export HAS_CUSTOM_BASE
 
 export CLEAN
 export IMG_NAME
