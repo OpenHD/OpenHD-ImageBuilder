@@ -1,6 +1,6 @@
-BASE_IMAGE_URL="https://drive.google.com/file/d/1z4Sx1CK2jaV9ZaA8xuKH0nxEwG8AynTg/view"
-BASE_IMAGE="jetson-nano-jp46-sd-card-image_careyer.7z"
-BASE_IMAGE_SHA256="33cc98390b3117b78b13369e19166d3c170834943f7c06fbe227c6abd1f86568"
+BASE_IMAGE_URL="https://drive.google.com/file/d/1ttm8DsgqVz5ohr5JW6oK3otLQr5CHuOt/view?usp=sharing"
+BASE_IMAGE="jetson-nano-jp46-sd-card-image_careyer_2022-01-30.7z"
+BASE_IMAGE_SHA256="2843994295837e3189265c648479f84772b58729ec93063082950ece97b17507"
 OS="ubuntu"
 DISTRO="bionic"
 HAS_CUSTOM_BASE=true
