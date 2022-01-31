@@ -49,15 +49,15 @@ if [[ "${OS}" == "ubuntu" ]]; then
     sudo cat /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
 
     #remove some nvidia packages... if building from nvidia base image 
-    #gdm isn't used, remove lightdm instead, removed new line in #60
-    #sudo apt remove ubuntu-desktop
-    #sudo apt remove libreoffice-writer chromium-browser chromium* yelp unity thunderbird rhythmbox nautilus gnome-software
-    #sudo apt remove ubuntu-artwork ubuntu-sounds ubuntu-wallpapers ubuntu-wallpapers-bionic
-    #sudo apt remove vlc-data lightdm
-    #sudo apt remove unity-settings-daemon packagekit wamerican mysql-common libgdm1
-    #sudo apt remove ubuntu-release-upgrader-gtk ubuntu-web-launchers
-    #sudo apt remove --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
-    #sudo apt autoremove
+
+    sudo apt remove ubuntu-desktop
+    sudo apt remove libreoffice-writer chromium-browser chromium* yelp unity thunderbird rhythmbox nautilus gnome-software
+    sudo apt remove ubuntu-artwork ubuntu-sounds ubuntu-wallpapers ubuntu-wallpapers-bionic
+    sudo apt remove vlc-data lightdm
+    sudo apt remove unity-settings-daemon packagekit wamerican mysql-common libgdm1
+    sudo apt remove ubuntu-release-upgrader-gtk ubuntu-web-launchers
+    sudo apt remove --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
+    sudo apt autoremove
     
 fi
 
@@ -66,11 +66,6 @@ if [[ "${HAS_CUSTOM_KERNEL}" == "true" ]]; then
     echo "-----------------------has a custom kernel----------------------------------"
     PLATFORM_PACKAGES="${PLATFORM_PACKAGES} ${KERNEL_PACKAGE}"
 fi
-
-#echo "-------------------------SHOW sources content-------------------------------"
-
-#sudo cat /etc/apt/sources.list
-#sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
 
 echo "-------------------------GETTING FIRST UPDATE------------------------------------"
 
