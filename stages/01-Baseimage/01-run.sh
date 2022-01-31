@@ -32,15 +32,15 @@ EOF
 fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
+	if [[ "${HAS_CUSTOM_BASE}" != true ]]; then    
+		log "Create empty image"
+    		dd if=/dev/zero of=temp.img bs=1 count=1 seek=2G
 
-    log "Create empty image"
-    dd if=/dev/zero of=temp.img bs=1 count=1 seek=2G
+    		log "Enlarge the downloaded image"
+    		cat temp.img >> IMAGE.img
 
-
-    log "Enlarge the downloaded image"
-    cat temp.img >> IMAGE.img
-
-    log "fdisk to enlarge the main partition"
+    		log "fdisk to enlarge the main partition"
+	fi
 
     PARTED_OUT=$(parted -s IMAGE.img unit s print)
     ROOT_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${ROOT_PART}"| xargs echo -n \
@@ -58,8 +58,8 @@ ${ROOT_OFFSET}
 
 w
 EOF
-fi
 sgdisk -c 1:APP IMAGE.img
+fi
 
 rm temp.img
 
