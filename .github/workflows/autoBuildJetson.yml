@@ -18,12 +18,9 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TESTING: [testing]
-        TARGET: [jetson-nano-2gb-bionic] # <-- Add targets here!
+        TARGET: [pi-buster, pi-bullseye] # <-- Add targets here!
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-      ref: '2.0'
     - name: Setup env
       run: |
         echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
