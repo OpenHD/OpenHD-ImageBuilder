@@ -41,7 +41,8 @@ jobs:
       run: sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support
     - name: configure
       run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }} small
-      run: rm -Rf work*
+    - name: clean workspace
+      run: sudo rm -Rf work-jetson-nano-2gb-bionic/03*
     ########################################
 
 
