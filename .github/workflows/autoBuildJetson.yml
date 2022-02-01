@@ -44,10 +44,12 @@ jobs:
     - name: configure
       run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }} small
     - name: listdata
-      run: sudo tree
+      run: sudo ls
+    - name: see space left1
+      run: sudo df -h
     - name: delete workdir
-      run: sudo rm -Rf work-jetson-nano-2gb-bionic
-    - name: see space left
+      run: sudo rm -Rf ./work-jetson-nano-2gb-bionic/*
+    - name: see space left2
       run: sudo df -h
 
 
