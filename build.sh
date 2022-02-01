@@ -195,6 +195,11 @@ if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
     log "Deploy image to: ${IMAGE_PATH_NAME}"
     mkdir -p "${DEPLOY_DIR}" || true
     cp "${PREV_WORK_DIR}/IMAGE.img" ${IMAGE_PATH_NAME}
+		if [[ "${SMALL}" == "small" ]]; then
+                echo "deleting work-Image after deploying"
+                rm -r "${PREV_WORK_DIR}"
+		df -h
+                fi
 fi
 
 cd ${BASE_DIR}
