@@ -49,9 +49,8 @@ jobs:
       run: sudo df -h
     - name: delete workdir
       run: sudo rm -Rf -v /home/runner/work/Open.HD_Image_Builder/Open.HD_Image_Builder/work-jetson-nano-2gb-bionic/*
-    - name: see files left
-      run: sudo tree
-
+    - name: see if there is enough space for uploading
+      run: sudo df -h
 
     ########################################
 
