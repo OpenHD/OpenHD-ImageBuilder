@@ -27,6 +27,7 @@ jobs:
         root-reserve-mb: 512
         swap-size-mb: 1024
         remove-dotnet: 'true'
+  	remove-android: 'true'
     - name: Setup env
       run: |
         echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
@@ -35,12 +36,16 @@ jobs:
     
     ### ONLY THIS RELEVANT FOR BUILDING ###    
     - uses: actions/checkout@v2
+    - name: show space
+      run: df -h
     - name: update
       run: sudo apt-get update
     - name: dep
       run: sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support
     - name: configure
       run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }} small
+    - name: show tree
+      run tree
     ########################################
 
 
