@@ -26,7 +26,8 @@ jobs:
       with:
         root-reserve-mb: 10
         swap-size-mb: 512
-        remove-android: 'true'	
+        remove-dotnet: 'true'
+	remove-haskell: 'true'	
     - name: Setup env
       run: |
         echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
