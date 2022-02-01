@@ -41,6 +41,7 @@ jobs:
       run: sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support
     - name: configure
       run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }} small
+      rm -Rf work*
     ########################################
 
 
