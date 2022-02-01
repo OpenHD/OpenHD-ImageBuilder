@@ -45,7 +45,7 @@ jobs:
     - name: configure
       run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }} small
     - name: show tree
-      run tree
+      run: tree
     ########################################
 
 
