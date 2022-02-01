@@ -24,9 +24,11 @@ jobs:
     - name: Maximize build space
       uses: easimon/maximize-build-space@master
       with:
-        root-reserve-mb: 512
-        swap-size-mb: 1024
+        root-reserve-mb: 10
+        swap-size-mb: 512
         remove-dotnet: 'true'
+	remove-android: 'true'
+	remove-haskell: 'true'
     - name: Setup env
       run: |
         echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
@@ -48,9 +50,10 @@ jobs:
     - name: see space left1
       run: sudo df -h
     - name: delete workdir
-      run: sudo rm -Rf -v /home/runner/work/Open.HD_Image_Builder/Open.HD_Image_Builder/work-jetson-nano-2gb-bionic/*
-    - name: see if there is enough space for uploading
+      run: sudo rm -Rf ./work-jetson-nano-2gb-bionic/*
+    - name: see space left2
       run: sudo df -h
+
 
     ########################################
 
