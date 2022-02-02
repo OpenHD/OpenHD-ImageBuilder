@@ -27,7 +27,7 @@ jobs:
         root-reserve-mb: 512
         swap-size-mb: 1024
         remove-dotnet: 'true'
-        remove-android: 'true'
+        overprovision-lvm: 'true'
 
     - name: Setup env
       run: |
@@ -45,8 +45,8 @@ jobs:
       run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }} small
     - name: remove old image to make space
       run: sudo rm -Rf -v /home/runner/work/Open.HD_Image_Builder/work-jetson-nano-2gb-bionic/03-Preconfiguration/IMAGE.img
-    - name: wait and check
-      run: sleep 100
+    - name: check size
+      run: df -h
     ########################################
 
 
