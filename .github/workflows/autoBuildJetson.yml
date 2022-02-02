@@ -51,12 +51,16 @@ jobs:
       run: df -h
     - name: compress
       run: 7z a -m0=lzma2 -sdel -aoa OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.7z ./deploy/*.img
+    - name: check size
+      run: df -h
     ########################################
 
 
     - name: Compose release filename
       # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions
       run: echo "artifact_name=OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
+    - name: Check for files
+      run: tree ./deploy
         
     - name: Pack image for ${{ matrix.TARGET }} ${{ matrix.TESTING }}
       uses: 'actions/upload-artifact@v2'
