@@ -44,7 +44,9 @@ jobs:
     - name: configure
       run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }} small
     - name: remove old image to make space
-      run: sudo rm -Rf -v /home/runner/work/Open.HD_Image_Builder/work-jetson-nano-2gb-bionic/03-Preconfiguration/IMAGE.img
+      run: sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
+    - name: is it really deleted ?
+      run: lsof | grep deleted
     - name: check size
       run: df -h
     ########################################
