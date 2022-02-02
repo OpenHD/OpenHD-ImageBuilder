@@ -112,6 +112,11 @@ if [[ "${OS}" == "ubuntu" ]]; then
     sudo chmod u+x /usr/local/bin/video.sh
     sudo systemctl enable networking.service
     sudo systemctl enable video.service
+    wget https://www.arducam.com/downloads/Jetson/Camera_overrides.tar.gz
+    tar zxvf Camera_overrides.tar.gz
+    cp camera_overrides.isp /var/nvidia/nvcam/settings/
+    chmod 664 /var/nvidia/nvcam/settings/camera_overrides.isp
+    chown root:root /var/nvidia/nvcam/settings/camera_overrides.isp
 fi
 
 apt update && apt upgrade -y
