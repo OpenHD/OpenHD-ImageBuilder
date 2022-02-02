@@ -50,9 +50,11 @@ jobs:
     - name: check size
       run: df -h
     - name: compress
-      run: 7z a -m0=lzma2 -sdel -aoa OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.7z ./deploy/*.img
+      run: 7z a -m0=lzma2 ./deploy/OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.7z ./deploy/*.img
     - name: check size
       run: df -h
+    - name: remove old image to make space
+      run: sudo rm -Rf -v ./deploy/*img
     ########################################
 
 
