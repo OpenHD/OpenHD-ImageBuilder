@@ -49,6 +49,8 @@ jobs:
       run: sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
     - name: check size
       run: df -h
+    - name: compress
+      run: 7z -m0=lzma2 -aoa ./deploy/* -sdel
     ########################################
 
 
@@ -61,5 +63,5 @@ jobs:
       with:
         name: "${{ env.artifact_name }}"
         path: |
-          ./deploy/*.img
+          ./deploy/*.7z
           if-no-files-found: error
