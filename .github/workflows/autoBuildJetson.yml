@@ -50,7 +50,7 @@ jobs:
     - name: check size
       run: df -h
     - name: compress
-      run: sudo 7z a -m0=lzma2 ./deploy/OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.7z ./deploy/*.img
+      run: sudo zip ./deploy/OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.zip ./deploy/*.img
     - name: check size
       run: df -h
     - name: remove old image to make space
@@ -71,5 +71,5 @@ jobs:
       with:
         name: "${{ env.artifact_name }}"
         path: |
-          ./deploy/*.7z
+          ./deploy/*.zip
           if-no-files-found: error
