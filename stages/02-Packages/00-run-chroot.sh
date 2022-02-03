@@ -93,22 +93,35 @@ echo "-------------------------DONE GETTING SECOND UPDATE-----------------------
 echo "Purge packages that interfer/we dont need..."
 
 PURGE="wireless-regdb cron avahi-daemon curl iptables man-db logrotate"
-#jtop was replaced with jetson-stats, so no need to install it, also replaced kernel headers, since there are no specific tegra ones
 
 export DEBIAN_FRONTEND=noninteractive
 
 echo "install openhd version-${OPENHD_PACKAGE}"
 if [[ "${OS}" == "ubuntu" ]]; then
-    echo "Install some Jetson essential libraries and compile rtl8812au driver from sources"
-    sudo apt install -y git nano python-pip build-essential libelf-dev rtl8812au=20220125-1
+    echo "Install some Jetson essential libraries and patched rtl8812au driver"
+    sudo apt install -y git nano python-pip build-essential libelf-dev rtl8812au=20220125-1 #mercurial Skipping
     sudo -H pip install -U jetson-stats
     cd /lib/modules/4.9.253/kernel/drivers/net/wireless
     cp -r 88XXau.ko /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/
     cd /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/
     mv rtl8812au.ko rtl8812au.ko.bak
     mv 88XXau.ko rtl8812au.ko
-    echo '#!/bin/bash' >> /usr/local/bin/video.sh && printf "\nsudo nvpmodel -m 0 | sudo jetson_clocks\nsudo iw wlan0 set freq 5320\nsudo iw wlan0 set txpower fixed 3100\necho \"nameserver 1.1.1.1\" > /etc/resolv.conf" >> /usr/local/bin/video.sh
-    printf "[Unit]\nDescription=\"Jetson Nano clocks\"\nAfter=openhdinterface.service\n[Service]\nExecStart=/usr/local/bin/video.sh\n[Install]\nWantedBy=multi-user.target\nAlias=video.service" >> /etc/systemd/system/video.service
+    log "Downloading Atheros parched drivers"
+    wget www.nurse.teithe.gr/htc_9271.fw
+    mv /lib/firmware/htc_9271.fw /lib/firmware/htc_9271.fw.bak
+    mv /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw.bak
+    cp htc_9271.fw /lib/firmware/
+    cp htc_9271.fw /lib/firmware/ath9k_htc/
+    mv /lib/firmware/ath9k_htc/htc_9271.fw /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw
+    #hg clone https://bitbucket.org/befi/wifibroadcast/  #repo is down so we need another source. Skipping
+    #git clone https://github.com/raspberrypi/linux.git
+    #cd linux
+    #git checkout fe4a83540ec73dfc298f16f027277355470ea9a0
+    #git branch wifi_txpower
+    #git checkout wifi_txpower
+    #git apply ../wifibroadcast/patches/AR9271/kernel/fixed_channel_power_of_ath9k_to_20dbm.patch
+    echo '#!/bin/bash' >> /usr/local/bin/video.sh && printf "\nsudo nvpmodel -m 0 | sudo jetson_clocks\nsudo iw wlan0 set freq 5320\nsudo iw wlan0 set txpower fixed 31>
+    printf "[Unit]\nDescription=\"Jetson Nano clocks\"\nAfter=openhdinterface.service\n[Service]\nExecStart=/usr/local/bin/video.sh\n[Install]\nWantedBy=multi-user.tar>
     sudo chmod u+x /usr/local/bin/video.sh
     sudo systemctl enable networking.service
     sudo systemctl enable video.service
@@ -124,6 +137,16 @@ apt -y --no-install-recommends install \
 ${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
 ${GNUPLOT} || exit 1
+apt install -y libsodium-dev libpcap-dev
+git clone https://github.com/Consti10/wifibroadcast.git
+cd wifibroadcast
+make
+mv /usr/local/bin/wfb_tx /usr/local/bin/wfb_tx.bak
+mv /usr/local/bin/wfb_rx /usr/local/bin/wfb_rx.bak
+mv /usr/local/bin/wfb_keygen /usr/local/bin/wfb_keygen.bak
+cp wfb_tx /usr/local/bin/
+cp wfb_rx /usr/local/bin/
+cp wfb_keygen /usr/local/bin/
 
 apt -yq purge ${PURGE} || exit 1
 apt -yq clean || exit 1
