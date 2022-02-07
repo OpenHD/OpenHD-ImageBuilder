@@ -1,6 +1,6 @@
-BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2020-05-28"
-BASE_IMAGE="2020-05-27-raspios-buster-lite-armhf.zip"
-BASE_IMAGE_SHA256="f5786604be4b41e292c5b3c711e2efa64b25a5b51869ea8313d58da0b46afc64"
+BASE_IMAGE_URL="https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2022-01-28"
+BASE_IMAGE="2022-01-28-raspios-buster-armhf-lite.zip"
+BASE_IMAGE_SHA256="84c7d41b6d0a9fc8e6163045842a1bae7cc57cef36808d3d350fdf18e9b3f50e"
 OS="raspbian"
 DISTRO="buster"
 HAS_CUSTOM_KERNEL=true
