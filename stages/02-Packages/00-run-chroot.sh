@@ -113,13 +113,6 @@ if [[ "${OS}" == "ubuntu" ]]; then
     cp htc_9271.fw /lib/firmware/
     cp htc_9271.fw /lib/firmware/ath9k_htc/
     mv /lib/firmware/ath9k_htc/htc_9271.fw /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw
-    #hg clone https://bitbucket.org/befi/wifibroadcast/  #repo is down so we need another source. Skipping
-    #git clone https://github.com/raspberrypi/linux.git
-    #cd linux
-    #git checkout fe4a83540ec73dfc298f16f027277355470ea9a0
-    #git branch wifi_txpower
-    #git checkout wifi_txpower
-    #git apply ../wifibroadcast/patches/AR9271/kernel/fixed_channel_power_of_ath9k_to_20dbm.patch
     echo '#!/bin/bash' >> /usr/local/bin/video.sh && printf "\nsudo nvpmodel -m 0 | sudo jetson_clocks\nsudo iw wlan0 set freq 5320\nsudo iw wlan0 set txpower fixed 3100\necho \"nameserver 1.1.1.1\" > /etc/resolv.conf" >> /usr/local/bin/video.sh
     printf "[Unit]\nDescription=\"Jetson Nano clocks\"\nAfter=openhdinterface.service\n[Service]\nExecStart=/usr/local/bin/video.sh\n[Install]\nWantedBy=multi-user.target\nAlias=video.service" >> /etc/systemd/system/video.service
     sudo chmod u+x /usr/local/bin/video.sh
