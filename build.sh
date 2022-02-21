@@ -141,7 +141,6 @@ export BASE_IMAGE_SHA256
 
 export BASE_IMAGE_Mirror
 export HAS_CUSTOM_KERNEL
-export Ba
 export BIT
 export ROOT_PART
 export BOOT_PART

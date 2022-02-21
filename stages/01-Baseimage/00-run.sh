@@ -26,13 +26,12 @@ if [[ "${SHA}" != "${BASE_IMAGE_SHA256}  ${BASE_IMAGE}" ]]; then
     rm *.img    
     rm *.xz
     rm *.7z
-	
+
+	if [[ "${BASE_IMAGE}" != "true" ]]; then    	
     		log "Download base Image"
     		wget -q --show-progress --progress=bar:force:noscroll $BASE_IMAGE_URL/$BASE_IMAGE 
 	fi
-
-
-
+fi
 
 
 log "Unarchive base image"
