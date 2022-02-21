@@ -8,8 +8,13 @@ echo "SHA: ${SHA}"
 
 if [[ "${HAS_CUSTOM_BASE}" == true ]]; then    
 
-echo "Downloading custom build base image for Jetson 4GB"
+echo "Downloading custom build base image"
 bash ../../scripts/gdrive.sh ${BASE_IMAGE_URL}
+rm uc* SKIP
+if [ -z "$(ls -A .)" ]; then
+   echo "Google-Drive error, downloading from slower mirror instead"
+   wget -q --show-progress --progress=bar:force:noscroll $BASE_IMAGE_Mirror/$BASE_IMAGE 
+fi
 SHA=$(sha256sum ${BASE_IMAGE})
 echo "SHA: ${SHA}"
 fi
@@ -22,12 +27,11 @@ if [[ "${SHA}" != "${BASE_IMAGE_SHA256}  ${BASE_IMAGE}" ]]; then
     rm *.xz
     rm *.7z
 	
-	if [[ "${BASE_IMAGE}" != "true" ]]; then    
-
     		log "Download base Image"
     		wget -q --show-progress --progress=bar:force:noscroll $BASE_IMAGE_URL/$BASE_IMAGE 
 	fi
-fi
+
+
 
 
 
