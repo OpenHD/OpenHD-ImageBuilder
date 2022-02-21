@@ -139,6 +139,7 @@ export BASE_DIR
 
 export BASE_IMAGE_SHA256
 
+export BASE_IMAGE_Mirror
 export HAS_CUSTOM_KERNEL
 export BIT
 export ROOT_PART
