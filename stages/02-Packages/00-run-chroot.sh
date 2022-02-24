@@ -106,7 +106,7 @@ if [[ "${OS}" == "ubuntu" ]]; then
     cd /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/
     mv rtl8812au.ko rtl8812au.ko.bak
     mv 88XXau.ko rtl8812au.ko
-    log "Downloading Atheros parched drivers"
+    echo "Downloading Atheros parched drivers"
     wget www.nurse.teithe.gr/htc_9271.fw
     mv /lib/firmware/htc_9271.fw /lib/firmware/htc_9271.fw.bak
     mv /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw.bak
