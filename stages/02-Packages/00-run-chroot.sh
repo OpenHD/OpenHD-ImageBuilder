@@ -100,6 +100,7 @@ echo "install openhd version-${OPENHD_PACKAGE}"
 if [[ "${OS}" == "ubuntu" ]]; then
     echo "Install some Jetson essential libraries and patched rtl8812au driver"
     sudo apt install -y git nano python-pip build-essential libelf-dev rtl8812au=20220125-1 #mercurial Skipping
+    sudo apt install -o Dpkg::Options::="--force-overwrite" install openhd-linux-jetson 
     sudo -H pip install -U jetson-stats
     cd /lib/modules/4.9.253/kernel/drivers/net/wireless
     cp -r 88XXau.ko /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/
@@ -126,7 +127,7 @@ if [[ "${OS}" == "ubuntu" ]]; then
 fi
 
 apt update && apt upgrade -y
-apt -y --no-install-recommends install \
+apt -y --no-install-recommends --focre-overwrite install \
 ${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
 ${GNUPLOT} || exit 1
