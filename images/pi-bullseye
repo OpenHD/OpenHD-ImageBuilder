@@ -4,7 +4,7 @@ BASE_IMAGE_SHA256="f6e2a3e907789ac25b61f7acfcbf5708a6d224cf28ae12535a2dc1d76a62e
 OS="raspbian"
 DISTRO="bullseye"
 HAS_CUSTOM_KERNEL=true
-KERNEL_PACKAGE="openhd-linux-pi"
+KERNEL_PACKAGE="openhd-linux-pi=2.1-0322"
 HAVE_BOOT_PART=true
 HAVE_CONF_PART=false
 BOOT_PART=1

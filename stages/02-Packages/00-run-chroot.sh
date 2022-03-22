@@ -100,7 +100,7 @@ if [[ "${OS}" == "ubuntu" ]]; then
     echo "Install some Jetson essential libraries and patched rtl8812au driver"
     sudo apt install -y git nano python-pip build-essential libelf-dev
     sudo apt remove linux-firmware nvidia-l4t-kernel nvidia-l4t-kernel-headers
-    sudo apt install openhd-linux-jetson=2.1-0321 #mercurial Skipping 
+    sudo apt install openhd-linux-jetson=2.1-0322 #mercurial Skipping 
     sudo -H pip install -U jetson-stats
     cd /lib/modules/4.9.253/kernel/drivers/net/wireless
     cp -r 88XXau.ko /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/
