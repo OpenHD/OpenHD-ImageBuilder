@@ -116,7 +116,6 @@ if [[ "${OS}" == "ubuntu" ]]; then
     echo '#!/bin/bash' >> /usr/local/bin/video.sh && printf "\nsudo nvpmodel -m 0 | sudo jetson_clocks\nsudo iw wlan0 set freq 5320\nsudo iw wlan0 set txpower fixed 3100\necho \"nameserver 1.1.1.1\" > /etc/resolv.conf" >> /usr/local/bin/video.sh
     printf "[Unit]\nDescription=\"Jetson Nano clocks\"\nAfter=openhdinterface.service\n[Service]\nExecStart=/usr/local/bin/video.sh\n[Install]\nWantedBy=multi-user.target\nAlias=video.service" >> /etc/systemd/system/video.service
     sudo chmod u+x /usr/local/bin/video.sh
-    sudo systemctl enable networking.service
     sudo systemctl enable video.service
     wget https://www.arducam.com/downloads/Jetson/Camera_overrides.tar.gz
     tar zxvf Camera_overrides.tar.gz
