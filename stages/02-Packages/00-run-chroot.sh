@@ -86,6 +86,7 @@ else if [[ "${TESTING}" == "milestone" ]]; then
     echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1-alpha/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1-testing.list
 else
     echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1.list
+fi
 
 echo "-------------------------GETTING SECOND UPDATE------------------------------------"
 
