@@ -48,7 +48,6 @@ jobs:
       run: sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
     - name: compress
       run: sudo zip ./deploy/OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.zip ./deploy/*.img
-      run: df -h
     - name: remove old image to make space
       run: sudo rm -Rf -v ./deploy/*img
     ########################################
