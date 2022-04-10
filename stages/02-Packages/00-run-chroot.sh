@@ -76,13 +76,16 @@ echo "-------------------------DONE GETTING FIRST UPDATE------------------------
 apt install -y apt-transport-https curl
 curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1/cfg/gpg/gpg.0AD501344F75A993.key' | apt-key add -
 curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1-testing/cfg/gpg/gpg.58A6C96C088A96BF.key' | apt-key add -
+curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1-alpha/gpg.9D1C80E55B50390B.key' | apt-key add -
 sudo apt-get install -y apt-utils
-
-echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1.list
 
 if [[ "${TESTING}" == "testing" ]]; then
     echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1-testing/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1-testing.list
-fi
+    echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1.list
+else if [[ "${TESTING}" == "milestone" ]]; then
+    echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1-alpha/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1-testing.list
+else
+    echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1.list
 
 echo "-------------------------GETTING SECOND UPDATE------------------------------------"
 
