@@ -96,7 +96,7 @@ echo "-------------------------DONE GETTING SECOND UPDATE-----------------------
 
 echo "Purge packages that interfer/we dont need..."
 
-PURGE="wireless-regdb cron avahi-daemon curl iptables man-db logrotate"
+PURGE="wireless-regdb avahi-daemon curl iptables man-db logrotate"
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -130,10 +130,10 @@ fi
 
 apt update && apt upgrade -y
 apt -y --no-install-recommends install \
-${OPENHD_PACKAGE} \
-${PLATFORM_PACKAGES} \
+#${OPENHD_PACKAGE} \
+#${PLATFORM_PACKAGES} \
 ${GNUPLOT} || exit 1
-apt install -y libsodium-dev libpcap-dev git nano build-essential
+apt install -y libsodium-dev libpcap-dev git nano build-essential 
 git clone https://github.com/Consti10/wifibroadcast.git
 cd wifibroadcast
 make

@@ -24,6 +24,18 @@ useradd openhd
 echo "openhd:openhd" | chpasswd
 adduser openhd sudo
 
+#add debug script and cronjob
+cd /opt
+git clone https://github.com/OpenHD/OpenHD-debug
+cd OpenHD-debug
+chmod +x debug.sh
+crontab -l > mycron
+echo "@reboot /opt/OpenHD-debug/debug.sh" >> mycron
+crontab mycron
+rm mycron
+systemctl enable cron.service
+
+
 
 # On platforms that already have a separate boot partition we just put the config files on there, but some
 # platforms don't have or need a boot partition, so on those we have a separate /conf partition. All
@@ -44,7 +56,7 @@ rm /etc/init.d/dhcpcd
 #disable unneeded services
 sudo systemctl disable dhcpcd.service
 sudo systemctl disable dnsmasq.service
-sudo systemctl disable cron.service
+#sudo systemctl disable cron.service
 sudo systemctl disable syslog.service
 if [[ "${OS}" != "ubuntu" ]]; then
     echo "OS is NOT ubuntu..disabling journald"
