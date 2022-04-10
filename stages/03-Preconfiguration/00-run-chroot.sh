@@ -84,7 +84,7 @@ fi
 sudo systemctl disable systemd-update-utmp.service
 sudo systemctl disable networking.service
 
-if [[ "${TESTING}" != "testing" ]]; then
+if [[ "${TESTING}" = "milestone" ]]; then
     echo "NOT TESTING stopping-disbale-mask journald"
     systemctl stop systemd-journald.service
     systemctl disable systemd-journald.service
