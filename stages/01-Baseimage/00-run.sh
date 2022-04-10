@@ -9,12 +9,7 @@ echo "SHA: ${SHA}"
 if [[ "${HAS_CUSTOM_BASE}" == true ]]; then    
 
 echo "Downloading custom build base image"
-bash ../../scripts/gdrive.sh ${BASE_IMAGE_URL}
-rm uc* SKIP
-if [ -z "$(ls -A .)" ]; then
-   echo "Google-Drive error, downloading from slower mirror instead"
-   wget -q --show-progress --progress=bar:force:noscroll $BASE_IMAGE_Mirror/$BASE_IMAGE 
-fi
+wget -q --show-progress --progress=bar:force:noscroll $BASE_IMAGE_Mirror/$BASE_IMAGE 
 SHA=$(sha256sum ${BASE_IMAGE})
 echo "SHA: ${SHA}"
 fi

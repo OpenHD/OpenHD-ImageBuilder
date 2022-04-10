@@ -27,7 +27,7 @@ echo ""
 
 
 if [[ "${IMAGE_TYPE}" == "" ]]; then
-    echo "Usage: ./build.sh pi-stretch"
+    echo "Usage: ./build.sh pi-bullseye"
     echo ""
     echo "Target boards:"
     echo ""
