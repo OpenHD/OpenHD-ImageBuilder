@@ -84,14 +84,6 @@ fi
 sudo systemctl disable systemd-update-utmp.service
 sudo systemctl disable networking.service
 
-if [[ "${TESTING}" = "milestone" ]]; then
-    echo "NOT TESTING stopping-disbale-mask journald"
-    systemctl stop systemd-journald.service
-    systemctl disable systemd-journald.service
-    systemctl mask systemd-journald.service
-fi
-
-
 sudo rm /etc/init.d/resize2fs_once
 
 # Disable ZeroTier service
