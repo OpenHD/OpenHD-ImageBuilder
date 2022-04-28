@@ -102,47 +102,16 @@ export DEBIAN_FRONTEND=noninteractive
 echo "install openhd version-${OPENHD_PACKAGE}"
 if [[ "${OS}" == "ubuntu" ]]; then
     echo "Install some Jetson essential libraries and patched rtl8812au driver"
-    sudo apt install -y git nano python-pip build-essential libelf-dev rtl8812au=20220125-1 #mercurial Skipping
+    sudo apt install -y git nano python-pip build-essential libelf-dev 
     sudo -H pip install -U jetson-stats
-    cd /lib/modules/4.9.253/kernel/drivers/net/wireless
-    cp -r 88XXau.ko /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/
-    cd /lib/modules/4.9.253-tegra/kernel/drivers/net/wireless/realtek/rtl8812au/
-    mv rtl8812au.ko rtl8812au.ko.bak
-    mv 88XXau.ko rtl8812au.ko
-    echo "Downloading Atheros parched drivers"
-    wget www.nurse.teithe.gr/htc_9271.fw
-    mv /lib/firmware/htc_9271.fw /lib/firmware/htc_9271.fw.bak
-    mv /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw.bak
-    cp htc_9271.fw /lib/firmware/
-    cp htc_9271.fw /lib/firmware/ath9k_htc/
-    mv /lib/firmware/ath9k_htc/htc_9271.fw /lib/firmware/ath9k_htc/htc_9271-1.4.0.fw
-    echo '#!/bin/bash' >> /usr/local/bin/video.sh && printf "\nsudo nvpmodel -m 0 | sudo jetson_clocks\nsudo iw wlan0 set freq 5320\nsudo iw wlan0 set txpower fixed 3100\necho \"nameserver 1.1.1.1\" > /etc/resolv.conf" >> /usr/local/bin/video.sh
-    printf "[Unit]\nDescription=\"Jetson Nano clocks\"\nAfter=openhdinterface.service\n[Service]\nExecStart=/usr/local/bin/video.sh\n[Install]\nWantedBy=multi-user.target\nAlias=video.service" >> /etc/systemd/system/video.service
-    sudo chmod u+x /usr/local/bin/video.sh
-    sudo systemctl enable video.service
-    wget https://www.arducam.com/downloads/Jetson/Camera_overrides.tar.gz
-    tar zxvf Camera_overrides.tar.gz
-    cp camera_overrides.isp /var/nvidia/nvcam/settings/
-    chmod 664 /var/nvidia/nvcam/settings/camera_overrides.isp
-    chown root:root /var/nvidia/nvcam/settings/camera_overrides.isp
 fi
 
 apt update && apt upgrade -y
-apt -y --no-install-recommends install \
+apt -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends install \
 ${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
 ${GNUPLOT} || exit 1
 apt install -y libsodium-dev libpcap-dev git nano build-essential libcamera0 
-git clone https://github.com/Consti10/wifibroadcast.git
-cd wifibroadcast
-make
-mv /usr/local/bin/wfb_tx /usr/local/bin/wfb_tx.bak
-mv /usr/local/bin/wfb_rx /usr/local/bin/wfb_rx.bak
-mv /usr/local/bin/wfb_keygen /usr/local/bin/wfb_keygen.bak
-cp wfb_tx /usr/local/bin/
-cp wfb_rx /usr/local/bin/
-cp wfb_keygen /usr/local/bin/
-
 
 
 apt -yq purge ${PURGE} || exit 1
