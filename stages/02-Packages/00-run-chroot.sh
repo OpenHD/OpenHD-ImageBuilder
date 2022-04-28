@@ -24,7 +24,7 @@ if [[ "${OS}" == "raspbian" ]]; then
     apt-mark hold raspberrypi-kernel
     # Install libraspberrypi-dev before apt-get update
     DEBIAN_FRONTEND=noninteractive apt -yq install libraspberrypi-doc libraspberrypi-dev libraspberrypi-dev libraspberrypi-bin libraspberrypi0 || exit 1
-    apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite libcamera0
+    apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite
     apt purge raspberrypi-kernel
     PLATFORM_PACKAGES=""
 fi
@@ -132,7 +132,7 @@ apt -y --no-install-recommends install \
 ${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
 ${GNUPLOT} || exit 1
-apt install -y libsodium-dev libpcap-dev git nano build-essential 
+apt install -y libsodium-dev libpcap-dev git nano build-essential libcamera0 
 git clone https://github.com/Consti10/wifibroadcast.git
 cd wifibroadcast
 make
@@ -142,6 +142,8 @@ mv /usr/local/bin/wfb_keygen /usr/local/bin/wfb_keygen.bak
 cp wfb_tx /usr/local/bin/
 cp wfb_rx /usr/local/bin/
 cp wfb_keygen /usr/local/bin/
+
+
 
 apt -yq purge ${PURGE} || exit 1
 apt -yq clean || exit 1
