@@ -110,7 +110,6 @@ fi
 
 apt update && apt upgrade -y
 apt -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends install \
-${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
 ${GNUPLOT} || exit 1
 apt install -y libsodium-dev libpcap-dev git nano build-essential libcamera0 
