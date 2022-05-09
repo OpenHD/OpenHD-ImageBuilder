@@ -1,11 +1,9 @@
-BASE_IMAGE_URL="https://drive.google.com/file/d/1XtgBq3bgs8orHoWiVf5_HRHq5FgcS4DL/view?usp=sharing"
+BASE_IMAGE_URL="https://openhdfpv.org/wp-content/BaseImages/"
 BASE_IMAGE="jetson-nano-jp46-fixed.7z"
 BASE_IMAGE_SHA256="dfdd2d22c8bc86e925803ca0b571ac168202521ad9bea4f439723c75f04420d4"
-BASE_Mirror=true
-BASE_IMAGE_Mirror="https://openhdfpv.org/wp-content/uploads/download-manager-files/BaseImages/"
 OS="ubuntu"
 DISTRO="bionic"
-HAS_CUSTOM_BASE=true
+HAS_CUSTOM_BASE=false
 HAS_CUSTOM_KERNEL=true
 KERNEL_PACKAGE="openhd-linux-jetson"
 HAVE_BOOT_PART=false
