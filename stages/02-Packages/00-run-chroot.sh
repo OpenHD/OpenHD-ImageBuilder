@@ -16,8 +16,6 @@ fi
 
 if [[ "${OS}" == "raspbian" ]]; then
     echo "OS is raspbian"
-    rm /boot/config.txt
-    rm /boot/cmdline.txt
     apt-mark hold firmware-atheros || exit 1
     apt purge firmware-atheros || exit 1
     apt -yq install firmware-misc-nonfree || exit 1
@@ -26,7 +24,7 @@ if [[ "${OS}" == "raspbian" ]]; then
     DEBIAN_FRONTEND=noninteractive apt -yq install libraspberrypi-doc libraspberrypi-dev libraspberrypi-dev libraspberrypi-bin libraspberrypi0 || exit 1
     apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite
     apt purge raspberrypi-kernel
-    PLATFORM_PACKAGES=""
+    PLATFORM_PACKAGES="openhd-linux-pi libsodium-dev libpcap-dev git nano libcamera0 "
 fi
 
 
@@ -38,18 +36,8 @@ fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
     echo "OS is ubuntu"
-    PLATFORM_PACKAGES=""
 
-    echo "-------------------------SHOW nvideo source list-------------------------------"
-    #it appears some variable for source list gets missed when building images like this.. 
-    #by deleting and rewriting source list entry it fixes it.
-    rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
-    echo "deb https://repo.download.nvidia.com/jetson/common r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
-    echo "deb https://repo.download.nvidia.com/jetson/t210 r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
-    sudo cat /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
-
-    #remove some nvidia packages... if building from nvidia base image 
-
+    #clean up jetson-image
     sudo apt remove ubuntu-desktop
     sudo apt remove libreoffice-writer chromium-browser chromium* yelp unity thunderbird rhythmbox nautilus gnome-software
     sudo apt remove ubuntu-artwork ubuntu-sounds ubuntu-wallpapers ubuntu-wallpapers-bionic
@@ -59,14 +47,14 @@ if [[ "${OS}" == "ubuntu" ]]; then
     sudo apt remove --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
     sudo apt autoremove
     
-    PLATFORM_PACKAGES="${PLATFORM_PACKAGES} ${KERNEL_PACKAGE}"
+    PLATFORM_PACKAGES="openhd-linux-jetson"
 
 fi
 
 
 if [[ "${HAS_CUSTOM_KERNEL}" == "true" ]]; then
     echo "-----------------------has a custom kernel----------------------------------"
-    PLATFORM_PACKAGES="${PLATFORM_PACKAGES} ${KERNEL_PACKAGE}"
+    PLATFORM_PACKAGES="${PLATFORM_PACKAGES}"
 fi
 
 echo "-------------------------GETTING FIRST UPDATE------------------------------------"
@@ -103,17 +91,15 @@ export DEBIAN_FRONTEND=noninteractive
 
 echo "install openhd version-${OPENHD_PACKAGE}"
 if [[ "${OS}" == "ubuntu" ]]; then
-    echo "Install some Jetson essential libraries and patched rtl8812au driver"
-    sudo apt install -y git nano python-pip build-essential libelf-dev 
+    sudo apt install -y git nano python-pip libelf-dev 
     sudo -H pip install -U jetson-stats
 fi
 
 apt update && apt upgrade -y
-apt -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends install \
+apt -y --no-install-recommends install \
 ${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
 ${GNUPLOT} || exit 1
-apt install -y libsodium-dev libpcap-dev git nano build-essential libcamera0 
 
 
 apt -yq purge ${PURGE} || exit 1

@@ -4,21 +4,6 @@
 
 #!/bin/bash
 
-if [[ "${OS}" == "raspbian" && "${DISTRO}" == "stretch" ]]; then
-    # fix broadcom opengl  library names without breaking anything else
-    ln -sf /opt/vc/lib/libbrcmEGL.so /opt/vc/lib/libEGL.so
-    ln -sf /opt/vc/lib/libEGL.so /opt/vc/lib/libEGL.so.1
-    ln -sf /opt/vc/lib/libbrcmGLESv2.so /opt/vc/lib/libGLESv2.so
-    ln -sf /opt/vc/lib/libbrcmGLESv2.so /opt/vc/lib/libGLESv2.so.2
-    ln -sf /opt/vc/lib/libbrcmOpenVG.so /opt/vc/lib/libOpenVG.so
-    ln -sf /opt/vc/lib/libbrcmWFC.so /opt/vc/lib/libWFC.so
-
-    ln -sf /opt/vc/lib/pkgconfig/brcmegl.pc    /opt/vc/lib/pkgconfig/egl.pc
-    ln -sf /opt/vc/lib/pkgconfig/brcmglesv2.pc /opt/vc/lib/pkgconfig/glesv2.pc
-    ln -sf /opt/vc/lib/pkgconfig/brcmvg.pc     /opt/vc/lib/pkgconfig/vg.pc
-fi
-
-
 # create a use account that should be the same on all platforms
 useradd openhd
 echo "openhd:openhd" | chpasswd
@@ -45,6 +30,14 @@ if [[ "${HAVE_CONF_PART}" == "false" ]] && [[ "${HAVE_BOOT_PART}" == "true" ]]; 
 fi
 
 
+if [[ "${OS}" == "raspbian" ]]; then
+    echo "disabling first run script"
+    git clone https://github.com/OpenHD/firstrun
+    cd firstrun
+    cp firstrun.sh /boot/conf
+
+fi
+
 #Ensure the runlevel is multi-target (3) could possibly be lower...
 sudo systemctl set-default multi-user.target
 
@@ -56,10 +49,9 @@ rm /etc/init.d/dhcpcd
 #disable unneeded services
 sudo systemctl disable dhcpcd.service
 sudo systemctl disable dnsmasq.service
-#sudo systemctl disable cron.service
 sudo systemctl disable syslog.service
-if [[ "${OS}" != "ubuntu" ]]; then
-    echo "OS is NOT ubuntu..disabling journald"
+if [[ "${OS}" != "testing" ]] || [[ "${OS}" != "milestone" ]]; then
+    echo "disabling journald"
     sudo systemctl disable journald.service
 fi
 sudo systemctl disable triggerhappy.service
