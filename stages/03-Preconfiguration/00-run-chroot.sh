@@ -34,6 +34,7 @@ if [[ "${OS}" == "raspbian" ]]; then
     echo "disabling first run script"
     git clone https://github.com/OpenHD/firstrun
     cd firstrun
+    cp cmdline.txt /boot/conf
     cp firstrun.sh /boot/conf
 
 fi
