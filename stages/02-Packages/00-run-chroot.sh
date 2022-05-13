@@ -37,6 +37,10 @@ fi
 if [[ "${OS}" == "ubuntu" ]]; then
     echo "OS is ubuntu"
 
+    rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
+    echo "deb https://repo.download.nvidia.com/jetson/common r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
+    echo "deb https://repo.download.nvidia.com/jetson/t210 r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+    
     #clean up jetson-image
     sudo apt remove ubuntu-desktop
     sudo apt remove libreoffice-writer chromium-browser chromium* yelp unity thunderbird rhythmbox nautilus gnome-software
