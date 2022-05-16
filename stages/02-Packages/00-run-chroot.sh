@@ -24,7 +24,7 @@ if [[ "${OS}" == "raspbian" ]]; then
     DEBIAN_FRONTEND=noninteractive apt -yq install libraspberrypi-doc libraspberrypi-dev libraspberrypi-dev libraspberrypi-bin libraspberrypi0 || exit 1
     apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite
     apt purge raspberrypi-kernel
-    PLATFORM_PACKAGES="openhd-linux-pi libsodium-dev libpcap-dev git nano libcamera0 "
+    PLATFORM_PACKAGES="libsodium-dev libpcap-dev git nano libcamera0"
 fi
 
 
