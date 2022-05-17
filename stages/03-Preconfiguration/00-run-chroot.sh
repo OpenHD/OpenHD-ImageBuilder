@@ -32,11 +32,12 @@ fi
 
 if [[ "${OS}" == "raspbian" ]]; then
     echo "disabling first run script"
-    git clone https://github.com/OpenHD/firstrun
+    git clone https://github.com/OpenHD/Overlay
     cd firstrun
     cp cmdline.txt /boot/cmdline.txt
     cp firstrun.sh /boot/firstrun.sh
     cp userconf.txt /boot/userconf.txt
+    cp config.txt /boot/config.txt
 fi
 
 #Ensure the runlevel is multi-target (3) could possibly be lower...
