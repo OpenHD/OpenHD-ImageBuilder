@@ -3,11 +3,18 @@ pushd ${STAGE_WORK_DIR}
 
 if [[ "${OS}" == "raspbian" ]]; then
 
-    log "Create 4Gb empty image"
-    dd if=/dev/zero of=temp.img bs=1 count=1 seek=4294967296
+    log "Calculate difference between original Image and Wanted size (7GB)"
+    WANTEDSIZE="7168000000"
+    FILESIZE=$(stat -c%s "IMAGE.img")
+    DIFFERENCE=$(expr $WANTEDSIZE - $FILESIZE)
+    DIFFERENCE=$(expr $DIFFERENCE - 1)
 
 
-    log "Enlarge the downloaded image by 4Gb"
+    log "Create empty image"
+    dd if=/dev/zero of=temp.img bs=1 count=1 seek=$DIFFERENCE
+
+
+    log "Enlarge the downloaded image"
     cat temp.img >> IMAGE.img
 
     log "fdisk magic to enlarge the main partition"
