@@ -101,7 +101,7 @@ if [[ "${OS}" == "ubuntu" ]]; then
 fi
 
 apt update && apt upgrade -y
-apt -y --no-install-recommends install \
+apt -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends install \
 ${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
 ${GNUPLOT} || exit 1
