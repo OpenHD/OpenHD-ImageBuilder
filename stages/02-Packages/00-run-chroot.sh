@@ -25,7 +25,7 @@ if [[ "${OS}" == "raspbian" ]]; then
     apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite
     apt purge raspberrypi-kernel
     apt remove nfs-common
-    PLATFORM_PACKAGES="openhd-linux-pi libsodium-dev libpcap-dev git nano libcamera0"
+    PLATFORM_PACKAGES="openhd-linux-pi libsodium-dev libpcap-dev git nano libcamera0 openssh-server"
 fi
 
 
