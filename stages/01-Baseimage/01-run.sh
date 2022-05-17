@@ -39,15 +39,21 @@ EOF
 fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
-	if [[ "${HAS_CUSTOM_BASE}" != true ]]; then    
-		log "Create empty image"
-    		dd if=/dev/zero of=temp.img bs=1 count=1 seek=2G
 
-    		log "Enlarge the downloaded image"
-    		cat temp.img >> IMAGE.img
+    log "Calculate difference between original Image and Wanted size (~16GB)"
+        WANTEDSIZE="15872000000"
+        FILESIZE=$(stat -c%s "IMAGE.img")
+        DIFFERENCE=$(expr $WANTEDSIZE - $FILESIZE)
+        DIFFERENCE=$(expr $DIFFERENCE - 1)
+    log $DIFFERENCE
 
-    		log "fdisk to enlarge the main partition"
-	fi
+    log "Create empty image"
+    dd if=/dev/zero of=temp.img bs=1 count=1 seek=$DIFFERENCE
+
+    log "Enlarge the downloaded image"
+    cat temp.img >> IMAGE.img
+
+    log "fdisk to enlarge the main partition"
 
     PARTED_OUT=$(parted -s IMAGE.img unit s print)
     ROOT_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${ROOT_PART}"| xargs echo -n \
@@ -55,7 +61,6 @@ if [[ "${OS}" == "ubuntu" ]]; then
 
     echo "ROOT OFFSET: $ROOT_OFFSET"
     echo "IF EDITING THIS SCRIPT THE SPACES MATER FOR FDISK COMMANDS" 
-        #Jetson needs more space
     fdisk IMAGE.img <<EOF
 d
 1
