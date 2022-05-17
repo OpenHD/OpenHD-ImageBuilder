@@ -4,7 +4,7 @@ pushd ${STAGE_WORK_DIR}
 if [[ "${OS}" == "raspbian" ]]; then
 
     log "Create 4Gb empty image"
-    dd if=/dev/zero of=temp.img bs=1 count=1 seek=4G
+    dd if=/dev/zero of=temp.img bs=1 count=1 seek=4096M
 
 
     log "Enlarge the downloaded image by 4Gb"
