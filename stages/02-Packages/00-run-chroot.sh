@@ -41,6 +41,11 @@ if [[ "${OS}" == "ubuntu" ]]; then
     rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
     echo "deb https://repo.download.nvidia.com/jetson/common r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
     echo "deb https://repo.download.nvidia.com/jetson/t210 r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+
+    echo "update gcc and libboost to something usable"
+    sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+    sudo add-apt-repository ppa:mhier/libboost-latest -y
+    sudo add-apt-repository ppa:git-core/ppa -y
     
     #clean up jetson-image
     sudo apt remove ubuntu-desktop
