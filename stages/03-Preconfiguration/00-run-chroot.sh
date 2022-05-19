@@ -33,7 +33,7 @@ fi
 if [[ "${OS}" == "raspbian" ]]; then
     echo "disabling first run script"
     git clone https://github.com/OpenHD/Overlay
-    cd firstrun
+    cd Overlay
     cp cmdline.txt /boot/cmdline.txt
     cp firstrun.sh /boot/firstrun.sh
     cp userconf.txt /boot/userconf.txt
