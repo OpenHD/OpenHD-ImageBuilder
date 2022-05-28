@@ -49,12 +49,13 @@ rm /etc/init.d/dhcpcd
 
 
 #disable unneeded services
-sudo systemctl disable dhcpcd.service
 sudo systemctl disable dnsmasq.service
 sudo systemctl disable syslog.service
 if [[ "${OS}" != "testing" ]] || [[ "${OS}" != "milestone" ]]; then
     echo "disabling journald"
     sudo systemctl disable journald.service
+    sudo systemctl disable dhcpcd.service
+    sudo systemctl disable networking.service
 fi
 sudo systemctl disable triggerhappy.service
 sudo systemctl disable avahi-daemon.service
@@ -64,6 +65,8 @@ sudo systemctl disable anacron.service
 sudo systemctl disable exim4.service
 sudo systemctl mask hostapd.service
 sudo systemctl mask wpa_supplicant.service
+sudo systemctl enable ssh
+
 
 #Disable does not work on PLYMOUTH
 sudo systemctl mask plymouth-start.service
@@ -76,7 +79,7 @@ if [[ "${OS}" != "ubuntu" ]]; then
 fi
 #this service updates runlevel changes. Set desired runlevel prior to this being disabled
 sudo systemctl disable systemd-update-utmp.service
-sudo systemctl disable networking.service
+
 
 sudo rm /etc/init.d/resize2fs_once
 
