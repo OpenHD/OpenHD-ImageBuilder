@@ -25,7 +25,7 @@ if [[ "${OS}" == "raspbian" ]]; then
     apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite
     apt purge raspberrypi-kernel
     apt remove nfs-common
-    PLATFORM_PACKAGES="openhd-linux-pi libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev"
+    PLATFORM_PACKAGES="openhd-linux-pi openhd-qt-pi-bullseye qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev"
 fi
 
 
