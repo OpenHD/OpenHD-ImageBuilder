@@ -25,7 +25,7 @@ if [[ "${OS}" == "raspbian" ]]; then
     apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite
     apt purge raspberrypi-kernel
     apt remove nfs-common
-    PLATFORM_PACKAGES="openhd-linux-pi openhd-qt-pi-bullseye qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev"
+    PLATFORM_PACKAGES="openhd-linux-pi openhd-qt-pi-bullseye qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
 fi
 
 
@@ -73,7 +73,24 @@ apt update --allow-releaseinfo-change || exit 1
 echo "-------------------------Debug-Consti;)------------------------------------------"
 
 mkdir -p /home/consti10/openhd
-echo "-------------------------DONE GETTING FIRST UPDATE-------------------------------"
+
+echo "-------------------------INSTALL QT-PATCHES-------------------------------"
+
+            touch /etc/ld.so.conf.d/qt.conf
+            echo "/opt/Qt5.15.4/lib/" >/etc/ld.so.conf.d/qt.conf
+            sudo ldconfig
+            export PATH="$PATH:/opt/Qt5.15.4/bin/"
+            git clone https://github.com/GStreamer/gst-plugins-good
+            cd gst-plugins-good
+            git checkout 1.18.4
+            meson --prefix /usr build
+            ninja -C build
+            ninja -C build install
+
+
+if [[ "${OS}" == "raspbian" ]]; then
+    echo "OS is raspbian"
+fi
 
 apt install -y apt-transport-https curl
 curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1/cfg/gpg/gpg.0AD501344F75A993.key' | apt-key add -
