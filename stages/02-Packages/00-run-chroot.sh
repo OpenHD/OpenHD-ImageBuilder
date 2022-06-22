@@ -80,13 +80,7 @@ echo "-------------------------INSTALL QT-PATCHES-------------------------------
             echo "/opt/Qt5.15.4/lib/" >/etc/ld.so.conf.d/qt.conf
             sudo ldconfig
             export PATH="$PATH:/opt/Qt5.15.4/bin/"
-            git clone https://github.com/GStreamer/gst-plugins-good
-            cd gst-plugins-good
-            git checkout 1.18.4
-            meson --prefix /usr build
-            ninja -C build
-            ninja -C build install
-
+          
 
 if [[ "${OS}" == "raspbian" ]]; then
     echo "OS is raspbian"
