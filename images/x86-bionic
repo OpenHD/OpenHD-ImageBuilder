@@ -1,6 +1,6 @@
-BASE_IMAGE_URL="https://releases.ubuntu.com/18.04/"
-BASE_IMAGE="ubuntu-18.04.6-desktop-amd64.iso"
-BASE_IMAGE_SHA256="f730be589aa1ba923ebe6eca573fa66d09ba14c4c104da2c329df652d42aff11"
+BASE_IMAGE_URL="https://openhdfpv.org/wp-content/BaseImages/"
+BASE_IMAGE="openhd-x86-ubuntu-18.04-base.img.7z"
+BASE_IMAGE_SHA256="DDD000ADE4A83906C2E81CFE65A009F5C42F9FC06CCC1A97F42EDAF7C86E6BB8"
 OS="ubuntu"
 DISTRO="bionic"
 HAS_CUSTOM_KERNEL=false
