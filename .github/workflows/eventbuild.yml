@@ -16,7 +16,7 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TESTING: [milestone]
-        TARGET: [x86 bionic] # <-- Add targets here!
+        TARGET: [x86-bionic] # <-- Add targets here!
 
     steps:
     - name: Maximize build space
