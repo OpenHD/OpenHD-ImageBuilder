@@ -1,0 +1,64 @@
+name: Image build on event
+
+on:
+  push:
+    branches: [ "x86-ProofOfConcept" ]
+  workflow_dispatch:
+#  schedule:
+#    - cron: '0 2 * * *' # run at 2 AM UTC
+
+jobs:
+  build:
+
+    runs-on: ubuntu-20.04
+    
+    strategy:
+      fail-fast: false # Don't fail all if any of the jobs is failing
+      matrix:
+        TESTING: [milestone]
+        TARGET: [x86 bionic] # <-- Add targets here!
+
+    steps:
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 512
+        swap-size-mb: 1024
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+        overprovision-lvm: 'true'
+    - name: Setup env
+      run: |
+        echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
+        echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+    
+    
+    ### ONLY THIS RELEVANT FOR BUILDING ###
+    - uses: actions/checkout@v2
+    - name: update
+      run: sudo apt-get update
+    - name: dep
+      run: sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support
+    - name: configure
+      run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }} small
+    - name: remove old image to make space
+      run: sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
+    - name: compress
+      run: sudo zip ./deploy/OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.zip ./deploy/*.img
+    - name: remove old image to make space
+      run: sudo rm -Rf -v ./deploy/*img
+    ########################################
+
+
+    - name: Compose release filename
+      # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions
+      run: echo "artifact_name=OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
+        
+    - name: Pack image for ${{ matrix.TARGET }} ${{ matrix.TESTING }}
+      uses: 'actions/upload-artifact@v2'
+      with:
+        name: "${{ env.artifact_name }}"
+        path: |
+          ./deploy/*.zip
+          if-no-files-found: error
