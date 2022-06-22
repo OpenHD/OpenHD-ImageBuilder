@@ -74,14 +74,6 @@ echo "-------------------------Debug-Consti;)-----------------------------------
 
 mkdir -p /home/consti10/openhd
 
-echo "-------------------------INSTALL QT-PATCHES-------------------------------"
-
-            touch /etc/ld.so.conf.d/qt.conf
-            echo "/opt/Qt5.15.4/lib/" >/etc/ld.so.conf.d/qt.conf
-            sudo ldconfig
-            export PATH="$PATH:/opt/Qt5.15.4/bin/"
-          
-
 if [[ "${OS}" == "raspbian" ]]; then
     echo "OS is raspbian"
 fi
@@ -124,6 +116,13 @@ ${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
 ${GNUPLOT} || exit 1
 
+echo "-------------------------INSTALL QT-PATCHES-------------------------------"
+
+            touch /etc/ld.so.conf.d/qt.conf
+            echo "/opt/Qt5.15.4/lib/" >/etc/ld.so.conf.d/qt.conf
+            sudo ldconfig
+            export PATH="$PATH:/opt/Qt5.15.4/bin/"
+          
 
 apt -yq purge ${PURGE} || exit 1
 apt -yq clean || exit 1
