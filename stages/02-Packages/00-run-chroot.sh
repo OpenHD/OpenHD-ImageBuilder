@@ -57,7 +57,7 @@ if [[ "${OS}" == "ubuntu" ]]; then
     sudo apt remove --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
     sudo apt autoremove
     
-    PLATFORM_PACKAGES="openhd-linux-jetson"
+    PLATFORM_PACKAGES="openhd-linux-jetson openhd-qt-jetson-nano-bionic qopenhd"
 
 fi
 
