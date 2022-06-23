@@ -25,7 +25,7 @@ if [[ "${OS}" == "raspbian" ]]; then
     apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite
     apt purge raspberrypi-kernel
     apt remove nfs-common
-    PLATFORM_PACKAGES="openhd-linux-pi openhd-qt-pi-bullseye qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
+    PLATFORM_PACKAGES="openhd-linux-pi gst-plugins-good openhd-qt-pi-bullseye qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
 fi
 
 
@@ -57,7 +57,7 @@ if [[ "${OS}" == "ubuntu" ]]; then
     sudo apt remove --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
     sudo apt autoremove
     
-    PLATFORM_PACKAGES="openhd-linux-jetson openhd-qt-jetson-nano-bionic qopenhd"
+    PLATFORM_PACKAGES="openhd-linux-jetson gst-plugins-good openhd-qt-jetson-nano-bionic qopenhd"
 
 fi
 
