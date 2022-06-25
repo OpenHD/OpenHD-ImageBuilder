@@ -13,3 +13,5 @@ do
 done
 
 losetup -D
+
+# Remove mounted folders, that where used for building in chroot

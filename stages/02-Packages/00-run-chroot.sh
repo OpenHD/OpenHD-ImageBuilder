@@ -16,6 +16,7 @@ fi
 
 if [[ "${OS}" == "raspbian" ]]; then
     echo "OS is raspbian"
+    chmod -p /home/openhd
     apt-mark hold firmware-atheros || exit 1
     apt purge firmware-atheros || exit 1
     apt -yq install firmware-misc-nonfree || exit 1
@@ -117,12 +118,13 @@ ${PLATFORM_PACKAGES} \
 ${GNUPLOT} || exit 1
 
 echo "-------------------------INSTALL QT-PATCHES-------------------------------"
-
+#linking QT and it's libraries so the system can detect them
             touch /etc/ld.so.conf.d/qt.conf
             echo "/opt/Qt5.15.4/lib/" >/etc/ld.so.conf.d/qt.conf
             sudo ldconfig
             export PATH="$PATH:/opt/Qt5.15.4/bin/"
-          
+            cd /usr/bin
+            sudo ln -s /opt/Qt5.15.4/bin/qmake qmake
 
 apt -yq purge ${PURGE} || exit 1
 apt -yq clean || exit 1
