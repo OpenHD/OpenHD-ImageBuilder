@@ -26,7 +26,7 @@ line
 echo ""
 if [[ "${IMAGE_TYPE}" == "pi-legacy-bullseye" ]]; then
     IMAGE_TYPE="pi-bullseye"
-    legacy= true
+    LEGACY= true
 fi
 
 if [[ "${IMAGE_TYPE}" == "" ]]; then
@@ -175,6 +175,7 @@ export PREV_WORK_DIR
 export ROOTFS_DIR
 export PREV_ROOTFS_DIR
 export IMG_SUFFIX
+export LEGACY
 
 # shellcheck source=scripts/common.sh
 source "${SCRIPT_DIR}/common.sh"

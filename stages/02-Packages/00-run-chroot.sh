@@ -14,11 +14,11 @@ if [ "${APT_CACHER_NG_ENABLED}" == "true" ]; then
     echo "Acquire::http::Proxy \"${APT_CACHER_NG_URL}/\";" >> /etc/apt/apt.conf.d/10cache
 fi
 
-if [[ "${legacy}" == true ]]; then
+if [[ "${LEGACY}" == true ]]; then
     echo "This is a TEST"
     break
 else
-    echo $legacy
+    echo $LEGACY
     break
 fi
 
