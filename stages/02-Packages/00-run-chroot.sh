@@ -16,16 +16,16 @@ fi
 
 if [[ "${LEGACY}" == true ]]; then
     echo "This is a TEST"
-    break
+    exit
 else
     echo $LEGACY
-    break
+    exit
 fi
 
 if [[ "${OS}" == "raspbian" ]]; then
     echo "OS is raspbian"
     mkdir -p /home/openhd
-    chmod openhd:openhd /home/openhd
+    chown openhd:openhd /home/openhd
     apt-mark hold firmware-atheros || exit 1
     apt purge firmware-atheros || exit 1
     apt -yq install firmware-misc-nonfree || exit 1
