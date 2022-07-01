@@ -14,13 +14,13 @@ if [ "${APT_CACHER_NG_ENABLED}" == "true" ]; then
     echo "Acquire::http::Proxy \"${APT_CACHER_NG_URL}/\";" >> /etc/apt/apt.conf.d/10cache
 fi
 
-if [[ "${LEGACY}" == true ]]; then
-    echo "This is a TEST"
-    exit
-else
-    echo $LEGACY
-    exit
+
+if [[ "${LEGACY}" == "true" ]]; then
+    echo "Building legacy Version"
+    echo "Disabling h265 Hardware Decoding"
+    PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good openhd-qt-pi-bullseye-legacy qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
 fi
+
 
 if [[ "${OS}" == "raspbian" ]]; then
     echo "OS is raspbian"
@@ -35,7 +35,9 @@ if [[ "${OS}" == "raspbian" ]]; then
     apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite
     apt purge raspberrypi-kernel
     apt remove nfs-common
-    PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good openhd-qt-pi-bullseye qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
+    if [[ "${LEGACY}" =! "true" ]]; then
+    PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
+    fi
 fi
 
 
