@@ -24,10 +24,7 @@ n=" ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚�
 echo ""
 line
 echo ""
-if [[ "${IMAGE_TYPE}" == "pi-legacy-bullseye" ]]; then
-    IMAGE_TYPE="pi-bullseye"
-    LEGACY= "true"
-fi
+
 
 if [[ "${IMAGE_TYPE}" == "" ]]; then
     echo "Usage: ./build.sh pi-bullseye"
@@ -142,6 +139,7 @@ export BASE_DIR
 
 export BASE_IMAGE_SHA256
 
+export LEGACY
 export BASE_IMAGE_Mirror
 export HAS_CUSTOM_KERNEL
 export BIT
@@ -175,7 +173,6 @@ export PREV_WORK_DIR
 export ROOTFS_DIR
 export PREV_ROOTFS_DIR
 export IMG_SUFFIX
-export LEGACY
 
 # shellcheck source=scripts/common.sh
 source "${SCRIPT_DIR}/common.sh"
