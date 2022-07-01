@@ -17,6 +17,9 @@ fi
 if [[ "${legacy}" == true ]]; then
     echo "This is a TEST"
     break
+else
+    echo $legacy
+    break
 fi
 
 if [[ "${OS}" == "raspbian" ]]; then
