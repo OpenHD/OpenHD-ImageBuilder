@@ -24,7 +24,9 @@ n=" ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚�
 echo ""
 line
 echo ""
-
+if [[ "${IMAGE_TYPE}" == "pi-legacy-bullseye" ]]; then
+    IMAGE_TYPE="pi-bullseye"
+    legacy= true
 
 if [[ "${IMAGE_TYPE}" == "" ]]; then
     echo "Usage: ./build.sh pi-bullseye"

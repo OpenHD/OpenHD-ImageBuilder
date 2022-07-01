@@ -14,6 +14,11 @@ if [ "${APT_CACHER_NG_ENABLED}" == "true" ]; then
     echo "Acquire::http::Proxy \"${APT_CACHER_NG_URL}/\";" >> /etc/apt/apt.conf.d/10cache
 fi
 
+if [[ "${legacy}" == true ]]; then
+    echo "This is a TEST"
+    break
+fi
+
 if [[ "${OS}" == "raspbian" ]]; then
     echo "OS is raspbian"
     mkdir -p /home/openhd
