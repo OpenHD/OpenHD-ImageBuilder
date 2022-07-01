@@ -3,14 +3,15 @@ pushd ${STAGE_WORK_DIR}
 
 if [[ "${OS}" == "raspbian" ]]; then
 
-    log "Calculate difference between original Image and Wanted size (7GB)"
+    #Makes the images flashable with raspberry pi imager
+    log "Calculate difference between original Image and Wanted size (7GB)" 
     WANTEDSIZE="7168000000"
     FILESIZE=$(stat -c%s "IMAGE.img")
     DIFFERENCE=$(expr $WANTEDSIZE - $FILESIZE)
     DIFFERENCE=$(expr $DIFFERENCE - 1)
 
 
-    log "Create empty image"
+    log "Create empty image" #this will be attached to the base image to increase the size of it
     dd if=/dev/zero of=temp.img bs=1 count=1 seek=$DIFFERENCE
 
 
@@ -22,7 +23,7 @@ if [[ "${OS}" == "raspbian" ]]; then
     PARTED_OUT=$(parted -s IMAGE.img unit s print)
     ROOT_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${ROOT_PART}"| xargs echo -n \
         | cut -d" " -f 2 | tr -d s)
-
+    
     echo "ROOT OFFSET: $ROOT_OFFSET"
     echo "IF EDITING THIS SCRIPT THE SPACES MATER FOR FDISK COMMANDS"
 
