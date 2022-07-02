@@ -104,11 +104,15 @@ elif [[ "${TESTING}" == "milestone" ]]; then
     cd /opt
     apt install git
     git clone --recursive https://github.com/OpenHD/Open.HD
+    cd Open.HD
     git checkout 2.1-milestones
+    cd /opt
     git clone --recursive https://github.com/OpenHD/QOpenHD
+    cd QOpenHD
     git checkout 2.1-milestones
-    echo "installing build dependencies"
-    bash /opt/QOpenHD/install_dep.sh 
+    cd /opt
+    #echo "installing build dependencies"
+    #bash /opt/QOpenHD/install_dep.sh 
     bash /opt/Open.HD/install_dep.sh 
     rpi-update
     ls -a /opt/
