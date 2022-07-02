@@ -14,7 +14,7 @@ if [ "${APT_CACHER_NG_ENABLED}" == "true" ]; then
     echo "Acquire::http::Proxy \"${APT_CACHER_NG_URL}/\";" >> /etc/apt/apt.conf.d/10cache
 fi
 
-if [[ "${OS}" == "raspbian" ]]; then
+if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
     echo "OS is raspbian"
     echo ${LEGACY}
     mkdir -p /home/openhd
@@ -28,8 +28,8 @@ if [[ "${OS}" == "raspbian" ]]; then
     apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite
     apt purge raspberrypi-kernel
     apt remove nfs-common
-    if [[ "${LEGACY}" != "true" ]]; then
-    PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
+    if [[ "${OS}" == "raspbian" ]]; then
+    PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good openhd-qt-pi-bullseye qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
     else
     echo "Building legacy Version"
     echo "Disabling h265 Hardware Decoding"
