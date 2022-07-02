@@ -114,8 +114,8 @@ elif [[ "${TESTING}" == "milestone" ]]; then
     echo "installing build dependencies"
     bash /opt/QOpenHD/install_dep.sh 
     bash /opt/Open.HD/install_dep.sh 
-    git clone https://github.com/raspberrypi/firmware/
-    cd firmware
+    git clone OpenHD/rpi-firmware
+    cd rpi-firmware
     cp -r opt/vc /opt/vc
     cd /opt
     ls -a
