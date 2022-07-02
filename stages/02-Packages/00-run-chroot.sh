@@ -103,6 +103,7 @@ elif [[ "${TESTING}" == "milestone" ]]; then
     echo "cloning Qopenhd and Openhd github repositories"
     cd /opt
     apt install git
+    rpi-update
     git clone --recursive https://github.com/OpenHD/Open.HD
     git checkout 2.1-milestones
     git clone --recursive https://github.com/OpenHD/QOpenHD
