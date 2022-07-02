@@ -103,7 +103,6 @@ elif [[ "${TESTING}" == "milestone" ]]; then
     echo "cloning Qopenhd and Openhd github repositories"
     cd /opt
     apt install git
-    rpi-update
     git clone --recursive https://github.com/OpenHD/Open.HD
     git checkout 2.1-milestones
     git clone --recursive https://github.com/OpenHD/QOpenHD
@@ -111,6 +110,9 @@ elif [[ "${TESTING}" == "milestone" ]]; then
     echo "installing build dependencies"
     bash /opt/QOpenHD/install_dep.sh 
     bash /opt/Open.HD/install_dep.sh 
+    rpi-update
+    ls -a /opt/
+
 
 else
     echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1.list
