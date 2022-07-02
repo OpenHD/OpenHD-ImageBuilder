@@ -112,6 +112,7 @@ elif [[ "${TESTING}" == "milestone" ]]; then
     bash /opt/Open.HD/install_dep.sh 
     rpi-update
     ls -a /opt/
+    uname -a
 
 
 else
