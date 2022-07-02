@@ -119,6 +119,9 @@ elif [[ "${TESTING}" == "milestone" ]]; then
     cd rpi-firmware
     cp -r opt/vc /opt/vc
     cd /opt
+    sudo ln -s /opt/vc/lib/libbrcmGLESv2.so /usr/lib/arm-linux-gnueabihf/libbrcmGLESv2.so
+    sudo ln -s /opt/vc/lib/libbrcmEGL.so /usr/lib/arm-linux-gnueabihf/libbrcmEGL.so 
+    echo "linked broadcom EGL libraries"
     ls -a
 
 
