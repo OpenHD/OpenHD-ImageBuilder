@@ -1,7 +1,7 @@
 # Do this to the WORK folder of this stage
 pushd ${STAGE_WORK_DIR}
 
-if [[ "${OS}" == "raspbian" ]]; then
+if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]] ; then
 
     #Makes the images flashable with raspberry pi imager
     log "Calculate difference between original Image and Wanted size (7GB)" 
