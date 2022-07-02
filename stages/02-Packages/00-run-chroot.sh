@@ -59,7 +59,8 @@ if [[ "${OS}" == "ubuntu" ]]; then
     sudo add-apt-repository ppa:git-core/ppa -y
     
     #clean up jetson-image
-    sudo apt remove ubuntu-desktop
+    sudo apt remove ubuntu-desktop gdm3
+    sudo apt-get purge -y gnome-*
     sudo apt remove libreoffice-writer chromium-browser chromium* yelp unity thunderbird rhythmbox nautilus gnome-software
     sudo apt remove ubuntu-artwork ubuntu-sounds ubuntu-wallpapers ubuntu-wallpapers-bionic
     sudo apt remove vlc-data lightdm
@@ -114,7 +115,7 @@ elif [[ "${TESTING}" == "milestone" ]]; then
     echo "installing build dependencies"
     bash /opt/QOpenHD/install_dep.sh 
     bash /opt/Open.HD/install_dep.sh 
-    git clone OpenHD/rpi-firmware
+    git clone https://github.com/OpenHD/rpi-firmware
     cd rpi-firmware
     cp -r opt/vc /opt/vc
     cd /opt
