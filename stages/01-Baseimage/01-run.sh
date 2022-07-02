@@ -40,14 +40,21 @@ EOF
 fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
-
+    if [[ "${TESTING}" == "milestone" ]]; then
+    log "Calculate difference between original Image and Wanted size (~25GB)"
+        WANTEDSIZE="25872000000"
+        FILESIZE=$(stat -c%s "IMAGE.img")
+        DIFFERENCE=$(expr $WANTEDSIZE - $FILESIZE)
+        DIFFERENCE=$(expr $DIFFERENCE - 1)
+    log $DIFFERENCE
+    else
     log "Calculate difference between original Image and Wanted size (~16GB)"
         WANTEDSIZE="15872000000"
         FILESIZE=$(stat -c%s "IMAGE.img")
         DIFFERENCE=$(expr $WANTEDSIZE - $FILESIZE)
         DIFFERENCE=$(expr $DIFFERENCE - 1)
     log $DIFFERENCE
-
+    fi
     log "Create empty image"
     dd if=/dev/zero of=temp.img bs=1 count=1 seek=$DIFFERENCE
 
