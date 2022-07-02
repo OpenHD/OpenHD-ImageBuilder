@@ -30,7 +30,7 @@ if [[ "${HAVE_CONF_PART}" == "false" ]] && [[ "${HAVE_BOOT_PART}" == "true" ]]; 
 fi
 
 
-if [[ "${OS}" == "raspbian" ]]; then
+if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]] ; then
     echo "disabling first run script"
     git clone https://github.com/OpenHD/Overlay
     cd Overlay
