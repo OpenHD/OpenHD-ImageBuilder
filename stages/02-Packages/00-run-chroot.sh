@@ -16,7 +16,6 @@ fi
 
 if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
     echo "OS is raspbian"
-    echo ${LEGACY}
     mkdir -p /home/openhd
     chown openhd:openhd /home/openhd
     apt-mark hold firmware-atheros || exit 1
@@ -29,11 +28,15 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
     apt purge raspberrypi-kernel
     apt remove nfs-common
     if [[ "${OS}" == "raspbian" ]]; then
+    echo "Enabling h265 Hardware Decoding"
     PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good openhd-qt-pi-bullseye qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
     else
     echo "Building legacy Version"
     echo "Disabling h265 Hardware Decoding"
     PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good openhd-qt-pi-bullseye-legacy qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
+    OS="raspbian"
+    echo "after this we'll do everything like on normal"
+    echo ${OS}
     fi
 fi
 
