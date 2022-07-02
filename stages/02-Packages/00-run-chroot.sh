@@ -17,7 +17,6 @@ fi
 if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
     echo "OS is raspbian"
     mkdir -p /home/openhd
-    chown openhd:openhd /home/openhd
     apt-mark hold firmware-atheros || exit 1
     apt purge firmware-atheros || exit 1
     apt -yq install firmware-misc-nonfree || exit 1
@@ -103,6 +102,7 @@ elif [[ "${TESTING}" == "milestone" ]]; then
     echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1-alpha/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1-testing.list
     echo "cloning Qopenhd and Openhd github repositories"
     cd /opt
+    apt install git
     git clone --recursive https://github.com/OpenHD/Open.HD
     git checkout 2.1-milestones
     git clone --recursive https://github.com/OpenHD/QOpenHD
