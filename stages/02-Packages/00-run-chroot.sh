@@ -111,10 +111,10 @@ elif [[ "${TESTING}" == "milestone" ]]; then
     cd QOpenHD
     git checkout 2.1-milestones
     cd /opt
-    #echo "installing build dependencies"
-    #bash /opt/QOpenHD/install_dep.sh 
+    echo "installing build dependencies"
+    bash /opt/QOpenHD/install_dep.sh 
     bash /opt/Open.HD/install_dep.sh 
-    rpi-update
+    sudo SKIP_KERNEL=1 rpi-update
     ls -a /opt/
     uname -a
 
