@@ -60,6 +60,8 @@ jobs:
         sudo rm -rvf deploy*
         sudo rm -rvf work*
         ls -a
+        sudo apt purge -y dotnet-sdk-6.0 temurin-17-jdk temurin-11-jdk adoptopenjdk-11-hotspot libgl1-mesa-dri google-cloud-sdk hhvm google-chrome-stable firefox dotnet-sdk-5.0 mongodb-mongosh qemu-user-static
+        sudo apt autoremove -y
         sudo df -h
     ########################################
 
