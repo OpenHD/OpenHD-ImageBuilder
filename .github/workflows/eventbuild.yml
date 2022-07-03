@@ -47,7 +47,7 @@ jobs:
         ls -a
         sudo mv ./deploy/*.img ./image.img
         sudo df -h
-        sudo bash clean.sh
+        sudo bash clean-fail.sh
         sudo rm -rvf *
         ls -a
         sudo df -h
