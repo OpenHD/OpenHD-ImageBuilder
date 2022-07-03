@@ -55,7 +55,7 @@ jobs:
         ls -a
         sudo mv ./deploy/*.img ./image.img
         sudo df -h
-        sudo find . \! -name 'image.img' -delete
+        sudo rm -rf *
         sudo df -h
     ########################################
 
