@@ -54,9 +54,8 @@ jobs:
       run: |
         ls -a
         sudo mv ./deploy/*.img ./image.img
-        sudo zip ./deploy/OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.zip ./*.img
         sudo df -h
-        sudo rm -Rf -v !("image.img")
+        sudo find . \! -name 'image.img' -delete
         sudo df -h
     ########################################
 
