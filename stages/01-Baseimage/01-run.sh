@@ -41,8 +41,8 @@ fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
     if [[ "${TESTING}" == "milestone" ]]; then
-    log "Calculate difference between original Image and Wanted size (~19GB)"
-        WANTEDSIZE="19872000000"
+    log "Calculate difference between original Image and Wanted size (~18GB)"
+        WANTEDSIZE="17872000000"
         FILESIZE=$(stat -c%s "IMAGE.img")
         DIFFERENCE=$(expr $WANTEDSIZE - $FILESIZE)
         DIFFERENCE=$(expr $DIFFERENCE - 1)
