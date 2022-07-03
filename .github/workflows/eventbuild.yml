@@ -21,7 +21,7 @@ jobs:
         TARGET: [pi-legacy-bullseye, pi-bullseye, jetson-nano-2gb-bionic, jetson-nano-4gb-bionic] # <-- Add targets here!
 
     steps:
-     - name: Maximize build space
+    - name: Maximize build space
       uses: easimon/maximize-build-space@master
       with:
         root-reserve-mb: 512
