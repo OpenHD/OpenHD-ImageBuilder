@@ -52,9 +52,12 @@ jobs:
         sudo rm -Rf -v ./work-pi-legacy-bullseye/03-Preconfiguration/*
     - name: compress
       run: |
+        ls -a
         sudo mv ./deploy/*.img ./image.img
         sudo zip ./deploy/OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.zip ./*.img
+        sudo df -h
         sudo rm -Rf -v !("image.img")
+        sudo df -h
     ########################################
 
 
