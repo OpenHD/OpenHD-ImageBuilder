@@ -3,7 +3,6 @@
 # Do not use log here, it will end up in the image
 
 #!/bin/bash
-echo "is it even running ?"
 # create a use account that should be the same on all platforms
 useradd openhd
 echo "openhd:openhd" | chpasswd

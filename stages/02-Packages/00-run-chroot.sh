@@ -67,7 +67,7 @@ if [[ "${OS}" == "ubuntu" ]]; then
     sudo apt remove unity-settings-daemon packagekit wamerican mysql-common libgdm1
     sudo apt remove ubuntu-release-upgrader-gtk ubuntu-web-launchers
     sudo apt remove --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
-    sudo apt autoremove
+    sudo apt autoremove -y
     
     PLATFORM_PACKAGES="openhd-linux-jetson gstreamer1.0-qt5 openhd-qt-jetson-nano-bionic qopenhd "
 
