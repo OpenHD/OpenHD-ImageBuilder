@@ -57,6 +57,7 @@ jobs:
         sudo df -h
         sudo bash clean-fail.sh
         sudo rm -rvf *
+        sudo dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -n
         ls -a
         sudo df -h
     ########################################
