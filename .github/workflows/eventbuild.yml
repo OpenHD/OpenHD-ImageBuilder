@@ -29,7 +29,6 @@ jobs:
         remove-dotnet: 'true'
         remove-android: 'true'
         remove-haskell: 'true'
-        overprovision-lvm: 'true'
     - name: Setup env
       run: |
         echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
@@ -50,17 +49,16 @@ jobs:
         sudo rm -Rf -v ./work-jetson-nano-4gb-bionic/03-Preconfiguration/*
         sudo rm -Rf -v ./work-pi-bullseye/03-Preconfiguration/*
         sudo rm -Rf -v ./work-pi-legacy-bullseye/03-Preconfiguration/*
-    - name: compress
+    - name: magic
       run: |
         ls -a
         sudo mv ./deploy/*.img ./image.img
         sudo df -h
-        sudo bash reset.sh
-        
+        sudo bash reset.sh pi-bullseye
+        sudo bash reset.sh jetson-nano-2gb
+        sudo bash reset.sh jetson-nano-4gb
         sudo rm -rvf deploy*
         sudo rm -rvf work*
-        sudo rm -rvf /tmp
-
         ls -a
         sudo df -h
     ########################################
