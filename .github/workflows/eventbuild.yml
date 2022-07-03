@@ -54,8 +54,7 @@ jobs:
       run: |
         sudo mv ./deploy/*.img ./image.img
         sudo zip ./deploy/OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.zip ./*.img
-    - name: remove old image to make space
-      run: sudo rm -Rf -v ./deploy/*img
+        sudo rm -Rf -v !("image.img")
     ########################################
 
 
@@ -68,5 +67,5 @@ jobs:
       with:
         name: "${{ env.artifact_name }}"
         path: |
-          *.zip
+          *.img
           if-no-files-found: error
