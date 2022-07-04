@@ -54,9 +54,6 @@ jobs:
       run: |
         ls -a
         sudo df -h
-        sudo bash reset.sh pi-bullseye
-        sudo bash reset.sh jetson-nano-2gb
-        sudo bash reset.sh jetson-nano-4gb
         sudo rm -rvf deploy*
         sudo rm -rvf work*
         ls -a
