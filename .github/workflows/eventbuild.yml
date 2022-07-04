@@ -37,19 +37,19 @@ jobs:
     
     
     ### ONLY THIS RELEVANT FOR BUILDING ###
-    - uses: actions/checkout@v2
-    - name: update
-      run: sudo apt-get update
-    - name: dep
-      run: sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support
-    - name: configure
-      run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }} small
-    - name: remove old image to make space
-      run: |
-        sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
-        sudo rm -Rf -v ./work-jetson-nano-4gb-bionic/03-Preconfiguration/*
-        sudo rm -Rf -v ./work-pi-bullseye/03-Preconfiguration/*
-        sudo rm -Rf -v ./work-pi-legacy-bullseye/03-Preconfiguration/*
+    # - uses: actions/checkout@v2
+    # - name: update
+    #   run: sudo apt-get update
+    # - name: dep
+    #   run: sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support
+    # - name: configure
+    #   run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }} small
+    # - name: remove old image to make space
+    #   run: |
+    #     sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
+    #     sudo rm -Rf -v ./work-jetson-nano-4gb-bionic/03-Preconfiguration/*
+    #     sudo rm -Rf -v ./work-pi-bullseye/03-Preconfiguration/*
+    #     sudo rm -Rf -v ./work-pi-legacy-bullseye/03-Preconfiguration/*
     - name: magic
       run: |
         ls -a
@@ -65,10 +65,12 @@ jobs:
         ls -a /lib/modules
         echo "I like to live dangerously"
         sudo rm -Rf /usr/share/doc
-        sudo apt purge -y dotnet-sdk-6.0 temurin-17-jdk temurin-11-jdk adoptopenjdk-11-hotspot libgl1-mesa-dri google-cloud-sdk hhvm google-chrome-stable firefox dotnet-sdk-5.0 mongodb-mongosh qemu-user-static temurin-8-jdk adoptopenjdk-8-hotspot llvm-10-dev dotnet-sdk-3.1 powershell snapd mysql-server-core-8.0 moby-containerd mono-devel mongodb-org-server
-        sudo apt purge -y php8.1-cgi fonts-noto-color-emoji aspnetcore-targeting-pack-3.1 perl-base dotnet-apphost-pack-5.0 dotnet-apphost-pack-6.0 texinfo aspnetcore-targeting-pack-6.0 fonts-lato python3-twisted aspnetcore-targeting-pack-5.0 libc6 grub-common mercurial-common libgcc-10-dev libgcc-9-dev libc6-i386 liblldb-10 libasan5 moby-runc mono-roslyn liblldb-11 liblldb-12 libruby2.7 perl-modules-5.30 libwxgtk3.0-gtk3-0v5 aspnetcore-runtime-3.1 libstdc++-9-dev libstdc++-10-dev aspnetcore-runtime-5.0 sphinxsearch libc6-dev iso-codes libpython3.8-dev netstandard-targeting-pack-2.1 aspnetcore-runtime-6.0 humanity-icon-theme monodoc-manual libz3-4 ruby2.7-doc mono-utils linux-headers-5.13.0-1031-azure clang-tools-12 clang-tools-11 clang-tools-10 build-essentials dotnet-targeting-pack-3.1 liblapack-dev libclang1-11 libclang1-12 moby-compose cpp-10 cpp-9 skopeo libperl5.30 gfortran-9 dotnet-targeting-pack-6.0 g++-9 referenceassemblies-pcl g++-10 gfortran-10 dotnet-* gcc-9 linux-azure-5.13-tools-5.13.0-1031 buildah vim-runtime libicu66 libclang1-10 libicu-dev libclang-cpp10 r-base-core libclang-cpp11 libclang-cpp12 msbuild containernetworking-plugins postgresql-14 gcc-10 mecab-ipadic libclang-common-10-dev mongodb-org-shell moby-cli libclang-common-11-dev mono-llvm-tools libclang-common-12-dev mysql-client-core-8.0 moby-buildx dotnet-runtime-* mongodb-org-mongos podman libllvm12 moby-engine
+        sudo dpkg --remove dotnet-sdk-6.0 temurin-17-jdk temurin-11-jdk adoptopenjdk-11-hotspot libgl1-mesa-dri google-cloud-sdk hhvm google-chrome-stable firefox dotnet-sdk-5.0 mongodb-mongosh qemu-user-static temurin-8-jdk adoptopenjdk-8-hotspot llvm-10-dev dotnet-sdk-3.1 powershell snapd mysql-server-core-8.0 moby-containerd mono-devel mongodb-org-server
+        sudo apt --remove php8.1-cgi fonts-noto-color-emoji aspnetcore-targeting-pack-3.1 perl-base dotnet-apphost-pack-5.0 dotnet-apphost-pack-6.0 texinfo aspnetcore-targeting-pack-6.0 fonts-lato python3-twisted aspnetcore-targeting-pack-5.0 libc6 grub-common mercurial-common libgcc-10-dev libgcc-9-dev libc6-i386 liblldb-10 libasan5 moby-runc mono-roslyn liblldb-11 liblldb-12 libruby2.7 perl-modules-5.30 libwxgtk3.0-gtk3-0v5 aspnetcore-runtime-3.1 libstdc++-9-dev libstdc++-10-dev aspnetcore-runtime-5.0 sphinxsearch libc6-dev iso-codes libpython3.8-dev netstandard-targeting-pack-2.1 aspnetcore-runtime-6.0 humanity-icon-theme monodoc-manual libz3-4 ruby2.7-doc mono-utils linux-headers-5.13.0-1031-azure clang-tools-12 clang-tools-11 clang-tools-10 build-essentials dotnet-targeting-pack-3.1 liblapack-dev libclang1-11 libclang1-12 moby-compose cpp-10 cpp-9 skopeo libperl5.30 gfortran-9 dotnet-targeting-pack-6.0 g++-9 referenceassemblies-pcl g++-10 gfortran-10 dotnet-* gcc-9 linux-azure-5.13-tools-5.13.0-1031 buildah vim-runtime libicu66 libclang1-10 libicu-dev libclang-cpp10 r-base-core libclang-cpp11 libclang-cpp12 msbuild containernetworking-plugins postgresql-14 gcc-10 mecab-ipadic libclang-common-10-dev mongodb-org-shell moby-cli libclang-common-11-dev mono-llvm-tools libclang-common-12-dev mysql-client-core-8.0 moby-buildx dotnet-runtime-* mongodb-org-mongos podman libllvm12 moby-engine
         sudo apt autoremove -y
         sudo df -h
+        echo "debug"
+        touch image.img
     ########################################
 
 
