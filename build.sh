@@ -62,6 +62,9 @@ run_stage(){
     mkdir -p "${STAGE_WORK_DIR}"
 
     # Check wether to skip or not
+    echo "-------------------------------------------------------"
+    echo "--------------check-------------size-------------------"
+    df -h
     if [ ! -f "${STAGE_WORK_DIR}/SKIP" ]; then
         # mount the image for this stage
         if [ ! -f "${STAGE_WORK_DIR}/SKIP_IMAGE" ]; then
