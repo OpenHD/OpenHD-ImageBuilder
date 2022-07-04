@@ -54,7 +54,7 @@ jobs:
       run: |
         ls -a
         sudo df -h
-        sudo mv ./deploy/*.img ./image.img
+        sudo mv ./deploy/*.img ./OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.img
         echo "moved image"
         sudo rm -rvf deploy*
         sudo rm -rvf work*
