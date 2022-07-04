@@ -60,7 +60,7 @@ jobs:
         sudo rm -rvf deploy*
         sudo rm -rvf work*
         ls -a
-        sudo apt purge -y dotnet-sdk-6.0 temurin-17-jdk temurin-11-jdk adoptopenjdk-11-hotspot libgl1-mesa-dri google-cloud-sdk hhvm google-chrome-stable firefox dotnet-sdk-5.0 mongodb-mongosh qemu-user-static
+        sudo apt purge -y dotnet-sdk-6.0 temurin-17-jdk temurin-11-jdk adoptopenjdk-11-hotspot libgl1-mesa-dri google-cloud-sdk hhvm google-chrome-stable firefox dotnet-sdk-5.0 mongodb-mongosh qemu-user-static temurin-8-jdk adoptopenjdk-8-hotspot llvm-10-dev dotnet-sdk-3.1 powershell snapd mysql-server-core-8.0 moby-containerd mono-devel mongodb-org-server
         sudo apt autoremove -y
         sudo df -h
     ########################################
