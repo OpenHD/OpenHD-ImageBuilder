@@ -53,7 +53,6 @@ jobs:
     - name: magic
       run: |
         ls -a
-    # sudo mv ./deploy/*.img ./image.img
         sudo df -h
         sudo bash reset.sh pi-bullseye
         sudo bash reset.sh jetson-nano-2gb
