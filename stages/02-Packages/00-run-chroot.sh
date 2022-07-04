@@ -179,3 +179,7 @@ export OPENHD_VERSION=$(dpkg -s openhd | grep "^Version" | awk '{ print $2 }')
 
 echo ${OPENHD_VERSION} > /openhd_version.txt
 echo ${OPENHD_VERSION} > /boot/openhd_version.txt
+
+echo "-------------------------------------------------------------"
+echo "--------------------DEBUG------------------------------------"
+df -h
