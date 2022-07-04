@@ -65,7 +65,7 @@ jobs:
         sudo rm -Rf /home/linuxbrew
         sudo rm -Rf /home/runner-admin
         df -h
-        sudo du -d 1 .
+        sudo du -d 1 /
         echo "step 0"
         sudo apt remove -y dotnet* temurin-17-jdk temurin-11-jdk adoptopenjdk-11-hotspot libgl1-mesa-dri google-cloud-sdk hhvm google-chrome-stable firefox mongodb-mongosh qemu-user-static temurin-8-jdk adoptopenjdk-8-hotspot llvm-10-dev powershell snapd mysql-server-core-8.0 moby-containerd mono-devel mongodb-org-server
         echo "step 1"
@@ -79,10 +79,6 @@ jobs:
         sudo apt remove -y sphinxsearch libc6-dev iso-codes libpython3.8-dev netstandard-targeting-pack-2.1 aspnetcore-runtime-6.0 humanity-icon-theme monodoc-manual libz3-4 ruby2.7-doc mono-utils linux-headers-5.13.0-1031-azure clang-tools-12 clang-tools-11 clang-tools-10 
         echo "step 4"
         df -h
-        sudo apt remove -y liblapack-dev libclang1-11 libclang1-12 moby-compose cpp-10 cpp-9 skopeo referenceassemblies-pcl linux-azure-5.13-tools-5.13.0-1031 buildah vim-runtime libicu66 libclang1-10 libclang-cpp10 r-base-core libclang-cpp11 
-        sudo "setp 5"
-        df -h
-        sudo apt remove -y libclang-cpp12 msbuild containernetworking-plugins postgresql-14 gcc-10 mecab-ipadic libclang-common-10-dev mongodb-org-shell moby-cli libclang-common-11-dev mono-llvm-tools libclang-common-12-dev mysql-client-core-8.0 moby-buildx  mongodb-org-mongos podman libllvm12 moby-engine
         sudo apt autoremove -y
         sudo df -h
         echo "debug"
