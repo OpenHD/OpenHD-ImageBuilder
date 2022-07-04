@@ -61,10 +61,11 @@ jobs:
         ls -a /lib/modules
         echo "I like to live dangerously"
         sudo rm -Rf /usr/share/doc
+        du -d 1 /
         echo "step 0"
         sudo apt remove -y dotnet* temurin-17-jdk temurin-11-jdk adoptopenjdk-11-hotspot libgl1-mesa-dri google-cloud-sdk hhvm google-chrome-stable firefox mongodb-mongosh qemu-user-static temurin-8-jdk adoptopenjdk-8-hotspot llvm-10-dev powershell snapd mysql-server-core-8.0 moby-containerd mono-devel mongodb-org-server
         echo "step 1"
-        sudo apt remove -y php8.1-cgi fonts-noto-color-emoji aspnetcore-targeting-pack-3.1 aspnetcore-targeting-pack-6.0 fonts-lato python3-twisted aspnetcore-targeting-pack-5.0 libc6 libgcc-10-dev
+        sudo apt remove -y php8.1-cgi fonts-noto-color-emoji aspnetcore-targeting-pack-3.1 aspnetcore-targeting-pack-6.0 fonts-lato python3-twisted aspnetcore-targeting-pack-5.0
         echo "step 2"
         sudo apt remove -y libgcc-9-dev libc6-i386 liblldb-10 libasan5 moby-runc mono-roslyn liblldb-11 liblldb-12 libruby2.7 perl-modules-5.30 libwxgtk3.0-gtk3-0v5 aspnetcore-runtime-3.1 libstdc++-9-dev libstdc++-10-dev aspnetcore-runtime-5.0 
         echo "step 3"
