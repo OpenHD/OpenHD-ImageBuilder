@@ -37,19 +37,19 @@ jobs:
     
     
     ### ONLY THIS RELEVANT FOR BUILDING ###
-    # - uses: actions/checkout@v2
-    # - name: update
-    #   run: sudo apt-get update
-    # - name: dep
-    #   run: sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support
-    # - name: configure
-    #   run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }} small
-    # - name: remove old image to make space
-    #   run: |
-    #     sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
-    #     sudo rm -Rf -v ./work-jetson-nano-4gb-bionic/03-Preconfiguration/*
-    #     sudo rm -Rf -v ./work-pi-bullseye/03-Preconfiguration/*
-    #     sudo rm -Rf -v ./work-pi-legacy-bullseye/03-Preconfiguration/*
+    - uses: actions/checkout@v2
+    - name: update
+      run: sudo apt-get update
+    - name: dep
+      run: sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support
+    - name: configure
+      run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }} small
+    - name: remove old image to make space
+      run: |
+        sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
+        sudo rm -Rf -v ./work-jetson-nano-4gb-bionic/03-Preconfiguration/*
+        sudo rm -Rf -v ./work-pi-bullseye/03-Preconfiguration/*
+        sudo rm -Rf -v ./work-pi-legacy-bullseye/03-Preconfiguration/*
     - name: magic
       run: |
         ls -a
