@@ -28,7 +28,7 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
     apt remove nfs-common
     if [[ "${OS}" == "raspbian" ]]; then
     echo "Enabling h265 Hardware Decoding"
-    PLATFORM_PACKAGES="openhd-linux-pi mavsdk openhd-qt-pi-bullseye qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
+    PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good openhd-qt-pi-bullseye qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
     else
     echo "Building legacy Version"
     echo "Disabling h265 Hardware Decoding"
