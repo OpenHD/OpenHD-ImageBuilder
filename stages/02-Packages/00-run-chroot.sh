@@ -14,7 +14,7 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
     echo "OS is raspbian"
     # Remove atheros firmware, which will be replaced by our kernel, hold raspberry kernel, so it will not be updated anymore
     mkdir -p /home/openhd
-    apt-mark -y hold firmware-atheros || exit 1
+    apt-mark hold firmware-atheros || exit 1
     apt purge -y firmware-atheros || exit 1
     apt -yq install firmware-misc-nonfree || exit 1
     apt-mark hold raspberrypi-kernel
