@@ -24,50 +24,51 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
     apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite
     apt purge raspberrypi-kernel
     apt remove nfs-common
-    if [[ "${OS}" == "raspbian" ]]; then
-    echo "Enabling h265 Hardware Decoding"
-    #list packages which will be installed later in Second update
-    PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good openhd-qt-pi-bullseye qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
-    #libcamera may fail, since it isn't really supported yet
-    else
-    echo "Building legacy Version"
-    echo "Disabling h265 Hardware Decoding"
-    #list packages which will be installed later in Second update
-    PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good openhd-qt-pi-bullseye-legacy qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
-    #libcamera may fail, since it isn't really supported yet
-        #the only difference currently is that a different build qt needs to be installed
-    OS="raspbian" 
-    echo "after this we'll do everything like on normal"
-    echo ${OS}
+        if [[ "${OS}" == "raspbian" ]]; then
+        echo "Enabling h265 Hardware Decoding"
+        #list packages which will be installed later in Second update
+        PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good openhd-qt-pi-bullseye qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
+        #libcamera may fail, since it isn't really supported yet
+        else
+        echo "Building legacy Version"
+        echo "Disabling h265 Hardware Decoding"
+        #list packages which will be installed later in Second update
+        PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good openhd-qt-pi-bullseye-legacy qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
+        #libcamera may fail, since it isn't really supported yet
+            #the only difference currently is that a different build qt needs to be installed
+        OS="raspbian" 
+        echo "after this we'll do everything like on normal"
+        echo ${OS}
+        fi
 fi
+    if [[ "${OS}" == "ubuntu" ]]; then
+        echo "OS is ubuntu"
 
-if [[ "${OS}" == "ubuntu" ]]; then
-    echo "OS is ubuntu"
+        #The version we use as Base has messed up sources (by nvidia), we're correcting this now
+        rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
+        echo "deb https://repo.download.nvidia.com/jetson/common r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
+        echo "deb https://repo.download.nvidia.com/jetson/t210 r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
 
-    #The version we use as Base has messed up sources (by nvidia), we're correcting this now
-    rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
-    echo "deb https://repo.download.nvidia.com/jetson/common r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
-    echo "deb https://repo.download.nvidia.com/jetson/t210 r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
+        echo "update gcc and libboost to something usable"
+        #Since about everything on Jetson is not updated for ages and we need more modern build tools we'll add repositories which supply the right packages.
+        sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+        sudo add-apt-repository ppa:mhier/libboost-latest -y
+        sudo add-apt-repository ppa:git-core/ppa -y
+        
+        #clean up jetson-image, to decrease the size, this step is optional
+        sudo apt remove ubuntu-desktop gdm3
+        sudo apt-get purge -y gnome-*
+        sudo apt remove libreoffice-writer chromium-browser chromium* yelp unity thunderbird rhythmbox nautilus gnome-software
+        sudo apt remove ubuntu-artwork ubuntu-sounds ubuntu-wallpapers ubuntu-wallpapers-bionic
+        sudo apt remove vlc-data lightdm
+        sudo apt remove unity-settings-daemon packagekit wamerican mysql-common libgdm1
+        sudo apt remove ubuntu-release-upgrader-gtk ubuntu-web-launchers
+        sudo apt remove --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
+        sudo apt autoremove -y
+        #list packages which will be installed later in Second update
+        PLATFORM_PACKAGES="openhd-linux-jetson gstreamer1.0-qt5 openhd-qt-jetson-nano-bionic qopenhd nano python-pip libelf-dev"
+    fi
 
-    echo "update gcc and libboost to something usable"
-    #Since about everything on Jetson is not updated for ages and we need more modern build tools we'll add repositories which supply the right packages.
-    sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-    sudo add-apt-repository ppa:mhier/libboost-latest -y
-    sudo add-apt-repository ppa:git-core/ppa -y
-    
-    #clean up jetson-image, to decrease the size, this step is optional
-    sudo apt remove ubuntu-desktop gdm3
-    sudo apt-get purge -y gnome-*
-    sudo apt remove libreoffice-writer chromium-browser chromium* yelp unity thunderbird rhythmbox nautilus gnome-software
-    sudo apt remove ubuntu-artwork ubuntu-sounds ubuntu-wallpapers ubuntu-wallpapers-bionic
-    sudo apt remove vlc-data lightdm
-    sudo apt remove unity-settings-daemon packagekit wamerican mysql-common libgdm1
-    sudo apt remove ubuntu-release-upgrader-gtk ubuntu-web-launchers
-    sudo apt remove --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
-    sudo apt autoremove -y
-    #list packages which will be installed later in Second update
-    PLATFORM_PACKAGES="openhd-linux-jetson gstreamer1.0-qt5 openhd-qt-jetson-nano-bionic qopenhd nano python-pip libelf-dev"
-fi
 
 
 if [[ "${HAS_CUSTOM_KERNEL}" == "true" ]]; then
