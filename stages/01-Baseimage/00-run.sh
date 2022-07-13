@@ -1,19 +1,10 @@
-# Do this to the WORK folder of this stage
+# Download Base Image, extract, check checksum
 pushd ${STAGE_WORK_DIR}
 
 log "Check any previous images"
 
 SHA=$(sha256sum ${BASE_IMAGE})
 echo "SHA: ${SHA}"
-
-if [[ "${HAS_CUSTOM_BASE}" == true ]]; then    
-
-echo "Downloading custom build base image"
-wget -q --show-progress --progress=bar:force:noscroll $BASE_IMAGE_Mirror/$BASE_IMAGE 
-SHA=$(sha256sum ${BASE_IMAGE})
-echo "SHA: ${SHA}"
-fi
-
 
 
 if [[ "${SHA}" != "${BASE_IMAGE_SHA256}  ${BASE_IMAGE}" ]]; then    
