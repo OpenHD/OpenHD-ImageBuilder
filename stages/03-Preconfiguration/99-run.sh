@@ -1,4 +1,5 @@
 # Do this to the WORK folder of this stage
+# Make version number visible, rename fat partition
 pushd ${STAGE_WORK_DIR}
 
 cp ${STAGE_WORK_DIR}/mnt/openhd_version.txt ${WORK_DIR}/openhd_version.txt

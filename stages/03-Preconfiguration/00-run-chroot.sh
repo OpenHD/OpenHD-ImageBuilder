@@ -1,6 +1,7 @@
 # This runs in context if the image (CHROOT)
 # Any native compilation can be done here
 # Do not use log here, it will end up in the image
+# Here we disable services, create users, put debug stuff in and set our hostname
 
 #!/bin/bash
 # create a use account that should be the same on all platforms
@@ -8,7 +9,7 @@ useradd openhd
 echo "openhd:openhd" | chpasswd
 adduser openhd sudo
 
-#add debug script and cronjob
+#add debug script and cronjob currently only fully supported on raspberry (this is in pre-alpha phase)
 cd /opt
 git clone https://github.com/OpenHD/OpenHD-debug
 cd OpenHD-debug
@@ -29,6 +30,7 @@ if [[ "${HAVE_CONF_PART}" == "false" ]] && [[ "${HAVE_BOOT_PART}" == "true" ]]; 
 fi
 
 
+#Since Raspberry Foundation removed the pi user and ssh file we now need our own way to activate ssh, and other stuff
 if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]] ; then
     echo "disabling first run script"
     git clone https://github.com/OpenHD/Overlay
@@ -43,6 +45,7 @@ fi
 sudo systemctl set-default multi-user.target
 
 
+#remove networking stuff
 rm /etc/init.d/dnsmasq
 rm /etc/init.d/dhcpcd
 
@@ -52,6 +55,7 @@ sudo systemctl disable dnsmasq.service
 sudo systemctl disable syslog.service
 if [[ "${OS}" != "testing" ]] || [[ "${OS}" != "milestone" ]]; then
     echo "disabling journald"
+    #we disable networking, dhcp, journald on non dev-images, since it'll put additional strain on the sd-cards
     sudo systemctl disable journald.service
     sudo systemctl disable dhcpcd.service
     sudo systemctl disable networking.service
@@ -64,7 +68,7 @@ sudo systemctl disable anacron.service
 sudo systemctl disable exim4.service
 sudo systemctl mask hostapd.service
 sudo systemctl mask wpa_supplicant.service
-sudo systemctl enable ssh
+sudo systemctl enable ssh #we have ssh constantly enabled
 
 
 #Disable does not work on PLYMOUTH
@@ -79,7 +83,7 @@ fi
 #this service updates runlevel changes. Set desired runlevel prior to this being disabled
 sudo systemctl disable systemd-update-utmp.service
 
-
+#remove filesystem-resizer
 sudo rm /etc/init.d/resize2fs_once
 
 # Disable ZeroTier service
