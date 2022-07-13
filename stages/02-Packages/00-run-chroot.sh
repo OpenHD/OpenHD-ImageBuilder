@@ -21,7 +21,7 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
     # Install libraspberrypi-dev before apt-get update
     #Remove current kernel and nfs(bloat)
     DEBIAN_FRONTEND=noninteractive apt -yq install libraspberrypi-doc libraspberrypi-dev libraspberrypi-dev libraspberrypi-bin libraspberrypi0 || exit 1
-    apt-mark hold -y libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite
+    apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite
     apt purge -y raspberrypi-kernel
     apt remove -y nfs-common
         if [[ "${OS}" == "raspbian" ]]; then
