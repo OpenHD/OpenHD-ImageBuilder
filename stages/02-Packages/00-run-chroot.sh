@@ -39,7 +39,6 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
     OS="raspbian" 
     echo "after this we'll do everything like on normal"
     echo ${OS}
-    fi
 fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
