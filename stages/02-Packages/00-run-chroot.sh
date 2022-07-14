@@ -43,31 +43,28 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
 fi
     if [[ "${OS}" == "ubuntu" ]]; then
         echo "OS is ubuntu"
-
         #The version we use as Base has messed up sources (by nvidia), we're correcting this now
         rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
         echo "deb https://repo.download.nvidia.com/jetson/common r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
         echo "deb https://repo.download.nvidia.com/jetson/t210 r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
-
         echo "update gcc and libboost to something usable"
         #Since about everything on Jetson is not updated for ages and we need more modern build tools we'll add repositories which supply the right packages.
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
         sudo add-apt-repository ppa:mhier/libboost-latest -y
         sudo add-apt-repository ppa:git-core/ppa -y
-        
         #clean up jetson-image, to decrease the size, this step is optional
-        sudo apt remove ubuntu-desktop gdm3
+        sudo apt remove -y ubuntu-desktop gdm3
         sudo apt-get purge -y gnome-*
-        sudo apt remove libreoffice-writer chromium-browser chromium* yelp unity thunderbird rhythmbox nautilus gnome-software
-        sudo apt remove ubuntu-artwork ubuntu-sounds ubuntu-wallpapers ubuntu-wallpapers-bionic
-        sudo apt remove vlc-data lightdm
-        sudo apt remove unity-settings-daemon packagekit wamerican mysql-common libgdm1
-        sudo apt remove ubuntu-release-upgrader-gtk ubuntu-web-launchers
-        sudo apt remove --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
+        sudo apt remove -y libreoffice-writer chromium-browser chromium* yelp unity thunderbird rhythmbox nautilus gnome-software
+        sudo apt remove -y ubuntu-artwork ubuntu-sounds ubuntu-wallpapers ubuntu-wallpapers-bionic
+        sudo apt remove -y vlc-data lightdm
+        sudo apt remove -y unity-settings-daemon packagekit wamerican mysql-common libgdm1
+        sudo apt remove -y ubuntu-release-upgrader-gtk ubuntu-web-launchers
+        sudo apt remove -y --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
         sudo apt autoremove -y
         #list packages which will be installed later in Second update
         PLATFORM_PACKAGES="openhd-linux-jetson gstreamer1.0-qt5 openhd-qt-jetson-nano-bionic qopenhd nano python-pip libelf-dev"
-    fi
+fi
 
 
 
