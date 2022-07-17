@@ -93,8 +93,8 @@ sudo apt-get install -y apt-utils
 if [[ "${TESTING}" == "testing" ]]; then
     echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1-testing/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1-testing.list
     echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1.list
-elif [[ "${TESTING}" == "milestone" ]]; then
-    echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1-alpha/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1-testing.list
+elif [[ "${TESTING}" == "evo" ]]; then
+    echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1-testing.list
     echo "cloning Qopenhd and Openhd github repositories"
     #For development ease we clone the most important repositories and install all their dependencies
     cd /opt
@@ -174,5 +174,4 @@ MNT_DIR="${STAGE_WORK_DIR}/mnt"
 # in the work dir so the builder can use it in the image name
 export OPENHD_VERSION=$(dpkg -s openhd | grep "^Version" | awk '{ print $2 }')
 
-echo ${OPENHD_VERSION} > /openhd_version.txt
 echo ${OPENHD_VERSION} > /boot/openhd_version.txt
