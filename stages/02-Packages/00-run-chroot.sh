@@ -86,7 +86,6 @@ fi
 apt install -y apt-transport-https curl
 curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1/cfg/gpg/gpg.0AD501344F75A993.key' | apt-key add -
 curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1-testing/cfg/gpg/gpg.58A6C96C088A96BF.key' | apt-key add -
-curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/gpg.A0B32203D4A48382.key' |  gpg --dearmor > ${keyring_location}
 sudo apt-get install -y apt-utils
 
 #We use different repositories for milestone and testing branches, milestone includes ALL needed files and have everything build exactly for milestone images
@@ -94,7 +93,9 @@ if [[ "${TESTING}" == "testing" ]]; then
     echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1-testing/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1-testing.list
     echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1.list
 elif [[ "${TESTING}" == "evo" ]]; then
-    echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1-testing.list
+    curl -1sLf \
+    'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' \
+    | sudo -E bash
     echo "cloning Qopenhd and Openhd github repositories"
     #For development ease we clone the most important repositories and install all their dependencies
     cd /opt
