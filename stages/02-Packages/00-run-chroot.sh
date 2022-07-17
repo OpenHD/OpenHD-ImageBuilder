@@ -86,7 +86,7 @@ fi
 apt install -y apt-transport-https curl
 curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1/cfg/gpg/gpg.0AD501344F75A993.key' | apt-key add -
 curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1-testing/cfg/gpg/gpg.58A6C96C088A96BF.key' | apt-key add -
-curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1-alpha/gpg.9D1C80E55B50390B.key' | apt-key add -
+curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/gpg.A0B32203D4A48382.key' |  gpg --dearmor > ${keyring_location}
 sudo apt-get install -y apt-utils
 
 #We use different repositories for milestone and testing branches, milestone includes ALL needed files and have everything build exactly for milestone images
