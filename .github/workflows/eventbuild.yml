@@ -2,7 +2,9 @@ name: Image build on event
 
 on:
   push:
-    branches: [ "x86-ProofOfConcept" ]
+    branches: [ master, "2.0", "2.1-milestones" ]
+  pull_request:
+    branches: [ master, "2.0" ]
   workflow_dispatch:
 #  schedule:
 #    - cron: '0 2 * * *' # run at 2 AM UTC
@@ -15,9 +17,8 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-
         TESTING: [evo]
-        TARGET: [x86-bionic] # <-- Add targets here!
+        TARGET: [pi-legacy-bullseye, pi-bullseye, jetson-nano-2gb-bionic, jetson-nano-4gb-bionic] # <-- Add targets here!
 
     steps:
     - name: Maximize build space
