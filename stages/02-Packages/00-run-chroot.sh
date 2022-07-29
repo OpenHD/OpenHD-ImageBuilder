@@ -114,14 +114,14 @@ elif [[ "${TESTING}" == "evo" ]]; then
     bash /opt/QOpenHD/install_dep.sh 
     bash /opt/Open.HD/install_dep.sh 
 
-    #Raspi-OS does not include the videocore libraries, so we need to install and link them to get rpi(legacy) to start EGLFS (does not hurt pi4 and up)
-    git clone --depth=1 https://github.com/OpenHD/rpi-firmware
-    cd rpi-firmware
-    cp -r opt/vc /opt/vc
-    cd /opt
-    sudo ln -s /opt/vc/lib/libbrcmGLESv2.so /usr/lib/arm-linux-gnueabihf/libbrcmGLESv2.so
-    sudo ln -s /opt/vc/lib/libbrcmEGL.so /usr/lib/arm-linux-gnueabihf/libbrcmEGL.so 
-    echo "linked broadcom EGL libraries"
+    # #Raspi-OS does not include the videocore libraries, so we need to install and link them to get rpi(legacy) to start EGLFS (does not hurt pi4 and up)
+    # git clone --depth=1 https://github.com/OpenHD/rpi-firmware
+    # cd rpi-firmware
+    # cp -r opt/vc /opt/vc
+    # cd /opt
+    # sudo ln -s /opt/vc/lib/libbrcmGLESv2.so /usr/lib/arm-linux-gnueabihf/libbrcmGLESv2.so
+    # sudo ln -s /opt/vc/lib/libbrcmEGL.so /usr/lib/arm-linux-gnueabihf/libbrcmEGL.so 
+    # echo "linked broadcom EGL libraries"
 
 
 else
