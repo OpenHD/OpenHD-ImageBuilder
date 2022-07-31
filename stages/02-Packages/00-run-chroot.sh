@@ -33,7 +33,7 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
         echo "Building legacy Version"
         echo "Disabling h265 Hardware Decoding"
         #list packages which will be installed later in Second update
-        PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good openhd-qt-pi-bullseye-legacy qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
+        PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good openhd-qt libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev/buster-backports libboost-thread1.74-dev/buster-backports meson"
         #libcamera may fail, since it isn't really supported yet
             #the only difference currently is that a different build qt needs to be installed
         OS="raspbian" 
@@ -100,6 +100,7 @@ elif [[ "${TESTING}" == "evo" ]]; then
     | sudo -E bash
     echo "cloning Qopenhd and Openhd github repositories"
     #For development ease we clone the most important repositories and install all their dependencies
+    if [[ "${OS}" != "raspbian-legacy" ]]; then
     cd /opt
     apt install git
     git clone --recursive https://github.com/OpenHD/Open.HD
@@ -113,6 +114,11 @@ elif [[ "${TESTING}" == "evo" ]]; then
     echo "installing build dependencies"
     bash /opt/QOpenHD/install_dep.sh 
     bash /opt/Open.HD/install_dep.sh 
+    else
+    echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list.d/backports.list
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9
+    apt update 
+    apt install libboost1.74-dev/buster-backports libboost1.74-all-dev/buster-backports cmake/buster-backports -y
 
     # #Raspi-OS does not include the videocore libraries, so we need to install and link them to get rpi(legacy) to start EGLFS (does not hurt pi4 and up)
     # git clone --depth=1 https://github.com/OpenHD/rpi-firmware
