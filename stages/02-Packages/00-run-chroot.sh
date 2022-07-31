@@ -119,7 +119,7 @@ elif [[ "${TESTING}" == "evo" ]]; then
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9
     apt update 
     apt install libboost1.74-dev/buster-backports libboost1.74-all-dev/buster-backports cmake/buster-backports -y
-
+    fi
     # #Raspi-OS does not include the videocore libraries, so we need to install and link them to get rpi(legacy) to start EGLFS (does not hurt pi4 and up)
     # git clone --depth=1 https://github.com/OpenHD/rpi-firmware
     # cd rpi-firmware
