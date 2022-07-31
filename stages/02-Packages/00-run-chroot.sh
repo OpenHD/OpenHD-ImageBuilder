@@ -100,7 +100,7 @@ elif [[ "${TESTING}" == "evo" ]]; then
     | sudo -E bash
     echo "cloning Qopenhd and Openhd github repositories"
     #For development ease we clone the most important repositories and install all their dependencies
-    if [[ "${OS}" != "raspbian-legacy" ]]; then
+    if [[ "${DISTRO}" != "buster" ]]; then
     cd /opt
     apt install git
     git clone --recursive https://github.com/OpenHD/Open.HD
