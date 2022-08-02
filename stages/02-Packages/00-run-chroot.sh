@@ -33,7 +33,7 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
         echo "Building legacy Version"
         echo "Disabling h265 Hardware Decoding"
         #list packages which will be installed later in Second update
-        PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good openhd-qt libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev/buster-backports libboost-thread1.74-dev/buster-backports meson"
+        PLATFORM_PACKAGES="mavsdk gst-plugins-good openhd-qt libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev/buster-backports libboost-thread1.74-dev/buster-backports meson"
         #libcamera may fail, since it isn't really supported yet
             #the only difference currently is that a different build qt needs to be installed
         OS="raspbian" 
