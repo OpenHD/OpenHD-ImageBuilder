@@ -14,20 +14,20 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
     echo "OS is raspbian"
     # Remove atheros firmware, which will be replaced by our kernel, hold raspberry kernel, so it will not be updated anymore
     mkdir -p /home/openhd
-    apt purge -y firmware-atheros || exit 1
-    apt-mark hold firmware-atheros || exit 1
-    apt -yq install firmware-misc-nonfree || exit 1
+    #apt purge -y firmware-atheros || exit 1
+    #apt-mark hold firmware-atheros || exit 1
+    #apt -yq install firmware-misc-nonfree || exit 1
     #apt-mark hold raspberrypi-kernel
     # Install libraspberrypi-dev before apt-get update
     #Remove current kernel and nfs(bloat)
     DEBIAN_FRONTEND=noninteractive apt -yq install libraspberrypi-doc libraspberrypi-dev libraspberrypi-dev libraspberrypi-bin libraspberrypi0 || exit 1
-    apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite
+    #apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite
     #apt purge -y raspberrypi-kernel
     apt remove -y nfs-common
         if [[ "${OS}" == "raspbian" ]]; then
         echo "Enabling h265 Hardware Decoding"
         #list packages which will be installed later in Second update
-        PLATFORM_PACKAGES="mavsdk gst-plugins-good openhd-qt-pi-bullseye qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
+        PLATFORM_PACKAGES="mavsdk gst-plugins-good openhd-linux-pi veye-raspberrypi openhd-qt-pi-bullseye qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
         #libcamera may fail, since it isn't really supported yet
         else
         echo "Building legacy Version"
