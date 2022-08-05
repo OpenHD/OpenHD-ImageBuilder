@@ -60,6 +60,9 @@ if [[ "${OS}" != "testing" ]] || [[ "${OS}" != "milestone" ]]; then
     sudo systemctl disable dhcpcd.service
     sudo systemctl disable networking.service
 fi
+#replace dhcpcd with network manager
+sudo systemctl disable dhcpcd.service
+
 sudo systemctl disable triggerhappy.service
 sudo systemctl disable avahi-daemon.service
 sudo systemctl disable ser2net.service
