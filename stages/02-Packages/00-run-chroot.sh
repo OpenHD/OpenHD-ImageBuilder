@@ -118,9 +118,23 @@ elif [[ "${TESTING}" == "evo" ]]; then
     echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list.d/backports.list
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9
     apt update 
-    apt install libboost1.74-dev/buster-backports libboost1.74-all-dev/buster-backports cmake/buster-backports -y
+    cd /opt
+    apt install git
+    git clone --recursive https://github.com/OpenHD/Open.HD
+    cd Open.HD
+    git checkout 2.1-milestones
+    cd /opt
+    git clone --recursive https://github.com/OpenHD/QOpenHD
+    cd QOpenHD
+    git checkout 2.1-milestones
+    cd /opt
+    echo "installing build dependencies"
+    #bash /opt/QOpenHD/install_dep.sh 
+    bash /opt/Open.HD/install_dep_legacy.sh 
+    apt install -y libboost1.74-dev/buster-backports libboost1.74-all-dev/buster-backports cmake/buster-backports
+    apt install -y libboost1.74-dev libboost-filesystem1.74-dev libboost-thread1.74-dev
     fi
-    # #Raspi-OS does not include the videocore libraries, so we need to install and link them to get rpi(legacy) to start EGLFS (does not hurt pi4 and up)
+    # #Raspi-OS bullseye does not include the videocore libraries, so we need to install and link them to get rpi(legacy) to start EGLFS (does not hurt pi4 and up)
     # git clone --depth=1 https://github.com/OpenHD/rpi-firmware
     # cd rpi-firmware
     # cp -r opt/vc /opt/vc
