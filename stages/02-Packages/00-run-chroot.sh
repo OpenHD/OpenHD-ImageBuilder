@@ -133,6 +133,7 @@ elif [[ "${TESTING}" == "evo" ]]; then
     bash /opt/Open.HD/install_dep_legacy.sh 
     apt install -y libboost1.74-dev/buster-backports libboost1.74-all-dev/buster-backports cmake/buster-backports
     apt install -y libboost1.74-dev libboost-filesystem1.74-dev libboost-thread1.74-dev
+    apt install -y openhd-linux-pi=20201124.1
     fi
     # #Raspi-OS bullseye does not include the videocore libraries, so we need to install and link them to get rpi(legacy) to start EGLFS (does not hurt pi4 and up)
     # git clone --depth=1 https://github.com/OpenHD/rpi-firmware
