@@ -1,8 +1,8 @@
-BASE_IMAGE_URL="https://downloads.raspberrypi.org/raspios_oldstable_lite_armhf/images/raspios_oldstable_lite_armhf-2022-01-28"
-BASE_IMAGE="2022-01-28-raspios-buster-armhf-lite.zip"
-BASE_IMAGE_SHA256="84c7d41b6d0a9fc8e6163045842a1bae7cc57cef36808d3d350fdf18e9b3f50e"
-OS="raspbian-legacy"
-DISTRO="buster"
+BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2022-04-07/"
+BASE_IMAGE="2022-04-04-raspios-bullseye-armhf-lite.img.xz"
+BASE_IMAGE_SHA256="34987327503fac1076e53f3584f95ca5f41a6a790943f1979262d58d62b04175"
+OS="raspbian"
+DISTRO="bullseye"
 LEGACY="true"
 HAS_CUSTOM_KERNEL=false
 HAVE_BOOT_PART=true

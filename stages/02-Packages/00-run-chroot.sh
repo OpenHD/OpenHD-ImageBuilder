@@ -33,7 +33,7 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
         echo "Building legacy Version"
         echo "Disabling h265 Hardware Decoding"
         #list packages which will be installed later in Second update
-        PLATFORM_PACKAGES=" mavsdk network-manager gst-plugins-good openhd-qt libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev/buster-backports libboost-thread1.74-dev/buster-backports meson"
+        PLATFORM_PACKAGES="openhd-linux-pi network-manager mavsdk gst-plugins-good openhd-qt-pi-bullseye-legacy qopenhd-legacy libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
         #libcamera may fail, since it isn't really supported yet
             #the only difference currently is that a different build qt needs to be installed
         OS="raspbian" 
@@ -99,24 +99,6 @@ elif [[ "${TESTING}" == "evo" ]]; then
     'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' \
     | sudo -E bash
     echo "cloning Qopenhd and Openhd github repositories"
-    #For development ease we clone the most important repositories and install all their dependencies
-    if [[ "${DISTRO}" != "buster" ]]; then
-    cd /opt
-    apt install git
-    git clone --recursive https://github.com/OpenHD/Open.HD
-    cd Open.HD
-    git checkout 2.1-milestones
-    cd /opt
-    git clone --recursive https://github.com/OpenHD/QOpenHD
-    cd QOpenHD
-    git checkout 2.1-milestones
-    cd /opt
-    echo "installing build dependencies"
-    bash /opt/QOpenHD/install_dep.sh 
-    bash /opt/Open.HD/install_dep.sh 
-    else
-    echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list.d/backports.list
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E98404D386FA1D9
     apt update 
     cd /opt
     apt install git
@@ -129,20 +111,8 @@ elif [[ "${TESTING}" == "evo" ]]; then
     git checkout 2.1-milestones
     cd /opt
     echo "installing build dependencies"
-    #bash /opt/QOpenHD/install_dep.sh 
-    bash /opt/Open.HD/install_dep_legacy.sh 
-    apt install -y libboost1.74-dev/buster-backports libboost1.74-all-dev/buster-backports cmake/buster-backports
-    apt install -y libboost1.74-dev libboost-filesystem1.74-dev libboost-thread1.74-dev veye-raspberrypi
-    apt install -y openhd-linux-pi=20201124.1
-    fi
-    # #Raspi-OS bullseye does not include the videocore libraries, so we need to install and link them to get rpi(legacy) to start EGLFS (does not hurt pi4 and up)
-    # git clone --depth=1 https://github.com/OpenHD/rpi-firmware
-    # cd rpi-firmware
-    # cp -r opt/vc /opt/vc
-    # cd /opt
-    # sudo ln -s /opt/vc/lib/libbrcmGLESv2.so /usr/lib/arm-linux-gnueabihf/libbrcmGLESv2.so
-    # sudo ln -s /opt/vc/lib/libbrcmEGL.so /usr/lib/arm-linux-gnueabihf/libbrcmEGL.so 
-    # echo "linked broadcom EGL libraries"
+    bash /opt/QOpenHD/install_dep.sh 
+    bash /opt/Open.HD/install_dep.sh
 
 
 else

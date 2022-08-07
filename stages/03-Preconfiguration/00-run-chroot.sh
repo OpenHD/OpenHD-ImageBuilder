@@ -41,15 +41,6 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]] ; then
     cp config.txt /boot/config.txt
 fi
 
-if [[ "${OS}" == "raspbian-legacy" ]] ; then
-echo "enable some functionality from the newest raspberry OS"
-    git clone https://github.com/OpenHD/Overlay
-    cd Overlay
-    cp firstrun.sh /boot/firstrun.sh
-    cp userconf.txt /boot/userconf.txt
-    cp config.txt /boot/config.txt
-fi
-
 #Ensure the runlevel is multi-target (3) could possibly be lower...
 sudo systemctl set-default multi-user.target
 
