@@ -77,9 +77,6 @@ fi
 echo "-------------------------GETTING FIRST UPDATE------------------------------------"
 
 apt update --allow-releaseinfo-change || exit 1  
-echo "-------------------------Debug-Consti;)------------------------------------------"
-
-mkdir -p /home/consti10/openhd
 
 if [[ "${OS}" == "raspbian" ]]; then
     echo "OS is raspbian"
