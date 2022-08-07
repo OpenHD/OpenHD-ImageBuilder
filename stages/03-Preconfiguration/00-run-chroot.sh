@@ -35,6 +35,7 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]] ; then
     echo "disabling first run script"
     git clone https://github.com/OpenHD/Overlay
     cd Overlay
+    rm /boot/config.txt
     cp cmdline.txt /boot/cmdline.txt
     cp firstrun.sh /boot/firstrun.sh
     cp userconf.txt /boot/userconf.txt
@@ -87,7 +88,7 @@ fi
 sudo systemctl disable systemd-update-utmp.service
 
 #remove filesystem-resizer
-sudo rm /etc/init.d/resize2fs_once
+#sudo rm /etc/init.d/resize2fs_once
 
 # Disable ZeroTier service
 #sudo systemctl disable zerotier-one
