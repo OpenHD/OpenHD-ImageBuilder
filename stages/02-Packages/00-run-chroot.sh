@@ -108,9 +108,13 @@ elif [[ "${TESTING}" == "evo" ]]; then
     git checkout 2.1-milestones
     cd /opt
     echo "installing build dependencies"
+    if [[ "${OS}" == "ubuntu" ]]; then
+    bash /opt/QOpenHD/install_dep.sh 
+    bash /opt/Open.HD/install_dep_jetson.sh
+    else
     bash /opt/QOpenHD/install_dep.sh 
     bash /opt/Open.HD/install_dep.sh
-
+    fi
 
 else
     #if no milestone or testing is build, just write the standart openhd-source 
