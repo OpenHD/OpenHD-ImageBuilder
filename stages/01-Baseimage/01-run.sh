@@ -95,3 +95,4 @@ mkfs.vfat $LOOPFILE
 
 # return
 
+popd
