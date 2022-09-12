@@ -47,35 +47,51 @@ if [[ "${OS}" == "ubuntu" ]]; then
         FILESIZE=$(stat -c%s "IMAGE.img")
         DIFFERENCE=$(expr $WANTEDSIZE - $FILESIZE)
         DIFFERENCE=$(expr $DIFFERENCE - 1)
-    log $DIFFERENCE
-    log "Create empty image"
+	DIFFERENCE=$(expr $DIFFERENCE - 1024000)
     dd if=/dev/zero of=temp.img bs=1 count=1 seek=$DIFFERENCE
+    dd if=/dev/zero of=conf.img bs=1 count=1 seek=204799
 
     log "Enlarge the downloaded image"
     cat temp.img >> IMAGE.img
+    cat conf.img >> IMAGE.img
 
     log "fdisk to enlarge the main partition"
     #calculating image offsets
     PARTED_OUT=$(parted -s IMAGE.img unit s print)
     ROOT_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${ROOT_PART}"| xargs echo -n \
         | cut -d" " -f 2 | tr -d s)
-
     echo "ROOT OFFSET: $ROOT_OFFSET"
-    echo "IF EDITING THIS SCRIPT THE SPACES MATER FOR FDISK COMMANDS" 
     #Now we delete Partition 1, write a new partition 1 and write the calculated size to have a larger root-partition)
     fdisk IMAGE.img <<EOF
+n
+15
+30793166
+30997966
+t
+15
+11
+w
+EOF
+echo "created conf partition"
+
+fdisk IMAGE.img <<EOF
 d
 1
 n
 1
-${ROOT_OFFSET}
-
+28672
+30793165
 w
 EOF
 sgdisk -c 1:APP IMAGE.img #some jetson-scripts assume that the first partition (active partition with the root-filesystem), is called app, so we rename it
-fi
 
 rm temp.img
+rm conf.img
+
+LOOPFILE=$(losetup --partscan --show --find IMAGE.img)
+LOOPFILE=${LOOPFILE}p15
+mkfs.vfat $LOOPFILE
+
 
 # return
-popd
+
