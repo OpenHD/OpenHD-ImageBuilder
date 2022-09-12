@@ -92,7 +92,7 @@ LOOPFILE=$(losetup --partscan --show --find IMAGE.img)
 LOOPFILE=${LOOPFILE}p15
 mkfs.vfat $LOOPFILE
 
-
+fi
 # return
 
 popd
