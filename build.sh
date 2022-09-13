@@ -203,9 +203,9 @@ if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
     ls -l ${PREV_WORK_DIR}/IMAGE.img
     zip ${PREV_WORK_DIR}/image.zip ${PREV_WORK_DIR}/IMAGE.img
     rm ${PREV_WORK_DIR}/IMAGE.img
-    cp ${PREV_WORK_DIR}/image.zip ${IMAGE_PATH_NAME}
+    cp ${PREV_WORK_DIR}/image.zip ${DEPLOY_DIR}
     rm -Rf ${PREV_WORK_DIR}
-    cd ${IMAGE_PATH_NAME}
+    cd ${DEPLOY_DIR}
     unzip *.zip
     rm -Rf *.zip
     df -h
