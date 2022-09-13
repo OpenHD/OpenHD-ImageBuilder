@@ -198,6 +198,7 @@ if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
     log ""
     log "======================================================"
     log "Deploy image to: ${IMAGE_PATH_NAME}"
+    df -h
     mkdir -p "${DEPLOY_DIR}" || true
     cp "${PREV_WORK_DIR}/IMAGE.img" ${IMAGE_PATH_NAME}
 fi
