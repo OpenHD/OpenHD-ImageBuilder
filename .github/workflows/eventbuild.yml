@@ -2,7 +2,7 @@ name: Image build on event
 
 on:
   push:
-    branches: [ master, "2.0", "2.1-milestones" ]
+    branches: [ master, "2.0", "2.1-milestones","sizetest" ]
   pull_request:
     branches: [ master, "2.0" ]
   workflow_dispatch:
@@ -32,6 +32,12 @@ jobs:
         overprovision-lvm: 'true'
     - name: Setup env
       run: |
+        sudo rm -Rf /usr/share/doc
+        sudo rm -Rf /home/linuxbrew
+        sudo rm -Rf /home/runner-admin
+        sudo rm -Rf /opt/hostedtoolcache
+        sudo rm -Rf /opt/microsoft
+        sudo rm -Rf /opt/hhvm
         echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
         echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
     
