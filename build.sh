@@ -201,8 +201,12 @@ if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
     df -h
     mkdir -p "${DEPLOY_DIR}" || true
     ls -l ${PREV_WORK_DIR}/IMAGE.img
-    cp "${PREV_WORK_DIR}/IMAGE.img" ${IMAGE_PATH_NAME}
+    zip ${PREV_WORK_DIR}/IMAGE.img
+    rm IMAGE.img
+    cp "${PREV_WORK_DIR}/*.zip" ${IMAGE_PATH_NAME}
     rm -Rf ${PREV_WORK_DIR}
+    unzip *.zip
+    rm *.zip
     df -h
 fi
 
