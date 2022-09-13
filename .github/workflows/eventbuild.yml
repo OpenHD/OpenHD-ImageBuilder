@@ -39,6 +39,7 @@ jobs:
         sudo rm -Rf /opt/microsoft
         sudo rm -Rf /opt/hhvm
         sudo apt remove -y dotnet* temurin-17-jdk temurin-11-jdk adoptopenjdk-11-hotspot libgl1-mesa-dri google-cloud-sdk hhvm google-chrome-stable firefox mongodb-mongosh qemu-user-static temurin-8-jdk adoptopenjdk-8-hotspot llvm-10-dev powershell snapd mysql-server-core-8.0 moby-containerd mono-devel mongodb-org-server
+        sudo apt remove -y php8.1-cgi fonts-noto-color-emoji aspnetcore-targeting-pack-3.1 aspnetcore-targeting-pack-6.0 fonts-lato python3-twisted aspnetcore-targeting-pack-5.0
         echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
         echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
     
@@ -71,8 +72,6 @@ jobs:
         sudo rm -Rf /opt/hostedtoolcache
         sudo rm -Rf /opt/microsoft
         sudo rm -Rf /opt/hhvm
-        sudo apt remove -y dotnet* temurin-17-jdk temurin-11-jdk adoptopenjdk-11-hotspot libgl1-mesa-dri google-cloud-sdk hhvm google-chrome-stable firefox mongodb-mongosh qemu-user-static temurin-8-jdk adoptopenjdk-8-hotspot llvm-10-dev powershell snapd mysql-server-core-8.0 moby-containerd mono-devel mongodb-org-server
-        sudo apt remove -y php8.1-cgi fonts-noto-color-emoji aspnetcore-targeting-pack-3.1 aspnetcore-targeting-pack-6.0 fonts-lato python3-twisted aspnetcore-targeting-pack-5.0
         sudo apt remove -y libgcc-9-dev libc6-i386 liblldb-10 libasan5 moby-runc mono-roslyn liblldb-11 liblldb-12 libruby2.7 perl-modules-5.30 libwxgtk3.0-gtk3-0v5 aspnetcore-runtime-3.1 libstdc++-9-dev libstdc++-10-dev aspnetcore-runtime-5.0 
         sudo apt remove -y sphinxsearch libc6-dev iso-codes libpython3.8-dev netstandard-targeting-pack-2.1 aspnetcore-runtime-6.0 humanity-icon-theme monodoc-manual libz3-4 ruby2.7-doc mono-utils linux-headers-5.13.0-1031-azure clang-tools-12 clang-tools-11 clang-tools-10 
         sudo apt autoremove -y
