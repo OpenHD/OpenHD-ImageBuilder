@@ -207,7 +207,7 @@ if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
     rm -Rf ${PREV_WORK_DIR}
     cd ${DEPLOY_DIR}
     7z e image.zip 
-    rm -Rf opt
+    rm -Rf image.zip
     df -h
 fi
 
