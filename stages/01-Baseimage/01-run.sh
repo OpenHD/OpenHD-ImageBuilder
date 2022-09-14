@@ -49,11 +49,11 @@ if [[ "${OS}" == "ubuntu" ]]; then
         DIFFERENCE=$(expr $DIFFERENCE - 1)
 	DIFFERENCE=$(expr $DIFFERENCE - 204799)
     dd if=/dev/zero of=temp.img bs=1 count=1 seek=$DIFFERENCE
-    dd if=/dev/zero of=conf.img bs=1 count=1 seek=204799
+    #dd if=/dev/zero of=conf.img bs=1 count=1 seek=204799
 
     log "Enlarge the downloaded image"
     cat temp.img >> IMAGE.img
-    cat conf.img >> IMAGE.img
+    #cat conf.img >> IMAGE.img
 
     log "fdisk to enlarge the main partition"
     #calculating image offsets
@@ -65,8 +65,8 @@ if [[ "${OS}" == "ubuntu" ]]; then
     fdisk IMAGE.img <<EOF
 n
 15
+30588367
 30793166
-30997966
 t
 15
 11
@@ -80,7 +80,7 @@ d
 n
 1
 28672
-30793165
+30588366
 w
 EOF
 sgdisk -c 1:APP IMAGE.img #some jetson-scripts assume that the first partition (active partition with the root-filesystem), is called app, so we rename it

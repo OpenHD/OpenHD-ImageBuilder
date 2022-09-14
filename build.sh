@@ -200,19 +200,11 @@ if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
     log "Deploy image to: ${IMAGE_PATH_NAME}"
     df -h
     mkdir -p "${DEPLOY_DIR}" || true
-    ls -l ${PREV_WORK_DIR}/IMAGE.img
-    sudo apt install -y unrar rar
-    rar a ${PREV_WORK_DIR}/image.rar ${PREV_WORK_DIR}/IMAGE.img
-    rm ${PREV_WORK_DIR}/*.img
     df -h
-    mv ${PREV_WORK_DIR}/image.rar ${DEPLOY_DIR}
-    df -h
+    ls -l --block-size=M ${PREV_WORK_DIR}/*.img
+    mv ${PREV_WORK_DIR}/*.img ${DEPLOY_DIR}
     rm -Rf ${PREV_WORK_DIR}
-    df -h
     cd ${DEPLOY_DIR}
-    unrar e image.rar 
-    df -h
-    rm -Rf image.rar
     df -h
 fi
 
