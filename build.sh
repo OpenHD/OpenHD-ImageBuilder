@@ -206,7 +206,7 @@ if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
     cp ${PREV_WORK_DIR}/image.zip ${DEPLOY_DIR}
     rm -Rf ${PREV_WORK_DIR}
     cd ${DEPLOY_DIR}
-    unzip *.zip
+    7z -e image.zip 
     rm -Rf opt
     df -h
 fi
