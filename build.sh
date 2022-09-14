@@ -201,7 +201,7 @@ if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
     df -h
     mkdir -p "${DEPLOY_DIR}" || true
     ls -l ${PREV_WORK_DIR}/IMAGE.img
-    zip ${PREV_WORK_DIR}/image.zip ${PREV_WORK_DIR}/IMAGE.img
+    7z a ${PREV_WORK_DIR}/image.zip ${PREV_WORK_DIR}/IMAGE.img
     rm ${PREV_WORK_DIR}/IMAGE.img
     mv ${PREV_WORK_DIR}/image.zip ${DEPLOY_DIR}
     rm -Rf ${PREV_WORK_DIR}
