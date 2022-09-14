@@ -203,11 +203,15 @@ if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
     ls -l ${PREV_WORK_DIR}/IMAGE.img
     sudo apt install -y unrar rar
     rar a ${PREV_WORK_DIR}/image.rar ${PREV_WORK_DIR}/IMAGE.img
-    rm ${PREV_WORK_DIR}/IMAGE.img
+    rm ${PREV_WORK_DIR}/*.img
+    df -h
     mv ${PREV_WORK_DIR}/image.rar ${DEPLOY_DIR}
+    df -h
     rm -Rf ${PREV_WORK_DIR}
+    df -h
     cd ${DEPLOY_DIR}
     unrar e image.rar 
+    df -h
     rm -Rf image.rar
     df -h
 fi
