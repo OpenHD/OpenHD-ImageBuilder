@@ -201,13 +201,14 @@ if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
     df -h
     mkdir -p "${DEPLOY_DIR}" || true
     ls -l ${PREV_WORK_DIR}/IMAGE.img
-    7z a ${PREV_WORK_DIR}/image.7z ${PREV_WORK_DIR}/IMAGE.img
+    sudo apt install -y unrar rar
+    rar a ${PREV_WORK_DIR}/image.rar ${PREV_WORK_DIR}/IMAGE.img
     rm ${PREV_WORK_DIR}/IMAGE.img
-    mv ${PREV_WORK_DIR}/image.7z ${DEPLOY_DIR}
+    mv ${PREV_WORK_DIR}/image.rar ${DEPLOY_DIR}
     rm -Rf ${PREV_WORK_DIR}
     cd ${DEPLOY_DIR}
-    7z e image.7z 
-    rm -Rf image.7z
+    unrar e image.rar 
+    rm -Rf image.rar
     df -h
 fi
 
