@@ -203,7 +203,7 @@ if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
     ls -l ${PREV_WORK_DIR}/IMAGE.img
     zip ${PREV_WORK_DIR}/image.zip ${PREV_WORK_DIR}/IMAGE.img
     rm ${PREV_WORK_DIR}/IMAGE.img
-    cp ${PREV_WORK_DIR}/image.zip ${DEPLOY_DIR}
+    mv ${PREV_WORK_DIR}/image.zip ${DEPLOY_DIR}
     rm -Rf ${PREV_WORK_DIR}
     cd ${DEPLOY_DIR}
     7z e image.zip 
