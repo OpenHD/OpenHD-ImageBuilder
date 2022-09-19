@@ -54,7 +54,7 @@ jobs:
     - name: dep
       run: sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support
     - name: configure
-      run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }} small
+      run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
     - name: remove old image to make space
       run: |
         sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
