@@ -35,13 +35,10 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]] ; then
     echo "disabling first run script"
     git clone https://github.com/OpenHD/Overlay
     cd Overlay
-    rm /boot/config.txt
     cp cmdline.txt /boot/cmdline.txt
     cp firstrun.sh /boot/firstrun.sh
     cp firstrun.sh /boot/secondrun.sh
     cp userconf.txt /boot/userconf.txt
-    cp config.txt /boot/config.txt
-    cp config.new /boot/config.new
 fi
 
 #Ensure the runlevel is multi-target (3) could possibly be lower...
