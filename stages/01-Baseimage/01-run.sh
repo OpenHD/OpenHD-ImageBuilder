@@ -49,11 +49,9 @@ if [[ "${OS}" == "ubuntu" ]]; then
         DIFFERENCE=$(expr $DIFFERENCE - 1)
 	DIFFERENCE=$(expr $DIFFERENCE - 204800)
     dd if=/dev/zero of=temp.img bs=1 count=1 seek=$DIFFERENCE
-    #dd if=/dev/zero of=conf.img bs=1 count=1 seek=204799
 
     log "Enlarge the downloaded image"
     cat temp.img >> IMAGE.img
-    #cat conf.img >> IMAGE.img
 
     log "fdisk to enlarge the main partition"
     #calculating image offsets
