@@ -35,11 +35,11 @@ fi
      echo "disabling first run script"
      git clone https://github.com/OpenHD/Overlay
      cd Overlay
-     rm cmdline.txt
-     rm firstrun.sh
-     cp cmdline.txt /boot/cmdline.txt
-     cp firstrun.sh /boot/firstrun.sh
-     cp firstrun.sh /boot/secondrun.sh
+     #rm cmdline.txt
+     #rm firstrun.sh
+     #cp cmdline.txt /boot/cmdline.txt
+     #cp firstrun.sh /boot/firstrun.sh
+     #cp firstrun.sh /boot/secondrun.sh
      cp userconf.txt /boot/userconf.txt
  fi
 
