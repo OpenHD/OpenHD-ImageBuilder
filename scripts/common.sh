@@ -14,8 +14,8 @@ mount_image () {
         log "Mounting boot partition: ${BOOT_PART}"
         echo "Mounting boot partition: ${BOOT_PART}"
 
-        BOOT_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${BOOT_PART}" | xargs echo -n | cut -d" " -f 2 | tr -d B)
-        BOOT_LENGTH=$(echo "$PARTED_OUT" | grep -e "^ ${BOOT_PART}" | xargs echo -n | cut -d" " -f 4 | tr -d B)
+        BOOT_OFFSET=8192
+        BOOT_LENGTH=524288
         BOOT_DEV=$(losetup --show -f -o "${BOOT_OFFSET}" --sizelimit "${BOOT_LENGTH}" "${IMG_FILE}")
         log "/boot: offset $BOOT_OFFSET, length $BOOT_LENGTH"
         echo "/boot: offset $BOOT_OFFSET, length $BOOT_LENGTH"
@@ -36,8 +36,8 @@ mount_image () {
     log "Mounting root partition: ${ROOT_PART}"
     echo "Mounting root partition: ${ROOT_PART}"
 
-    ROOT_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${ROOT_PART}" | xargs echo -n | cut -d" " -f 2 | tr -d B)
-    ROOT_LENGTH=$(echo "$PARTED_OUT" | grep -e "^ ${ROOT_PART}" | xargs echo -n | cut -d" " -f 4 | tr -d B)
+    ROOT_OFFSET=532480
+    ROOT_LENGTH=13467520
     ROOT_DEV=$(losetup --show -f -o "${ROOT_OFFSET}" --sizelimit "${ROOT_LENGTH}" "${IMG_FILE}")
 
 
