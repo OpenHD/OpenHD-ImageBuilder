@@ -30,19 +30,19 @@ if [[ "${HAVE_CONF_PART}" == "false" ]] && [[ "${HAVE_BOOT_PART}" == "true" ]]; 
 fi
 
 
-#Since Raspberry Foundation removed the pi user and ssh file we now need our own way to activate ssh, and other stuff
-if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]] ; then
-    echo "disabling first run script"
-    git clone https://github.com/OpenHD/Overlay
-    cd Overlay
-    #cp cmdline.txt /boot/cmdline.txt
-    #cp firstrun.sh /boot/firstrun.sh
-    #cp firstrun.sh /boot/secondrun.sh
-    #cp userconf.txt /boot/userconf.txt
-fi
+# #Since Raspberry Foundation removed the pi user and ssh file we now need our own way to activate ssh, and other stuff
+# if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]] ; then
+#     echo "disabling first run script"
+#     git clone https://github.com/OpenHD/Overlay
+#     cd Overlay
+#     #cp cmdline.txt /boot/cmdline.txt
+#     #cp firstrun.sh /boot/firstrun.sh
+#     #cp firstrun.sh /boot/secondrun.sh
+#     #cp userconf.txt /boot/userconf.txt
+# fi
 
 #Ensure the runlevel is multi-target (3) could possibly be lower...
-sudo systemctl set-default multi-user.target
+#sudo systemctl set-default multi-user.target
 
 
 #remove networking stuff

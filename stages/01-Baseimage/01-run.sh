@@ -86,9 +86,9 @@ sgdisk -c 1:APP IMAGE.img #some jetson-scripts assume that the first partition (
 rm temp.img
 rm conf.img
 
-LOOPFILE=$(losetup --partscan --show --find IMAGE.img)
-LOOPFILE=${LOOPFILE}p15
-mkfs.vfat $LOOPFILE
+# LOOPFILE=$(losetup --partscan --show --find IMAGE.img)
+# LOOPFILE=${LOOPFILE}p15
+# mkfs.vfat $LOOPFILE
 
 fi
 # return
