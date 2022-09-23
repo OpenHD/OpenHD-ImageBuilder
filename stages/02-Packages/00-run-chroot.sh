@@ -63,7 +63,7 @@ fi
         sudo apt remove -y --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
         sudo apt autoremove -y
         #list packages which will be installed later in Second update
-        PLATFORM_PACKAGES="openhd-linux-jetson gstreamer1.0-qt5 openhd-qt-jetson-nano-bionic qopenhd nano python-pip libelf-dev"
+        PLATFORM_PACKAGES="gstreamer1.0-qt5 openhd-qt-jetson-nano-bionic qopenhd nano python-pip libelf-dev"
 fi
 
 
