@@ -28,6 +28,7 @@ fi
 
  if [[ "${OS}" == "ubuntu-x86" ]] ; then
         echo "OS is ubuntu, we're building for x86"
+        sudo apt-mark hold linux-image-5.13.0-30-generic
         sudo apt update
         sudo apt upgrade
         sudo apt install -y git
@@ -102,7 +103,6 @@ if [[ "${TESTING}" == "testing" ]]; then
       if [[ "${OS}" == "ubuntu-x86" ]] ; then
       echo "x86-compiling stuff"
       cd /opt
-      sudo apt-mark hold linux-image-5.13.0-30-generic
       sudo apt install -y install openhd-qt-x86-focal install qopenhd
       sudo apt install -y xserver-xorg-input-libinput 
       sudo apt install -y xinit net-tools libxcb-xinerama0 libxcb-util1 libgstreamer-plugins-base1.0-dev
