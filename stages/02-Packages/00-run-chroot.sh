@@ -33,12 +33,9 @@ fi
  if [[ "${OS}" == "ubuntu-x86" ]] ; then
         echo "OS is ubuntu, we're building for x86"
         apt-mark hold linux-image-*
-        #Since about everything on Jetson is not updated for ages and we need more modern build tools we'll add repositories which supply the right packages.
         sudo apt update
         sudo apt upgrade
         sudo apt install -y git
-        #clean up jetson-image, to decrease the size, this step is optional
-        #list packages which will be installed later in Second update
         PLATFORM_PACKAGES="gstreamer1.0-qt5 nano python3-pip libelf-dev"
 fi
 
@@ -65,7 +62,7 @@ fi
         sudo apt remove -y --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
         sudo apt autoremove -y
         #list packages which will be installed later in Second update
-        PLATFORM_PACKAGES="openhd-linux-jetson jetson-stats nano python-pip libelf-dev"
+        PLATFORM_PACKAGES="openhd-linux-jetson nano python-pip libelf-dev"
 fi
 
 echo "-------------------------GETTING FIRST UPDATE------------------------------------"
