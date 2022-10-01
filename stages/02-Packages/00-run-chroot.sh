@@ -30,7 +30,7 @@ fi
         echo "OS is ubuntu, we're building for x86"
         sudo apt-mark hold linux-image-5.13.0-30-generic
         sudo apt update
-        sudo apt upgrade
+        #sudo apt upgrade
         sudo apt install -y git
         PLATFORM_PACKAGES="nano python3-pip libavcodec-dev libavformat-dev libelf-dev"
 fi
@@ -131,7 +131,8 @@ export DEBIAN_FRONTEND=noninteractive
 echo "install openhd version-${OPENHD_PACKAGE}"
 
 #Now we're installing all those Packages, we need force-overwrite to overwrite some libraries and files which are supplied by other .deb-files, when we build them ourselves (like the kernel)
-apt update && apt upgrade -y
+apt update
+#apt upgrade -y
 apt -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends install \
 ${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
