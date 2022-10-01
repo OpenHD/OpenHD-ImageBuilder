@@ -1,5 +1,5 @@
 # This runs in context if the image (CHROOT)
-# Any native compilation can be done here
+# Any native compilation can be done here, but should be moved into an own repository.
 # Do not use log here, it will end up in the image
 # This stage will install and remove packages which are required to get OpenHD to work
 
@@ -20,15 +20,16 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
     apt-mark hold raspberrypi-kernel
     # Install libraspberrypi-dev before apt-get update
     #Remove current kernel and nfs(bloat)
-    DEBIAN_FRONTEND=noninteractive apt -yq install libraspberrypi-doc libraspberrypi-dev libraspberrypi-dev libraspberrypi-bin libraspberrypi0 || exit 1
-    apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc libcamera-apps-lite
+    apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc
     apt purge -y raspberrypi-kernel
     apt remove -y nfs-common
+
         if [[ "${OS}" == "raspbian" ]]; then
-        PLATFORM_PACKAGES="openhd-linux-pi network-manager mavsdk gst-plugins-good openhd-qt qopenhd-legacy libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
-        echo ${OS}
+        PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good openhd-qt qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
         fi
+
 fi
+
     if [[ "${OS}" == "ubuntu" ]]; then
         echo "OS is ubuntu"
         #The version we use as Base has messed up sources (by nvidia), we're correcting this now
@@ -51,15 +52,7 @@ fi
         sudo apt remove -y --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
         sudo apt autoremove -y
         #list packages which will be installed later in Second update
-        PLATFORM_PACKAGES="gstreamer1.0-qt5 openhd-qt-jetson-nano-bionic qopenhd nano python-pip libelf-dev"
-fi
-
-
-
-if [[ "${HAS_CUSTOM_KERNEL}" == "true" ]]; then
-    echo "-----------------------has a custom kernel----------------------------------"
-    #Just linking the packages above to the variable
-    PLATFORM_PACKAGES="${PLATFORM_PACKAGES}"
+        PLATFORM_PACKAGES="openhd-linux-jetson jetson-stats nano python-pip libelf-dev"
 fi
 
 echo "-------------------------GETTING FIRST UPDATE------------------------------------"
@@ -71,22 +64,16 @@ apt update --allow-releaseinfo-change || exit 1
 if [[ "${OS}" == "raspbian" ]]; then
     echo "OS is raspbian"
 fi
-#Include our own repository-keys and add dependencies for the install-script of cloudsmith
-apt install -y apt-transport-https curl
-curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1/cfg/gpg/gpg.0AD501344F75A993.key' | apt-key add -
-curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-1-testing/cfg/gpg/gpg.58A6C96C088A96BF.key' | apt-key add -
-sudo apt-get install -y apt-utils
+#add dependencies for our cloudsmith repository install-scripts
+apt install -y apt-transport-https curl apt-utils
 
 #We use different repositories for milestone and testing branches, milestone includes ALL needed files and have everything build exactly for milestone images
 if [[ "${TESTING}" == "testing" ]]; then
-    echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1-testing/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1-testing.list
-    echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1.list
-elif [[ "${TESTING}" == "evo" ]]; then
     curl -1sLf \
     'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' \
     | sudo -E bash
     curl -1sLf \
-    'https://dl.cloudsmith.io/public/openhd/openhd-2-2-2-evo/setup.deb.sh' \
+    'https://dl.cloudsmith.io/public/openhd/openhd-2-2-dev/setup.deb.sh' \
     | sudo -E bash
     echo "cloning Qopenhd and Openhd github repositories"
     apt update 
@@ -94,24 +81,23 @@ elif [[ "${TESTING}" == "evo" ]]; then
     apt install git
     git clone --recursive https://github.com/OpenHD/Open.HD
     cd Open.HD
-    git checkout 2.1-milestones
+    git checkout 2.2.3-evo
     cd /opt
     git clone --recursive https://github.com/OpenHD/QOpenHD
     cd QOpenHD
-    git checkout 2.1-milestones
+    git checkout 2.2.3-evo
     cd /opt
     echo "installing build dependencies"
     if [[ "${OS}" == "ubuntu" ]]; then
-    bash /opt/QOpenHD/install_dep.sh 
     bash /opt/Open.HD/install_dep_jetson.sh
     else
     bash /opt/QOpenHD/install_dep.sh 
     bash /opt/Open.HD/install_dep.sh
     fi
-
 else
-    #if no milestone or testing is build, just write the standart openhd-source 
-    echo "deb https://dl.cloudsmith.io/public/openhd/openhd-2-1/deb/${OS} ${DISTRO} main" > /etc/apt/sources.list.d/openhd-2-1.list
+    curl -1sLf \
+    'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' \
+    | sudo -E bash
 fi
 
 echo "-------------------------GETTING SECOND UPDATE------------------------------------"
@@ -122,7 +108,7 @@ echo "-------------------------DONE GETTING SECOND UPDATE-----------------------
 echo "Purge packages that interfer/we dont need..."
 
 #write packages that will be removed into PURGE
-PURGE="wireless-regdb avahi-daemon curl iptables man-db logrotate"
+PURGE="wireless-regdb avahi-daemon iptables man-db logrotate"
 
 #this is needed, so that every install script is forced to use the default values and can't open windows or other interactive stuff
 export DEBIAN_FRONTEND=noninteractive
@@ -134,21 +120,6 @@ apt -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends install \
 ${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
 ${GNUPLOT} || exit 1
-
-#This is optional and installs a htop like jetson-task-monitor
-if [[ "${OS}" == "ubuntu" ]]; then
-    sudo -H pip install -U jetson-stats
-fi
-
-echo "-------------------------INSTALL QT-PATCHES-------------------------------"
-#linking QT and it's libraries so the system can detect them
-#since we build QT by ourself we need to link the libraries and binaries, so that the system knows where to look for
-            touch /etc/ld.so.conf.d/qt.conf
-            echo "/opt/Qt5.15.4/lib/" >/etc/ld.so.conf.d/qt.conf
-            sudo ldconfig
-            export PATH="$PATH:/opt/Qt5.15.4/bin/"
-            cd /usr/bin
-            sudo ln -s /opt/Qt5.15.4/bin/qmake qmake
 
 #Now we purge/remove stuff that isn't needed andor was written in PURGE
 apt -yq purge ${PURGE} || exit 1

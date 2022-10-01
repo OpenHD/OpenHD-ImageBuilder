@@ -3,7 +3,6 @@ BASE_IMAGE="2022-09-06-raspios-bullseye-armhf-lite.img.xz"
 BASE_IMAGE_SHA256="28582f75128e426215e2cda8d6be04c57c0d190d5bf2d4bef62201340d5e60cf"
 OS="raspbian"
 DISTRO="bullseye"
-HAS_CUSTOM_KERNEL=false
 HAVE_BOOT_PART=true
 HAVE_CONF_PART=false
 BOOT_PART=1
