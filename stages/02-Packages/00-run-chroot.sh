@@ -25,19 +25,7 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
     apt purge -y raspberrypi-kernel
     apt remove -y nfs-common
         if [[ "${OS}" == "raspbian" ]]; then
-        echo "Enabling h265 Hardware Decoding"
-        #list packages which will be installed later in Second update
-        PLATFORM_PACKAGES="openhd-linux-pi network-manager mavsdk gst-plugins-good openhd-qt-pi-bullseye qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
-        #libcamera may fail, since it isn't really supported yet
-        else
-        echo "Building legacy Version"
-        echo "Disabling h265 Hardware Decoding"
-        #list packages which will be installed later in Second update
-        PLATFORM_PACKAGES="openhd-linux-pi network-manager mavsdk gst-plugins-good openhd-qt-pi-bullseye-legacy qopenhd-legacy libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
-        #libcamera may fail, since it isn't really supported yet
-            #the only difference currently is that a different build qt needs to be installed
-        OS="raspbian" 
-        echo "after this we'll do everything like on normal"
+        PLATFORM_PACKAGES="openhd-linux-pi network-manager mavsdk gst-plugins-good openhd-qt-pi qopenhd-legacy libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
         echo ${OS}
         fi
 fi
