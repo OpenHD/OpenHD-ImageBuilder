@@ -111,9 +111,9 @@ if [[ "${TESTING}" == "testing" ]]; then
       echo "x86-compiling stuff"
       bash /opt/QOpenHD/install_dep_extra.sh
       cd /opt
-      sudo apt install -y install qt5-default install qtcreator qopenhd
-      sudo apt install -y qtdeclarative5-dev libgles2-mesa-devqtquickcontrols2-5-dev qtquickcontrols2-5-dev xserver-xorg-input-libinput 
-      sudo apt install -y xinit net-tools libxcb-xinerama0 libxcb-util1 libqt5x11extras5 libqt5dbus5 libqt5widgets5 libqt5network5 libqt5gui5 libqt5core5a 
+      sudo apt install -y install openhd-qt-x86-focal install qopenhd
+      sudo apt install -y xserver-xorg-input-libinput 
+      sudo apt install -y xinit net-tools libxcb-xinerama0 libxcb-util1 
       sudo apt install -y dkms nvidia-driver-510 nvidia-dkms-510
       sudo apt install -y network-manager network-manager-gnome openhd-linux-x86
       fi
