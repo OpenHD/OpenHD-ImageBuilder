@@ -101,8 +101,9 @@ if [[ "${TESTING}" == "testing" ]]; then
     fi
       if [[ "${OS}" == "ubuntu-x86" ]] ; then
       echo "x86-compiling stuff"
-      bash /opt/QOpenHD/install_dep_extra.sh
       cd /opt
+      apt show -a linux-image*
+      sudo apt-mark hold linux-image*
       sudo apt install -y install openhd-qt-x86-focal install qopenhd
       sudo apt install -y xserver-xorg-input-libinput 
       sudo apt install -y xinit net-tools libxcb-xinerama0 libxcb-util1 libgstreamer-plugins-base1.0-dev
