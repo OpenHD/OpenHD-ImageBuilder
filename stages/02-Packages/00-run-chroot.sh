@@ -30,6 +30,19 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
 
 fi
 
+ if [[ "${OS}" == "ubuntu-x86" ]] ; then
+        echo "OS is ubuntu, we're building for x86"
+        apt-mark hold linux-image-*
+        #Since about everything on Jetson is not updated for ages and we need more modern build tools we'll add repositories which supply the right packages.
+        sudo apt update
+        sudo apt upgrade
+        sudo apt install -y git
+        #clean up jetson-image, to decrease the size, this step is optional
+        #list packages which will be installed later in Second update
+        PLATFORM_PACKAGES="gstreamer1.0-qt5 nano python3-pip libelf-dev"
+fi
+
+
     if [[ "${OS}" == "ubuntu" ]]; then
         echo "OS is ubuntu"
         #The version we use as Base has messed up sources (by nvidia), we're correcting this now
@@ -94,6 +107,17 @@ if [[ "${TESTING}" == "testing" ]]; then
     bash /opt/QOpenHD/install_dep.sh 
     bash /opt/Open.HD/install_dep.sh
     fi
+      if [[ "${OS}" == "ubuntu-x86" ]] ; then
+      echo "x86-compiling stuff"
+      bash /opt/QOpenHD/install_dep_extra.sh
+      cd /opt
+      sudo apt install -y install qt5-default install qtcreator qopenhd
+      sudo apt install -y qtdeclarative5-dev libgles2-mesa-devqtquickcontrols2-5-dev qtquickcontrols2-5-dev xserver-xorg-input-libinput 
+      sudo apt install -y xinit net-tools libxcb-xinerama0 libxcb-util1 libqt5x11extras5 libqt5dbus5 libqt5widgets5 libqt5network5 libqt5gui5 libqt5core5a 
+      sudo apt install -y dkms nvidia-driver-510 nvidia-dkms-510
+      sudo apt install -y network-manager network-manager-gnome openhd-linux-x86
+      fi
+
 else
     curl -1sLf \
     'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' \

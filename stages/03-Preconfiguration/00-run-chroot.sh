@@ -9,19 +9,6 @@ useradd openhd
 echo "openhd:openhd" | chpasswd
 adduser openhd sudo
 
-#add debug script and cronjob currently only fully supported on raspberry (this is in pre-alpha phase)
-cd /opt
-git clone https://github.com/OpenHD/OpenHD-debug
-cd OpenHD-debug
-chmod +x debug.sh
-crontab -l > mycron
-echo "@reboot /opt/OpenHD-debug/debug.sh" >> mycron
-crontab mycron
-rm mycron
-systemctl enable cron.service
-
-
-
 # On platforms that already have a separate boot partition we just put the config files on there, but some
 # platforms don't have or need a boot partition, so on those we have a separate /conf partition. All
 # openhd components look to /conf, so a symlink works well here. We may end up using separate /conf on everything.
@@ -31,16 +18,22 @@ fi
 
 
  #Since Raspberry Foundation removed the pi user and ssh file we now need our own way to activate ssh, and other stuff
- if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]] ; then
+ if [[ "${OS}" == "raspbian" ]] ; then
      echo "disabling first run script"
      git clone https://github.com/OpenHD/Overlay
      cd Overlay
-     #rm cmdline.txt
-     #rm firstrun.sh
-     #cp cmdline.txt /boot/cmdline.txt
-     #cp firstrun.sh /boot/firstrun.sh
-     #cp firstrun.sh /boot/secondrun.sh
      cp userconf.txt /boot/userconf.txt
+     #add debug script and cronjob currently only fully supported on raspberry (this is in pre-alpha phase)
+     
+        cd /opt
+        git clone https://github.com/OpenHD/OpenHD-debug
+        cd OpenHD-debug
+        chmod +x debug.sh
+        crontab -l > mycron
+        echo "@reboot /opt/OpenHD-debug/debug.sh" >> mycron
+        crontab mycron
+        rm mycron
+        systemctl enable cron.service
  fi
 
 #Ensure the runlevel is multi-target (3) could possibly be lower...
