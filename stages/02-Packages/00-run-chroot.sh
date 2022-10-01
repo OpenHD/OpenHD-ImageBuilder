@@ -10,7 +10,7 @@ if [[ "${OS}" != "ubuntu" ]]; then
     rm /lib/modules/*/source || true
 fi
 
-if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
+if [[ "${OS}" == "raspbian" ]]; then
     echo "OS is raspbian"
     # Remove atheros firmware, which will be replaced by our kernel, hold raspberry kernel, so it will not be updated anymore
     mkdir -p /home/openhd
@@ -23,20 +23,15 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
     apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc
     apt purge -y raspberrypi-kernel
     apt remove -y nfs-common
-
-        if [[ "${OS}" == "raspbian" ]]; then
-        PLATFORM_PACKAGES="openhd-linux-pi mavsdk gst-plugins-good openhd-qt qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
-        fi
-
+    PLATFORM_PACKAGES="openhd-linux-pi libavcodec-dev libavformat-dev mavsdk gst-plugins-good openhd-qt qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
 fi
 
  if [[ "${OS}" == "ubuntu-x86" ]] ; then
         echo "OS is ubuntu, we're building for x86"
-        apt-mark hold linux-image-*
         sudo apt update
         sudo apt upgrade
         sudo apt install -y git
-        PLATFORM_PACKAGES="gstreamer1.0-qt5 nano python3-pip libelf-dev"
+        PLATFORM_PACKAGES="nano python3-pip libavcodec-dev libavformat-dev libelf-dev"
 fi
 
 
@@ -62,7 +57,7 @@ fi
         sudo apt remove -y --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
         sudo apt autoremove -y
         #list packages which will be installed later in Second update
-        PLATFORM_PACKAGES="openhd-linux-jetson nano python-pip libelf-dev"
+        PLATFORM_PACKAGES="openhd-linux-jetson nano libgstreamer-plugins-base1.0-dev python-pip libelf-dev"
 fi
 
 echo "-------------------------GETTING FIRST UPDATE------------------------------------"
@@ -110,7 +105,7 @@ if [[ "${TESTING}" == "testing" ]]; then
       cd /opt
       sudo apt install -y install openhd-qt-x86-focal install qopenhd
       sudo apt install -y xserver-xorg-input-libinput 
-      sudo apt install -y xinit net-tools libxcb-xinerama0 libxcb-util1 
+      sudo apt install -y xinit net-tools libxcb-xinerama0 libxcb-util1 libgstreamer-plugins-base1.0-dev
       sudo apt install -y dkms nvidia-driver-510 nvidia-dkms-510
       sudo apt install -y network-manager network-manager-gnome openhd-linux-x86
       fi
