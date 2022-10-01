@@ -25,7 +25,7 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]]; then
     apt purge -y raspberrypi-kernel
     apt remove -y nfs-common
         if [[ "${OS}" == "raspbian" ]]; then
-        PLATFORM_PACKAGES="openhd-linux-pi network-manager mavsdk gst-plugins-good openhd-qt-pi qopenhd-legacy libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
+        PLATFORM_PACKAGES="openhd-linux-pi network-manager mavsdk gst-plugins-good openhd-qt qopenhd-legacy libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
         echo ${OS}
         fi
 fi
