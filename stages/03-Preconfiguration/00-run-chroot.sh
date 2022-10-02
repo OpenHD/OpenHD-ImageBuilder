@@ -17,14 +17,29 @@ if [[ "${HAVE_CONF_PART}" == "false" ]] && [[ "${HAVE_BOOT_PART}" == "true" ]]; 
 fi
 
 
- #Since Raspberry Foundation removed the pi user and ssh file we now need our own way to activate ssh, and other stuff
  if [[ "${OS}" == "raspbian" ]] ; then
-     echo "disabling first run script"
+     echo "adding openhd user"
      git clone https://github.com/OpenHD/Overlay
      cd Overlay
      cp userconf.txt /boot/userconf.txt
-     #add debug script and cronjob currently only fully supported on raspberry (this is in pre-alpha phase)
-     
+     echo "setup raspbian to enable QOpenHD"
+   	 sed -i '/.all./d' /boot/config.txt
+	 sed -i '/camera_auto_detect=1/d' /boot/config.txt
+	 sed -i '/dtoverlay=vc4-kms-v3d/d' /boot/config.txt
+	 sed -i '/enable_uart=1/d' /boot/config.txt
+	 echo "[all]" >> /boot/config.txt
+	 echo "start_x=1" >> /boot/config.txt
+	 echo "dtoverlay=vc4-fkms-v3d" >> /boot/config.txt
+	 echo "enable_uart=1" >> /boot/config.txt
+     echo "dtparam=i2c_arm=on" >> /boot/config.txt
+     echo "dtparam=i2c_vc=on" >> /boot/config.txt
+     echo "dtparam=i2c1=on" >> /boot/config.txt
+     echo "setting up clocks"
+     echo "h264_freq_min=400" >> /boot/config.txt
+     echo "isp_freq_min=400" >> /boot/config.txt
+     echo "v3d_freq_min=400" >> /boot/config.txt
+
+  
         cd /opt
         git clone https://github.com/OpenHD/OpenHD-debug
         cd OpenHD-debug
