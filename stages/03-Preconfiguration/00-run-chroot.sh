@@ -19,6 +19,7 @@ fi
 
  if [[ "${OS}" == "raspbian" ]] ; then
      echo "adding openhd user"
+     cd /opt
      git clone https://github.com/OpenHD/Overlay
      cd Overlay
      cp userconf.txt /boot/userconf.txt
