@@ -28,7 +28,7 @@ fi
 
  if [[ "${OS}" == "ubuntu-x86" ]] ; then
         echo "OS is ubuntu, we're building for x86"
-        sudo apt-mark hold linux-image-5.13.0-30-generic linux-image-5.15.0-41-generic
+        sudo apt-mark hold linux-image-generic linux-headers-generic
         sudo apt update
         sudo apt upgrade
         sudo apt install -y git
