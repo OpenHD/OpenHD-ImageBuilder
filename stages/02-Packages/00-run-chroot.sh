@@ -23,7 +23,7 @@ if [[ "${OS}" == "raspbian" ]]; then
     apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc
     apt purge -y raspberrypi-kernel
     apt remove -y nfs-common
-    PLATFORM_PACKAGES="openhd-linux-pi libavcodec-dev libavformat-dev mavsdk gst-plugins-good openhd-qt qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
+    PLATFORM_PACKAGES="openhd-linux-pi veye-raspberrypi libavcodec-dev libavformat-dev mavsdk gst-plugins-good openhd-qt qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
 fi
 
  if [[ "${OS}" == "ubuntu-x86" ]] ; then

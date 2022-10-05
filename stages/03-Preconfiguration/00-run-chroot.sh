@@ -19,6 +19,7 @@ fi
 
  if [[ "${OS}" == "raspbian" ]] ; then
      echo "adding openhd user"
+     touch /boot/OpenHD/rpi.txt
      cd /opt
      git clone https://github.com/OpenHD/Overlay
      cd Overlay
@@ -40,16 +41,16 @@ fi
      echo "isp_freq_min=400" >> /boot/config.txt
      echo "v3d_freq_min=400" >> /boot/config.txt
 
-  
-        cd /opt
-        git clone https://github.com/OpenHD/OpenHD-debug
-        cd OpenHD-debug
-        chmod +x debug.sh
-        crontab -l > mycron
-        echo "@reboot /opt/OpenHD-debug/debug.sh" >> mycron
-        crontab mycron
-        rm mycron
-        systemctl enable cron.service
+        #Adding Debug Script (currently pi only)
+     cd /opt
+     git clone https://github.com/OpenHD/OpenHD-debug
+     cd OpenHD-debug
+     chmod +x debug.sh
+     crontab -l > mycron
+     echo "@reboot /opt/OpenHD-debug/debug.sh" >> mycron
+     crontab mycron
+     rm mycron
+     systemctl enable cron.service
  fi
 
 #Ensure the runlevel is multi-target (3) could possibly be lower...
@@ -93,6 +94,8 @@ sudo systemctl mask plymouth-quit.service
 if [[ "${OS}" != "ubuntu" ]]; then
     echo "OS is NOT ubuntu..disabling journald flush"
     sudo systemctl disable systemd-journal-flush.service
+    touch /boot/OpenHD/jetson.txt
+
 fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
