@@ -42,9 +42,15 @@ fi
      echo "v3d_freq_min=400" >> /boot/config.txt
      echo "gpu_mem=128" >> /boot/config.txt
 
-        #additional drivers
-        wget -O install_pivariety_pkgs.sh https://github.com/ArduCAM/Arducam-Pivariety-V4L2-Driver/releases/download/install_script/install_pivariety_pkgs.sh
-        ./install_pivariety_pkgs.sh -p kernel_driver
+        #enable arducam drivers
+        cd /opt
+        git clone https://github.com/OpenHD/Arducam-Pivariety-V4L2-Driver
+        cd Arducam-Pivariety-V4L2-Driver
+        cd Release
+        ./install_driver.sh -1
+        ./install_driver.sh -2
+        ./install_driver.sh -3
+
         #Adding Debug Script (currently pi only)
      cd /opt
      git clone https://github.com/OpenHD/OpenHD-debug
