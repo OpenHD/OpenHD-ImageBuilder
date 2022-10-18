@@ -103,12 +103,12 @@ sudo systemctl mask plymouth-quit.service
 if [[ "${OS}" != "ubuntu" ]]; then
     echo "OS is NOT ubuntu..disabling journald flush"
     sudo systemctl disable systemd-journal-flush.service
-    touch /boot/OpenHD/jetson.txt
 
 fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
        echo "/dev/mmcblk0p15 /boot/OpenHD vfat defaults 0 0" >> /etc/fstab
+       touch /boot/OpenHD/jetson.txt
 fi
 #this service updates runlevel changes. Set desired runlevel prior to this being disabled
 sudo systemctl disable systemd-update-utmp.service
