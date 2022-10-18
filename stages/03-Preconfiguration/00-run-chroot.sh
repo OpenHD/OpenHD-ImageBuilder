@@ -47,9 +47,8 @@ fi
         git clone https://github.com/OpenHD/Arducam-Pivariety-V4L2-Driver
         cd Arducam-Pivariety-V4L2-Driver
         cd Release
-        ./install_driver.sh -1
-        ./install_driver.sh -2
-        ./install_driver.sh -3
+        ./install_driver.sh
+
 
         #Adding Debug Script (currently pi only)
      cd /opt
