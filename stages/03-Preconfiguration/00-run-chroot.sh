@@ -48,6 +48,10 @@ fi
         cd Arducam-Pivariety-V4L2-Driver
         cd Release
         ./install_driver.sh
+        #removing overlay until openhd loads it
+        sed -i '/dtoverlay=arducam-pivariety/d' /boot/config.txt
+
+
 
 
         #Adding Debug Script (currently pi only)
