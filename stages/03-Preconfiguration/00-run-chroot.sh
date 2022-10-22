@@ -42,19 +42,20 @@ fi
      echo "v3d_freq_min=400" >> /boot/config.txt
      echo "gpu_mem=128" >> /boot/config.txt
 
-        #enable arducam drivers
-        cd /opt
-        git clone https://github.com/OpenHD/Arducam-Pivariety-V4L2-Driver
-        cd Arducam-Pivariety-V4L2-Driver
-        cd Release
-        ./install_driver.sh
-        #removing overlay until openhd loads it
-        sed -i '/dtoverlay=arducam-pivariety/d' /boot/config.txt
+     # enable dualcam-csi
+     cd /boot/
+     wget https://github.com/ochin-space/ochin-CM4/blob/master/files/dt-blob.bin
+        
+     #enable arducam drivers
+     cd /opt
+     git clone https://github.com/OpenHD/Arducam-Pivariety-V4L2-Driver
+     cd Arducam-Pivariety-V4L2-Driver
+     cd Release
+     ./install_driver.sh
+     #removing overlay until openhd loads it
+     sed -i '/dtoverlay=arducam-pivariety/d' /boot/config.txt
 
-
-
-
-        #Adding Debug Script (currently pi only)
+     #Adding Debug Script (currently pi only)
      cd /opt
      git clone https://github.com/OpenHD/OpenHD-debug
      cd OpenHD-debug
