@@ -42,10 +42,20 @@ fi
      echo "v3d_freq_min=400" >> /boot/config.txt
      echo "gpu_mem=128" >> /boot/config.txt
 
-        #additional drivers
-        wget -O install_pivariety_pkgs.sh https://github.com/ArduCAM/Arducam-Pivariety-V4L2-Driver/releases/download/install_script/install_pivariety_pkgs.sh
-        ./install_pivariety_pkgs.sh -p kernel_driver
-        #Adding Debug Script (currently pi only)
+     # enable dualcam-csi
+     cd /boot/
+     wget https://github.com/ochin-space/ochin-CM4/blob/master/files/dt-blob.bin
+        
+     #enable arducam drivers
+     cd /opt
+     git clone https://github.com/OpenHD/Arducam-Pivariety-V4L2-Driver
+     cd Arducam-Pivariety-V4L2-Driver
+     cd Release
+     ./install_driver.sh
+     #removing overlay until openhd loads it
+     sed -i '/dtoverlay=arducam-pivariety/d' /boot/config.txt
+
+     #Adding Debug Script (currently pi only)
      cd /opt
      git clone https://github.com/OpenHD/OpenHD-debug
      cd OpenHD-debug
@@ -98,12 +108,12 @@ sudo systemctl mask plymouth-quit.service
 if [[ "${OS}" != "ubuntu" ]]; then
     echo "OS is NOT ubuntu..disabling journald flush"
     sudo systemctl disable systemd-journal-flush.service
-    touch /boot/OpenHD/jetson.txt
 
 fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
        echo "/dev/mmcblk0p15 /boot/OpenHD vfat defaults 0 0" >> /etc/fstab
+       touch /boot/OpenHD/jetson.txt
 fi
 #this service updates runlevel changes. Set desired runlevel prior to this being disabled
 sudo systemctl disable systemd-update-utmp.service
