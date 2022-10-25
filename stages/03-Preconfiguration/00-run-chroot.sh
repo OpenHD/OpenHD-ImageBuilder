@@ -41,6 +41,7 @@ fi
      echo "isp_freq_min=400" >> /boot/config.txt
      echo "v3d_freq_min=400" >> /boot/config.txt
      echo "gpu_mem=128" >> /boot/config.txt
+     sudo raspi-config nonint do_boot_behaviour B2
 
      # enable dualcam-csi
      cd /boot/
