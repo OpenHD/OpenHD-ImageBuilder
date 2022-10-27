@@ -116,6 +116,12 @@ fi
 if [[ "${OS}" == "ubuntu" ]]; then
        echo "/dev/mmcblk0p15 /boot/OpenHD vfat defaults 0 0" >> /etc/fstab
        touch /boot/OpenHD/jetson.txt
+       touch /boot/OpenHD/air.txt
+fi
+
+if [[ "${OS}" == "ubuntu-x86" ]] ; then
+        touch /boot/OpenHD/x86.txt
+       touch /boot/OpenHD/ground.txt
 fi
 #this service updates runlevel changes. Set desired runlevel prior to this being disabled
 sudo systemctl disable systemd-update-utmp.service
