@@ -65,7 +65,7 @@ fi
 echo "-------------------------GETTING FIRST UPDATE------------------------------------"
 
 #adding config folder
-mkdir -p /boot/OpenHD
+mkdir -p /boot/openhd
 apt update --allow-releaseinfo-change || exit 1  
 
 if [[ "${OS}" == "raspbian" ]]; then

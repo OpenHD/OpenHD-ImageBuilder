@@ -19,7 +19,7 @@ fi
 
  if [[ "${OS}" == "raspbian" ]] ; then
      echo "adding openhd user"
-     touch /boot/OpenHD/rpi.txt
+     touch /boot/openhd/rpi.txt
      cd /opt
      git clone https://github.com/OpenHD/Overlay
      cd Overlay
@@ -114,14 +114,14 @@ if [[ "${OS}" != "ubuntu" ]]; then
 fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
-       echo "/dev/mmcblk0p15 /boot/OpenHD vfat defaults 0 0" >> /etc/fstab
-       touch /boot/OpenHD/jetson.txt
-       touch /boot/OpenHD/air.txt
+       echo "/dev/mmcblk0p15 /boot/openhd vfat defaults 0 0" >> /etc/fstab
+       touch /boot/openhd/jetson.txt
+       touch /boot/openhd/air.txt
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
-       touch /boot/OpenHD/x86.txt
-       touch /boot/OpenHD/ground.txt
+       touch /boot/openhd/x86.txt
+       touch /boot/openhd/ground.txt
        cd /opt
        git clone https://github.com/OpenHD/Overlay
        cd Overlay
