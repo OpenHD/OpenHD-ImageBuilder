@@ -75,7 +75,7 @@ fi
 apt install -y apt-transport-https curl apt-utils
 
 #We use different repositories for milestone and testing branches, milestone includes ALL needed files and have everything build exactly for milestone images
-if [[ "${TESTING}" == "testing" ]]; then
+if [[ "${TESTING}" == "testing" ]] ; then
     curl -1sLf \
     'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' \
     | sudo -E bash
@@ -97,10 +97,12 @@ if [[ "${TESTING}" == "testing" ]]; then
     echo "installing build dependencies"
     if [[ "${OS}" == "ubuntu" ]]; then
     bash /opt/Open.HD/install_dep_jetson.sh
-    else
+    elif [[ "${OS}" == "raspbian" ]]; then
     bash /opt/QOpenHD/install_dep.sh 
     bash /opt/Open.HD/install_dep.sh
     fi
+
+    
       if [[ "${OS}" == "ubuntu-x86" ]] ; then
       echo "x86-compiling stuff"
       cd /opt
@@ -110,6 +112,7 @@ if [[ "${TESTING}" == "testing" ]]; then
       #sudo apt install -y dkms nvidia-driver-510 nvidia-dkms-510
       sudo apt install -y network-manager network-manager-gnome openhd-linux-x86
       git clone https://github.com/OpenHD/rtl8812au-5.2.20 
+      cat /proc/version
       fi
 
 else
