@@ -8,6 +8,8 @@
 useradd openhd
 echo "openhd:openhd" | chpasswd
 adduser openhd sudo
+chown -R openhd:openhd /home/openhd
+
 
 # On platforms that already have a separate boot partition we just put the config files on there, but some
 # platforms don't have or need a boot partition, so on those we have a separate /conf partition. All
