@@ -26,24 +26,9 @@ fi
      git clone https://github.com/OpenHD/Overlay
      cd Overlay
      cp userconf.txt /boot/userconf.txt
+     cd configs
+     cp * /boot/openhd
      echo "setup raspbian to enable QOpenHD"
-   	#  sed -i '/.all./d' /boot/config.txt
-	#  sed -i '/camera_auto_detect=1/d' /boot/config.txt
-	#  sed -i '/dtoverlay=vc4-kms-v3d/d' /boot/config.txt
-	#  sed -i '/enable_uart=1/d' /boot/config.txt
-    #  echo "setting up clocks"
-    #  echo "[pi4]" >> /boot/config.txt
-    #  echo "h264_freq_min=400" >> /boot/config.txt
-    #  echo "isp_freq_min=400" >> /boot/config.txt
-    #  echo "v3d_freq_min=400" >> /boot/config.txt
-    #  echo "gpu_mem=128" >> /boot/config.txt
-    #  echo "[all]" >> /boot/config.txt
-	#  echo "start_x=1" >> /boot/config.txt
-	#  echo "dtoverlay=vc4-fkms-v3d" >> /boot/config.txt
-	#  echo "enable_uart=1" >> /boot/config.txt
-    #  echo "dtparam=i2c_arm=on" >> /boot/config.txt
-    #  echo "dtparam=i2c_vc=on" >> /boot/config.txt
-    #  echo "dtparam=i2c1=on" >> /boot/config.txt
      #enable autologin
      sudo raspi-config nonint do_boot_behaviour B2
 
@@ -102,7 +87,6 @@ sudo systemctl disable hciuart.service
 sudo systemctl disable anacron.service
 sudo systemctl disable exim4.service
 sudo systemctl mask hostapd.service
-sudo systemctl mask wpa_supplicant.service
 sudo systemctl enable ssh #we have ssh constantly enabled
 
 
