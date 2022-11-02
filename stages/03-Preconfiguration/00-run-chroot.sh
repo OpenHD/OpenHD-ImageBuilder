@@ -93,7 +93,7 @@ if [[ "${OS}" != "testing" ]] || [[ "${OS}" != "milestone" ]]; then
 fi
 #replace dhcpcd with network manager
 sudo systemctl disable dhcpcd.service
-sudo sysctemctl enable NetworkManager
+sudo systemctl enable NetworkManager
 
 sudo systemctl disable triggerhappy.service
 sudo systemctl disable avahi-daemon.service
