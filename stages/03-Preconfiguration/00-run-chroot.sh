@@ -27,7 +27,7 @@ fi
      cd Overlay
      cp userconf.txt /boot/userconf.txt
      cd configs
-     cp * /boot/openhd
+     cp * /boot/openhd/configs
      echo "setup raspbian to enable QOpenHD"
      #enable autologin
      sudo raspi-config nonint do_boot_behaviour B2
