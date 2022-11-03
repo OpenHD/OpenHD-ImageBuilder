@@ -106,6 +106,7 @@ if [[ "${TESTING}" == "testing" ]] ; then
       if [[ "${OS}" == "ubuntu-x86" ]] ; then
       echo "x86-compiling stuff"
       cd /opt
+      mkdir -p /opt/X86/
       sudo apt install -y install openhd-qt-x86-focal install qopenhd
       sudo apt install -y xserver-xorg-input-libinput xserver-xorg-input-synaptics
       sudo apt install -y xinit net-tools libxcb-xinerama0 libxcb-util1 libgstreamer-plugins-base1.0-dev

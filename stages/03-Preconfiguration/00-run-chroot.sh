@@ -115,11 +115,11 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        cd /opt
        git clone https://github.com/OpenHD/Overlay
        cd Overlay
-       mkdir -p /opt/X86/
-       cp initial-setup.sh /opt/X86/initial-setup.sh
-       cp initial-setup.service /etc/systemd/system/
-       chmod 744 /opt/X86/initial-setup.sh
-       chmod 664 /etc/systemd/system/initial-setup.service
+       cp -rf initial-setup.sh /opt/X86/
+       cp -rf initial-setup.service /etc/systemd/system/
+       sudo chmod +x /opt/X86/initial-setup.sh
+       sudo chmod 744 /opt/X86/initial-setup.sh
+       sudo chmod 664 /etc/systemd/system/initial-setup.service
        systemctl daemon-reload
        systemctl enable initial-setup.service
        echo "Created initial setup service"
