@@ -115,11 +115,12 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        cd /opt
        git clone https://github.com/OpenHD/Overlay
        cd Overlay
-       cp initial-setup.sh /opt/X86
+       cp initial-setup.sh /opt/X86/initial-setup.sh
        cp initial-setup.service /etc/systemd/system/
        chmod 744 /opt/X86/initial-setup.sh
        chmod 664 /etc/systemd/system/initial-setup.service
-
+       systemctl daemon-reload
+       systemctl enable initial-setup.service
        "Created initial setup service"
 fi
 #this service updates runlevel changes. Set desired runlevel prior to this being disabled
