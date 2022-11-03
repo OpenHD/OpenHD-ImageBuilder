@@ -117,6 +117,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        cd Overlay
        cp initial-setup.sh /opt/X86
        chmod +x /opt/X86/initial-setup.sh
+       cd /opt/X86
        update-rc.d initial-setup.sh defaults 100
 
 fi
