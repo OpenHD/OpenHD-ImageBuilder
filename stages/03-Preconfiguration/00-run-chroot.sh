@@ -115,6 +115,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        cd /opt
        git clone https://github.com/OpenHD/Overlay
        cd Overlay
+       mkdir -p /opt/X86/
        cp initial-setup.sh /opt/X86/initial-setup.sh
        cp initial-setup.service /etc/systemd/system/
        chmod 744 /opt/X86/initial-setup.sh
