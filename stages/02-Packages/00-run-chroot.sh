@@ -112,8 +112,7 @@ if [[ "${TESTING}" == "testing" ]] ; then
       sudo apt install -y xinit net-tools libxcb-xinerama0 libxcb-util1 libgstreamer-plugins-base1.0-dev
       #sudo apt install -y dkms nvidia-driver-510 nvidia-dkms-510
       sudo apt install -y network-manager libspdlog-dev network-manager-gnome openhd-linux-x86
-      cd /opt/X86/
-      git clone https://github.com/OpenHD/rtl8812au-5.2.20 
+      git clone https://github.com/OpenHD/rtl8812au-5.2.20 /opt/X86/
       cat /proc/version
       fi
 
