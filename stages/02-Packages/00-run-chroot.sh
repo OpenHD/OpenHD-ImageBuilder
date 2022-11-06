@@ -23,8 +23,8 @@ if [[ "${OS}" == "raspbian" ]]; then
     #Remove current kernel and nfs(bloat)
     apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc
     apt purge -y raspberrypi-kernel
-    apt remove -y nfs-common
-    PLATFORM_PACKAGES="veye-raspberrypi libsdl2-dev libavcodec-dev libavformat-dev mavsdk gst-plugins-good openhd-qt qopenhd libsodium-dev libpcap-dev git nano libcamera0 openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
+    apt remove -y nfs-common libcamera*
+    PLATFORM_PACKAGES="veye-raspberrypi libsdl2-dev libcamera-openhd libavcodec-dev libavformat-dev mavsdk gst-plugins-good openhd-qt qopenhd libsodium-dev libpcap-dev git nano openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
 fi
 
  if [[ "${OS}" == "ubuntu-x86" ]] ; then
