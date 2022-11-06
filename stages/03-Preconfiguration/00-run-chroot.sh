@@ -32,6 +32,7 @@ fi
      echo "setup raspbian to enable QOpenHD"
      cp /boot/openhd/configs/rpi_raspicam.txt /boot/config.txt
      #enable autologin
+     cd ..
      cp motd /etc/motd
      cp getty@.service /usr/lib/systemd/system/getty@.service
 
