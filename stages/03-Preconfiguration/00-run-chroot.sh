@@ -32,7 +32,8 @@ fi
      echo "setup raspbian to enable QOpenHD"
      cp /boot/openhd/configs/rpi_raspicam.txt /boot/config.txt
      #enable autologin
-     sudo raspi-config nonint do_boot_behaviour B2
+     cp motd /etc/motd
+     cp getty@.service /usr/lib/systemd/system/getty@.service
 
      # enable dualcam-csi
      cd /boot/
