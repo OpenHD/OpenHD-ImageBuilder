@@ -69,8 +69,6 @@ apt update --allow-releaseinfo-change || exit 1
 
 if [[ "${OS}" == "raspbian" ]]; then
     echo "OS is raspbian"
-    apt update
-    apt -y install openhd-linux-pi
 fi
 #add dependencies for our cloudsmith repository install-scripts
 apt install -y apt-transport-https curl apt-utils
@@ -137,6 +135,7 @@ echo "install openhd version-${OPENHD_PACKAGE}"
 #Now we're installing all those Packages, we need force-overwrite to overwrite some libraries and files which are supplied by other .deb-files, when we build them ourselves (like the kernel)
 apt update
 apt upgrade -y
+apt -y install openhd-linux-pi
 apt -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends install \
 ${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
