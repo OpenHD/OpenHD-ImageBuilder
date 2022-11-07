@@ -24,7 +24,7 @@ if [[ "${OS}" == "raspbian" ]]; then
     apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc
     apt purge -y raspberrypi-kernel
     apt remove -y nfs-common libcamera*
-    PLATFORM_PACKAGES="veye-raspberrypi libsdl2-dev libspdlog-dev libcamera-openhd libavcodec-dev libavformat-dev mavsdk gst-plugins-good openhd-qt qopenhd libsodium-dev libpcap-dev git nano openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
+    PLATFORM_PACKAGES="veye-raspberrypi openhd-linux-pi libsdl2-dev libspdlog-dev libcamera-openhd libavcodec-dev libavformat-dev mavsdk gst-plugins-good openhd-qt qopenhd libsodium-dev libpcap-dev git nano openssh-server libboost1.74-dev libboost-thread1.74-dev meson"
 fi
 
  if [[ "${OS}" == "ubuntu-x86" ]] ; then
@@ -93,10 +93,10 @@ if [[ "${TESTING}" == "testing" ]] ; then
     cd /opt
     echo "installing build dependencies"
     if [[ "${OS}" == "ubuntu" ]]; then
-    bash /opt/Open.HD/install_dep_jetson.sh
+    bash /opt/Open.HD/install_dep_jetson.sh || exit 1
     elif [[ "${OS}" == "raspbian" ]]; then
-    bash /opt/QOpenHD/install_dep.sh 
-    bash /opt/Open.HD/install_dep.sh
+    bash /opt/QOpenHD/install_dep.sh || exit 1
+    bash /opt/Open.HD/install_dep.sh || exit 1
     fi
 
     
@@ -133,7 +133,6 @@ echo "install openhd version-${OPENHD_PACKAGE}"
 #Now we're installing all those Packages, we need force-overwrite to overwrite some libraries and files which are supplied by other .deb-files, when we build them ourselves (like the kernel)
 apt update
 apt upgrade -y
-apt -y install openhd-linux-pi
 apt -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends install \
 ${OPENHD_PACKAGE} \
 ${PLATFORM_PACKAGES} \
