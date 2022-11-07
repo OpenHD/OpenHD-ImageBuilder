@@ -87,11 +87,9 @@ if [[ "${TESTING}" == "testing" ]] ; then
     apt install git
     git clone --recursive https://github.com/OpenHD/Open.HD
     cd Open.HD
-    git checkout 2.2.3-evo
     cd /opt
     git clone --recursive https://github.com/OpenHD/QOpenHD
     cd QOpenHD
-    git checkout 2.2.3-evo
     cd /opt
     echo "installing build dependencies"
     if [[ "${OS}" == "ubuntu" ]]; then
