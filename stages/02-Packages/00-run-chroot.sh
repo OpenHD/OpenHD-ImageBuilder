@@ -29,11 +29,10 @@ fi
 
  if [[ "${OS}" == "ubuntu-x86" ]] ; then
         echo "OS is ubuntu, we're building for x86"
-        sudo apt-mark hold linux-image-generic linux-headers-generic linux-headers-5.15.0-48-generic linux-hwe-5.15-headers-5.15.0-48 linux-image-5.15.0-48-generic linux-modules-generic linux-modules-extra-generic linux-modules-5.15.0-48-generic linux-modules-extra-5.15.0-48-generic
         sudo apt update
         sudo apt upgrade
         sudo apt install -y git
-        PLATFORM_PACKAGES="nano python3-pip libavcodec-dev libavformat-dev libelf-dev"
+        PLATFORM_PACKAGES="nano python3-pip htop libavcodec-dev libavformat-dev libelf-dev"
 fi
 
 
@@ -108,12 +107,9 @@ if [[ "${TESTING}" == "testing" ]] ; then
       cd /opt
       mkdir -p /opt/X86/
       sudo apt install -y openhd-qt-x86-focal qopenhd
-      sudo apt install -y xserver-xorg-input-libinput xserver-xorg-input-synaptics
       sudo apt install -y xinit net-tools libxcb-xinerama0 libxcb-util1 libgstreamer-plugins-base1.0-dev
       #sudo apt install -y dkms nvidia-driver-510 nvidia-dkms-510
-      sudo apt install -y network-manager libspdlog-dev network-manager-gnome openhd-linux-x86
-      git clone https://github.com/OpenHD/rtl8812au-5.2.20 /opt/X86/
-      cat /proc/version
+      sudo apt install -y network-manager libspdlog-dev network-manager-gnome openhd-linux-x86 qopenhd 
       fi
 
 else
