@@ -69,6 +69,8 @@ apt update --allow-releaseinfo-change || exit 1
 
 if [[ "${OS}" == "raspbian" ]]; then
     echo "OS is raspbian"
+    apt update
+    apt -y install openhd-linux-pi
 fi
 #add dependencies for our cloudsmith repository install-scripts
 apt install -y apt-transport-https curl apt-utils
