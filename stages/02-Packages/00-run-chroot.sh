@@ -95,9 +95,9 @@ if [[ "${TESTING}" == "testing" ]] ; then
     bash /opt/Open.HD/install_dep_jetson.sh || exit 1
     elif [[ "${OS}" == "raspbian" ]]; then
     cd /opt/QOpenHD
-    bash /opt/QOpenHD/install_dep.sh || exit 1
+    bash /opt/QOpenHD/install_dep_rpi.sh || exit 1
     cd /opt/Open.HD
-    bash /opt/Open.HD/install_dep.sh || exit 1
+    bash /opt/Open.HD/install_dep_rpi.sh || exit 1
     fi
 
     
