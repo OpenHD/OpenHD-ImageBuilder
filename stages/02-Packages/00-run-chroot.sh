@@ -4,7 +4,7 @@
 # This stage will install and remove packages which are required to get OpenHD to work
 
 #!/bin/bash
-if [[ "${OS}" != "ubuntu" ]]; then
+if [[ "${OS}" == "raspbian" ]]; then
     # Remove bad and unnecessary symlinks if system is not ubuntu
     rm /lib/modules/*/build || true
     rm /lib/modules/*/source || true
