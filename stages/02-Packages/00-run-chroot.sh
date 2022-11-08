@@ -85,19 +85,19 @@ if [[ "${TESTING}" == "testing" ]] ; then
     apt update 
     cd /opt
     apt install git
-    git clone --recursive https://github.com/OpenHD/Open.HD
-    cd Open.HD
+    git clone --recursive https://github.com/OpenHD/OpenHD
+    cd OpenHD
     cd /opt
     git clone --recursive https://github.com/OpenHD/QOpenHD
      echo "installing build dependencies"
     if [[ "${OS}" == "ubuntu" ]]; then
-    cd /opt/Open.HD
-    bash /opt/Open.HD/install_dep_jetson.sh || exit 1
+    cd /opt/OpenHD
+    bash /opt/OpenHD/install_dep_jetson.sh || exit 1
     elif [[ "${OS}" == "raspbian" ]]; then
     cd /opt/QOpenHD
     bash /opt/QOpenHD/install_dep_rpi.sh || exit 1
-    cd /opt/Open.HD
-    bash /opt/Open.HD/install_dep_rpi.sh || exit 1
+    cd /opt/OpenHD
+    bash /opt/OpenHD/install_dep_rpi.sh || exit 1
     fi
 
     
