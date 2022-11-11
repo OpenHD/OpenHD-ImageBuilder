@@ -19,6 +19,8 @@ zenity --warning --title="OpenHD Warning" --text="OpenHD may interfere with your
 
 	if zenity --question --title="Confirm" --text="Do you want to install OpenHD Drivers ? \nThis will install custom drivers and services needed to run OpenHD! \nPlease remember turning off your wireless Network or switch it to another Band then OpenHD " --no-wrap 
 	then	
+		apt update 
+		apt install -y git dkms
 		mkdir -p /opt/X86
 		cd /opt/X86
 		rm -Rf *
@@ -74,7 +76,7 @@ zenity --warning --title="OpenHD Warning" --text="OpenHD may interfere with your
     		sudo apt install -y openhd-qt-x86-focal qopenhd mavsdk
       		sudo apt install -y xinit net-tools libxcb-xinerama0 libxcb-util1 libgstreamer-plugins-base1.0-dev
 		sudo apt install -y network-manager libspdlog-dev network-manager-gnome qopenhd 
-		sudo apt install openhd qopenhd
+		sudo apt install -y openhd qopenhd
 		zenity --info --title="Success" --text="OpenHD is now installed, please reboot" --no-wrap
 
     		
