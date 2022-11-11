@@ -21,11 +21,12 @@ zenity --warning --title="OpenHD Warning" --text="OpenHD may interfere with your
 	then	
 		apt update 
 		apt install -y git dkms curl
-		chmod u+x  shortcuts/OpenHD-Air.desktop
-		chmod u+x  shortcuts/OpenHD-Ground.desktop
-		chmod u+x  shortcuts/QOpenHD.desktop
+		chmod a+x  shortcuts/OpenHD-Air.desktop
+		chmod a+x  shortcuts/OpenHD-Ground.desktop
+		chmod a+x  shortcuts/QOpenHD.desktop
 		for homedir in /home/*; do sudo cp shortcuts/* "$homedir"; done
 		sudo cp shortcuts/* /usr/share/applications/
+		sudo cp shortcuts/OpenHD.ico /opt/
 		mkdir -p /opt/X86
 		cd /opt/X86
 		rm -Rf *
