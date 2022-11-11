@@ -71,8 +71,12 @@ zenity --warning --title="OpenHD Warning" --text="OpenHD may interfere with your
     		cd OpenHD
     		./install_dep_ubuntu20.sh
     		cd ..
+    		git clone https://github.com/OpenHD/QOpenHD
     		cd QOpenHD
+    		chmod +x install_dep_ubuntu20_release.sh
+    		chmod +x install_dep_extra.sh
     		./install_dep_ubuntu20_release.sh
+    		./install_dep_extra.sh
     		sudo apt install -y openhd-qt-x86-focal qopenhd mavsdk
       		sudo apt install -y xinit net-tools libxcb-xinerama0 libxcb-util1 libgstreamer-plugins-base1.0-dev
 		sudo apt install -y network-manager libspdlog-dev network-manager-gnome qopenhd 
@@ -86,3 +90,4 @@ else
 zenity --warning --title="OpenHD Warning" --text="You need to run this as root, please restart the script!" --no-wrap
 exit
 fi
+
