@@ -77,11 +77,18 @@ zenity --warning --title="OpenHD Warning" --text="OpenHD may interfere with your
     		chmod +x install_dep_extra.sh
     		./install_dep_ubuntu20_release.sh
     		./install_dep_extra.sh
-    		sudo apt install -y openhd-qt-x86-focal qopenhd mavsdk
+    		sudo apt install -y openhd-qt-x86-focal mavsdk
       		sudo apt install -y xinit net-tools libxcb-xinerama0 libxcb-util1 libgstreamer-plugins-base1.0-dev
-		sudo apt install -y network-manager libspdlog-dev network-manager-gnome qopenhd 
-		sudo apt install -y openhd qopenhd
-		zenity --info --title="Success" --text="OpenHD is now installed, please reboot" --no-wrap
+			sudo apt install -y network-manager libspdlog-dev network-manager-gnome 
+			sudo apt install -y openhd qopenhd
+			sudo rm -Rf \etc\systemd\system\qopenhd.service
+			sudo rm -Rf \etc\systemd\system\openhd.service
+			chmod u+x  shortcuts/OpenHD-Air.desktop
+			chmod u+x  shortcuts/OpenHD-Ground.desktop
+			chmod u+x  shortcuts/QOpenHD.desktop
+			for homedir in /home/*; do sudo cp shortcuts/* "$homedir"; done
+			sudo cp shortcuts/* /usr/share/applications/
+			zenity --info --title="Success" --text="OpenHD is now installed, please reboot" --no-wrap
 
     		
 
