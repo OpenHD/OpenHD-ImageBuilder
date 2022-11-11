@@ -20,7 +20,7 @@ zenity --warning --title="OpenHD Warning" --text="OpenHD may interfere with your
 	if zenity --question --title="Confirm" --text="Do you want to install OpenHD Drivers ? \nThis will install custom drivers and services needed to run OpenHD! \nPlease remember turning off your wireless Network or switch it to another Band then OpenHD " --no-wrap 
 	then	
 		apt update 
-		apt install -y git dkms
+		apt install -y git dkms curl
 		mkdir -p /opt/X86
 		cd /opt/X86
 		rm -Rf *
