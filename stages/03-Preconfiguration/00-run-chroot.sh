@@ -117,6 +117,14 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        git clone https://github.com/OpenHD/Overlay
        cd Overlay
        cp motd /etc/motd
+       systemctl disable openhd
+       git clone https://github.com/OpenHD/OpenHD-ImageBuilder
+       cd OpenHD-ImageBuilder
+       chmod a+x  shortcuts/OpenHD-Air.desktop
+	   chmod a+x  shortcuts/OpenHD-Ground.desktop
+	   chmod a+x  shortcuts/QOpenHD.desktop
+	   sudo cp shortcuts/* /usr/share/applications/
+	   sudo cp shortcuts/OpenHD.ico /opt/
        #cp -rf initial-setup.sh /opt/X86/
        #cp -rf initial-setup.service /etc/systemd/system/
        #sudo chmod +x /opt/X86/initial-setup.sh
