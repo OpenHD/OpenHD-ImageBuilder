@@ -106,7 +106,6 @@ if [[ "${OS}" != "ubuntu" ]]; then
 fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
-       echo "/dev/mmcblk0p15 /boot/openhd vfat defaults 0 0" >> /etc/fstab
        touch /boot/openhd/jetson.txt
        touch /boot/openhd/air.txt
 fi
