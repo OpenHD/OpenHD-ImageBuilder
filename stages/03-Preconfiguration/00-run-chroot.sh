@@ -108,6 +108,7 @@ fi
 if [[ "${OS}" == "ubuntu" ]]; then
        touch /boot/openhd/jetson.txt
        touch /boot/openhd/air.txt
+       rm /usr/sbin/nv-oem-config-firstboot*
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
