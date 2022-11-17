@@ -36,6 +36,9 @@ fi
      cd ..
      cp motd /etc/motd
      cp getty@.service /usr/lib/systemd/system/getty@.service
+     #remove serial console
+    sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
+    sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
 
      # enable dualcam-csi
      cd /boot/
