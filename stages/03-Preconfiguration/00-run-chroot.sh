@@ -6,6 +6,7 @@
 #!/bin/bash
 # create a use account that should be the same on all platforms
 useradd openhd
+mkdir -p /home/openhd
 echo "openhd:openhd" | chpasswd
 adduser openhd sudo
 chown -R openhd:openhd /home/openhd
@@ -106,6 +107,7 @@ if [[ "${OS}" != "ubuntu" ]]; then
 fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
+       echo "debug ubuntu jetson"
        touch /boot/openhd/jetson.txt
        touch /boot/openhd/air.txt
        rm /usr/sbin/nv-oem-config-firstboot*
