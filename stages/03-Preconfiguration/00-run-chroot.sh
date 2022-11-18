@@ -113,7 +113,7 @@ if [[ "${OS}" == "ubuntu" ]]; then
        echo "debug ubuntu jetson"
        touch /boot/openhd/jetson.txt
        touch /boot/openhd/air.txt
-       rm /usr/sbin/nv-oem-config-firstboot*
+       systemctl disable nv-oem-config.service
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
