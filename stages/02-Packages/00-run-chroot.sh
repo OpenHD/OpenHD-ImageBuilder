@@ -32,6 +32,7 @@ fi
         sudo apt update
         sudo apt upgrade
         sudo apt install -y git
+        sudo apt remove -y ubuntu-artwork ubuntu-sounds ubuntu-wallpapers
         PLATFORM_PACKAGES="nano python3-pip htop libavcodec-dev libavformat-dev libelf-dev"
 fi
 
@@ -100,7 +101,7 @@ if [[ "${TESTING}" == "testing" ]] ; then
     bash /opt/OpenHD/install_dep_rpi.sh || exit 1
     elif [[ "${OS}" == "ubuntu-x86" ]]; then
     cd /opt/QOpenHD
-    bash /opt/QOpenHD/install_dep_ubuntu22.sh || exit 1
+    #bash /opt/QOpenHD/install_dep_ubuntu22.sh || exit 1
     cd /opt/OpenHD
     bash /opt/OpenHD/install_dep_ubuntu22.sh || exit 1
     fi
