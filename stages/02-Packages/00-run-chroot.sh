@@ -32,7 +32,6 @@ fi
         sudo apt update
         sudo apt upgrade
         sudo apt install -y git
-        sudo apt remove -y ubuntu-artwork ubuntu-sounds ubuntu-wallpapers
         PLATFORM_PACKAGES="nano python3-pip htop libavcodec-dev libavformat-dev libelf-dev"
 fi
 
