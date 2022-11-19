@@ -32,10 +32,11 @@ fi
         sudo apt update
         sudo apt upgrade
         sudo apt install -y git
-        PLATFORM_PACKAGES="nano python3-pip htop libavcodec-dev libavformat-dev libelf-dev"
+        PLATFORM_PACKAGES="nano python3-pip htop libavcodec-dev libavformat-dev libelf-dev libboost-filesystem-dev openhd"
+        cd /opt
+        mkdir -p /opt/X86/
 fi
-
-
+    
     if [[ "${OS}" == "ubuntu" ]]; then
         echo "OS is ubuntu"
         #The version we use as Base has messed up sources (by nvidia), we're correcting this now
@@ -73,8 +74,8 @@ fi
 #add dependencies for our cloudsmith repository install-scripts
 apt install -y apt-transport-https curl apt-utils
 
-#We use different repositories for milestone and testing branches, milestone includes ALL needed files and have everything build exactly for milestone images
-if [[ "${TESTING}" == "testing" ]] ; then
+#We use different repositories for regular and testing branches. Ubuntu x86 has not enough space to clone and build everything, the user must do this on himself if he wants that (needs at least 20gb space)
+if [[ "${TESTING}" == "testing" ]] && [[ "${OS}" != "ubuntu-x86" ]]; then
     curl -1sLf \
     'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' \
     | sudo -E bash
@@ -98,29 +99,15 @@ if [[ "${TESTING}" == "testing" ]] ; then
     bash /opt/QOpenHD/install_dep_rpi.sh || exit 1
     cd /opt/OpenHD
     bash /opt/OpenHD/install_dep_rpi.sh || exit 1
-    elif [[ "${OS}" == "ubuntu-x86" ]]; then
-    cd /opt/QOpenHD
-    #bash /opt/QOpenHD/install_dep_ubuntu22.sh || exit 1
-    cd /opt/OpenHD
-    bash /opt/OpenHD/install_dep_ubuntu22.sh || exit 1
     fi
     
-
-    
-    if [[ "${OS}" == "ubuntu-x86" ]] ; then
-    echo "x86-compiling stuff"
-    cd /opt
-    mkdir -p /opt/X86/
-    #sudo apt install -y openhd-qt-x86-focal 
-    #sudo apt install -y dkms nvidia-driver-510 nvidia-dkms-510
-    #sudo apt install -y libspdlog-dev openhd-linux-x86 qopenhd 
-    fi
-
 else
     curl -1sLf \
     'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' \
     | sudo -E bash
 fi
+
+
 
 echo "-------------------------GETTING SECOND UPDATE------------------------------------"
 #after getting our repositories inside the image we need to apply them and update the sources
@@ -139,10 +126,7 @@ echo "install openhd version-${OPENHD_PACKAGE}"
 #Now we're installing all those Packages, we need force-overwrite to overwrite some libraries and files which are supplied by other .deb-files, when we build them ourselves (like the kernel)
 apt update
 apt upgrade -y
-apt -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends install \
-${OPENHD_PACKAGE} \
-${PLATFORM_PACKAGES} \
-${GNUPLOT} || exit 1
+apt -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends install ${PLATFORM_PACKAGES} || exit 1
 
 #Now we purge/remove stuff that isn't needed andor was written in PURGE
 apt -yq purge ${PURGE} || exit 1
