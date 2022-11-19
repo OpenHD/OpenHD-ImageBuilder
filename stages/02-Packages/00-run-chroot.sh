@@ -98,18 +98,23 @@ if [[ "${TESTING}" == "testing" ]] ; then
     bash /opt/QOpenHD/install_dep_rpi.sh || exit 1
     cd /opt/OpenHD
     bash /opt/OpenHD/install_dep_rpi.sh || exit 1
+    elif [[ "${OS}" == "ubuntu-x86" ]]; then
+    cd /opt/QOpenHD
+    bash /opt/QOpenHD/install_dep_ubuntu22.sh || exit 1
+    cd /opt/OpenHD
+    bash /opt/OpenHD/install_dep_ubuntu22.sh || exit 1
     fi
+    
 
     
-      if [[ "${OS}" == "ubuntu-x86" ]] ; then
-      echo "x86-compiling stuff"
-      cd /opt
-      mkdir -p /opt/X86/
-      sudo apt install -y openhd-qt-x86-focal 
-      sudo apt install -y xinit net-tools libxcb-xinerama0 libxcb-util1 libgstreamer-plugins-base1.0-dev
-      #sudo apt install -y dkms nvidia-driver-510 nvidia-dkms-510
-      sudo apt install -y network-manager libspdlog-dev network-manager-gnome openhd-linux-x86 qopenhd 
-      fi
+    if [[ "${OS}" == "ubuntu-x86" ]] ; then
+    echo "x86-compiling stuff"
+    cd /opt
+    mkdir -p /opt/X86/
+    #sudo apt install -y openhd-qt-x86-focal 
+    #sudo apt install -y dkms nvidia-driver-510 nvidia-dkms-510
+    #sudo apt install -y libspdlog-dev openhd-linux-x86 qopenhd 
+    fi
 
 else
     curl -1sLf \
