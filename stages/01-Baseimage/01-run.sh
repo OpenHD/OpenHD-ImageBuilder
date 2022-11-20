@@ -41,7 +41,7 @@ EOF
 fi
 
 #jetson images need much more space than pi, so we need about 16GB space
-if [[ "${OS}" == "ubuntu" ]]; then
+if [[ "${OS}" == "dumbubuntu" ]]; then
      log "Calculate difference between original Image and Wanted size (~16GB)"
         WANTEDSIZE="15872000000"
         FILESIZE=$(stat -c%s "IMAGE.img")
