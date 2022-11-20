@@ -43,9 +43,6 @@ fi
     if [[ "${OS}" == "ubuntu" ]]; then
         echo "OS is ubuntu"
         #The version we use as Base has messed up sources (by nvidia), we're correcting this now
-        rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
-        echo "deb https://repo.download.nvidia.com/jetson/common r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
-        echo "deb https://repo.download.nvidia.com/jetson/t210 r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
         echo "update gcc and libboost to something usable"
         #Since about everything on Jetson is not updated for ages and we need more modern build tools we'll add repositories which supply the right packages.
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
