@@ -35,6 +35,9 @@ fi
         PLATFORM_PACKAGES="nano python3-pip htop libavcodec-dev libavformat-dev libelf-dev libboost-filesystem-dev openhd"
         cd /opt
         mkdir -p /opt/X86/
+        curl -1sLf \
+        'https://dl.cloudsmith.io/public/openhd/openhd-2-2-dev/setup.deb.sh' \
+    |   sudo -E bash
 fi
     
     if [[ "${OS}" == "ubuntu" ]]; then
