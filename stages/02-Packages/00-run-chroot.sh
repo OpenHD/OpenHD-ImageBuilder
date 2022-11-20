@@ -43,7 +43,12 @@ fi
     if [[ "${OS}" == "ubuntu" ]]; then
         echo "OS is ubuntu"
         #The version we use as Base has messed up sources (by nvidia), we're correcting this now
+         rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
+        echo "deb https://repo.download.nvidia.com/jetson/common r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
+        echo "deb https://repo.download.nvidia.com/jetson/t210 r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
         echo "update gcc and libboost to something usable"
+        apt update
+        echo "Nvidia apparently doesn't like to fix code for Jetson devices"
         #Since about everything on Jetson is not updated for ages and we need more modern build tools we'll add repositories which supply the right packages.
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
         sudo add-apt-repository ppa:mhier/libboost-latest -y
@@ -74,7 +79,7 @@ fi
 #add dependencies for our cloudsmith repository install-scripts
 apt install -y apt-transport-https curl apt-utils
 
-#We use different repositories for regular and testing branches. Ubuntu x86 has not enough space to clone and build everything, the user must do this on himself if he wants that (needs at least 20gb space)
+#We use different repositories for regular and testing branches. Ubuntu has not enough space to clone and build everything, the user must do this on himself if he wants that (needs at least 20gb space)
 if [[ "${TESTING}" == "testing" ]] && [[ "${OS}" != "ubuntu-x86" ]]; then
     curl -1sLf \
     'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' \
@@ -91,10 +96,7 @@ if [[ "${TESTING}" == "testing" ]] && [[ "${OS}" != "ubuntu-x86" ]]; then
     cd /opt
     git clone --recursive https://github.com/OpenHD/QOpenHD
      echo "installing build dependencies"
-    if [[ "${OS}" == "ubuntu" ]]; then
-    cd /opt/OpenHD
-    bash /opt/OpenHD/install_dep_jetson.sh || exit 1
-    elif [[ "${OS}" == "raspbian" ]]; then
+    if [[ "${OS}" == "raspbian" ]]; then
     cd /opt/QOpenHD
     bash /opt/QOpenHD/install_dep_rpi.sh || exit 1
     cd /opt/OpenHD
