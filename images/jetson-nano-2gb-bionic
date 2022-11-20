@@ -1,4 +1,4 @@
-BASE_IMAGE_URL="https://openhdfpv.org/wp-content/BaseImages/
+BASE_IMAGE_URL="https://openhdfpv.org/wp-content/BaseImages/"
 BASE_IMAGE="jetson-2GB.7z"
 BASE_IMAGE_SHA256="tbd"
 OS="ubuntu"
