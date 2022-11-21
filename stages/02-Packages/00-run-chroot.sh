@@ -64,7 +64,7 @@ fi
         sudo apt remove -y --purge libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot
         sudo apt autoremove -y
         #list packages which will be installed later in Second update
-        PLATFORM_PACKAGES="nano libgstreamer-plugins-base1.0-dev python-pip libelf-dev libboost-filesystem-dev openhd"
+        PLATFORM_PACKAGES="nano libgstreamer-plugins-base1.0-dev python-pip libelf-dev libboost1.74-dev openhd"
 fi
 
 echo "-------------------------GETTING FIRST UPDATE------------------------------------"

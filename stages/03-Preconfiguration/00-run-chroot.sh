@@ -23,6 +23,7 @@ fi
  cd /opt
  git clone https://github.com/OpenHD/Overlay
 #Enable autologin
+ cd Overlay
  cp motd /etc/motd
  cp getty@.service /usr/lib/systemd/system/getty@.service
 
