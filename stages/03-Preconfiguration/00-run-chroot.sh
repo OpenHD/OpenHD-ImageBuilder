@@ -25,7 +25,6 @@ fi
 #Enable autologin
  cd Overlay
  cp motd /etc/motd
- cp getty@.service /usr/lib/systemd/system/getty@.service
 
  if [[ "${OS}" == "raspbian" ]] ; then
      echo "adding openhd user"
@@ -33,6 +32,7 @@ fi
      cd /opt
      cd Overlay
      cp userconf.txt /boot/userconf.txt
+     cp getty@.service /usr/lib/systemd/system/getty@.service
      cd configs
      mkdir -p /boot/openhd/configs
      cp * /boot/openhd/configs
@@ -112,11 +112,13 @@ if [[ "${OS}" != "ubuntu" ]]; then
 fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
-       echo "debug ubuntu jetson"
        mkdir -p /boot/openhd/
+       mkdir -p /etc/systemd/system/getty@tty1.service.d
        touch /boot/openhd/jetson.txt
        touch /boot/openhd/air.txt
+       cp /opt/Overlay/override.conf /etc/systemd/system/getty@tty1.service.d/
        systemctl disable nv-oem-config-gui.service
+       systemctl enable getty@tty1.service
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
