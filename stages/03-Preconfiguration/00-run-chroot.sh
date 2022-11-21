@@ -19,12 +19,17 @@ if [[ "${HAVE_CONF_PART}" == "false" ]] && [[ "${HAVE_BOOT_PART}" == "true" ]]; 
     ln -s /boot /conf
 fi
 
+#Clone misc Scripts and Files
+ cd /opt
+ git clone https://github.com/OpenHD/Overlay
+#Enable autologin
+ cp motd /etc/motd
+ cp getty@.service /usr/lib/systemd/system/getty@.service
 
  if [[ "${OS}" == "raspbian" ]] ; then
      echo "adding openhd user"
      touch /boot/openhd/rpi.txt
      cd /opt
-     git clone https://github.com/OpenHD/Overlay
      cd Overlay
      cp userconf.txt /boot/userconf.txt
      cd configs
@@ -32,10 +37,6 @@ fi
      cp * /boot/openhd/configs
      echo "setup raspbian to enable QOpenHD"
      cp /boot/openhd/configs/rpi_raspicam.txt /boot/config.txt
-     #enable autologin
-     cd ..
-     cp motd /etc/motd
-     cp getty@.service /usr/lib/systemd/system/getty@.service
      #remove serial console
     sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
     sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
@@ -111,18 +112,16 @@ fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
        echo "debug ubuntu jetson"
+       mkdir -p /boot/openhd/
        touch /boot/openhd/jetson.txt
        touch /boot/openhd/air.txt
        systemctl disable nv-oem-config-gui.service
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
+       mkdir -p /boot/openhd/
        touch /boot/openhd/x86.txt
        touch /boot/openhd/ground.txt
-       cd /opt
-       git clone https://github.com/OpenHD/Overlay
-       cd Overlay
-       cp motd /etc/motd
        systemctl disable openhd
        git clone https://github.com/OpenHD/OpenHD-ImageBuilder
        cd OpenHD-ImageBuilder
