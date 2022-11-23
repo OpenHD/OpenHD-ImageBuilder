@@ -86,7 +86,7 @@ So, on to this, the new and improved 'staged' image builder.
 
 **Note:** if a build fails for some reason, be sure to run the cleanup script so that any temporarily mounted images are cleaned up:
 
-    ./clean-fail.sh
+    ./clean-fail.sh 
 
 ### STAGES
 The core concept (and some code) was taken from link:https://github.com/RPi-Distro/pi-gen[pi-gen], the Raspbian image generator.
