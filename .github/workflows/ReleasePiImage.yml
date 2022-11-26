@@ -111,6 +111,9 @@ jobs:
         echo 'NAME<<EOF' >> $GITHUB_ENV
         ls -1 | sed -e 's/.img/.img.gz/g' >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
+        echo 'SIZEFULL<<EOF' >> $GITHUB_ENV
+        wc -c *.img >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
         gzip -v *.img
         ls -a
         mv * ../
@@ -145,15 +148,20 @@ jobs:
 
     - name: update YAMLFILE for the ImageWriter
       run: |
-        ls -a
-        cat sha256
+        ls -a      
+        export NAME=$(cat last.release)
+        export FILESIZE=${{ env.FULLSIZE }}
+        export FILENAME= ${{ env.NAME }}
+        export DOWNLOADSIZE=$(wc -c *.gz)
         export SUM=$(cat sha256)
-        sed -i "s/RELEASENAME/testname/ig" os_list_imagingutility_v3.json
-        sed -i "s/FILENAME/testfilename/ig" os_list_imagingutility_v3.json       
-        sed -i "s/FILESIZE/testsize/ig" os_list_imagingutility_v3.json       
+        export RELEASEDATE=$(date +%Y-%m-%d)
+
+        sed -i "s/RELEASENAME/$NAME/ig" os_list_imagingutility_v3.json
+        sed -i "s/FILENAME/$FILENAME/ig" os_list_imagingutility_v3.json       
+        sed -i "s/FILESIZE/$FILESIZE/ig" os_list_imagingutility_v3.json       
         sed -i "s/SHASUM/$SUM/ig" os_list_imagingutility_v3.json       
-        sed -i "s/DOWNLOADSIZE/testsizedownload/ig" os_list_imagingutility_v3.json        
-        sed -i "s/RELEASEDATE/testdate/ig" os_list_imagingutility_v3.json            
+        sed -i "s/DOWNLOADSIZE/$DOWNLOADSIZE/ig" os_list_imagingutility_v3.json        
+        sed -i "s/RELEASEDATE/$RELEASEDATE/ig" os_list_imagingutility_v3.json            
 
     - name: Upload YAMLFILE
       uses: nicklasfrahm/scp-action@main
