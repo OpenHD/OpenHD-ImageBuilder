@@ -151,7 +151,7 @@ jobs:
         ls -a      
         export NAME=$(cat last.release)
         export FILESIZE=${{ env.FULLSIZE }}
-        export FILENAME= ${{ env.NAME }}
+        export FILENAME=${{ env.NAME }}
         export DOWNLOADSIZE=$(wc -c *.gz)
         export SUM=$(cat sha256)
         export RELEASEDATE=$(date +%Y-%m-%d)
