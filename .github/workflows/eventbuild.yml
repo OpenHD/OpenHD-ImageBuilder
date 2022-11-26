@@ -106,7 +106,8 @@ jobs:
         cd OpenHD*
         sha256sum * | cut -f 1 -d " " > ../sha256
         ls -a ../
-        echo "name="$(ls -1) >> $GITHUB_ENV
+        echo "{name}={$(ls -1)}" >> $GITHUB_ENV
+        echo "${{ env.name }}"
         gzip -v *.img
         ls -a
         mv *.gz ../OpenHD-Evo-2.2.3-Beta3-Release.gz
