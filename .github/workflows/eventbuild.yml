@@ -99,6 +99,7 @@ jobs:
     - name: compress
       run: |
         cd OpenHD*
+        sha256sum * > ../sha256
         gzip -v *
         ls -a
         mv *.gz ../OpenHD-Evo-2.2.3-Beta3-Release.gz
@@ -112,5 +113,7 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: OpenHD-Evo-2.2.3-Beta3-Release.gz
+        source: |
+          OpenHD-Evo-2.2.3-Beta3-Release.gz
+          sha256
         target: OpenHD-Evo-2.2.3-Beta3-Release.gz
