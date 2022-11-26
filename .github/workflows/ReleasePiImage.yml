@@ -140,14 +140,19 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: os_list_imagingutility_v3.json
+        source: os_list_imagingutility_v3_template.json
         target: os_list_imagingutility_v3.json
 
     - name: debug
       run: |
-        cat os_list_imagingutility_v3.json
+        sed -e "s/RELEASENAME/testname/ig" os_list_imagingutility_v3.json
+        sed -e "s/FILENAME/testfilename/ig" os_list_imagingutility_v3.json       
+        sed -e "s/FILESIZE/testsize/ig" os_list_imagingutility_v3.json       
+        sed -e "s/SHASUM/testsum/ig" os_list_imagingutility_v3.json       
+        sed -e "s/DOWNLOADSIZE/testsizedownload/ig" os_list_imagingutility_v3.json        
+        sed -e "s/RELEASEDATE/testdate/ig" os_list_imagingutility_v3.json            
 
-    - name: Upload sha256 file via SSH
+    - name: Upload YAMLFILE
       uses: nicklasfrahm/scp-action@main
       with:
         direction: upload
@@ -156,5 +161,5 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: sha256
-        target: sha256
+        source: os_list_imagingutility_v3.json
+        target: os_list_imagingutility_v3.json
