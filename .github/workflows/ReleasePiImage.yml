@@ -10,7 +10,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-22.04
     
     strategy:
@@ -19,7 +18,7 @@ jobs:
         TESTING: [testing]
         TARGET: [pi-bullseye] # <-- Add targets here!
 
-   steps:
+    steps:
     - name: Maximize build space
       uses: easimon/maximize-build-space@master
       with:
