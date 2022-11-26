@@ -20,15 +20,15 @@ jobs:
         TARGET: [pi-bullseye] # <-- Add targets here!
 
     steps:
-    - name: Maximize build space
-      uses: easimon/maximize-build-space@master
-      with:
-        root-reserve-mb: 512
-        swap-size-mb: 1024
-        remove-dotnet: 'true'
-        remove-android: 'true'
-        remove-haskell: 'true'
-        overprovision-lvm: 'true'
+#    - name: Maximize build space
+#      uses: easimon/maximize-build-space@master
+#      with:
+#        root-reserve-mb: 512
+#        swap-size-mb: 1024
+#        remove-dotnet: 'true'
+#        remove-android: 'true'
+#        remove-haskell: 'true'
+#        overprovision-lvm: 'true'
     - name: Setup env
       run: |
 
