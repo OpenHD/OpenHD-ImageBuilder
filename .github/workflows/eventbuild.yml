@@ -12,7 +12,7 @@ env:
   secret_link: ${{ secrets.LINK }}
   secret_password: ${{ secrets.PASSWORD }}
   secret_username: ${{ secrets.USERNAME }}
-  secret_Port: ${{ secrets.PORT }}
+  secret_port: ${{ secrets.PORT }}
 
 jobs:
   build:
