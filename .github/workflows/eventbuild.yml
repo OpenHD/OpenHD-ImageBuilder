@@ -104,12 +104,12 @@ jobs:
         tar cJvf archive.tar.xz *
         
     - name: Upload file via SSH
-        uses: nicklasfrahm/scp-action@main
-        with:
-          direction: upload
-          host: ${{ secrets.LINK }}
-          port: ${{ secrets.PORT }}
-          username: ${{ secrets.USER }}
-          insecure_password: ${{ secrets.PASSWORD }}
-          source: archive.tar.xz
-          target: /opt
+      uses: nicklasfrahm/scp-action@main
+      with:
+        direction: upload
+        host: ${{ secrets.LINK }}
+        port: ${{ secrets.PORT }}
+        username: ${{ secrets.USER }}
+        insecure_password: ${{ secrets.PASSWORD }}
+        source: archive.tar.xz
+        target: /opt
