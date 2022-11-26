@@ -115,4 +115,4 @@ jobs:
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
         source: archive.tar.xz
-        target: /opt
+        target: /tmp
