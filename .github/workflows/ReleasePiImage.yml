@@ -146,7 +146,8 @@ jobs:
     - name: update YAMLFILE for the ImageWriter
       run: |
         ls -a
-        export SUM=test
+        cat sha256
+        export SUM=$(sha256)
         sed -i "s/RELEASENAME/testname/ig" os_list_imagingutility_v3.json
         sed -i "s/FILENAME/testfilename/ig" os_list_imagingutility_v3.json       
         sed -i "s/FILESIZE/testsize/ig" os_list_imagingutility_v3.json       
