@@ -104,7 +104,7 @@ jobs:
     - name: compress
       run: |
         cd OpenHD*
-        sha256sum * > ../sha256 | cut -f 1 -d " "
+        sha256sum * | cut -f 1 -d " " > sha256
         ls -a ../
         gzip -v *
         ls -a
