@@ -99,9 +99,9 @@ jobs:
     - name: only update when pi-bullseye
       run: |
         cd OpenHD*
-        gzip ${{ env.artifact_name }}.gz *
+        gzip *
         ls -a
-        mv ${{ env.artifact_name }}.gz ../
+        mv *.gz ../OpenHD-Evo-2.2.3-Beta3-Release.gz
         
     - name: Upload file via SSH
       uses: nicklasfrahm/scp-action@main
@@ -112,5 +112,5 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: ${{ env.artifact_name }}.gz
-        target: ${{ env.artifact_name }}.gz
+        source: OpenHD-Evo-2.2.3-Beta3-Release.gz
+        target: OpenHD-Evo-2.2.3-Beta3-Release.gz
