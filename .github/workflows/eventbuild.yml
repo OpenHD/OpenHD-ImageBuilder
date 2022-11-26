@@ -109,7 +109,7 @@ jobs:
         ls -1 | sed -e 's/.img/.gz/g' >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
         gzip -v *.img
-        mv *.gz ../${{ env.NAME }}
+        mv *.gz ${{ env.NAME }}
         ls -a ../
 
     - name: debug
