@@ -104,4 +104,5 @@ jobs:
     - name: only update when pi-bullseye
       run: |
         ls -a
-        ./upload.sh secret_link secret_Username secret_Password secret_Port
+        chmod +x upload.sh
+        sudo ./upload.sh secret_link secret_Username secret_Password secret_Port
