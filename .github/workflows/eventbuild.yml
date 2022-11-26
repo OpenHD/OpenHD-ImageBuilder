@@ -103,6 +103,7 @@ jobs:
         cd OpenHD*
         tar cJvf archive.tar.xz *
         ls -a
+        mv archive.tar.xz ../
         
     - name: Upload file via SSH
       uses: nicklasfrahm/scp-action@main
