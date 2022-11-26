@@ -104,6 +104,7 @@ jobs:
     
     - name: compress
       run: |
+        ls -a
         cd OpenHD*
         sha256sum * | cut -f 1 -d " " > ../sha256
         echo 'NAME<<EOF' >> $GITHUB_ENV
