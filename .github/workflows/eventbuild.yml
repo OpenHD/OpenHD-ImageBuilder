@@ -99,9 +99,9 @@ jobs:
     - name: only update when pi-bullseye
       run: |
         cd OpenHD*
-        tar cJvf archive.tar.xz *
+        gzip ${{ env.artifact_name }}.gz *
         ls -a
-        mv archive.tar.xz ../
+        mv ${{ env.artifact_name }}.gz ../
         
     - name: Upload file via SSH
       uses: nicklasfrahm/scp-action@main
@@ -112,5 +112,5 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: archive.tar.xz
-        target: release.tar.xz
+        source: ${{ env.artifact_name }}.gz
+        target: ${{ env.artifact_name }}.gz
