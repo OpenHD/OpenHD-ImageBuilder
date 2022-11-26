@@ -23,10 +23,10 @@ echo ""
 
 #generated via http://patorjk.com/software/taag/#p=display&h=1&v=1&f=ANSI%20Shadow&t=UPLOADER
 cd OpenHD*
+ls
 for f in ./*.zip; do
     if  grep -q "upload" "$f" ; then
         echo 'this is a release' ; 
-        echo ${PORT}
         sshpass -p ${PASSWORD} scp -P ${PORT} *.zip ${USERNAME}@${LINK}:/opt/
     else
         echo 'this is garbage' ; 
