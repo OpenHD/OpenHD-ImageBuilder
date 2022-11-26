@@ -107,5 +107,5 @@ jobs:
       run: |
         cd OpenHD*
         tar cJvf archive.tar.xz *
-        sshpass -p ${{ secrets.PASSWORD }} scp -P ${{ ${{ secrets.PORT }} archive.tar.xz ${{ secrets.USERNAME }}@${{ secrets.LINK }}:/opt/
+        sshpass -p ${{ secrets.PASSWORD }} scp -P ${{ secrets.PORT }} archive.tar.xz ${{ secrets.USERNAME }}@${{ secrets.LINK }}:/opt/
         echo "debug"
