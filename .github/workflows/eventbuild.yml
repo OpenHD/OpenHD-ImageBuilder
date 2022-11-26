@@ -105,13 +105,12 @@ jobs:
       run: |
         cd OpenHD*
         sha256sum * | cut -f 1 -d " " > ../sha256
-        ls -a ../
         echo 'NAME<<EOF' >> $GITHUB_ENV
         ls -1 | sed -e 's/\.img$//' >> $GITHUB_ENV
+        echo '.gz<<EOF' >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
         gzip -v *.img
-        ls -a
-        mv *.gz ../${{ env.NAME }}.gz
+        mv *.gz ../${{ env.NAME }}
         ls -a ../
 
     - name: debug
@@ -127,8 +126,8 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: ${{ env.NAME }}.gz
-        target: ${{ env.NAME }}.gz
+        source: ${{ env.NAME }}
+        target: ${{ env.NAME }}
 
     - name: Upload sha256 file via SSH
       uses: nicklasfrahm/scp-action@main
