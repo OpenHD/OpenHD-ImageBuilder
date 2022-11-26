@@ -111,8 +111,9 @@ jobs:
         echo 'EOF' >> $GITHUB_ENV
         gzip -v *.img
         ls -a
-        mv *.gz ../OpenHD-Evo-2.2.3-Beta3-Release.gz
+        mv *.gz ../${{ env.NAME }}.gz
         ls -a ../
+
     - name: debug
       run: |
         echo "${{ env.NAME }}"    
@@ -126,8 +127,8 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: OpenHD-Evo-2.2.3-Beta3-Release.gz
-        target: OpenHD-Evo-2.2.3-Beta3-Release.gz
+        source: ${{ env.NAME }}.gz
+        target: ${{ env.NAME }}.gz
 
     - name: Upload sha256 file via SSH
       uses: nicklasfrahm/scp-action@main
