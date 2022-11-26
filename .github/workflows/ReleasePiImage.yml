@@ -51,8 +51,8 @@ jobs:
       run: | 
         mkdir -p ./deploy/
         cd ./deploy/
-        touch release.img
-        echo "test" > release.img
+        touch OpenHD-image-pi-bullseye-testing--2.2.3-evo-2022-11-26_1622.img
+        echo "test" > OpenHD-image-pi-bullseye-testing--2.2.3-evo-2022-11-26_1622.img
 #    - name: remove old image to make space
 #      run: |
 #        sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
