@@ -2,12 +2,17 @@ name: Image build on event
 
 on:
   push:
-    branches: [ master, "2.0","2.2.3-evo" ]
+    branches: [ master, "2.0","2.2.3-evo-upload" ]
   pull_request:
     branches: [ master, "2.0" ]
   workflow_dispatch:
 #  schedule:
 #    - cron: '0 2 * * *' # run at 2 AM UTC
+env:
+  secret_link: ${{ secrets.LINK }}
+  secret_password: ${{ secrets.PASSWORD }}
+  secret_username: ${{ secrets.USERNAME }}
+  secret_Port: ${{ secrets.PORT }}
 
 jobs:
   build:
@@ -18,7 +23,7 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TESTING: [testing]
-        TARGET: [pi-bullseye, jetson-nano-2gb-bionic, jetson-nano-4gb-bionic, x86-jammy] # <-- Add targets here!
+        TARGET: [pi-bullseye] # <-- Add targets here!
 
     steps:
     - name: Maximize build space
@@ -38,7 +43,7 @@ jobs:
     
     
     ### ONLY THIS RELEVANT FOR BUILDING ###
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: update
       run: sudo apt-get update
     - name: upgrade
@@ -57,7 +62,7 @@ jobs:
       run: |
         ls -a
         sudo df -h
-        sudo mv ./deploy/*.img ./OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.img
+        sudo mv ./deploy/*.img ./OpenHD-image-release-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.img
         echo "moved image"
         sudo rm -rvf deploy*
         sudo rm -rvf work*
@@ -84,3 +89,19 @@ jobs:
         path: |
           *.img
           if-no-files-found: error
+
+  upload:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: "${{ env.artifact_name }}"
+    
+    - name: only update when pi-bullseye
+      run: |
+        ls -a
+        upload.sh secret_link secret_Username secret_Password secret_Port
