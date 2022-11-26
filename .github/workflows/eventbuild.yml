@@ -105,8 +105,6 @@ jobs:
     
     - name: only update when pi-bullseye
       run: |
-        ls -a
-        chmod +x upload.sh
         cd OpenHD*
         ls
         tar cJvf archive.tar.xz *
