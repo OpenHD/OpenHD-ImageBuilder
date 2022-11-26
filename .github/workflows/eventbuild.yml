@@ -113,5 +113,5 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: *.xz
+        source: archive.tar.xz
         target: /opt
