@@ -90,12 +90,7 @@ jobs:
   upload:
     needs: build
     runs-on: ubuntu-latest
-    env:
-        l : ${{ secrets.LINK }}
-        u : ${{ secrets.USER }}
-        p : ${{ secrets.PASSWORD }}
-        po : ${{ secrets.PORT }}
-            
+
     steps:
     - uses: actions/checkout@v3
 
@@ -107,5 +102,14 @@ jobs:
       run: |
         cd OpenHD*
         tar cJvf archive.tar.xz *
-        sshpass -p $p scp -P $po archive.tar.xz $u@$l:/opt/
-        echo "debug"
+        
+    - name: Upload file via SSH
+        uses: nicklasfrahm/scp-action@main
+        with:
+          direction: upload
+          host: ${{ secrets.LINK }}
+          port: ${{ secrets.PORT }}
+          username: ${{ secrets.USER }}
+          insecure_password: ${{ secrets.PASSWORD }}
+          source: archive.tar.xz
+          target: /opt
