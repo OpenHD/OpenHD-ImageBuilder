@@ -2,8 +2,8 @@ name: Image build on event
 
 on:
   push:
-    paths:
-      - 'last.release'
+#    paths:
+#      - 'last.release'
 
 #  schedule:
 #    - cron: '0 2 * * *' # run at 2 AM UTC
