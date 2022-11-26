@@ -120,7 +120,17 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: |
-          OpenHD-Evo-2.2.3-Beta3-Release.gz
-          ../sha256
+        source: OpenHD-Evo-2.2.3-Beta3-Release.gz
         target: OpenHD-Evo-2.2.3-Beta3-Release.gz
+
+    - name: Upload sha256 file via SSH
+      uses: nicklasfrahm/scp-action@main
+      with:
+        direction: upload
+        host: ${{ secrets.LINK }}
+        port: ${{ secrets.PORT }}
+        username: ${{ secrets.USER }}
+        insecure_password: ${{ secrets.PASSWORD }}
+        insecure_ignore_fingerprint: true
+        source: sha256
+        target: sha256
