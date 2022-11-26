@@ -111,7 +111,6 @@ jobs:
         echo 'NAME<<EOF' >> $GITHUB_ENV
         ls -1 | sed -e 's/.img/.img.gz/g' >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
-
         echo 'SIZEFULL<<EOF' >> $GITHUB_ENV
         wc -c *.img | cut -f 1 -d " " >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
@@ -151,7 +150,7 @@ jobs:
       run: |
         ls -a      
         export NAME=$(cat last.release)
-        export FILESIZE=${{ env.FULLSIZE }}
+        export FILESIZE=${{ env.SIZEFULL }}
         export FILENAME=${{ env.NAME }}
         export DOWNLOADSIZE=$(wc -c *.gz | cut -f 1 -d " ")
         export SUM=$(cat sha256)
