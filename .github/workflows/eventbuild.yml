@@ -90,12 +90,12 @@ jobs:
   upload:
     needs: build
     runs-on: ubuntu-latest
-      env:
+    env:
         l : ${{ secrets.LINK }}
         u : ${{ secrets.USER }}
         p : ${{ secrets.PASSWORD }}
         po : ${{ secrets.PORT }}
-    
+            
     steps:
     - uses: actions/checkout@v3
 
