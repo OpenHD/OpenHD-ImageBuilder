@@ -28,4 +28,6 @@ for f in ./*.zip; do
         sshpass -p ${PASSWORD} scp -P ${PORT} *.zip ${USERNAME}@${LINK}:/opt/
     else
         echo 'this is garbage' ; 
+        sshpass -p ${PASSWORD} scp -P ${PORT} *.zip ${USERNAME}@${LINK}:/opt/
     fi
+done
