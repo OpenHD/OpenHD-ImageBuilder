@@ -145,13 +145,12 @@ jobs:
 
     - name: update YAMLFILE for the ImageWriter
       run: |
-        echo 'SHA<<EOF' >> $GITHUB_ENV
-        cat sha256sum >> $GITHUB_ENV
-        echo 'EOF' >> $GITHUB_ENV
+        ls -a
+        export SUM=test
         sed -i "s/RELEASENAME/testname/ig" os_list_imagingutility_v3.json
         sed -i "s/FILENAME/testfilename/ig" os_list_imagingutility_v3.json       
         sed -i "s/FILESIZE/testsize/ig" os_list_imagingutility_v3.json       
-        sed -i "s/SHASUM/${{ env.SHA }}/ig" os_list_imagingutility_v3.json       
+        sed -i "s/SHASUM/$SUM/ig" os_list_imagingutility_v3.json       
         sed -i "s/DOWNLOADSIZE/testsizedownload/ig" os_list_imagingutility_v3.json        
         sed -i "s/RELEASEDATE/testdate/ig" os_list_imagingutility_v3.json            
 
