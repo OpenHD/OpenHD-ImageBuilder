@@ -109,8 +109,9 @@ jobs:
         ls -1 | sed -e 's/.img/.gz/g' >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
         gzip -v *.img
-        ls -a ../
+        ls -a
         cp * ../
+        ls -a
     - name: debug
       run: |
         echo "${{ env.NAME }}"    
