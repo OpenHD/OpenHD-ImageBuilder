@@ -1,10 +1,7 @@
 name: Image build on event
 
 on:
-#  push
-  pull_request:
-    types:
-      - closed
+  push:
     paths:
       - 'last.release'
 
@@ -13,7 +10,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-22.04
     
     strategy:
@@ -50,6 +46,13 @@ jobs:
     - name: Build Image
       run: | 
          sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
+# - name: FAKE IMAGE FOR DEBUG
+#   run: | 
+#     mkdir -p ./deploy/
+#     cd ./deploy/
+#     touch OpenHD-image-pi-bullseye-testing--2.2.3-evo-2022-11-26_1622.img
+#     echo "test" > OpenHD-image-pi-bullseye-testing--2.2.3-evo-2022-11-26_1622.img
+#     mv OpenHD* ../
     - name: remove old image to make space
       run: |
         sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
@@ -101,10 +104,14 @@ jobs:
     
     - name: compress
       run: |
+        ls -a
         cd OpenHD*
         sha256sum * | cut -f 1 -d " " > ../sha256
         echo 'NAME<<EOF' >> $GITHUB_ENV
         ls -1 | sed -e 's/.img/.img.gz/g' >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+        echo 'SIZEFULL<<EOF' >> $GITHUB_ENV
+        wc -c *.img | cut -f 1 -d " " >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
         gzip -v *.img
         ls -a
@@ -126,7 +133,36 @@ jobs:
         source: ${{ env.NAME }}
         target: ${{ env.NAME }}
 
-    - name: Upload sha256 file via SSH
+    - name: Download yaml file via SSH
+      uses: nicklasfrahm/scp-action@main
+      with:
+        direction: download
+        host: ${{ secrets.LINK }}
+        port: ${{ secrets.PORT }}
+        username: ${{ secrets.USER }}
+        insecure_password: ${{ secrets.PASSWORD }}
+        insecure_ignore_fingerprint: true
+        source: os_list_imagingutility_v3_template.json
+        target: os_list_imagingutility_v3.json
+
+    - name: update YAMLFILE for the ImageWriter
+      run: |
+        ls -a      
+        export NAME=$(cat last.release)
+        export FILESIZE=${{ env.SIZEFULL }}
+        export FILENAME=${{ env.NAME }}
+        export DOWNLOADSIZE=$(wc -c *.gz | cut -f 1 -d " ")
+        export SUM=$(cat sha256)
+        export RELEASEDATE=$(date +%Y-%m-%d)
+
+        sed -i "s/RELEASENAME/$NAME/ig" os_list_imagingutility_v3.json
+        sed -i "s/FILENAME/$FILENAME/ig" os_list_imagingutility_v3.json       
+        sed -i "s/FILESIZE/$FILESIZE/ig" os_list_imagingutility_v3.json       
+        sed -i "s/SHASUM/$SUM/ig" os_list_imagingutility_v3.json       
+        sed -i "s/DOWNLOADSIZE/$DOWNLOADSIZE/ig" os_list_imagingutility_v3.json        
+        sed -i "s/RELEASEDATE/$RELEASEDATE/ig" os_list_imagingutility_v3.json            
+
+    - name: Upload YAMLFILE
       uses: nicklasfrahm/scp-action@main
       with:
         direction: upload
@@ -135,5 +171,5 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: sha256
-        target: sha256
+        source: os_list_imagingutility_v3.json
+        target: os_list_imagingutility_v3.json
