@@ -104,12 +104,13 @@ jobs:
     - name: compress
       run: |
         cd OpenHD*
-        sha256sum * > ../sha256
+        sha256sum * > ../sha256 | cut -f 1 -d " "
         ls -a ../
         gzip -v *
         ls -a
         mv *.gz ../OpenHD-Evo-2.2.3-Beta3-Release.gz
         ls -a ../
+        
         
     - name: Upload file via SSH
       uses: nicklasfrahm/scp-action@main
