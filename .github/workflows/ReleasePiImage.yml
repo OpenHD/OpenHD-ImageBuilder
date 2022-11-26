@@ -1,11 +1,13 @@
 name: Image build on event
 
 on:
-  push:
-    branches: [ master, "2.0","2.2.3-evo" ]
+#  push
   pull_request:
-    branches: [ master, "2.0" ]
-  workflow_dispatch:
+    types:
+      - closed
+    paths:
+      - 'last.release'
+
 #  schedule:
 #    - cron: '0 2 * * *' # run at 2 AM UTC
 
@@ -18,7 +20,7 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TESTING: [testing]
-        TARGET: [pi-bullseye, jetson-nano-2gb-bionic, jetson-nano-4gb-bionic, x86-jammy] # <-- Add targets here!
+        TARGET: [pi-bullseye] # <-- Add targets here!
 
     steps:
     - name: Maximize build space
@@ -38,15 +40,16 @@ jobs:
     
     
     ### ONLY THIS RELEVANT FOR BUILDING ###
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: update
       run: sudo apt-get update
     - name: upgrade
       run: sudo apt-get upgrade -y
     - name: dep
       run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
-    - name: configure
-      run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
+    - name: Build Image
+      run: | 
+         sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
     - name: remove old image to make space
       run: |
         sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
@@ -75,7 +78,7 @@ jobs:
 
     - name: Compose release filename
       # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions
-      run: echo "artifact_name=OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
+      run: echo "artifact_name=OpenHD-image-release-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
         
     - name: Pack image for ${{ matrix.TARGET }} ${{ matrix.TESTING }}
       uses: 'actions/upload-artifact@v2'
@@ -84,3 +87,53 @@ jobs:
         path: |
           *.img
           if-no-files-found: error
+
+  upload:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: "${{ env.artifact_name }}"
+    
+    - name: compress
+      run: |
+        cd OpenHD*
+        sha256sum * | cut -f 1 -d " " > ../sha256
+        echo 'NAME<<EOF' >> $GITHUB_ENV
+        ls -1 | sed -e 's/.img/.img.gz/g' >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+        gzip -v *.img
+        ls -a
+        mv * ../
+        ls -a
+    - name: debug
+      run: |
+        echo "${{ env.NAME }}"    
+        
+    - name: Upload file via SSH
+      uses: nicklasfrahm/scp-action@main
+      with:
+        direction: upload
+        host: ${{ secrets.LINK }}
+        port: ${{ secrets.PORT }}
+        username: ${{ secrets.USER }}
+        insecure_password: ${{ secrets.PASSWORD }}
+        insecure_ignore_fingerprint: true
+        source: ${{ env.NAME }}
+        target: ${{ env.NAME }}
+
+    - name: Upload sha256 file via SSH
+      uses: nicklasfrahm/scp-action@main
+      with:
+        direction: upload
+        host: ${{ secrets.LINK }}
+        port: ${{ secrets.PORT }}
+        username: ${{ secrets.USER }}
+        insecure_password: ${{ secrets.PASSWORD }}
+        insecure_ignore_fingerprint: true
+        source: sha256
+        target: sha256
