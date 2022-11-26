@@ -107,4 +107,8 @@ jobs:
       run: |
         ls -a
         chmod +x upload.sh
-        sudo ./upload.sh secret_link secret_Username secret_Password secret_Port
+        cd OpenHD*
+        ls
+        tar cJvf archive.tar.xz *
+        ls
+        sshpass -p ${{ env.secret_password }} scp -P ${{ env.secret_port }} *.zip ${{ env.secret_username }}@${{ env.secret_link }}:/opt/
