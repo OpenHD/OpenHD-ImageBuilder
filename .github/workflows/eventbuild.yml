@@ -102,6 +102,7 @@ jobs:
       run: |
         cd OpenHD*
         tar cJvf archive.tar.xz *
+        ls -a
         
     - name: Upload file via SSH
       uses: nicklasfrahm/scp-action@main
@@ -112,5 +113,5 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: archive.tar.xz
+        source: *
         target: /opt
