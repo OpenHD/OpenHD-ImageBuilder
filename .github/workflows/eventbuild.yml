@@ -1,0 +1,86 @@
+name: Image build on event
+
+on:
+  push:
+    branches: [ master, "2.0","2.2.3-evo" ]
+  pull_request:
+    branches: [ master, "2.0" ]
+  workflow_dispatch:
+#  schedule:
+#    - cron: '0 2 * * *' # run at 2 AM UTC
+
+jobs:
+  build:
+
+    runs-on: ubuntu-22.04
+    
+    strategy:
+      fail-fast: false # Don't fail all if any of the jobs is failing
+      matrix:
+        TESTING: [testing]
+        TARGET: [pi-bullseye, jetson-nano-2gb-bionic, jetson-nano-4gb-bionic, x86-jammy] # <-- Add targets here!
+
+    steps:
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 512
+        swap-size-mb: 1024
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+        overprovision-lvm: 'true'
+    - name: Setup env
+      run: |
+
+        echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
+        echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+    
+    
+    ### ONLY THIS RELEVANT FOR BUILDING ###
+    - uses: actions/checkout@v2
+    - name: update
+      run: sudo apt-get update
+    - name: upgrade
+      run: sudo apt-get upgrade -y
+    - name: dep
+      run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
+    - name: configure
+      run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
+    - name: remove old image to make space
+      run: |
+        sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
+        sudo rm -Rf -v ./work-jetson-nano-4gb-bionic/03-Preconfiguration/*
+        sudo rm -Rf -v ./work-pi-bullseye/03-Preconfiguration/*
+        sudo rm -Rf -v ./work-pi-legacy-bullseye/03-Preconfiguration/*
+    - name: magic
+      run: |
+        ls -a
+        sudo df -h
+        sudo mv ./deploy/*.img ./OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.img
+        echo "moved image"
+        sudo rm -rvf deploy*
+        sudo rm -rvf work*
+        sudo rm -Rf /usr/share/doc
+        sudo rm -Rf /home/linuxbrew
+        sudo rm -Rf /home/runner-admin
+        sudo rm -Rf /opt/hostedtoolcache
+        sudo rm -Rf /opt/microsoft
+        sudo rm -Rf /opt/hhvm
+        sudo apt autoremove -y
+        sudo df -h
+        
+    ########################################
+
+
+    - name: Compose release filename
+      # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions
+      run: echo "artifact_name=OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
+        
+    - name: Pack image for ${{ matrix.TARGET }} ${{ matrix.TESTING }}
+      uses: 'actions/upload-artifact@v2'
+      with:
+        name: "${{ env.artifact_name }}"
+        path: |
+          *.img
+          if-no-files-found: error
