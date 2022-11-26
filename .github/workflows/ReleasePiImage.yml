@@ -2,8 +2,8 @@ name: Image build on event
 
 on:
   push:
-#    paths:
-#      - 'last.release'
+    paths:
+      - 'last.release'
 
 #  schedule:
 #    - cron: '0 2 * * *' # run at 2 AM UTC
@@ -19,16 +19,16 @@ jobs:
         TESTING: [testing]
         TARGET: [pi-bullseye] # <-- Add targets here!
 
-    steps:
-#    - name: Maximize build space
-#      uses: easimon/maximize-build-space@master
-#      with:
-#        root-reserve-mb: 512
-#        swap-size-mb: 1024
-#        remove-dotnet: 'true'
-#        remove-android: 'true'
-#        remove-haskell: 'true'
-#        overprovision-lvm: 'true'
+   steps:
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 512
+        swap-size-mb: 1024
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+        overprovision-lvm: 'true'
     - name: Setup env
       run: |
 
@@ -37,45 +37,45 @@ jobs:
     
     
     ### ONLY THIS RELEVANT FOR BUILDING ###
-    - uses: actions/checkout@v3
-#    - name: update
-#      run: sudo apt-get update
-#    - name: upgrade
-#      run: sudo apt-get upgrade -y
-#    - name: dep
-#      run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
-#    - name: Build Image
-#      run: | 
-#         sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
+   - uses: actions/checkout@v3
+    - name: update
+      run: sudo apt-get update
+    - name: upgrade
+      run: sudo apt-get upgrade -y
+    - name: dep
+      run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
     - name: Build Image
       run: | 
-        mkdir -p ./deploy/
-        cd ./deploy/
-        touch OpenHD-image-pi-bullseye-testing--2.2.3-evo-2022-11-26_1622.img
-        echo "test" > OpenHD-image-pi-bullseye-testing--2.2.3-evo-2022-11-26_1622.img
-        mv OpenHD* ../
-#    - name: remove old image to make space
-#      run: |
-#        sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
-#        sudo rm -Rf -v ./work-jetson-nano-4gb-bionic/03-Preconfiguration/*
-#        sudo rm -Rf -v ./work-pi-bullseye/03-Preconfiguration/*
-#        sudo rm -Rf -v ./work-pi-legacy-bullseye/03-Preconfiguration/*
-#    - name: magic
-#      run: |
-#        ls -a
-#        sudo df -h
-#        sudo mv ./deploy/*.img ./OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.img
-#        echo "moved image"
-#        sudo rm -rvf deploy*
-#        sudo rm -rvf work*
-#        sudo rm -Rf /usr/share/doc
-#        sudo rm -Rf /home/linuxbrew
-#        sudo rm -Rf /home/runner-admin
-#        sudo rm -Rf /opt/hostedtoolcache
-#        sudo rm -Rf /opt/microsoft
-#        sudo rm -Rf /opt/hhvm
-#        sudo apt autoremove -y
-#        sudo df -h
+         sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
+# - name: FAKE IMAGE FOR DEBUG
+#   run: | 
+#     mkdir -p ./deploy/
+#     cd ./deploy/
+#     touch OpenHD-image-pi-bullseye-testing--2.2.3-evo-2022-11-26_1622.img
+#     echo "test" > OpenHD-image-pi-bullseye-testing--2.2.3-evo-2022-11-26_1622.img
+#     mv OpenHD* ../
+    - name: remove old image to make space
+      run: |
+        sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
+        sudo rm -Rf -v ./work-jetson-nano-4gb-bionic/03-Preconfiguration/*
+        sudo rm -Rf -v ./work-pi-bullseye/03-Preconfiguration/*
+        sudo rm -Rf -v ./work-pi-legacy-bullseye/03-Preconfiguration/*
+    - name: magic
+      run: |
+        ls -a
+        sudo df -h
+        sudo mv ./deploy/*.img ./OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.img
+        echo "moved image"
+        sudo rm -rvf deploy*
+        sudo rm -rvf work*
+        sudo rm -Rf /usr/share/doc
+        sudo rm -Rf /home/linuxbrew
+        sudo rm -Rf /home/runner-admin
+        sudo rm -Rf /opt/hostedtoolcache
+        sudo rm -Rf /opt/microsoft
+        sudo rm -Rf /opt/hhvm
+        sudo apt autoremove -y
+        sudo df -h
         
     ########################################
 
