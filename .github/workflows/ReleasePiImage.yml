@@ -1,10 +1,7 @@
 name: Image build on event
 
 on:
-#  push
-  pull_request:
-    types:
-      - closed
+  push:
     paths:
       - 'last.release'
 
