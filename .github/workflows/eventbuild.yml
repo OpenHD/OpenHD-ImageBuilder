@@ -96,10 +96,10 @@ jobs:
       with:
         name: "${{ env.artifact_name }}"
     
-    - name: only update when pi-bullseye
+    - name: compress
       run: |
         cd OpenHD*
-        gzip *
+        gzip -v *
         ls -a
         mv *.gz ../OpenHD-Evo-2.2.3-Beta3-Release.gz
         
