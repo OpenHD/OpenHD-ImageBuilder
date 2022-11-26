@@ -107,15 +107,15 @@ jobs:
         sha256sum * | cut -f 1 -d " " > ../sha256
         ls -a ../
         echo 'NAME<<EOF' >> $GITHUB_ENV
-        ls -1 >> $GITHUB_ENV
+        ls -1 | sed -e 's/\.img$//' >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
         gzip -v *.img
         ls -a
         mv *.gz ../OpenHD-Evo-2.2.3-Beta3-Release.gz
         ls -a ../
-    - name: Use the value
+    - name: debug
       run: |
-        echo "${{ env.NAME }}" # This will output 'yello    
+        echo "${{ env.NAME }}"    
         
     - name: Upload file via SSH
       uses: nicklasfrahm/scp-action@main
