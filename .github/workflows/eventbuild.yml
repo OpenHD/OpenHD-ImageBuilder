@@ -110,8 +110,7 @@ jobs:
         echo 'EOF' >> $GITHUB_ENV
         gzip -v *.img
         ls -a ../
-        ls -a
-
+        cp * ../
     - name: debug
       run: |
         echo "${{ env.NAME }}"    
