@@ -62,7 +62,7 @@ jobs:
       run: |
         ls -a
         sudo df -h
-        sudo mv ./deploy/*.img ./OpenHD-image-release-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.img
+        sudo mv ./deploy/*.img ./OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}.img
         echo "moved image"
         sudo rm -rvf deploy*
         sudo rm -rvf work*
@@ -80,7 +80,7 @@ jobs:
 
     - name: Compose release filename
       # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions
-      run: echo "artifact_name=OpenHD-image-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
+      run: echo "artifact_name=OpenHD-image-release-${{ matrix.TARGET }}-${{ matrix.TESTING }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
         
     - name: Pack image for ${{ matrix.TARGET }} ${{ matrix.TESTING }}
       uses: 'actions/upload-artifact@v2'
@@ -104,4 +104,4 @@ jobs:
     - name: only update when pi-bullseye
       run: |
         ls -a
-        upload.sh secret_link secret_Username secret_Password secret_Port
+        ./upload.sh secret_link secret_Username secret_Password secret_Port
