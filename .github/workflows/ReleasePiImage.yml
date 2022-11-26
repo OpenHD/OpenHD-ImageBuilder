@@ -53,6 +53,7 @@ jobs:
         cd ./deploy/
         touch OpenHD-image-pi-bullseye-testing--2.2.3-evo-2022-11-26_1622.img
         echo "test" > OpenHD-image-pi-bullseye-testing--2.2.3-evo-2022-11-26_1622.img
+        mv OpenHD* ../
 #    - name: remove old image to make space
 #      run: |
 #        sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
