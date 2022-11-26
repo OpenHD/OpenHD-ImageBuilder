@@ -106,7 +106,8 @@ jobs:
         cd OpenHD*
         sha256sum * | cut -f 1 -d " " > ../sha256
         ls -a ../
-        ls -1 
+        VAR = $(ls -1) 
+        echo $VAR
         gzip -v *.img
         ls -a
         mv *.gz ../OpenHD-Evo-2.2.3-Beta3-Release.gz
