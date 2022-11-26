@@ -39,12 +39,12 @@ jobs:
     
     ### ONLY THIS RELEVANT FOR BUILDING ###
     - uses: actions/checkout@v3
-    - name: update
-      run: # sudo apt-get update
-    - name: upgrade
-      run: # sudo apt-get upgrade -y
-    - name: dep
-      run: # sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
+#    - name: update
+#      run: # sudo apt-get update
+#    - name: upgrade
+#      run: # sudo apt-get upgrade -y
+#    - name: dep
+#      run: # sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
     - name: Build Image
       run: | 
         # sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
@@ -105,7 +105,7 @@ jobs:
         sha256sum * > ../sha256
         gzip -v *
         ls -a
-        mv *.g  z ../OpenHD-Evo-2.2.3-Beta3-Release.gz
+        mv *.gz ../OpenHD-Evo-2.2.3-Beta3-Release.gz
         
     - name: Upload file via SSH
       uses: nicklasfrahm/scp-action@main
