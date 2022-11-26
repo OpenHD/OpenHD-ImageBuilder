@@ -113,7 +113,9 @@ jobs:
         ls -a
         mv *.gz ../OpenHD-Evo-2.2.3-Beta3-Release.gz
         ls -a ../
-        
+    - name: Use the value
+      run: |
+        echo "${{ env.NAME }}" # This will output 'yello    
         
     - name: Upload file via SSH
       uses: nicklasfrahm/scp-action@main
