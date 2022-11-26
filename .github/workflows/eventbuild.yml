@@ -48,6 +48,8 @@ jobs:
     - name: Build Image
       run: | 
         # sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
+        mkdir -p ./deploy/
+        cd ./deploy/
         touch release.img
         echo "test" > release.img
     - name: remove old image to make space
