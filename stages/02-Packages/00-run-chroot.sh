@@ -101,8 +101,7 @@ if [[ "${TESTING}" == "testing" ]] && [[ "${OS}" != "ubuntu-x86" ]]; then
     bash /opt/QOpenHD/install_dep_rpi.sh || exit 1
     cd /opt/OpenHD
     bash /opt/OpenHD/install_dep_rpi.sh || exit 1
-    fi
-    
+    fi 
 else
     curl -1sLf \
     'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' \
