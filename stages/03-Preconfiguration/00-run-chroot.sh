@@ -105,7 +105,7 @@ sudo systemctl mask plymouth-start.service
 sudo systemctl mask plymouth-read-write.service
 sudo systemctl mask plymouth-quit-wait.service
 sudo systemctl mask plymouth-quit.service
-if [[ "${OS}" != "ubuntu" ]]; then
+if [[ "${OS}" != "ubuntu" ]] || [[ "${OS}" != "ubuntu-x86" ]]; then
     echo "OS is NOT ubuntu..disabling journald flush"
     sudo systemctl disable systemd-journal-flush.service
 
@@ -126,6 +126,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        touch /boot/openhd/x86.txt
        touch /boot/openhd/ground.txt
        systemctl disable openhd
+       systemctl disable qopenhd
        git clone https://github.com/OpenHD/OpenHD-ImageBuilder
        cd OpenHD-ImageBuilder
        chmod a+x  shortcuts/OpenHD-Air.desktop
@@ -143,13 +144,10 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        #echo "Created initial setup service"
 fi
 #this service updates runlevel changes. Set desired runlevel prior to this being disabled
+if [[ "${OS}" != "ubuntu-x86" ]]; then
 sudo systemctl disable systemd-update-utmp.service
+fi
 
-#remove filesystem-resizer
-#sudo rm /etc/init.d/resize2fs_once
-
-# Disable ZeroTier service
-#sudo systemctl disable zerotier-one
 
 #change hostname
 CURRENT_HOSTNAME=`sudo cat /etc/hostname | sudo tr -d " \t\n\r"`
