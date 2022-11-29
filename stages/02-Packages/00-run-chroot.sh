@@ -30,7 +30,7 @@
          sudo apt update
          sudo apt upgrade
          sudo apt install -y git curl
-         PLATFORM_PACKAGES="nano python3-pip htop libavcodec-dev libavformat-dev libelf-dev libboost-filesystem-dev openhd qopenhd"
+         PLATFORM_PACKAGES="nano python3-pip htop libavcodec-dev libavformat-dev libelf-dev libboost-filesystem-dev openhd"
          cd /opt
          mkdir -p /opt/X86/
          curl -1sLf \
