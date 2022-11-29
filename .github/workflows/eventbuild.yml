@@ -18,7 +18,8 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TESTING: [testing]
-        TARGET: [x86-jammy] # <-- Add targets here!
+        TARGET: [pi-bullseye, jetson-nano-2gb-bionic, jetson-nano-4gb-bionic, x86-jammy] # <-- Add targets here!
+
 
     steps:
     - name: Maximize build space
