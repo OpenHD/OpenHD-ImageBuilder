@@ -2,7 +2,7 @@
 # # Any native compilation can be done here, but should be moved into an own repository.
 # # Do not use log here, it will end up in the image
 # # This stage will install and remove packages which are required to get OpenHD to work
- #!/bin/bash
+!/bin/bash
 
 
  if [[ "${OS}" == "raspbian" ]]; then
@@ -30,7 +30,7 @@
          sudo apt update
          sudo apt upgrade
          sudo apt install -y git curl
-         PLATFORM_PACKAGES="nano python3-pip htop libavcodec-dev libavformat-dev libelf-dev libboost-filesystem-dev openhd"
+         PLATFORM_PACKAGES="nano python3-pip htop libavcodec-dev libavformat-dev libelf-dev libboost-filesystem-dev openhd libspdlog-dev "
          cd /opt
          mkdir -p /opt/X86/
          curl -1sLf \
@@ -110,10 +110,6 @@
  apt update --allow-releaseinfo-change || exit 1
 
  echo "-------------------------DONE GETTING SECOND UPDATE------------------------------------"
- echo "Purge packages that interfer/we dont need..."
-
-#write packages that will be removed into PURGE
-# PURGE="wireless-regdb avahi-daemon iptables man-db logrotate"
 
 # #this is needed, so that every install script is forced to use the default values and can't open windows or other interactive stuff
  export DEBIAN_FRONTEND=noninteractive
