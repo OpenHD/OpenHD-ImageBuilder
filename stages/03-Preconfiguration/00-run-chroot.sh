@@ -129,11 +129,16 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        systemctl disable qopenhd
        git clone https://github.com/OpenHD/OpenHD-ImageBuilder
        cd OpenHD-ImageBuilder
+       gio set shortcuts/OpenHD-Air.desktop metadata::trusted true
+       gio set shortcuts/OpenHD-Ground.desktop metadata::trusted true
+       gio set shortcuts/QOpenHD.desktop metadata::trusted true
        chmod a+x  shortcuts/OpenHD-Air.desktop
 	   chmod a+x  shortcuts/OpenHD-Ground.desktop
 	   chmod a+x  shortcuts/QOpenHD.desktop
 	   sudo cp shortcuts/* /usr/share/applications/
+       sudo cp shortcuts/* /home/openhd/Desktop/
 	   sudo cp shortcuts/OpenHD.ico /opt/
+       sudo nmcli connection delete Onair
        #cp -rf initial-setup.sh /opt/X86/
        #cp -rf initial-setup.service /etc/systemd/system/
        #sudo chmod +x /opt/X86/initial-setup.sh

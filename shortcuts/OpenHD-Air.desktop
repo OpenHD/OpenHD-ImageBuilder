@@ -3,6 +3,6 @@ Encoding=UTF-8
 Version=1.0
 Type=Application
 Terminal=true
-Exec=bash -c 'openhd -a'
+Exec=gnome-terminal -e "bash -c 'sudo openhd -a'"
 Name=OpenHD-AIR
 Icon=/opt/OpenHD.ico
