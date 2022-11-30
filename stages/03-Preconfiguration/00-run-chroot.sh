@@ -142,6 +142,8 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        gio set /home/openhd/Desktop/OpenHD-Air.desktop metadata::trusted true
        gio set /home/openhd/Desktop/OpenHD-Ground.desktop metadata::trusted true
        gio set /home/openhd/Desktop/QOpenHD.desktop metadata::trusted true
+       echo "openhd ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/openhd
+
 
        #cp -rf initial-setup.sh /opt/X86/
        #cp -rf initial-setup.service /etc/systemd/system/
