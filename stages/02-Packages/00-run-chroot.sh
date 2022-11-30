@@ -2,7 +2,7 @@
 # # Any native compilation can be done here, but should be moved into an own repository.
 # # Do not use log here, it will end up in the image
 # # This stage will install and remove packages which are required to get OpenHD to work
-!/bin/bash
+#!/bin/bash
 
 
  if [[ "${OS}" == "raspbian" ]]; then
@@ -22,7 +22,7 @@
      apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc
      apt purge -y raspberrypi-kernel
      apt remove -y nfs-common libcamera*
-     PLATFORM_PACKAGES="veye-raspberrypi openhd-linux-pi libsdl2-dev libspdlog-dev libcamera-openhd libavcodec-dev libavformat-dev mavsdk gst-plugins-good openhd-qt qopenhd libsodium-dev libpcap-dev git nano openssh-server libboost-filesystem1.74-dev meson"
+     PLATFORM_PACKAGES="veye-raspberrypi openhd-linux-pi libsdl2-dev libspdlog-dev libcamera-openhd libavcodec-dev libavformat-dev mavsdk gst-plugins-good openhd-qt openhd qopenhd libsodium-dev libpcap-dev git nano openssh-server libboost-filesystem1.74-dev meson"
  fi
 
  if [[ "${OS}" == "ubuntu-x86" ]] ; then
