@@ -20,6 +20,7 @@ jobs:
         TESTING: [testing]
         TARGET: [pi-bullseye, jetson-nano-2gb-bionic, jetson-nano-4gb-bionic, x86-jammy] # <-- Add targets here!
 
+
     steps:
     - name: Maximize build space
       uses: easimon/maximize-build-space@master
