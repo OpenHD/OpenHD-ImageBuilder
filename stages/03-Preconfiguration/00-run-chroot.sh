@@ -42,6 +42,9 @@ fi
     sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
     sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
 
+    #mask Wpa Supplicant
+    systemctl mask wpa_supplicant
+
      # enable dualcam-csi
      cd /boot/
      wget https://github.com/ochin-space/ochin-CM4/blob/master/files/dt-blob.bin
