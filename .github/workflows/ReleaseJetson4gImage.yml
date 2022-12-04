@@ -1,4 +1,4 @@
-name: Image Release RPI
+name: Image Release Jetson-4GB
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TESTING: [testing]
-        TARGET: [pi-bullseye] # <-- Add targets here!
+        TARGET: [jetson-nano-4gb-bionic] # <-- Add targets here!
 
     steps:
     - name: Maximize build space
@@ -142,8 +142,8 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: os_list_imagingutility_v3_x86.json
-        target: os_list_imagingutility_v3_rpi.json
+        source: os_list_imagingutility_v3_j2g.json
+        target: os_list_imagingutility_v3_j4g.json
 
     - name: update YAMLFILE for the ImageWriter
       run: |
@@ -155,12 +155,12 @@ jobs:
         export SUM=$(cat sha256)
         export RELEASEDATE=$(date +%Y-%m-%d)
 
-        sed -i "s/RELEASENAME_rpi/$NAME/ig" os_list_imagingutility_v3_rpi.json
-        sed -i "s/FILENAME_rpi/$FILENAME/ig" os_list_imagingutility_v3_rpi.json       
-        sed -i "s/FILESIZE_rpi/$FILESIZE/ig" os_list_imagingutility_v3_rpi.json       
-        sed -i "s/SHASUM_rpi/$SUM/ig" os_list_imagingutility_v3_rpi.json       
-        sed -i "s/DOWNLOADSIZE_rpi/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_rpi.json        
-        sed -i "s/RELEASEDATE_rpi/$RELEASEDATE/ig" os_list_imagingutility_v3_rpi.json            
+        sed -i "s/RELEASENAME/$NAME/ig" os_list_imagingutility_v3_j4g.jso
+        sed -i "s/FILENAME/$FILENAME/ig" os_list_imagingutility_v3_j4g.jso       
+        sed -i "s/FILESIZE/$FILESIZE/ig" os_list_imagingutility_v3_j4g.jso       
+        sed -i "s/SHASUM/$SUM/ig" os_list_imagingutility_v3_j4g.jso       
+        sed -i "s/DOWNLOADSIZE/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_j4g.jso        
+        sed -i "s/RELEASEDATE/$RELEASEDATE/ig" os_list_imagingutility_v3_j4g.jso            
 
     - name: Upload YAMLFILE
       uses: nicklasfrahm/scp-action@main
@@ -171,5 +171,5 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: os_list_imagingutility_v3_rpi.json
-        target: os_list_imagingutility_v3_rpi.json
+        source: os_list_imagingutility_v3_j4g.jso
+        target: os_list_imagingutility_v3.jso
