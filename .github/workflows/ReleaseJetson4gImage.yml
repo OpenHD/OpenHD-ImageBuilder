@@ -117,6 +117,7 @@ jobs:
         ls -a
         mv * ../
         ls -a
+        sleep 15m
     - name: debug
       run: |
         echo "${{ env.NAME }}"    
