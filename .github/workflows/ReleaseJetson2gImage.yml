@@ -121,18 +121,6 @@ jobs:
       run: |
         echo "${{ env.NAME }}"    
         
-    - name: Upload file via SSH
-      uses: nicklasfrahm/scp-action@main
-      with:
-        direction: upload
-        host: ${{ secrets.LINK }}
-        port: ${{ secrets.PORT }}
-        username: ${{ secrets.USER }}
-        insecure_password: ${{ secrets.PASSWORD }}
-        insecure_ignore_fingerprint: true
-        source: ${{ env.NAME }}
-        target: ${{ env.NAME }}
-
     - name: Download yaml file via SSH
       uses: nicklasfrahm/scp-action@main
       with:
@@ -173,3 +161,15 @@ jobs:
         insecure_ignore_fingerprint: true
         source: os_list_imagingutility_v3_j2g.json
         target: os_list_imagingutility_v3_j2g.json
+        
+    - name: Upload file via SSH
+      uses: nicklasfrahm/scp-action@main
+      with:
+        direction: upload
+        host: ${{ secrets.LINK }}
+        port: ${{ secrets.PORT }}
+        username: ${{ secrets.USER }}
+        insecure_password: ${{ secrets.PASSWORD }}
+        insecure_ignore_fingerprint: true
+        source: ${{ env.NAME }}
+        target: ${{ env.NAME }}

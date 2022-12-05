@@ -122,18 +122,6 @@ jobs:
       run: |
         echo "${{ env.NAME }}"    
         
-    - name: Upload file via SSH
-      uses: nicklasfrahm/scp-action@main
-      with:
-        direction: upload
-        host: ${{ secrets.LINK }}
-        port: ${{ secrets.PORT }}
-        username: ${{ secrets.USER }}
-        insecure_password: ${{ secrets.PASSWORD }}
-        insecure_ignore_fingerprint: true
-        source: ${{ env.NAME }}
-        target: ${{ env.NAME }}
-
     - name: Download yaml file via SSH
       uses: nicklasfrahm/scp-action@main
       with:
@@ -156,12 +144,12 @@ jobs:
         export SUM=$(cat sha256)
         export RELEASEDATE=$(date +%Y-%m-%d)
 
-        sed -i "s/RELEASENAME/$NAME/ig" os_list_imagingutility_v3_j4g.jso
-        sed -i "s/FILENAME/$FILENAME/ig" os_list_imagingutility_v3_j4g.jso       
-        sed -i "s/FILESIZE/$FILESIZE/ig" os_list_imagingutility_v3_j4g.jso       
-        sed -i "s/SHASUM/$SUM/ig" os_list_imagingutility_v3_j4g.jso       
-        sed -i "s/DOWNLOADSIZE/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_j4g.jso        
-        sed -i "s/RELEASEDATE/$RELEASEDATE/ig" os_list_imagingutility_v3_j4g.jso            
+        sed -i "s/RELEASENAME/$NAME/ig" os_list_imagingutility_v3_j4g.json
+        sed -i "s/FILENAME/$FILENAME/ig" os_list_imagingutility_v3_j4g.json       
+        sed -i "s/FILESIZE/$FILESIZE/ig" os_list_imagingutility_v3_j4g.json       
+        sed -i "s/SHASUM/$SUM/ig" os_list_imagingutility_v3_j4g.json       
+        sed -i "s/DOWNLOADSIZE/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_j4g.json        
+        sed -i "s/RELEASEDATE/$RELEASEDATE/ig" os_list_imagingutility_v3_j4g.json            
 
     - name: Upload YAMLFILE
       uses: nicklasfrahm/scp-action@main
@@ -172,5 +160,17 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: os_list_imagingutility_v3_j4g.jso
-        target: os_list_imagingutility_v3.jso
+        source: os_list_imagingutility_v3_j4g.json
+        target: os_list_imagingutility_v3.json
+
+    - name: Upload file via SSH
+      uses: nicklasfrahm/scp-action@main
+      with:
+        direction: upload
+        host: ${{ secrets.LINK }}
+        port: ${{ secrets.PORT }}
+        username: ${{ secrets.USER }}
+        insecure_password: ${{ secrets.PASSWORD }}
+        insecure_ignore_fingerprint: true
+        source: ${{ env.NAME }}
+        target: ${{ env.NAME }}
