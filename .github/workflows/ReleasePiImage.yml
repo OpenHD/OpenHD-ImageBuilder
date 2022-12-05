@@ -171,5 +171,6 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
+        action_timeout: 30m
         source: os_list_imagingutility_v3_rpi.json
         target: os_list_imagingutility_v3_rpi.json

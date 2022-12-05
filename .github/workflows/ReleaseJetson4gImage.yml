@@ -172,5 +172,6 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
+        action_timeout: 30m
         source: ${{ env.NAME }}
         target: ${{ env.NAME }}
