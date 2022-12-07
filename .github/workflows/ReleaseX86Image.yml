@@ -155,12 +155,12 @@ jobs:
         export SUM=$(cat sha256)
         export RELEASEDATE=$(date +%Y-%m-%d)
 
-        sed -i "s/RELEASENAME_x86/$NAME/ig" os_list_imagingutility_v3_x86.json
-        sed -i "s/FILENAME_x86/$FILENAME/ig" os_list_imagingutility_v3_x86.json       
-        sed -i "s/FILESIZE_x86/$FILESIZE/ig" os_list_imagingutility_v3_x86.json       
-        sed -i "s/SHASUM_x86/$SUM/ig" os_list_imagingutility_v3_x86.json       
-        sed -i "s/DOWNLOADSIZE_x86/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_x86.json        
-        sed -i "s/RELEASEDATE_x86/$RELEASEDATE/ig" os_list_imagingutility_v3_x86.json            
+        sed -i "s/RELEASENAMEx86/$NAME/ig" os_list_imagingutility_v3_x86.json
+        sed -i "s/FILENAMEx86/$FILENAME/ig" os_list_imagingutility_v3_x86.json       
+        sed -i "s/FILESIZEx86/$FILESIZE/ig" os_list_imagingutility_v3_x86.json       
+        sed -i "s/SHASUMx86/$SUM/ig" os_list_imagingutility_v3_x86.json       
+        sed -i "s/DOWNLOADSIZEx86/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_x86.json        
+        sed -i "s/RELEASEDATEx86/$RELEASEDATE/ig" os_list_imagingutility_v3_x86.json            
 
     - name: Upload YAMLFILE
       uses: nicklasfrahm/scp-action@main

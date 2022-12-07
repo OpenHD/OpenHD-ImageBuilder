@@ -155,12 +155,12 @@ jobs:
         export SUM=$(cat sha256)
         export RELEASEDATE=$(date +%Y-%m-%d)
 
-        sed -i "s/RELEASENAME_rpi/$NAME/ig" os_list_imagingutility_v3_rpi.json
-        sed -i "s/FILENAME_rpi/$FILENAME/ig" os_list_imagingutility_v3_rpi.json       
-        sed -i "s/FILESIZE_rpi/$FILESIZE/ig" os_list_imagingutility_v3_rpi.json       
-        sed -i "s/SHASUM_rpi/$SUM/ig" os_list_imagingutility_v3_rpi.json       
-        sed -i "s/DOWNLOADSIZE_rpi/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_rpi.json        
-        sed -i "s/RELEASEDATE_rpi/$RELEASEDATE/ig" os_list_imagingutility_v3_rpi.json            
+        sed -i "s/RELEASENAMErpi/$NAME/ig" os_list_imagingutility_v3_rpi.json
+        sed -i "s/FILENAMErpi/$FILENAME/ig" os_list_imagingutility_v3_rpi.json       
+        sed -i "s/FILESIZErpi/$FILESIZE/ig" os_list_imagingutility_v3_rpi.json       
+        sed -i "s/SHASUMrpi/$SUM/ig" os_list_imagingutility_v3_rpi.json       
+        sed -i "s/DOWNLOADSIZErpi/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_rpi.json        
+        sed -i "s/RELEASEDATErpi/$RELEASEDATE/ig" os_list_imagingutility_v3_rpi.json            
 
     - name: Upload YAMLFILE
       uses: nicklasfrahm/scp-action@main
