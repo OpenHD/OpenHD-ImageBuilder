@@ -1,4 +1,4 @@
-name: Image Release RPI
+name: Image Release X86
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TESTING: [testing]
-        TARGET: [pi-bullseye] # <-- Add targets here!
+        TARGET: [x86-jammy] # <-- Add targets here!
 
     steps:
     - name: Maximize build space
@@ -142,8 +142,8 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: os_list_imagingutility_v3_template.json
-        target: os_list_imagingutility_v3_rpi.json
+        source: os_list_imagingutility_v3_rpi.json
+        target: os_list_imagingutility_v3_x86.json
 
     - name: update YAMLFILE for the ImageWriter
       run: |
@@ -155,12 +155,12 @@ jobs:
         export SUM=$(cat sha256)
         export RELEASEDATE=$(date +%Y-%m-%d)
 
-        sed -i "s/RELEASENAMErpi/$NAME/ig" os_list_imagingutility_v3_rpi.json
-        sed -i "s/FILENAMErpi/$FILENAME/ig" os_list_imagingutility_v3_rpi.json       
-        sed -i "s/FILESIZErpi/$FILESIZE/ig" os_list_imagingutility_v3_rpi.json       
-        sed -i "s/SHASUMrpi/$SUM/ig" os_list_imagingutility_v3_rpi.json       
-        sed -i "s/DOWNLOADSIZErpi/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_rpi.json        
-        sed -i "s/RELEASEDATErpi/$RELEASEDATE/ig" os_list_imagingutility_v3_rpi.json            
+        sed -i "s/RELEASENAMEx86/$NAME/ig" os_list_imagingutility_v3_x86.json
+        sed -i "s/FILENAMEx86/$FILENAME/ig" os_list_imagingutility_v3_x86.json       
+        sed -i "s/FILESIZEx86/$FILESIZE/ig" os_list_imagingutility_v3_x86.json       
+        sed -i "s/SHASUMx86/$SUM/ig" os_list_imagingutility_v3_x86.json       
+        sed -i "s/DOWNLOADSIZEx86/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_x86.json        
+        sed -i "s/RELEASEDATEx86/$RELEASEDATE/ig" os_list_imagingutility_v3_x86.json            
 
     - name: Upload YAMLFILE
       uses: nicklasfrahm/scp-action@main
@@ -172,5 +172,5 @@ jobs:
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
         action_timeout: 30m
-        source: os_list_imagingutility_v3_rpi.json
-        target: os_list_imagingutility_v3_rpi.json
+        source: os_list_imagingutility_v3_x86.json
+        target: os_list_imagingutility_v3_x86.json
