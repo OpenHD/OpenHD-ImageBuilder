@@ -27,7 +27,7 @@ prepareOpenHD()
 	chmod a+x  shortcuts/OpenHD-Air.desktop
 	chmod a+x  shortcuts/OpenHD-Ground.desktop
 	chmod a+x  shortcuts/QOpenHD.desktop
-	for homedir in /home/*; do sudo cp shortcuts/* "$homedir"; done
+	for homedir in /home/*; do sudo cp shortcuts/*.desktop "$homedir"; done
 	for homedir in /home/*; do gio set /home/$homedir/Desktop/OpenHD-Air.desktop metadata::trusted true; done
 	for homedir in /home/*; do gio set /home/$homedir/Desktop/OpenHD-Ground.desktop metadata::trusted true; done
 	for homedir in /home/*; do gio set /home/$homedir/Desktop/QOpenHD.desktop metadata::trusted true; done
@@ -45,8 +45,7 @@ prepareOpenHD()
 
 if ((EUID == 0))
 then
-	echo $NoInt
-	if (( NoInt =! noint ))
+	if [ $# -eq 0 ]
 	then
 	zenity --info --title="OpenHD Installer" --text="This Tool will install OpenHD on your Linux-System" --no-wrap
 	zenity --warning --title="OpenHD Warning" --text="OpenHD may interfere with your normal Linux-System, it also allows to use frequencies and power settings, which might not be allowed in your country \nPlease note that you're the only one responsible for setting allowed values." --no-wrap
@@ -181,5 +180,6 @@ else
 	echo "You need to run this as root, please restart the script!"
 	exit
 fi
+
 
 
