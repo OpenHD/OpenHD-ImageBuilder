@@ -130,7 +130,7 @@ jobs:
         username: ${{ secrets.USER }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: os_list_imagingutility_v3_rpi.json
+        source: os_list_imagingutility_v3_x86.json
         target: os_list_imagingutility_v3_j2g.json
 
     - name: update YAMLFILE for the ImageWriter
