@@ -33,11 +33,7 @@ fi
      cd Overlay
      cp userconf.txt /boot/userconf.txt
      cp getty@.service /usr/lib/systemd/system/getty@.service
-     cd configs
-     mkdir -p /boot/openhd/configs
-     cp * /boot/openhd/configs
-     echo "setup raspbian to enable QOpenHD"
-     cp /boot/openhd/configs/rpi_raspicam.txt /boot/config.txt
+     cp default_raspi_config.txt /boot/config.txt
      #remove serial console
     sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
     sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
@@ -57,17 +53,6 @@ fi
      ./install_driver.sh
           #removing overlay until openhd loads it
           sed -i '/dtoverlay=arducam-pivariety/d' /boot/config.txt
-
-     #Adding Debug Script (currently pi only)
-     cd /opt
-     git clone https://github.com/OpenHD/OpenHD-debug
-     cd OpenHD-debug
-     chmod +x debug.sh
-     crontab -l > mycron
-     echo "@reboot /opt/OpenHD-debug/debug.sh" >> mycron
-     crontab mycron
-     rm mycron
-     systemctl enable cron.service
  fi
 
 #Ensure the runlevel is multi-target (3) could possibly be lower...
