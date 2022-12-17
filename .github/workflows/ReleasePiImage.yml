@@ -142,6 +142,7 @@ jobs:
         port: ${{ secrets.PORT }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
         source: OpenHD-OS-Images/os_list_imagingutility_v3_template.json
