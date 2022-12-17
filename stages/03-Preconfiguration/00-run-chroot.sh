@@ -38,9 +38,6 @@ fi
     sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
     sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
 
-    #mask Wpa Supplicant
-    systemctl mask wpa_supplicant
-
      # enable dualcam-csi
      cd /boot/
      wget https://github.com/ochin-space/ochin-CM4/blob/master/files/dt-blob.bin
@@ -58,20 +55,15 @@ fi
 #Ensure the runlevel is multi-target (3) could possibly be lower...
 #sudo systemctl set-default multi-user.target
 
-
 #remove networking stuff
 rm /etc/init.d/dnsmasq
 rm /etc/init.d/dhcpcd
 
-
 #disable unneeded services
 sudo systemctl disable dnsmasq.service
 sudo systemctl disable syslog.service
-    echo "disabling journald"
-    #we disable networking, dhcp, journald on non dev-images, since it'll put additional strain on the sd-cards
-    sudo systemctl disable journald.service
-    sudo systemctl disable dhcpcd.service
-    sudo systemctl disable networking.service
+echo "disabling journald"
+
 #replace dhcpcd with network manager
 sudo systemctl disable dhcpcd.service
 sudo systemctl enable NetworkManager
