@@ -140,7 +140,7 @@ jobs:
         export NAME=$(cat last.release)
         export FILESIZE=${{ env.SIZEFULL }}
         export FILENAME=${{ env.NAME }}
-        export DOWNLOADSIZE=$(wc -c *.gz | cut -f 1 -d " ")
+        export DOWNLOADSIZE=$(wc -c *.xz | cut -f 1 -d " ")
         export SUM=$(cat sha256)
         export RELEASEDATE=$(date +%Y-%m-%d)
 

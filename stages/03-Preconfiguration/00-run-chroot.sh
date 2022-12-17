@@ -67,13 +67,11 @@ rm /etc/init.d/dhcpcd
 #disable unneeded services
 sudo systemctl disable dnsmasq.service
 sudo systemctl disable syslog.service
-if [[ "${OS}" != "testing" ]] || [[ "${OS}" != "milestone" ]]; then
     echo "disabling journald"
     #we disable networking, dhcp, journald on non dev-images, since it'll put additional strain on the sd-cards
     sudo systemctl disable journald.service
     sudo systemctl disable dhcpcd.service
     sudo systemctl disable networking.service
-fi
 #replace dhcpcd with network manager
 sudo systemctl disable dhcpcd.service
 sudo systemctl enable NetworkManager
