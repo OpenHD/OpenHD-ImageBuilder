@@ -128,10 +128,11 @@ jobs:
         host: ${{ secrets.LINK }}
         port: ${{ secrets.PORT }}
         username: ${{ secrets.USER }}
+        key: ${{ secrets.KEY }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: ${{ env.NAME }}
-        target: ${{ env.NAME }}
+        source: OpenHD-OS-Images/${{ env.NAME }}
+        target: OpenHD-OS-Images/${{ env.NAME }}
 
     - name: Download yaml file via SSH
       uses: nicklasfrahm/scp-action@main
@@ -140,10 +141,11 @@ jobs:
         host: ${{ secrets.LINK }}
         port: ${{ secrets.PORT }}
         username: ${{ secrets.USER }}
+        key: ${{ secrets.KEY }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
-        source: os_list_imagingutility_v3_template.json
-        target: os_list_imagingutility_v3_rpi.json
+        source: OpenHD-OS-Images/os_list_imagingutility_v3_template.json
+        target: OpenHD-OS-Images/os_list_imagingutility_v3_rpi.json
 
     - name: update YAMLFILE for the ImageWriter
       run: |
@@ -169,8 +171,9 @@ jobs:
         host: ${{ secrets.LINK }}
         port: ${{ secrets.PORT }}
         username: ${{ secrets.USER }}
+        key: ${{ secrets.KEY }}
         insecure_password: ${{ secrets.PASSWORD }}
         insecure_ignore_fingerprint: true
         action_timeout: 30m
-        source: os_list_imagingutility_v3_rpi.json
-        target: os_list_imagingutility_v3_rpi.json
+        source: OpenHD-OS-Images/os_list_imagingutility_v3_rpi.json
+        target: OpenHD-OS-Images/os_list_imagingutility_v3_rpi.json
