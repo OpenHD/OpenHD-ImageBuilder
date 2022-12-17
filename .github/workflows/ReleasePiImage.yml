@@ -113,7 +113,7 @@ jobs:
         echo 'SIZEFULL<<EOF' >> $GITHUB_ENV
         wc -c *.img | cut -f 1 -d " " >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
-        xz -v7 *.img
+        touch image.xz 
         ls -a
         mv * ../
         ls -a
@@ -142,9 +142,7 @@ jobs:
         port: ${{ secrets.PORT }}
         username: ${{ secrets.USER }}
         key: ${{ secrets.KEY }}
-        passphrase: ${{ secrets.PASSPHRASE }}
         insecure_password: ${{ secrets.PASSWORD }}
-        insecure_ignore_fingerprint: true
         source: OpenHD-OS-Images/os_list_imagingutility_v3_template.json
         target: OpenHD-OS-Images/os_list_imagingutility_v3_rpi.json
 
