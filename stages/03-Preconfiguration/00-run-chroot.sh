@@ -54,10 +54,11 @@ fi
             #removing overlay until openhd loads it
                 sed -i '/dtoverlay=arducam-pivariety/d' /boot/config.txt
      fi
-
+     #set -x
      if [ -n "$INSTALL_RETERMINAL" ] && $INSTALL_RETERMINAL; then
         echo "reterminal install me please, Andrew :)"
      fi 
+     #set +x
  fi
 
 #Ensure the runlevel is multi-target (3) could possibly be lower...

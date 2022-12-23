@@ -161,6 +161,7 @@ export BASE_IMAGE
 export TESTING
 export SMALL
 export HAS_CUSTOM_BASE
+export INSTALL_RETERMINAL
 
 export CLEAN
 export IMG_NAME
