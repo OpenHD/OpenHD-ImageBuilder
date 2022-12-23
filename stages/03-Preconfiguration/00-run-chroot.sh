@@ -42,10 +42,9 @@ fi
      cd /boot/
      wget https://github.com/ochin-space/ochin-CM4/blob/master/files/dt-blob.bin
 
-     if ls /boot/overlays/ | grep -E arducam-pivariety.dtbo > /dev/null  
-        then
-            sed -i '/dtoverlay=arducam-pivariety/d' /boot/config.txt
-        else
+     if [ -e /boot/overlays/arducam-pivariety.dtbo ]; then
+            echo 'dtoverlay=arducam-pivariety' >> /boot/config.txt
+     else
             #enable arducam drivers
             cd /opt
             git clone https://github.com/OpenHD/Arducam-Pivariety-V4L2-Driver
@@ -54,22 +53,19 @@ fi
             ./install_driver.sh
             #removing overlay until openhd loads it
                 sed -i '/dtoverlay=arducam-pivariety/d' /boot/config.txt
-     fi  
+     fi
+
+     if [ -n "$INSTALL_RETERMINAL" ] && $INSTALL_RETERMINAL; then
+        echo "reterminal install me please, Andrew :)"
+     fi 
  fi
 
 #Ensure the runlevel is multi-target (3) could possibly be lower...
 #sudo systemctl set-default multi-user.target
 
 #remove networking stuff 
-if ls /etc/init.d/ | grep -E dnsmasq > /dev/null ; then
-    rm /etc/init.d/dnsmasq  
-fi
-
-if ls /etc/init.d/ | grep -E dhcpcd > /dev/null ; then
-    rm /etc/init.d/dhcpcd  
-fi 
-#rm /etc/init.d/dnsmasq
-#rm /etc/init.d/dhcpcd
+rm -f /etc/init.d/dnsmasq
+rm -f /etc/init.d/dhcpcd
 
 #disable unneeded services
 sudo systemctl disable dnsmasq.service
