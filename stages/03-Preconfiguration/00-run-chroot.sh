@@ -35,27 +35,33 @@ fi
      cp getty@.service /usr/lib/systemd/system/getty@.service
      cp default_raspi_config.txt /boot/config.txt
      #remove serial console
-    sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
-    sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
+     sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
+     sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
 
      # enable dualcam-csi
      cd /boot/
      wget https://github.com/ochin-space/ochin-CM4/blob/master/files/dt-blob.bin
-        
-     #enable arducam drivers
-     cd /opt
-     git clone https://github.com/OpenHD/Arducam-Pivariety-V4L2-Driver
-     cd Arducam-Pivariety-V4L2-Driver
-     cd Release
-     ./install_driver.sh
-          #removing overlay until openhd loads it
-          sed -i '/dtoverlay=arducam-pivariety/d' /boot/config.txt
+
+     if ls /boot/overlays/ | grep -E arducam-pivariety.dtbo > /dev/null  
+        then
+            sed -i '/dtoverlay=arducam-pivariety/d' /boot/config.txt
+        else
+            #enable arducam drivers
+            cd /opt
+            git clone https://github.com/OpenHD/Arducam-Pivariety-V4L2-Driver
+            cd Arducam-Pivariety-V4L2-Driver
+            cd Release
+            ./install_driver.sh
+            #removing overlay until openhd loads it
+                sed -i '/dtoverlay=arducam-pivariety/d' /boot/config.txt
+     fi  
  fi
 
 #Ensure the runlevel is multi-target (3) could possibly be lower...
 #sudo systemctl set-default multi-user.target
 
-#remove networking stuff
+#remove networking stuff 
+ls /etc/
 rm /etc/init.d/dnsmasq
 rm /etc/init.d/dhcpcd
 

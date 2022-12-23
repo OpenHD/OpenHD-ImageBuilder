@@ -150,6 +150,7 @@ export ROOT_PART
 export BOOT_PART
 export HAVE_BOOT_PART
 export HAVE_CONF_PART
+export CURRENT_VERSION
 export OPENHD_PACKAGE
 export KERNEL_PACKAGE
 export OS
@@ -202,7 +203,7 @@ if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
     mkdir -p "${DEPLOY_DIR}" || true
     df -h
     ls -l --block-size=M ${PREV_WORK_DIR}/*.img
-    mv ${PREV_WORK_DIR}/*.img ${DEPLOY_DIR}
+    mv ${PREV_WORK_DIR}/*.img ${IMAGE_PATH_NAME}
     rm -Rf ${PREV_WORK_DIR}
     cd ${DEPLOY_DIR}
     df -h
