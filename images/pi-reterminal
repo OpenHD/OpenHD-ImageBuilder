@@ -1,6 +1,6 @@
-BASE_IMAGE_URL="http://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2022-09-07/"
-BASE_IMAGE="2022-09-06-raspios-bullseye-armhf-lite.img.xz"
-BASE_IMAGE_SHA256="28582f75128e426215e2cda8d6be04c57c0d190d5bf2d4bef62201340d5e60cf"
+BASE_IMAGE_URL="https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2022-09-26/"
+BASE_IMAGE="2022-09-22-raspios-bullseye-armhf-lite.img.xz"
+BASE_IMAGE_SHA256="9bf5234efbadd2d39769486e0a20923d8526a45eba57f74cda45ef78e2b628da"
 OS="raspbian"
 DISTRO="bullseye"
 HAVE_BOOT_PART=true

@@ -56,7 +56,11 @@ fi
      fi
      #set -x
      if [ -n "$INSTALL_RETERMINAL" ] && $INSTALL_RETERMINAL; then
-        echo "reterminal install me please, Andrew :)"
+        cd /opt
+        git clone --depth 1 https://github.com/Seeed-Studio/seeed-linux-dtoverlays
+        cd seeed-linux-dtoverlays
+        ./scripts/reTerminal.sh
+        sed -i '/dtoverlay=vc4-fkms-v3d/d' /boot/config.txt
      fi 
      #set +x
  fi
