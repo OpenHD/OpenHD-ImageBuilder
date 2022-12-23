@@ -61,9 +61,15 @@ fi
 #sudo systemctl set-default multi-user.target
 
 #remove networking stuff 
-ls /etc/
-rm /etc/init.d/dnsmasq
-rm /etc/init.d/dhcpcd
+if ls /etc/init.d/ | grep -E dnsmasq > /dev/null ; then
+    rm /etc/init.d/dnsmasq  
+fi
+
+if ls /etc/init.d/ | grep -E dhcpcd > /dev/null ; then
+    rm /etc/init.d/dhcpcd  
+fi 
+#rm /etc/init.d/dnsmasq
+#rm /etc/init.d/dhcpcd
 
 #disable unneeded services
 sudo systemctl disable dnsmasq.service
