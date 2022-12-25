@@ -43,7 +43,7 @@ fi
      wget https://github.com/ochin-space/ochin-CM4/blob/master/files/dt-blob.bin
 
      if [ -e /boot/overlays/arducam-pivariety.dtbo ]; then
-            echo 'dtoverlay=arducam-pivariety' >> /boot/config.txt
+            echo '#dtoverlay=arducam-pivariety' >> /boot/config.txt
      else
             #enable arducam drivers
             cd /opt
