@@ -44,7 +44,7 @@ fi
 
      if [ -e /boot/overlays/arducam-pivariety.dtbo ]; then
             echo '#dtoverlay=arducam-pivariety' >> /boot/config.txt
-     else
+        else
             #enable arducam drivers
             cd /opt
             git clone https://github.com/OpenHD/Arducam-Pivariety-V4L2-Driver
@@ -54,7 +54,6 @@ fi
             #removing overlay until openhd loads it
                 sed -i '/dtoverlay=arducam-pivariety/d' /boot/config.txt
      fi
-     #set -x
      if [ -n "$INSTALL_RETERMINAL" ] && $INSTALL_RETERMINAL; then
         cd /opt
         git clone --depth 1 https://github.com/Seeed-Studio/seeed-linux-dtoverlays
@@ -62,7 +61,6 @@ fi
         ./scripts/reTerminal.sh
         sed -i '/dtoverlay=vc4-fkms-v3d/d' /boot/config.txt
      fi 
-     #set +x
  fi
 
 #Ensure the runlevel is multi-target (3) could possibly be lower...
