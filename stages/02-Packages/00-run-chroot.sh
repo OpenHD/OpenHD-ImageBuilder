@@ -28,6 +28,7 @@
 
  if [[ "${OS}" == "ubuntu-x86" ]] ; then
          echo "OS is ubuntu, we're building for x86"
+         sudo apt remove linux-headers-5.15.0-53* linux-image-5.15.0-53-generic linux-modules-extra-5.15.0-53-generic 
          sudo apt update
          sudo apt upgrade
          sudo apt install -y git curl
