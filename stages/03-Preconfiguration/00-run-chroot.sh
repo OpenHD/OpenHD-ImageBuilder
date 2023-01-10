@@ -113,10 +113,10 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        gio set /home/openhd/Desktop/OpenHD-Ground.desktop metadata::trusted true
        gio set /home/openhd/Desktop/QOpenHD.desktop metadata::trusted true
        echo "openhd ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/openhd
-       sudo apt install mono-runtime libmono-system-windows-forms4.0-cil libmono-system-core4.0-cil libmono-system-management4.0-cil libmono-system-xml-linq4.0-cil
-       sudo apt install mono-complete
-       wget https://firmware.ardupilot.org/Tools/MissionPlanner/MissionPlanner-latest.zip
-       unzip MissionPlanner-latest.zip
+    #    sudo apt install mono-runtime libmono-system-windows-forms4.0-cil libmono-system-core4.0-cil libmono-system-management4.0-cil libmono-system-xml-linq4.0-cil
+    #    sudo apt install mono-complete
+    #    wget https://firmware.ardupilot.org/Tools/MissionPlanner/MissionPlanner-latest.zip
+    #    unzip MissionPlanner-latest.zip
 fi
 #this service updates runlevel changes. Set desired runlevel prior to this being disabled
 if [[ "${OS}" != "ubuntu-x86" ]]; then
