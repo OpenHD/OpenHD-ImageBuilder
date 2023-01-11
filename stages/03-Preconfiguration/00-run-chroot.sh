@@ -138,6 +138,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        mkdir QGC
        cd QGC
        wget https://github.com/mavlink/qgroundcontrol/releases/download/v4.2.4/QGroundControl.AppImage
+       chmod +x QGroundControl.AppImage
        ./QGroundControl.AppImage --appimage-extract
        rm QGroundControl.AppImage
        cd squashfs-root
