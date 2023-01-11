@@ -125,12 +125,12 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        wget https://firmware.ardupilot.org/Tools/MissionPlanner/MissionPlanner-latest.zip
        unzip MissionPlanner-latest.zip
        rm MissionPlanner-latest.zip
-       mv MissionPlanner* MissionPlanner
+       mv MissionPlanner-latest MissionPlanner
        cd /opt
        wget https://github.com/iNavFlight/inav-configurator/releases/download/6.0.0-FP2/INAV-Configurator_linux64_6.0.0-FP2.tar.gz
        tar -zxvf INAV-Configurator_linux64_6.0.0-FP2.tar.gz
        rm INAV-Configurator_linux64_6.0.0-FP2.tar.gz
-       mv INAV* INAV
+       mv INAV\ \ Configurator INAV
        cd INAV
        chmod +x inav-configurator
        chmod +x chrome_crashpad_handler
