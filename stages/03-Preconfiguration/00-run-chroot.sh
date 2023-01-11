@@ -92,6 +92,8 @@ if [[ "${OS}" == "ubuntu" ]]; then
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
+       sudo usermod -a -G dialout openhd
+       sudo apt remove modemmanager
        cp /opt/Overlay/desktop-truster.sh /etc/profile.d/desktop-truster.sh
        #this script needs to be executable by every user
        chmod +777 /etc/profile.d/desktop-truster.sh
