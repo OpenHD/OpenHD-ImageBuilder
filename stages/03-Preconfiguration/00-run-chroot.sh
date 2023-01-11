@@ -106,11 +106,14 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        git clone https://github.com/OpenHD/OpenHD-ImageBuilder
        cd OpenHD-ImageBuilder
        chmod a+x  shortcuts/OpenHD-Air.desktop
-	   chmod a+x  shortcuts/OpenHD-Ground.desktop
-	   chmod a+x  shortcuts/QOpenHD.desktop
-	   sudo cp shortcuts/* /usr/share/applications/
+       chmod a+x  shortcuts/OpenHD-Ground.desktop
+       chmod a+x  shortcuts/QOpenHD.desktop
+       chmod a+x  shortcuts/INAV.desktop
+       chmod a+x  shortcuts/MissionPlanner.desktop
+       chmod a+x  shortcuts/qgroundcontrol.desktop
+       sudo cp shortcuts/* /usr/share/applications/
        sudo cp shortcuts/*.desktop /home/openhd/Desktop/
-	   sudo cp shortcuts/*.ico /opt/
+       sudo cp shortcuts/*.ico /opt/
        sudo nmcli connection delete Onair
        gio set /home/openhd/Desktop/OpenHD-Air.desktop metadata::trusted true
        gio set /home/openhd/Desktop/OpenHD-Ground.desktop metadata::trusted true
@@ -125,12 +128,11 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        wget https://firmware.ardupilot.org/Tools/MissionPlanner/MissionPlanner-latest.zip
        unzip MissionPlanner-latest.zip
        rm MissionPlanner-latest.zip
-       mv MissionPlanner-latest MissionPlanner
        cd /opt
        wget https://github.com/iNavFlight/inav-configurator/releases/download/6.0.0-FP2/INAV-Configurator_linux64_6.0.0-FP2.tar.gz
        tar -zxvf INAV-Configurator_linux64_6.0.0-FP2.tar.gz
        rm INAV-Configurator_linux64_6.0.0-FP2.tar.gz
-       mv INAV\ \ Configurator INAV
+       mv INAV\ Configurator/ INAV
        cd INAV
        chmod +x inav-configurator
        chmod +x chrome_crashpad_handler
