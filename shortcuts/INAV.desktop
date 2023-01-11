@@ -3,6 +3,6 @@ Encoding=UTF-8
 Version=1.0
 Type=Application
 Terminal=false
-Exec=gnome-terminal -e "bash -c '/opt/INAV/inav-configuator'
+Exec=gnome-terminal -e "bash -c '/opt/INAV/inav-configurator'
 Name=INAV
 Icon=/opt/INAV.ico
