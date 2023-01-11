@@ -107,19 +107,30 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 	   chmod a+x  shortcuts/QOpenHD.desktop
 	   sudo cp shortcuts/* /usr/share/applications/
        sudo cp shortcuts/*.desktop /home/openhd/Desktop/
-	   sudo cp shortcuts/OpenHD.ico /opt/
+	   sudo cp shortcuts/*.ico /opt/
        sudo nmcli connection delete Onair
        gio set /home/openhd/Desktop/OpenHD-Air.desktop metadata::trusted true
        gio set /home/openhd/Desktop/OpenHD-Ground.desktop metadata::trusted true
        gio set /home/openhd/Desktop/QOpenHD.desktop metadata::trusted true
+       gio set /home/openhd/Desktop/INAV.desktop metadata::trusted true
+       gio set /home/openhd/Desktop/MissionPlanner.desktop metadata::trusted true
        echo "openhd ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/openhd
        cd /opt
+       mkdir MissionPlanner
+       cd MissionPlanner
        wget https://firmware.ardupilot.org/Tools/MissionPlanner/MissionPlanner-latest.zip
        unzip MissionPlanner-latest.zip
+       rm MissionPlanner-latest.zip
+       mv MissionPlanner* MissionPlanner
        cd /opt
        wget https://github.com/iNavFlight/inav-configurator/releases/download/6.0.0-FP2/INAV-Configurator_linux64_6.0.0-FP2.tar.gz
        tar -zxvf INAV-Configurator_linux64_6.0.0-FP2.tar.gz
-       ls -a
+       rm INAV-Configurator_linux64_6.0.0-FP2.tar.gz
+       mv INAV* INAV
+       cd INAV
+       chmod +x inav-configurator
+       chmod +x chrome_crashpad_handler
+
 fi
 #this service updates runlevel changes. Set desired runlevel prior to this being disabled
 if [[ "${OS}" != "ubuntu-x86" ]]; then
