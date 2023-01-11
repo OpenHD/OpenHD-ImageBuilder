@@ -114,6 +114,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        gio set /home/openhd/Desktop/QOpenHD.desktop metadata::trusted true
        gio set /home/openhd/Desktop/INAV.desktop metadata::trusted true
        gio set /home/openhd/Desktop/MissionPlanner.desktop metadata::trusted true
+       gio set /home/openhd/Desktop/qgroundcontrol.desktop metadata::trusted true
        echo "openhd ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/openhd
        cd /opt
        mkdir MissionPlanner
@@ -130,6 +131,15 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        cd INAV
        chmod +x inav-configurator
        chmod +x chrome_crashpad_handler
+       cd /opt
+       mkdir QGC
+       cd QGC
+       wget https://github.com/mavlink/qgroundcontrol/releases/download/v4.2.4/QGroundControl.AppImage
+       ./QGroundControl.AppImage --appimage-extract
+       rm QGroundControl.AppImage
+       cd squashfs-root
+       mv * ../
+
 
 fi
 #this service updates runlevel changes. Set desired runlevel prior to this being disabled
