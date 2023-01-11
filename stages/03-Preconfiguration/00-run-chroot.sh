@@ -116,6 +116,9 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        cd /opt
        wget https://firmware.ardupilot.org/Tools/MissionPlanner/MissionPlanner-latest.zip
        unzip MissionPlanner-latest.zip
+       cd /opt
+       wget https://github.com/iNavFlight/inav-configurator/releases/download/6.0.0-FP2/INAV-Configurator_linux64_6.0.0-FP2.tar.gz
+       tar -zxvf INAV-Configurator_linux64_6.0.0-FP2.tar.gz
        ls -a
 fi
 #this service updates runlevel changes. Set desired runlevel prior to this being disabled
