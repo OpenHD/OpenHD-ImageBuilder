@@ -18,7 +18,7 @@
      apt -yq install firmware-misc-nonfree || exit 1
      apt-mark hold raspberrypi-kernel
      # Install libraspberrypi-dev before apt-get update
-     #Remove current kernel and nfs(bloat)
+     #Remove current kernel, libcamera and nfs(bloat)
      apt-mark hold libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc
      apt purge -y raspberrypi-kernel
      apt remove -y nfs-common libcamera*
