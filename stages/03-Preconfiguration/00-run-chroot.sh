@@ -94,15 +94,10 @@ fi
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
        sudo usermod -a -G dialout openhd
        sudo apt remove modemmanager
-       gsettings set org.gnome.settings-daemon.plugins.housekeeping active false
        cp /opt/Overlay/desktop-truster.sh /etc/profile.d/desktop-truster.sh
        #this script needs to be executable by every user
        chmod +777 /etc/profile.d/desktop-truster.sh
        mkdir -p /boot/openhd/
-       touch /boot/openhd/x86.txt
-       touch /boot/openhd/ground.txt
-       systemctl disable openhd
-       systemctl disable qopenhd
        git clone https://github.com/OpenHD/OpenHD-ImageBuilder
        cd OpenHD-ImageBuilder
        chmod a+x  shortcuts/OpenHD-Air.desktop
@@ -114,7 +109,6 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        sudo cp shortcuts/* /usr/share/applications/
        sudo cp shortcuts/*.desktop /home/openhd/Desktop/
        sudo cp shortcuts/*.ico /opt/
-       sudo nmcli connection delete Onair
        gio set /home/openhd/Desktop/OpenHD-Air.desktop metadata::trusted true
        gio set /home/openhd/Desktop/OpenHD-Ground.desktop metadata::trusted true
        gio set /home/openhd/Desktop/QOpenHD.desktop metadata::trusted true
