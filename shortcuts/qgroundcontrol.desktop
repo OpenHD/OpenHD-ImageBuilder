@@ -5,3 +5,5 @@ Type=Application
 Terminal=false
 Icon=/opt/qgroundcontrol.ico
 Exec=/opt/QGC/QGroundControl.AppImage
+Name=QGroundControl
+
