@@ -28,6 +28,7 @@
 
  if [[ "${OS}" == "ubuntu-x86" ]] ; then
          echo "OS is ubuntu, we're building for x86"
+         sudo apt-mark hold linux-generic linux-headers-generic linux-image-generic linux-generic-hwe-22.04 linux-image-generic-hwe-22.04 linux-headers-generic-hwe-22.04
          echo linux-image-5.15.0-57-generic hold | sudo dpkg --set-selections    
          echo linux-image-generic hold | sudo dpkg --set-selections
          echo linux-generic hold | sudo dpkg --set-selections     
