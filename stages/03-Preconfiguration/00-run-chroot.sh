@@ -145,7 +145,7 @@ sudo systemctl disable systemd-update-utmp.service
 fi
 
 
-#change hostname
+#change hostname to openhd
 CURRENT_HOSTNAME=`sudo cat /etc/hostname | sudo tr -d " \t\n\r"`
 NEW_HOSTNAME="openhd"
 if [ $? -eq 0 ]; then
