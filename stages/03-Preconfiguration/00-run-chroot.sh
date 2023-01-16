@@ -106,6 +106,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        chmod a+x  shortcuts/INAV.desktop
        chmod a+x  shortcuts/MissionPlanner.desktop
        chmod a+x  shortcuts/qgroundcontrol.desktop
+       chmod a+x  shortcuts/OpenHD-ImageWriter.desktop
        sudo cp shortcuts/* /usr/share/applications/
        sudo cp shortcuts/*.desktop /home/openhd/Desktop/
        sudo cp shortcuts/*.ico /opt/
