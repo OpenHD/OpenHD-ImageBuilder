@@ -125,10 +125,10 @@ jobs:
       uses: nicklasfrahm/scp-action@main
       with:
         direction: upload
-        host: ${{ secrets.LINK }}
-        port: ${{ secrets.PORT }}
-        username: ${{ secrets.USER }}
-        insecure_password: ${{ secrets.PASSWORD }}
+        host: ${{ secrets.LINKRap }}
+        port: ${{ secrets.PORTRap }}
+        username: ${{ secrets.USERRap }}
+        insecure_password: ${{ secrets.PASSWORDRap }}
         insecure_ignore_fingerprint: true
         source: ${{ env.NAME }}
         target: ${{ env.NAME }}
@@ -137,10 +137,10 @@ jobs:
       uses: nicklasfrahm/scp-action@main
       with:
         direction: download
-        host: ${{ secrets.LINK }}
-        port: ${{ secrets.PORT }}
-        username: ${{ secrets.USER }}
-        insecure_password: ${{ secrets.PASSWORD }}
+        host: ${{ secrets.LINKRap }}
+        port: ${{ secrets.PORTRap }}
+        username: ${{ secrets.USERRap }}
+        insecure_password: ${{ secrets.PASSWORDRap }}
         insecure_ignore_fingerprint: true
         source: os_list_imagingutility_v3_rpi.json
         target: os_list_imagingutility_v3_x86.json
@@ -166,10 +166,10 @@ jobs:
       uses: nicklasfrahm/scp-action@main
       with:
         direction: upload
-        host: ${{ secrets.LINK }}
-        port: ${{ secrets.PORT }}
-        username: ${{ secrets.USER }}
-        insecure_password: ${{ secrets.PASSWORD }}
+        host: ${{ secrets.LINKRap }}
+        port: ${{ secrets.PORTRap }}
+        username: ${{ secrets.USERRap }}
+        insecure_password: ${{ secrets.PASSWORDRap }}
         insecure_ignore_fingerprint: true
         action_timeout: 30m
         source: os_list_imagingutility_v3_x86.json

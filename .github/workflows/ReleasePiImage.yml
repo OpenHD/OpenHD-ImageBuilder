@@ -91,7 +91,7 @@ jobs:
           *.img
           if-no-files-found: error
 
-  upload:
+  uploadLEGACY:
     needs: build
     runs-on: ubuntu-latest
 
@@ -113,7 +113,7 @@ jobs:
         echo 'SIZEFULL<<EOF' >> $GITHUB_ENV
         wc -c *.img | cut -f 1 -d " " >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
-        touch image.xz 
+        xz -v7 *.img
         ls -a
         mv * ../
         ls -a
@@ -125,26 +125,25 @@ jobs:
       uses: nicklasfrahm/scp-action@main
       with:
         direction: upload
-        host: ${{ secrets.LINK }}
-        port: ${{ secrets.PORT }}
-        username: ${{ secrets.USER }}
-        key: ${{ secrets.KEY }}
-        insecure_password: ${{ secrets.PASSWORD }}
+        host: ${{ secrets.LINKRap }}
+        port: ${{ secrets.PORTRap }}
+        username: ${{ secrets.USERRap }}
+        insecure_password: ${{ secrets.PASSWORDRap }}
         insecure_ignore_fingerprint: true
-        source: OpenHD-OS-Images/${{ env.NAME }}
-        target: OpenHD-OS-Images/${{ env.NAME }}
+        source: ${{ env.NAME }}
+        target: ${{ env.NAME }}
 
     - name: Download yaml file via SSH
       uses: nicklasfrahm/scp-action@main
       with:
         direction: download
-        host: ${{ secrets.LINK }}
-        port: ${{ secrets.PORT }}
-        username: ${{ secrets.USER }}
-        key: ${{ secrets.KEY }}
-        insecure_password: ${{ secrets.PASSWORD }}
-        source: OpenHD-OS-Images/os_list_imagingutility_v3_template.json
-        target: OpenHD-OS-Images/os_list_imagingutility_v3_rpi.json
+        host: ${{ secrets.LINKRap }}
+        port: ${{ secrets.PORTRap }}
+        username: ${{ secrets.USERRap }}
+        insecure_password: ${{ secrets.PASSWORDRap }}
+        insecure_ignore_fingerprint: true
+        source: os_list_imagingutility_v3_template.json
+        target: os_list_imagingutility_v3_rpi.json
 
     - name: update YAMLFILE for the ImageWriter
       run: |
@@ -155,24 +154,107 @@ jobs:
         export DOWNLOADSIZE=$(wc -c *.xz | cut -f 1 -d " ")
         export SUM=$(cat sha256)
         export RELEASEDATE=$(date +%Y-%m-%d)
-
         sed -i "s/RELEASENAMErpi/$NAME/ig" os_list_imagingutility_v3_rpi.json
         sed -i "s/FILENAMErpi/$FILENAME/ig" os_list_imagingutility_v3_rpi.json       
         sed -i "s/FILESIZErpi/$FILESIZE/ig" os_list_imagingutility_v3_rpi.json       
         sed -i "s/SHASUMrpi/$SUM/ig" os_list_imagingutility_v3_rpi.json       
         sed -i "s/DOWNLOADSIZErpi/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_rpi.json        
         sed -i "s/RELEASEDATErpi/$RELEASEDATE/ig" os_list_imagingutility_v3_rpi.json            
-
     - name: Upload YAMLFILE
       uses: nicklasfrahm/scp-action@main
       with:
         direction: upload
-        host: ${{ secrets.LINK }}
-        port: ${{ secrets.PORT }}
-        username: ${{ secrets.USER }}
-        key: ${{ secrets.KEY }}
-        insecure_password: ${{ secrets.PASSWORD }}
+        host: ${{ secrets.LINKRap }}
+        port: ${{ secrets.PORTRap }}
+        username: ${{ secrets.USERRap }}
+        insecure_password: ${{ secrets.PASSWORDRap }}
         insecure_ignore_fingerprint: true
         action_timeout: 30m
-        source: OpenHD-OS-Images/os_list_imagingutility_v3_rpi.json
-        target: OpenHD-OS-Images/os_list_imagingutility_v3_rpi.json
+        source: os_list_imagingutility_v3_rpi.json
+        target: os_list_imagingutility_v3_rpi.json
+
+  # upload:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #   - uses: actions/checkout@v3
+
+  #   - uses: actions/download-artifact@v3
+  #     with:
+  #       name: "${{ env.artifact_name }}"
+    
+  #   - name: compress
+  #     run: |
+  #       ls -a
+  #       cd OpenHD*
+  #       sha256sum * | cut -f 1 -d " " > ../sha256
+  #       echo 'NAME<<EOF' >> $GITHUB_ENV
+  #       ls -1 | sed -e 's/.img/.img.xz/g' >> $GITHUB_ENV
+  #       echo 'EOF' >> $GITHUB_ENV
+  #       echo 'SIZEFULL<<EOF' >> $GITHUB_ENV
+  #       wc -c *.img | cut -f 1 -d " " >> $GITHUB_ENV
+  #       echo 'EOF' >> $GITHUB_ENV
+  #       xz -v7 *.img
+  #       ls -a
+  #       mv * ../
+  #       ls -a
+  #   - name: debug
+  #     run: |
+  #       echo "${{ env.NAME }}"    
+        
+  #   - name: Upload file via SSH
+  #     uses: nicklasfrahm/scp-action@main
+  #     with:
+  #       direction: upload
+  #       host: ${{ secrets.LINK }}
+  #       port: ${{ secrets.PORT }}
+  #       username: ${{ secrets.USER }}
+  #       key: ${{ secrets.KEY }}
+  #       insecure_password: ${{ secrets.PASSWORD }}
+  #       insecure_ignore_fingerprint: true
+  #       source: OpenHD-OS-Images/${{ env.NAME }}
+  #       target: OpenHD-OS-Images/${{ env.NAME }}
+
+  #   - name: Download yaml file via SSH
+  #     uses: nicklasfrahm/scp-action@main
+  #     with:
+  #       direction: download
+  #       host: ${{ secrets.LINK }}
+  #       port: ${{ secrets.PORT }}
+  #       username: ${{ secrets.USER }}
+  #       key: ${{ secrets.KEY }}
+  #       insecure_password: ${{ secrets.PASSWORD }}
+  #       source: OpenHD-OS-Images/os_list_imagingutility_v3_template.json
+  #       target: OpenHD-OS-Images/os_list_imagingutility_v3_rpi.json
+
+  #   - name: update YAMLFILE for the ImageWriter
+  #     run: |
+  #       ls -a      
+  #       export NAME=$(cat last.release)
+  #       export FILESIZE=${{ env.SIZEFULL }}
+  #       export FILENAME=${{ env.NAME }}
+  #       export DOWNLOADSIZE=$(wc -c *.xz | cut -f 1 -d " ")
+  #       export SUM=$(cat sha256)
+  #       export RELEASEDATE=$(date +%Y-%m-%d)
+
+  #       sed -i "s/RELEASENAMErpi/$NAME/ig" os_list_imagingutility_v3_rpi.json
+  #       sed -i "s/FILENAMErpi/$FILENAME/ig" os_list_imagingutility_v3_rpi.json       
+  #       sed -i "s/FILESIZErpi/$FILESIZE/ig" os_list_imagingutility_v3_rpi.json       
+  #       sed -i "s/SHASUMrpi/$SUM/ig" os_list_imagingutility_v3_rpi.json       
+  #       sed -i "s/DOWNLOADSIZErpi/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_rpi.json        
+  #       sed -i "s/RELEASEDATErpi/$RELEASEDATE/ig" os_list_imagingutility_v3_rpi.json            
+
+  #   - name: Upload YAMLFILE
+  #     uses: nicklasfrahm/scp-action@main
+  #     with:
+  #       direction: upload
+  #       host: ${{ secrets.LINK }}
+  #       port: ${{ secrets.PORT }}
+  #       username: ${{ secrets.USER }}
+  #       key: ${{ secrets.KEY }}
+  #       insecure_password: ${{ secrets.PASSWORD }}
+  #       insecure_ignore_fingerprint: true
+  #       action_timeout: 30m
+  #       source: OpenHD-OS-Images/os_list_imagingutility_v3_rpi.json
+  #       target: OpenHD-OS-Images/os_list_imagingutility_v3_rpi.json

@@ -35,7 +35,7 @@
          sudo apt update
          sudo apt upgrade
          sudo apt install -y git curl
-         PLATFORM_PACKAGES="nano python3-pip htop libavcodec-dev libavformat-dev libelf-dev libboost-filesystem-dev openhd libspdlog-dev openhd-qt qopenhd"
+         PLATFORM_PACKAGES="openhdimagewriter nano python3-pip htop libavcodec-dev libavformat-dev libelf-dev libboost-filesystem-dev openhd libspdlog-dev openhd-qt qopenhd"
          cd /opt
          curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-2-dev/setup.deb.sh' | sudo -E bash
         #install all qt-dependencies (needs to be cleaned in the future)
