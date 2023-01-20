@@ -23,7 +23,7 @@
      apt purge -y raspberrypi-kernel
      apt remove -y nfs-common libcamera*
      #DO NOT INSTALL libcamera-dev/libcamera-apps/libcamera0 those are not compatible with libcamera-openhd, which is a closed source version of libcamera with additional patches and arducam support
-     PLATFORM_PACKAGES="open-hd-web-ui openhd-linux-pi openhd-linux-pi-headers libsdl2-dev libspdlog-dev libcamera-openhd libcamera-apps-openhd libavcodec-dev libavformat-dev mavsdk gst-plugins-good openhd-qt openhd qopenhd libsodium-dev libpcap-dev git nano openssh-server libboost-filesystem1.74-dev meson"
+     PLATFORM_PACKAGES="open-hd-web-ui openhd-linux-pi openhd-linux-pi-headers libsdl2-dev libspdlog-dev libcamera-openhd libcamera-apps-openhd libavcodec-dev libavformat-dev mavsdk gst-plugins-good gstreamer1.0-gl openhd-qt openhd qopenhd libsodium-dev libpcap-dev git nano openssh-server libboost-filesystem1.74-dev meson"
  fi
 
  if [[ "${OS}" == "ubuntu-x86" ]] ; then
