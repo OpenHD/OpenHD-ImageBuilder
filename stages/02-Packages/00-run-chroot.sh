@@ -37,7 +37,7 @@
          sudo apt install -y git curl
          PLATFORM_PACKAGES="openhdimagewriter nano python3-pip htop libavcodec-dev libavformat-dev libelf-dev libboost-filesystem-dev openhd libspdlog-dev openhd-qt-x86-jammy qopenhd"
          cd /opt
-         curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-2-dev/setup.deb.sh' | sudo -E bash
+         curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-3-evo/setup.deb.sh' | sudo -E bash
         #install all qt-dependencies (needs to be cleaned in the future)
             apt -y install build-essential libfontconfig1-dev libdbus-1-dev libfreetype6-dev libicu-dev libinput-dev libxkbcommon-dev libsqlite3-dev libssl-dev libpng-dev libjpeg-dev libglib2.0-dev \
             libgles2-mesa-dev libgbm-dev libdrm-dev libwayland-dev pulseaudio libpulse-dev flex bison gperf libre2-dev libnss3-dev libdrm-dev libxml2-dev libxslt1-dev libminizip-dev libjsoncpp-dev liblcms2-dev libevent-dev libprotobuf-dev protobuf-compiler \
@@ -91,10 +91,7 @@
  #We use different repositories for regular and testing branches. Ubuntu has not enough space to clone and build everything, the user must do this on himself if he wants that (needs at least 20gb space)
  if [[ "${TESTING}" == "testing" ]] && [[ "${OS}" != "ubuntu-x86" ]]; then
      curl -1sLf \
-     'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' \
-     | sudo -E bash
-     curl -1sLf \
-     'https://dl.cloudsmith.io/public/openhd/openhd-2-2-dev/setup.deb.sh' \
+     'https://dl.cloudsmith.io/public/openhd/openhd-2-3-evo/setup.deb.sh' \
      | sudo -E bash
      echo "cloning Qopenhd and Openhd github repositories"
      apt update 
@@ -113,7 +110,7 @@
         fi 
  else
      curl -1sLf \
-     'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' \
+     'https://dl.cloudsmith.io/public/openhd/openhd-2-3-evo/setup.deb.sh' \
      | sudo -E bash
  fi
 
