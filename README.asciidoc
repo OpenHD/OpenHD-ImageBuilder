@@ -41,6 +41,8 @@ For the long version, read on.
 ## Flashing
 When flashing please use the OpenHD-ImageWriter.
 If you want to flash the Images manually you need to create a (air.txt) or (ground.txt) file in the openhd folder, which is in the root of the FAT32 Partition on the SD-CARD.
+
+
 ## Using
 In order to be able to run this you need a Debian or Ubuntu Linux machine with 30 Gb free space on the main partition, and with the following packages:
 
