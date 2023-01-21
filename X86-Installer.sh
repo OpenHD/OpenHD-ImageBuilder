@@ -87,10 +87,10 @@ then
 		
 		zenity --info --title="Success" --text=" OpenHD will now install it's ubuntu repositories." --no-wrap
 		curl -1sLf \
-		'https://dl.cloudsmith.io/public/openhd/openhd-2-2-evo/setup.deb.sh' \
+		'https://dl.cloudsmith.io/public/openhd/openhd-2-3-evo/setup.deb.sh' \
 		| sudo -E bash
 		curl -1sLf \
-		'https://dl.cloudsmith.io/public/openhd/openhd-2-2-dev/setup.deb.sh' \
+		'https://dl.cloudsmith.io/public/openhd/openhd-2-3-dev/setup.deb.sh' \
 		| sudo -E bash
 		echo "cloning Qopenhd and Openhd github repositories"
 		apt update 
