@@ -138,12 +138,12 @@ on_chroot() {
     fi
 
     if ! mount | grep -q "${MNT_DIR}/etc/resolv.conf)"; then
-        rm -Rf"${MNT_DIR}/etc/resolv.conf"
+        rm -Rf "${MNT_DIR}/etc/resolv.conf"
         echo "nameserver 1.1.1.1" > "${MNT_DIR}/etc/resolv.conf"
         mount --bind /etc/resolv.conf "${MNT_DIR}/etc/resolv.conf"
     fi
 
-    #cp "${STAGE_DIR}/$1" "${MNT_DIR}/home/pi/install.sh"
+    cp "${STAGE_DIR}/../additionalFiles" "${MNT_DIR}/opt"
     #sudo chroot --userspec=1000:1000 "$MNT_DIR" /bin/bash "/home/pi/install.sh"
     capsh --drop=cap_setfcap "--chroot=${MNT_DIR}/" -- "$@"
 
