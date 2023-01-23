@@ -143,7 +143,7 @@ on_chroot() {
         mount --bind /etc/resolv.conf "${MNT_DIR}/etc/resolv.conf"
     fi
 
-    cp "${STAGE_DIR}/../additionalFiles" "${MNT_DIR}/opt"
+    cp "${STAGE_DIR}/../../additionalFiles" "${MNT_DIR}/opt"
     #sudo chroot --userspec=1000:1000 "$MNT_DIR" /bin/bash "/home/pi/install.sh"
     capsh --drop=cap_setfcap "--chroot=${MNT_DIR}/" -- "$@"
 
