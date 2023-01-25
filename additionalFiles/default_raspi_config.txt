@@ -76,17 +76,23 @@ dtparam=i2c_arm=on
 dtparam=i2c_vc=on
 dtparam=i2c1=on
 
-#needed to fix frequencies because of a bug in MMAL-DECODER/ENCODER
+#OpenHD does not "overclock" the rpi by default - doing so is possible, but not recommended.
+#However, we increase the "minimum frequencies" to not fall below a specific performance threshold
+#that is generally the minimum for a lag free experience. We do never set values higher than what's specified
+#as safe to do here: https://www.raspberrypi.com/documentation/computers/config_txt.html
 
 [pi4]
-h264_freq_min=400
-isp_freq_min=400
-v3d_freq_min=400
+arm_freq_min=1000
+core_freq_min=500
+h264_freq_min=500
+isp_freq_min=500
+v3d_freq_min=500
 
 gpu_mem=128
 
 [pi3]
-arm_freq=1200
+arm_freq_min=1200
+core_freq_min=400
 h264_freq_min=400
 isp_freq_min=400
 v3d_freq_min=400
@@ -94,6 +100,8 @@ v3d_freq_min=400
 gpu_mem=128
 
 [Pi Zero 2 W]
+arm_freq_min=1000
+core_freq_min=400
 h264_freq_min=300
 isp_freq_min=300
 v3d_freq_min=300
@@ -102,6 +110,8 @@ gpu_mem=128
 
 
 [pi2]
+arm_freq_min=900
+core_freq_min=250
 h264_freq_min=250
 isp_freq_min=250
 v3d_freq_min=250
