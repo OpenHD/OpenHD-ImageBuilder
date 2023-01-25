@@ -19,18 +19,16 @@ if [[ "${HAVE_CONF_PART}" == "false" ]] && [[ "${HAVE_BOOT_PART}" == "true" ]]; 
     ln -s /boot /conf
 fi
 
-#Clone misc Scripts and Files
  cd /opt
- git clone https://github.com/OpenHD/Overlay
 #Enable autologin
- cd Overlay
+ cd additionalFiles
  cp motd /etc/motd
 
  if [[ "${OS}" == "raspbian" ]] ; then
      echo "adding openhd user"
      touch /boot/openhd/rpi.txt
      cd /opt
-     cd Overlay
+     cd additionalFiles
      cp userconf.txt /boot/userconf.txt
      cp getty@.service /usr/lib/systemd/system/getty@.service
      cp default_raspi_config.txt /boot/config.txt
@@ -87,7 +85,7 @@ if [[ "${OS}" == "ubuntu" ]]; then
        mkdir -p /etc/systemd/system/getty@tty1.service.d
        touch /boot/openhd/jetson.txt
        touch /boot/openhd/air.txt
-       cp /opt/Overlay/override.conf /etc/systemd/system/getty@tty1.service.d/
+       cp /opt/additionalFiles/override.conf /etc/systemd/system/getty@tty1.service.d/
        systemctl disable nv-oem-config-gui.service
        systemctl enable getty@tty1.service
 fi
@@ -95,7 +93,7 @@ fi
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
        sudo usermod -a -G dialout openhd
        sudo apt remove modemmanager
-       cp /opt/Overlay/desktop-truster.sh /etc/profile.d/desktop-truster.sh
+       cp /opt/additionalFiles/desktop-truster.sh /etc/profile.d/desktop-truster.sh
        #this script needs to be executable by every user
        chmod +777 /etc/profile.d/desktop-truster.sh
        mkdir -p /boot/openhd/
