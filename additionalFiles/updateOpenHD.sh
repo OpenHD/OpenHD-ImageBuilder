@@ -29,14 +29,21 @@ for deb_file in "$UPDATE_FOLDER"/*.deb; do
   fi
 
   # Install the .deb files
+
   echo "Installing $deb_file"
   dpkg -i --force-overwrite "$deb_file" >> "$LOG_FILE" 2>&1
   if [ $? -eq 0 ]; then
     echo "Success: $deb_file installed successfully" >> "$LOG_FILE"
   else
     echo "Failure: Failed to install $deb_file" >> "$LOG_FILE"
+    all_successful=false
   fi
 done
 
 # remove the update folder
 rm -rf "$UPDATE_FOLDER"
+
+if $all_successful; then
+  echo "All .deb files were installed successfully, rebooting the system"
+  reboot
+fi
