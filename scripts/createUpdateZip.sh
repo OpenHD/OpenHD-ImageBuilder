@@ -1,7 +1,10 @@
 #!/bin/bash
 
+#This script updates the package lists and downloads the .deb files for packages that need to be updated. The downloaded .deb files are stored in the /opt/update folder, and the folder is zipped into a file named update.zip.
+
+
 # The folder to store the .deb files
-UPDATE_FOLDER="/boot/update"
+UPDATE_FOLDER="/opt/update"
 
 # The name of the zip file
 ZIP_FILE="$UPDATE_FOLDER/update.zip"
@@ -25,5 +28,3 @@ done
 
 # Create the zip file
 zip -r "$ZIP_FILE" "$UPDATE_FOLDER"
-
-This script updates the package lists and downloads the .deb files for packages that need to be updated. The downloaded .deb files are stored in the /boot/update folder, and the folder is zipped into a file named update.zip.
