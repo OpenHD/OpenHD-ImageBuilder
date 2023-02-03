@@ -2,7 +2,7 @@ name: Image build on event
 
 on:
   push:
-    branches: [ "2.3-evo" ]
+    branches: [ "2.3.2" ]
   pull_request:
     branches: [ "2.3-evo" ]
   workflow_dispatch:
