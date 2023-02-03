@@ -5,7 +5,7 @@ UPDATE_FOLDER="/boot/openhd/update"
 TEMP_FOLDER="/tmp/updateOpenHD"
 
 # The log file
-LOG_FILE="$UPDATE_FOLDER/boot/openhd/install-log.txt"
+LOG_FILE="/boot/openhd/install-log.txt"
 mkdir -p $TEMP_FOLDER
 
 # Check if the update folder exists
