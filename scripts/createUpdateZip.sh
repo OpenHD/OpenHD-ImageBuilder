@@ -20,8 +20,11 @@ rm "$UPDATE_FOLDER"/*.deb
 # Update the package lists
 apt update
 
+# Get the list of upgradable packages
+UPGRADABLE_PACKAGES=$(apt-get upgrade --simulate | awk '/^Inst/ {print $2}')
+
 # Download the .deb files for packages that need to be updated
-for package in $(apt list --upgradable | awk '/\*/ {print $1}'); do
+for package in $UPGRADABLE_PACKAGES; do
   apt download "$package" -o APT::Sandbox::User=root --yes
   mv *.deb "$UPDATE_FOLDER"
 done
