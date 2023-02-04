@@ -39,7 +39,7 @@ fi
      # enable dualcam-csi
      cd /boot/
      rm -Rf dt-blob.bin
-     wget https://github.com/ochin-space/ochin-CM4/blob/master/files/dt-blob.bin
+     wget https://openhdfpv.org/wp-content/Downloader/dt-blob.bin
         
  fi
 
