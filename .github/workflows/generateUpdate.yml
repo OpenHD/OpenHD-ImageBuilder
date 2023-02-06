@@ -38,6 +38,7 @@ jobs:
         import_github_env: true
         commands: |
           ls -a
+          cd OpenHD-ImageBuilder
           bash additionalFiles/updateOpenHD.sh
 
 
