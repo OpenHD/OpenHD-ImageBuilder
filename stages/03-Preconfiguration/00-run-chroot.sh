@@ -68,6 +68,12 @@ sudo systemctl disable exim4.service
 sudo systemctl mask hostapd.service
 sudo systemctl enable ssh #we have ssh constantly enabled
 
+#Install Update-Service
+cp /opt/additionalFiles/update.service /etc/systemd/system/
+cp /opt/additionalFiles/updateOpenHD.sh /usr/local/bin/
+chmod +x /usr/local/bin/updateOpenHD.sh
+systemctl enable update.service
+
 
 #Disable does not work on PLYMOUTH
 sudo systemctl mask plymouth-start.service

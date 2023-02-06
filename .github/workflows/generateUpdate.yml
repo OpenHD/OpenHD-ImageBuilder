@@ -1,0 +1,46 @@
+name: Image build on event
+
+on:
+  push:
+    branches: [ "2.3-evo" ]
+  pull_request:
+    branches: [ "2.3-evo" ]
+  workflow_dispatch:
+#  schedule:
+#    - cron: '0 2 * * *' # run at 2 AM UTC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+      
+    steps:
+    
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - uses: pguyot/arm-runner-action@v2.5.2
+      id: build_image
+      with:
+        base_image: https://openhdfpv.org/wp-content/Downloader/OpenHD-image-pi-bullseye-configurable-release--2.3-evo-2023-02-04_0212.img.xz
+        image_additional_mb: 4000
+        copy_repository_path: /opt
+        copy_artifact_path: update
+        import_github_env: true
+        commands: |
+          ls -a
+          cd OpenHD-ImageBuilder
+          bash scripts/createUpdateZip.sh
+          ls -a /opt/update
+
+    - name: show directory
+      run: ls -a | tree
+
+    - name: Pack image for Pi-bullseye
+      uses: 'actions/upload-artifact@v2'
+      with:
+        name: "update"
+        path: |
+          update/*.zip
+          if-no-files-found: error

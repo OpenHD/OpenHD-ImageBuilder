@@ -1,0 +1,9 @@
+[Unit]
+Description=Install updates on boot
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /usr/local/bin/updateOpenHD.sh
+
+[Install]
+WantedBy=multi-user.target
