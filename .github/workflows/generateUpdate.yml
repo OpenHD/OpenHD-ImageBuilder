@@ -37,10 +37,10 @@ jobs:
     - name: show directory
       run: ls -a | tree
 
-    - name: Pack image for ${{ matrix.TARGET }}
+    - name: Pack image for Pi-bullseye
       uses: 'actions/upload-artifact@v2'
       with:
-        name: "${{ env.artifact_name }}"
+        name: "Update-$(date +'%Y-%m-%dT%H:%M:%S')"
         path: |
           update/*.zip
           if-no-files-found: error
