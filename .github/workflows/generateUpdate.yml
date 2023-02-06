@@ -40,7 +40,7 @@ jobs:
     - name: Pack image for Pi-bullseye
       uses: 'actions/upload-artifact@v2'
       with:
-        name: "$(cat last.release)"
+        name: "update"
         path: |
           update/*.zip
           if-no-files-found: error
