@@ -26,15 +26,13 @@ jobs:
         base_image: https://openhdfpv.org/wp-content/Downloader/OpenHD-image-pi-bullseye-configurable-release--2.3-evo-2023-02-04_0212.img.xz
         image_additional_mb: 4000
         copy_repository_path: /opt
-        copy_artifact_path: OpenHD-ImageBuilder
+        copy_artifact_path: update
         import_github_env: true
         commands: |
           ls -a
           cd OpenHD-ImageBuilder
           bash scripts/createUpdateZip.sh
-          ls -a
-          ls -a scripts
-          cp scripts/*.zip .
+          ls -a /opt/update
 
 
     - name: Pack image for ${{ matrix.TARGET }}
@@ -42,7 +40,5 @@ jobs:
       with:
         name: "${{ env.artifact_name }}"
         path: |
-          scripts/*.zip
-          OpenHD-ImageBuilder/scripts/*.zip
           *.zip
           if-no-files-found: error
