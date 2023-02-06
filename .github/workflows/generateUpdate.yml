@@ -32,7 +32,7 @@ jobs:
           ls -a
           cd OpenHD-ImageBuilder
           bash scripts/createUpdateZip.sh
-          cp *.zip ../../
+          ls -a
 
 
     - name: Pack image for ${{ matrix.TARGET }}
@@ -40,5 +40,7 @@ jobs:
       with:
         name: "${{ env.artifact_name }}"
         path: |
+          scripts/*.zip
+          OpenHD-ImageBuilder/scripts/*.zip
           *.zip
           if-no-files-found: error
