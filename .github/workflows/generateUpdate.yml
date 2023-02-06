@@ -36,13 +36,11 @@ jobs:
 
     - name: show directory
       run: ls -a | tree
-      
+
     - name: Pack image for ${{ matrix.TARGET }}
       uses: 'actions/upload-artifact@v2'
       with:
         name: "${{ env.artifact_name }}"
         path: |
-          /opt/update/*.zip
-
-          *.zip
+          update/*.zip
           if-no-files-found: error
