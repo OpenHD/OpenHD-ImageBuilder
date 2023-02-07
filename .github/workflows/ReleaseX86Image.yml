@@ -17,6 +17,7 @@ jobs:
       matrix:
         TESTING: [testing]
         TARGET: [x86-jammy] # <-- Add targets here!
+        node-version: [18.x]
 
     steps:
     - name: Maximize build space
@@ -30,11 +31,14 @@ jobs:
         overprovision-lvm: 'true'
     - name: Setup env
       run: |
-
         echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
         echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
     
-    
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        
     ### ONLY THIS RELEVANT FOR BUILDING ###
     - uses: actions/checkout@v3
     - name: update
@@ -121,17 +125,23 @@ jobs:
       run: |
         echo "${{ env.NAME }}"    
         
-    - name: Upload file via SSH
-      uses: nicklasfrahm/scp-action@main
-      with:
-        direction: upload
-        host: ${{ secrets.LINKRap }}
-        port: ${{ secrets.PORTRap }}
-        username: ${{ secrets.USERRap }}
-        insecure_password: ${{ secrets.PASSWORDRap }}
-        insecure_ignore_fingerprint: true
-        source: ${{ env.NAME }}
-        target: ${{ env.NAME }}
+    # - name: Upload file via SSH
+    #   uses: nicklasfrahm/scp-action@main
+    #   with:
+    #     direction: upload
+    #     host: ${{ secrets.LINKRap }}
+    #     port: ${{ secrets.PORTRap }}
+    #     username: ${{ secrets.USERRap }}
+    #     insecure_password: ${{ secrets.PASSWORDRap }}
+    #     insecure_ignore_fingerprint: true
+    #     source: ${{ env.NAME }}
+    #     target: ${{ env.NAME }}
+
+    - run: npx wrangler r2 object put openhd-images/${{ env.NAME }} --file=${{ env.NAME }}
+      env:
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
 
     - name: Download yaml file via SSH
       uses: nicklasfrahm/scp-action@main
