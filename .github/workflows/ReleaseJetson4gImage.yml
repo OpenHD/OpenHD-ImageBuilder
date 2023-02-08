@@ -33,12 +33,6 @@ jobs:
         echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
         echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
-    - name: Set AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
     ### ONLY THIS RELEVANT FOR BUILDING ###
     - uses: actions/checkout@v3
     - name: update
@@ -166,9 +160,12 @@ jobs:
         source: os_list_imagingutility_v3_j4g.json
         target: os_list_imagingutility_v3.json
 
-    - name: Copy files to the test website with the AWS CLI
+    - name: Upload to R2
       run: |
         aws s3api put-object --endpoint-url https://33c4ee5fa48c92377da1774982f08526.r2.cloudflarestorage.com --bucket openhd-images --key ${{ env.NAME }} --body ${{ env.NAME }}
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     # - name: Upload file via SSH
     #   uses: nicklasfrahm/scp-action@main
