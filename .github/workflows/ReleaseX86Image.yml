@@ -145,7 +145,7 @@ jobs:
         aws_key_id: ${{ secrets.DATA_KEY }}
         aws_secret_access_key: ${{ secrets.DATA_ACCESS}}
         aws_bucket: 'test'
-        source_dir: ${{ env.NAME }}
+        source_dir: 'OpenHD*/${{ env.NAME }}'
         endpoint: 'https://data.openhdfpv.org'
 
     - name: Download yaml file via SSH
