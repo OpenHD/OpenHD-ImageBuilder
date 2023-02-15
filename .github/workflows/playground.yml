@@ -12,12 +12,14 @@ jobs:
         echo "random_hash=$(openssl rand -hex 4)" >> $GITHUB_ENV
         echo "Random hash: $random_hash"
     - name: Create empty file
-      run: touch ${{ env.random_hash }}.txt     
+      run: |
+        mkdir deploy
+        touch deploy/${{ env.random_hash }}.txt     
     - name: Upload Test
       uses: shallwefootball/s3-upload-action@master
       with:
         aws_key_id: ${{ secrets.DATA_KEY }}
         aws_secret_access_key: ${{ secrets.DATA_ACCESS}}
         aws_bucket: 'test'
-        source_dir: ${{ env.random_hash }}.txt
+        source_dir: 'deploy'
         endpoint: 'https://data.openhdfpv.org' 
