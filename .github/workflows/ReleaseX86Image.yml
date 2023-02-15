@@ -131,22 +131,19 @@ jobs:
     #     insecure_ignore_fingerprint: true
     #     source: ${{ env.NAME }}
     #     target: ${{ env.NAME }}
-
-    #- name: Upload to R2
-    #  run: |
-    #    aws s3api put-object --endpoint-url https://33c4ee5fa48c92377da1774982f08526.r2.cloudflarestorage.com --bucket openhd-images --key ${{ env.NAME }} --body ${{ env.NAME }}
-    #  env:
-    #    AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-    #    AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     
-    - name: Upload Images
-      uses: shallwefootball/s3-upload-action@master
-      with:
-        aws_key_id: ${{ secrets.DATA_KEY }}
-        aws_secret_access_key: ${{ secrets.DATA_ACCESS}}
-        aws_bucket: 'test'
-        source_dir: 'OpenHD*/${{ env.NAME }}'
-        endpoint: 'https://data.openhdfpv.org'
+    - name: Upload to R2
+      shell: bash
+      env:
+        aws_endpoint: "https://33c4ee5fa48c92377da1774982f08526.r2.cloudflarestorage.com"
+        aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws_s3_bucket: openhd-images
+        AWS_EC2_METADATA_DISABLED: true
+      run: |
+        aws configure set aws_access_key_id $aws_key_id
+        aws configure set aws_secret_access_key $aws_secret_access_key 
+        aws s3 --endpoint-url $aws_endpoint cp OpenHD*/${{ env.NAME }} s3://$aws_s3_bucket
 
     - name: Download yaml file via SSH
       uses: nicklasfrahm/scp-action@main
