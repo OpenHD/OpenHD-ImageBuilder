@@ -24,7 +24,6 @@ jobs:
       run: |
         aws configure set aws_access_key_id $aws_key_id
         aws configure set aws_secret_access_key $aws_secret_access_key 
-        #aws configure set default.region us-east-1
         aws s3 --endpoint-url https://data.openhdfpv.org cp ${{ env.random_hash }}.txt s3://test
   
   
