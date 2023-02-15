@@ -13,8 +13,7 @@ jobs:
         echo "Random hash: $random_hash"
     - name: Create empty file
       run: |
-        mkdir deploy
-        touch deploy/${{ env.random_hash }}.txt     
+        touch ${{ env.random_hash }}.txt     
     - name: Upload Test
       uses: shallwefootball/s3-upload-action@master
       with:
@@ -22,4 +21,19 @@ jobs:
         aws_secret_access_key: ${{ secrets.DATA_ACCESS}}
         aws_bucket: 'test'
         source_dir: 'deploy'
-        endpoint: 'https://data.openhdfpv.org' 
+        endpoint: 'https://data.openhdfpv.org'
+    
+    - name: copy file to s3
+      shell: bash
+      env:
+        aws_key_id: ${{ secrets.DATA_ACCESS}}
+        aws_secret_access_key: ${{ secrets.DATA_KEY }}
+        aws_s3_bucket: ${{ secrets.S3_BUCKET }}
+      run: |
+        #sudo apt-get update && sudo apt-get -y install awscli
+        aws configure set aws_access_key_id $aws_key_id
+        aws configure set aws_secret_access_key $aws_secret_access_key 
+        #aws configure set default.region us-east-1
+        aws s3  --endpoint-url https://data.openhdfpv.org ${{ env.random_hash }}.txt s3://test
+  
+  
