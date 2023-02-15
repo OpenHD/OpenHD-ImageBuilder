@@ -9,7 +9,7 @@ jobs:
     steps:
     - name: Generate random hash
       run: |
-        random_hash=$(openssl rand -hex 4) >> $GITHUB_ENV
+        echo "random_hash=$(openssl rand -hex 4)" >> $GITHUB_ENV
         echo "Random hash: $random_hash"
     - name: Create empty file
       run: touch ${{ env.random_hash }}.txt     
