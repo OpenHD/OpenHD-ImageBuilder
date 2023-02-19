@@ -1,4 +1,4 @@
-BASE_IMAGE_URL="https://openhdfpv.org/wp-content/BaseImages/"
+BASE_IMAGE_URL="https://data.openhdfpv.org/openhd-images/BaseImages/"
 BASE_IMAGE="Ubuntu22.04-1911.img.7z"
 BASE_IMAGE_SHA256="BC1A3DFFE8FB6E7004951DAABE7EB010354F609F912B3B24E3ED2D92FE886911"
 OS="ubuntu-x86"

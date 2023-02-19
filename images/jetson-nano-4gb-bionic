@@ -1,4 +1,4 @@
-BASE_IMAGE_URL="https://openhdfpv.org/wp-content/BaseImages/"
+BASE_IMAGE_URL="https://data.openhdfpv.org/openhd-images/BaseImages/"
 BASE_IMAGE="jetson-nano-jp46-fixed.7z"
 BASE_IMAGE_SHA256="dfdd2d22c8bc86e925803ca0b571ac168202521ad9bea4f439723c75f04420d4"
 OS="ubuntu"
