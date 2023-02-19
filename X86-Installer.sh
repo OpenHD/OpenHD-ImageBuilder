@@ -89,9 +89,6 @@ then
 		curl -1sLf \
 		'https://dl.cloudsmith.io/public/openhd/openhd-2-3-evo/setup.deb.sh' \
 		| sudo -E bash
-		curl -1sLf \
-		'https://dl.cloudsmith.io/public/openhd/openhd-2-3-dev/setup.deb.sh' \
-		| sudo -E bash
 		echo "cloning Qopenhd and Openhd github repositories"
 		apt update 
 		cd /opt
