@@ -89,7 +89,7 @@ jobs:
           *.img
           if-no-files-found: error
 
-  uploadLEGACY:
+  upload:
     needs: build
     runs-on: ubuntu-latest
 
@@ -118,39 +118,24 @@ jobs:
     - name: debug
       run: |
         echo "${{ env.NAME }}"    
-        
-    # - name: Upload file via SSH
-    #   uses: nicklasfrahm/scp-action@main
-    #   with:
-    #     direction: upload
-    #     host: ${{ secrets.LINKRap }}
-    #     port: ${{ secrets.PORTRap }}
-    #     username: ${{ secrets.USERRap }}
-    #     insecure_password: ${{ secrets.PASSWORDRap }}
-    #     insecure_ignore_fingerprint: true
-    #     source: ${{ env.NAME }}
-    #     target: ${{ env.NAME }}
 
     - name: Upload to R2
-      run: |
-        aws s3api put-object --endpoint-url https://33c4ee5fa48c92377da1774982f08526.r2.cloudflarestorage.com --bucket openhd-images --key ${{ env.NAME }} --body ${{ env.NAME }}
+      shell: bash
       env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws_endpoint: "https://data.openhdfpv.org"
+        aws_key_id: ${{ secrets.DATA_ACCESS }}
+        aws_secret_access_key: ${{ secrets.DATA_KEY }}
+        aws_s3_bucket: test
+        AWS_EC2_METADATA_DISABLED: true
+      run: |
+        aws configure set aws_access_key_id $aws_key_id
+        aws configure set aws_secret_access_key $aws_secret_access_key 
+        aws s3 --endpoint-url $aws_endpoint cp ${{ env.NAME }} s3://$aws_s3_bucket
 
-    - name: Download yaml file via SSH
-      uses: nicklasfrahm/scp-action@main
-      with:
-        direction: download
-        host: ${{ secrets.LINKRap }}
-        port: ${{ secrets.PORTRap }}
-        username: ${{ secrets.USERRap }}
-        insecure_password: ${{ secrets.PASSWORDRap }}
-        insecure_ignore_fingerprint: true
-        source: os_list_imagingutility_v3_template.json
-        target: os_list_imagingutility_v3_rpi.json
+    - name: Download json
+      run: curl https://data.openhdfpv.org/openhd-images/Downloader/os_list_imagingutility_v3_template.json -o os_list_imagingutility_v3_rpi.json -s
 
-    - name: update YAMLFILE for the ImageWriter
+    - name: update json for the ImageWriter
       run: |
         ls -a      
         export NAME=$(cat last.release)
@@ -164,102 +149,19 @@ jobs:
         sed -i "s/FILESIZErpi/$FILESIZE/ig" os_list_imagingutility_v3_rpi.json       
         sed -i "s/SHASUMrpi/$SUM/ig" os_list_imagingutility_v3_rpi.json       
         sed -i "s/DOWNLOADSIZErpi/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_rpi.json        
-        sed -i "s/RELEASEDATErpi/$RELEASEDATE/ig" os_list_imagingutility_v3_rpi.json            
-    - name: Upload YAMLFILE
-      uses: nicklasfrahm/scp-action@main
-      with:
-        direction: upload
-        host: ${{ secrets.LINKRap }}
-        port: ${{ secrets.PORTRap }}
-        username: ${{ secrets.USERRap }}
-        insecure_password: ${{ secrets.PASSWORDRap }}
-        insecure_ignore_fingerprint: true
-        action_timeout: 30m
-        source: os_list_imagingutility_v3_rpi.json
-        target: os_list_imagingutility_v3_rpi.json
-
-  # upload:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #   - uses: actions/checkout@v3
-
-  #   - uses: actions/download-artifact@v3
-  #     with:
-  #       name: "${{ env.artifact_name }}"
+        sed -i "s/RELEASEDATErpi/$RELEASEDATE/ig" os_list_imagingutility_v3_rpi.json 
+        mv os_list_imagingutility_v3_rpi.json os_list_imagingutility_v3_dev.json 
     
-  #   - name: compress
-  #     run: |
-  #       ls -a
-  #       cd OpenHD*
-  #       sha256sum * | cut -f 1 -d " " > ../sha256
-  #       echo 'NAME<<EOF' >> $GITHUB_ENV
-  #       ls -1 | sed -e 's/.img/.img.xz/g' >> $GITHUB_ENV
-  #       echo 'EOF' >> $GITHUB_ENV
-  #       echo 'SIZEFULL<<EOF' >> $GITHUB_ENV
-  #       wc -c *.img | cut -f 1 -d " " >> $GITHUB_ENV
-  #       echo 'EOF' >> $GITHUB_ENV
-  #       xz -v7 *.img
-  #       ls -a
-  #       mv * ../
-  #       ls -a
-  #   - name: debug
-  #     run: |
-  #       echo "${{ env.NAME }}"    
-        
-  #   - name: Upload file via SSH
-  #     uses: nicklasfrahm/scp-action@main
-  #     with:
-  #       direction: upload
-  #       host: ${{ secrets.LINK }}
-  #       port: ${{ secrets.PORT }}
-  #       username: ${{ secrets.USER }}
-  #       key: ${{ secrets.KEY }}
-  #       insecure_password: ${{ secrets.PASSWORD }}
-  #       insecure_ignore_fingerprint: true
-  #       source: OpenHD-OS-Images/${{ env.NAME }}
-  #       target: OpenHD-OS-Images/${{ env.NAME }}
-
-  #   - name: Download yaml file via SSH
-  #     uses: nicklasfrahm/scp-action@main
-  #     with:
-  #       direction: download
-  #       host: ${{ secrets.LINK }}
-  #       port: ${{ secrets.PORT }}
-  #       username: ${{ secrets.USER }}
-  #       key: ${{ secrets.KEY }}
-  #       insecure_password: ${{ secrets.PASSWORD }}
-  #       source: OpenHD-OS-Images/os_list_imagingutility_v3_template.json
-  #       target: OpenHD-OS-Images/os_list_imagingutility_v3_rpi.json
-
-  #   - name: update YAMLFILE for the ImageWriter
-  #     run: |
-  #       ls -a      
-  #       export NAME=$(cat last.release)
-  #       export FILESIZE=${{ env.SIZEFULL }}
-  #       export FILENAME=${{ env.NAME }}
-  #       export DOWNLOADSIZE=$(wc -c *.xz | cut -f 1 -d " ")
-  #       export SUM=$(cat sha256)
-  #       export RELEASEDATE=$(date +%Y-%m-%d)
-
-  #       sed -i "s/RELEASENAMErpi/$NAME/ig" os_list_imagingutility_v3_rpi.json
-  #       sed -i "s/FILENAMErpi/$FILENAME/ig" os_list_imagingutility_v3_rpi.json       
-  #       sed -i "s/FILESIZErpi/$FILESIZE/ig" os_list_imagingutility_v3_rpi.json       
-  #       sed -i "s/SHASUMrpi/$SUM/ig" os_list_imagingutility_v3_rpi.json       
-  #       sed -i "s/DOWNLOADSIZErpi/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_rpi.json        
-  #       sed -i "s/RELEASEDATErpi/$RELEASEDATE/ig" os_list_imagingutility_v3_rpi.json            
-
-  #   - name: Upload YAMLFILE
-  #     uses: nicklasfrahm/scp-action@main
-  #     with:
-  #       direction: upload
-  #       host: ${{ secrets.LINK }}
-  #       port: ${{ secrets.PORT }}
-  #       username: ${{ secrets.USER }}
-  #       key: ${{ secrets.KEY }}
-  #       insecure_password: ${{ secrets.PASSWORD }}
-  #       insecure_ignore_fingerprint: true
-  #       action_timeout: 30m
-  #       source: OpenHD-OS-Images/os_list_imagingutility_v3_rpi.json
-  #       target: OpenHD-OS-Images/os_list_imagingutility_v3_rpi.json
+    
+    - name: Upload to R2
+      shell: bash
+      env:
+        aws_endpoint: "https://data.openhdfpv.org"
+        aws_key_id: ${{ secrets.DATA_ACCESS }}
+        aws_secret_access_key: ${{ secrets.DATA_KEY }}
+        aws_s3_bucket: test
+        AWS_EC2_METADATA_DISABLED: true
+      run: |
+        aws configure set aws_access_key_id $aws_key_id
+        aws configure set aws_secret_access_key $aws_secret_access_key 
+        aws s3 --endpoint-url $aws_endpoint cp os_list_imagingutility_v3_dev.json s3://$aws_s3_bucket
