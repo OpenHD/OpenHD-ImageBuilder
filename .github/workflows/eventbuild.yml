@@ -9,8 +9,6 @@ on:
 
 jobs:
   build:
-
-    if: github.event_name == 'push' && !set -e; git diff HEAD^ HEAD --name-only | grep -q 'last.releases'    
     runs-on: ubuntu-22.04
     
     strategy:
