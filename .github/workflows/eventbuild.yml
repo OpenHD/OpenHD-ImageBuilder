@@ -3,16 +3,13 @@ name: Image build on event
 on:
   push:
     branches: [ "2.3-evo" ]
-  pull_request:
-    branches: [ "2.3-evo" ]
-  workflow_dispatch:
-#  schedule:
-#    - cron: '0 2 * * *' # run at 2 AM UTC
+  
 
 jobs:
   build:
 
     runs-on: ubuntu-22.04
+    if: "! git diff HEAD^ HEAD --name-only | grep -q 'last.releases'"
     
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
