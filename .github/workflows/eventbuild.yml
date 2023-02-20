@@ -10,7 +10,8 @@ on:
 jobs:
   build:
 
-    if: github.event_name == 'push' && !set -e; git diff HEAD^ HEAD --name-only | grep -q 'last.releases'    strategy:
+    if: github.event_name == 'push' && !set -e; git diff HEAD^ HEAD --name-only | grep -q 'last.releases'    
+    strategy:
     runs-on: ubuntu-22.04
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
