@@ -2,8 +2,10 @@ name: Image build on event
 
 on:
   push:
-    branches:
-      - "2.3-evo,AWS-Tests"
+    branches: [ "2.3-evo,AWS-Tests" ]
+    paths:
+      - '!last.release'
+  workflow_dispatch:
 
 jobs:
   build:

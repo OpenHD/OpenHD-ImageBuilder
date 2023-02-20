@@ -115,7 +115,7 @@ image::https://github.com/OpenHD/Open.HD_Image_Builder/raw/master/Builder%20flow
 
 This allows us to run the build process once, and when we want to make a change in stage 3, we only run stage 3 and 4 again by removing the `SKIP` file from the `stages/03-Packages` and the `stages/04-Wifibroadcast` folders. The build system will copy the kernel `IMAGE.img` from stage 2 to stage 3 and re-run all the scripts in stage 3. The resulting image is copied to stage 4 and all those scripts are run. Finally, when there are no more stages, the `IMAGE.img` from the last stage is copied to the `./deploy` directory and renamed to include the target board and OpenHD version.
 
-#### Skipping2
+#### Skipping
 By placing a `SKIP` file in the stage folder, the entire stage will be skipped by the build system. Please be aware there is no sanity check in place, removing the `SKIP` file from stage 3 while leaving the `SKIP` file in stage 4 will produce an image based on the previous run, ignoring the modifications done in step 3.
 
 It is also possible to put a `SKIP-IMAGE` file into a stage, this will disable any attempt to copy the image from the previous stage. This is mainly used to prevent image copying in stage `00` and `01` where no image is yet available.
