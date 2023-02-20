@@ -2,15 +2,16 @@ name: Image build on event
 
 on:
   push:
-    branches: [ "2.3-evo" ]
-  
+    branches:
+      - "2.3-evo"
+    paths-ignore:
+      - "last.releases"
 
 jobs:
   build:
 
     runs-on: ubuntu-22.04
-    if: "! git diff HEAD^ HEAD --name-only | grep -q 'last.releases'"
-    
+    if: "github.event_name == 'push' && !git diff HEAD^ HEAD --name-only | grep -q 'last.releases'"       
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
