@@ -85,7 +85,7 @@ jobs:
   upload:
     needs: build
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/2.3-evo' && github.event.before != github.event.after && contains(changedfiles, 'last.release')
+    if: github.event_name == 'push' && github.ref == 'refs/heads/2.3-evo' && github.event.before != github.event.after && contains(github.event.head_commit.modified, 'last.release')
     steps:
     - uses: actions/checkout@v3
 
