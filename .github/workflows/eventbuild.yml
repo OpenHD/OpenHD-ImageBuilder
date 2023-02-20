@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - "2.3-evo,AWS-Tests"
-    paths-ignore:
-      - "last.releases"
 
 jobs:
   build:
