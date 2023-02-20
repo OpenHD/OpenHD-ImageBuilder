@@ -149,7 +149,7 @@ jobs:
         sed -i "s/RELEASEDATEx86/$RELEASEDATE/ig" os_list_imagingutility_v3_x86.json            
 
     - name: Debug
-      run: cat os_list_imagingutility_v3_rpi.json
+      run: cat os_list_imagingutility_v3_x86.json 
 
     - name: Upload to R2
       shell: bash
