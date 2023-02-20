@@ -123,7 +123,7 @@ jobs:
       run: |
         aws configure set aws_access_key_id $aws_key_id
         aws configure set aws_secret_access_key $aws_secret_access_key 
-        aws s3 --endpoint-url $aws_endpoint cp ${{ env.NAME }} s3://$aws_s3_bucket
+        aws s3 --endpoint-url $aws_endpoint cp ${{ env.NAME }} s3://$aws_s3_bucket/Downloader
 
     - name: Download json
       run: curl https://data.openhdfpv.org/openhd-images/Downloader/os_list_imagingutility_v3_template.json -o os_list_imagingutility_v3_rpi.json -s
@@ -142,10 +142,9 @@ jobs:
         sed -i "s/FILESIZErpi/$FILESIZE/ig" os_list_imagingutility_v3_rpi.json       
         sed -i "s/SHASUMrpi/$SUM/ig" os_list_imagingutility_v3_rpi.json       
         sed -i "s/DOWNLOADSIZErpi/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_rpi.json        
-        sed -i "s/RELEASEDATErpi/$RELEASEDATE/ig" os_list_imagingutility_v3_rpi.json 
-        mv os_list_imagingutility_v3_rpi.json os_list_imagingutility_v3_dev.json 
-    
-    
+        sed -i "s/RELEASEDATErpi/$RELEASEDATE/ig" os_list_imagingutility_v3_rpi.json    
+    - name: Debug
+      run: cat os_list_imagingutility_v3_rpi.json
     - name: Upload to R2
       shell: bash
       env:
@@ -157,4 +156,4 @@ jobs:
       run: |
         aws configure set aws_access_key_id $aws_key_id
         aws configure set aws_secret_access_key $aws_secret_access_key 
-        aws s3 --endpoint-url $aws_endpoint cp os_list_imagingutility_v3_dev.json s3://$aws_s3_bucket
+        aws s3 --endpoint-url $aws_endpoint cp os_list_imagingutility_v3_rpi.json s3://$aws_s3_bucket/Downloader
