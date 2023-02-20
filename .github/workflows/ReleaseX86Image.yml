@@ -2,8 +2,7 @@ name: Image Release X86
 
 on:
   push:
-    paths:
-      - 'last.release'
+    branches: [ "2.3-evo" ]
   workflow_dispatch:
 
 #  schedule:
@@ -45,13 +44,6 @@ jobs:
     - name: Build Image
       run: | 
          sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
-# - name: FAKE IMAGE FOR DEBUG
-#   run: | 
-#     mkdir -p ./deploy/
-#     cd ./deploy/
-#     touch OpenHD-image-pi-bullseye-testing--2.2.3-evo-2022-11-26_1622.img
-#     echo "test" > OpenHD-image-pi-bullseye-testing--2.2.3-evo-2022-11-26_1622.img
-#     mv OpenHD* ../
     - name: remove old image to make space
       run: |
         sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
@@ -93,6 +85,7 @@ jobs:
   upload:
     needs: build
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/2.3-evo' && github.event.before != github.event.after && last.release != github.sha }}
 
     steps:
     - uses: actions/checkout@v3
@@ -112,7 +105,7 @@ jobs:
         echo 'SIZEFULL<<EOF' >> $GITHUB_ENV
         wc -c *.img | cut -f 1 -d " " >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
-        xz -v7 *.img
+        xz -v2 *.img
         ls -a
         mv * ../
         ls -a
@@ -120,17 +113,6 @@ jobs:
       run: |
         echo "${{ env.NAME }}"    
         
-    # - name: Upload file via SSH
-    #   uses: nicklasfrahm/scp-action@main
-    #   with:
-    #     direction: upload
-    #     host: ${{ secrets.LINKRap }}
-    #     port: ${{ secrets.PORTRap }}
-    #     username: ${{ secrets.USERRap }}
-    #     insecure_password: ${{ secrets.PASSWORDRap }}
-    #     insecure_ignore_fingerprint: true
-    #     source: ${{ env.NAME }}
-    #     target: ${{ env.NAME }}
     
     - name: Upload to R2
       shell: bash
@@ -138,24 +120,16 @@ jobs:
         aws_endpoint: "https://data.openhdfpv.org"
         aws_key_id: ${{ secrets.DATA_ACCESS }}
         aws_secret_access_key: ${{ secrets.DATA_KEY }}
-        aws_s3_bucket: test
+        aws_s3_bucket: openhd-images
         AWS_EC2_METADATA_DISABLED: true
       run: |
         aws configure set aws_access_key_id $aws_key_id
         aws configure set aws_secret_access_key $aws_secret_access_key 
-        aws s3 --endpoint-url $aws_endpoint cp ${{ env.NAME }} s3://$aws_s3_bucket
+        aws s3 --endpoint-url $aws_endpoint cp ${{ env.NAME }} s3://$aws_s3_bucket/Downloader
 
-    - name: Download yaml file via SSH
-      uses: nicklasfrahm/scp-action@main
-      with:
-        direction: download
-        host: ${{ secrets.LINKRap }}
-        port: ${{ secrets.PORTRap }}
-        username: ${{ secrets.USERRap }}
-        insecure_password: ${{ secrets.PASSWORDRap }}
-        insecure_ignore_fingerprint: true
-        source: os_list_imagingutility_v3_rpi.json
-        target: os_list_imagingutility_v3_x86.json
+    - name: Download json
+      run: curl https://data.openhdfpv.org/openhd-images/Downloader/os_list_imagingutility_v3_x86.json -o os_list_imagingutility_v3_rpi.json -s
+
 
     - name: update YAMLFILE for the ImageWriter
       run: |
@@ -174,15 +148,18 @@ jobs:
         sed -i "s/DOWNLOADSIZEx86/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_x86.json        
         sed -i "s/RELEASEDATEx86/$RELEASEDATE/ig" os_list_imagingutility_v3_x86.json            
 
-    - name: Upload YAMLFILE
-      uses: nicklasfrahm/scp-action@main
-      with:
-        direction: upload
-        host: ${{ secrets.LINKRap }}
-        port: ${{ secrets.PORTRap }}
-        username: ${{ secrets.USERRap }}
-        insecure_password: ${{ secrets.PASSWORDRap }}
-        insecure_ignore_fingerprint: true
-        action_timeout: 30m
-        source: os_list_imagingutility_v3_x86.json
-        target: os_list_imagingutility_v3_x86.json
+    - name: Debug
+      run: cat os_list_imagingutility_v3_rpi.json
+
+    - name: Upload to R2
+      shell: bash
+      env:
+        aws_endpoint: "https://data.openhdfpv.org"
+        aws_key_id: ${{ secrets.DATA_ACCESS }}
+        aws_secret_access_key: ${{ secrets.DATA_KEY }}
+        aws_s3_bucket: openhd-images
+        AWS_EC2_METADATA_DISABLED: true
+      run: |
+        aws configure set aws_access_key_id $aws_key_id
+        aws configure set aws_secret_access_key $aws_secret_access_key 
+        aws s3 --endpoint-url $aws_endpoint cp os_list_imagingutility_v3_x86.json s3://$aws_s3_bucket/Downloader 
