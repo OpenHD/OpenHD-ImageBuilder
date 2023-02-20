@@ -84,8 +84,7 @@ jobs:
   upload:
     needs: build
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/2.3-evo' && github.event.before != github.event.after && last.release != github.sha }}
-
+    if: github.event_name == 'push' && github.ref == 'refs/heads/2.3-evo' && github.event.before != github.event.after && contains(changedfiles, 'last.release')
     steps:
     - uses: actions/checkout@v3
 
