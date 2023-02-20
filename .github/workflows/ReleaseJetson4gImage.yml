@@ -2,8 +2,8 @@ name: Image Release Jetson-4GB
 
 on:
   push:
-    paths:
-      - 'last.release'
+    branches: [ "2.3-evo" ]
+  workflow_dispatch:
 
 #  schedule:
 #    - cron: '0 2 * * *' # run at 2 AM UTC
@@ -44,13 +44,6 @@ jobs:
     - name: Build Image
       run: | 
          sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
-# - name: FAKE IMAGE FOR DEBUG
-#   run: | 
-#     mkdir -p ./deploy/
-#     cd ./deploy/
-#     touch OpenHD-image-pi-bullseye-testing--2.2.3-evo-2022-11-26_1622.img
-#     echo "test" > OpenHD-image-pi-bullseye-testing--2.2.3-evo-2022-11-26_1622.img
-#     mv OpenHD* ../
     - name: remove old image to make space
       run: |
         sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
@@ -91,6 +84,7 @@ jobs:
   upload:
     needs: build
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/2.3-evo' && github.event.before != github.event.after && last.release != github.sha }}
 
     steps:
     - uses: actions/checkout@v3

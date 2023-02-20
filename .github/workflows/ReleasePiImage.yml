@@ -2,8 +2,8 @@ name: Image Release RPI
 
 on:
   push:
-    paths:
-      - 'last.release'
+    branches: [ "2.3-evo" ]
+  workflow_dispatch:
 
 #  schedule:
 #    - cron: '0 2 * * *' # run at 2 AM UTC
@@ -85,6 +85,7 @@ jobs:
   upload:
     needs: build
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/2.3-evo' && github.event.before != github.event.after && last.release != github.sha }}
 
     steps:
     - uses: actions/checkout@v3
