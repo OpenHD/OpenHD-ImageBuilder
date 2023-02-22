@@ -5,7 +5,7 @@ if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "raspbian-legacy" ]] ; then
 
     #Makes the images flashable with raspberry pi imager
     log "Calculate difference between original Image and Wanted size (7GB)" 
-    WANTEDSIZE="7168000000"
+    WANTEDSIZE="4168000000"
     FILESIZE=$(stat -c%s "IMAGE.img")
     DIFFERENCE=$(expr $WANTEDSIZE - $FILESIZE)
     DIFFERENCE=$(expr $DIFFERENCE - 1)
