@@ -4,7 +4,9 @@
 # # This stage will install and remove packages which are required to get OpenHD to work
 #!/bin/bash
 
-
+ if [[ "${OS}" == "debian" ]]; then
+ export DISTRO=focal-stable wget -O - apt.radxa.com/$DISTRO/public.key | sudo apt-key add - 
+ fi
  if [[ "${OS}" == "raspbian" ]]; then
     # Remove bad and unnecessary symlinks if system is not ubuntu
      rm /lib/modules/*/build || true
