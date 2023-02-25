@@ -212,7 +212,7 @@ fi
 log ""
 log "======================================================"
 log "Shrinking image: ${IMAGE_PATH_NAME}"
-${SCRIPT_DIR}/scripts/pishrink.sh -v ${IMAGE_PATH_NAME}
+${SCRIPT_DIR}/pishrink.sh -v ${IMAGE_PATH_NAME}
 
 cd ${BASE_DIR}
 
