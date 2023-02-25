@@ -16,7 +16,7 @@ if [[ "${SHA}" != "${BASE_IMAGE_SHA256}  ${BASE_IMAGE}" ]]; then
 	if [[ "${BASE_IMAGE}" != "true" ]]; then    	
     		log "Download base Image"
     		#wget -q --show-progress --progress=bar:force:noscroll $BASE_IMAGE_URL/$BASE_IMAGE
-            curl $BASE_IMAGE_URL/$BASE_IMAGE -o $BASE_IMAGE -s
+            curl $BASE_IMAGE_URL/$BASE_IMAGE -o $BASE_IMAGE -s || exit 1
 	fi
 fi
 
