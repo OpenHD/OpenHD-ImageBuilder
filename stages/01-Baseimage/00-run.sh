@@ -13,11 +13,21 @@ if [[ "${SHA}" != "${BASE_IMAGE_SHA256}  ${BASE_IMAGE}" ]]; then
     rm *.xz
     rm *.7z
 
-	if [[ "${BASE_IMAGE}" != "true" ]]; then    	
-    		log "Download base Image"
-    		wget -q --show-progress --progress=bar:force:noscroll $BASE_IMAGE_URL/$BASE_IMAGE
-            #curl $BASE_IMAGE_URL/$BASE_IMAGE -o $BASE_IMAGE -s || exit 1
-	fi
+if [[ "${BASE_IMAGE}" != "true" ]]; then    	
+    log "Download base Image"
+    if wget -q --show-progress --progress=bar:force:noscroll $BASE_IMAGE_URL/$BASE_IMAGE; then
+        log "Base image download successful"
+    else
+        log "Base image download using wget failed, trying with curl"
+        if curl $BASE_IMAGE_URL/$BASE_IMAGE -o $BASE_IMAGE -s; then
+            log "Base image download successful"
+        else
+            log "Base image download using curl failed"
+            exit 1
+        fi
+    fi
+fi
+
 fi
 
 
