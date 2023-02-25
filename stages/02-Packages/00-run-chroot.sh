@@ -5,7 +5,10 @@
 #!/bin/bash
 
  if [[ "${OS}" == "debian" ]]; then
- export DISTRO=focal-stable wget -O - apt.radxa.com/$DISTRO/public.key | sudo apt-key add - 
+ #fix radxa's fuckup
+ export DISTRO=bullseye-stable
+ wget -O - apt.radxa.com/$DISTRO/public.key | sudo apt-key add - 
+
  fi
  if [[ "${OS}" == "raspbian" ]]; then
     # Remove bad and unnecessary symlinks if system is not ubuntu
