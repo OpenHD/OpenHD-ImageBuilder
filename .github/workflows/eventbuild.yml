@@ -40,6 +40,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: update
       run: sudo apt-get update
+    - name: fix ci's
+      run: sudo apt-mark hold grub-efi-amd64-signed
     - name: upgrade
       run: sudo apt-get upgrade -y
     - name: dep
