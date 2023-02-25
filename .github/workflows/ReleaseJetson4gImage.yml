@@ -118,7 +118,6 @@ jobs:
     - name: Download json
       run: curl https://data.openhdfpv.org/openhd-images/Downloader/os_list_imagingutility_v3_j2g.json -o os_list_imagingutility_v3_j4g.json -s
 
-
     - name: update json for the ImageWriter
       run: |
         ls -a      
@@ -138,6 +137,7 @@ jobs:
 
     - name: Debug
       run: cat os_list_imagingutility_v3_j4g.json
+    
     - name: Upload to R2
       shell: bash
       env:
@@ -150,16 +150,5 @@ jobs:
         aws configure set aws_access_key_id $aws_key_id
         aws configure set aws_secret_access_key $aws_secret_access_key 
         aws s3 --endpoint-url $aws_endpoint cp os_list_imagingutility_v3_j4g.json s3://$aws_s3_bucket/Downloader/os_list_imagingutility_v3_dev.json
-   
-    - name: Upload to R2
-      shell: bash
-      env:
-        aws_endpoint: "https://data.openhdfpv.org"
-        aws_key_id: ${{ secrets.DATA_ACCESS }}
-        aws_secret_access_key: ${{ secrets.DATA_KEY }}
-        aws_s3_bucket: openhd-images
-        AWS_EC2_METADATA_DISABLED: true
-      run: |
-        aws configure set aws_access_key_id $aws_key_id
-        aws configure set aws_secret_access_key $aws_secret_access_key 
         aws s3 --endpoint-url $aws_endpoint cp ${{ env.NAME }} s3://$aws_s3_bucket/Downloader/${{ env.NAME }}
+
