@@ -3,7 +3,7 @@ name: Image build on event
 on:
   push:
     branches:
-      - "2.3-evo"
+      - "2.3-evo","POC"
     paths-ignore:
       - "last.releases"
 
@@ -16,7 +16,7 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TESTING: [release]
-        TARGET: [pi-bullseye, jetson-nano-2gb-bionic, jetson-nano-4gb-bionic, x86-jammy] # <-- Add targets here!
+        TARGET: [pi-bullseye, jetson-nano-2gb-bionic, jetson-nano-4gb-bionic, x86-jammy, rock5] # <-- Add targets here!
 
 
     steps:
