@@ -191,6 +191,12 @@ for STAGE_DIR in "${BASE_DIR}/stages/"*; do
     fi
 done
 
+# PiShrink
+log ""
+log "======================================================"
+log "Shrinking image: ${IMAGE_PATH_NAME}"
+${SCRIPT_DIR}/pishrink.sh -v ${PREV_WORK_DIR}/*.img
+
 # rename the image according to the build date, the builder/openhd repo versions
 OPENHD_VERSION=$(cat ${WORK_DIR}/openhd_version.txt)
 if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
