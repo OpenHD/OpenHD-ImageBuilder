@@ -13,8 +13,8 @@
  sudo apt upgrade
  sudo apt install -y procps git cmake dkms
  cd /opt
- git clone https://github.com/OpenHD/OpenHD
- git clone https://github.com/OpenHD/QOpenHD
+ git clone https://github.com/OpenHD/OpenHD --recursive
+ git clone https://github.com/OpenHD/QOpenHD --recursive
  git clone https://github.com/OpenHD/rtl8812au
  cd /opt/OpenHD
  sudo bash install_dep_ubuntu22.sh
