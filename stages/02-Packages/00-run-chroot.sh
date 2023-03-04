@@ -12,18 +12,10 @@
  sudo apt-mark hold linux-5.10-rock-5-latest
  sudo apt upgrade
  sudo apt install -y procps git cmake dkms
- cd /opt
- git clone https://github.com/OpenHD/OpenHD --recursive
- git clone https://github.com/OpenHD/QOpenHD --recursive
- git clone https://github.com/OpenHD/rtl8812au
- cd /opt/OpenHD
- sudo bash install_dep_ubuntu22.sh
- cd OpenHD
- sudo bash build_install_cmake.sh
- cd /opt/QOpenHD
- sudo bash install_dep_ubuntu20_custom.sh
- sudo bash build_qmake.sh
  systemctl disable lightdm
+ git clone -b rock5-tests https://github.com/OpenHD/rtl8812au
+ cd rtl8812au
+ sudo bash dkms-install.sh
 
 
  fi
