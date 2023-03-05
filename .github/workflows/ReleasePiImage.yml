@@ -107,7 +107,7 @@ jobs:
         echo 'SIZEFULL<<EOF' >> $GITHUB_ENV
         wc -c *.img | cut -f 1 -d " " >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
-        xz -v7 *.img
+        xz -v7T0 *.img
         ls -a
         mv * ../
         ls -a

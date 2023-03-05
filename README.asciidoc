@@ -30,7 +30,7 @@ endif::[]
 
 // SETTINGS END \\
 
-# Open.HD-Image-Builder
+# OpenHD-Image-Builder
 
 // Table of Contents
 toc::[]
