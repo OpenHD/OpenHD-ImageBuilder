@@ -64,6 +64,7 @@ function clone_github_repos {
  # Add OpenHD Repository platform-specific packages
  apt install curl
  curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-3-evo/setup.deb.sh'| sudo -E bash
+ apt update
 
 
  # Remove platform-specific packages
