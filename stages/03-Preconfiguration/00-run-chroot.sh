@@ -96,8 +96,8 @@ if [[ "${OS}" == "ubuntu" ]]; then
        systemctl enable getty@tty1.service
 fi
 
-if [["${OS}" == "debian"]]; then
-    systemctl disable lightdm
+if [[ "${OS}" == "debian" ]]; then
+       systemctl disable lightdm
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
