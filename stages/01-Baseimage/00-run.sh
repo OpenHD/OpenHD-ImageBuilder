@@ -1,56 +1,62 @@
 #!/bin/bash
 
-set -euo pipefail
+pushd "${STAGE_WORK_DIR}"
 
-WORK_DIR="${STAGE_WORK_DIR}"
+log "Checking for previous images"
 
-log() {
-  echo "[$(date +'%Y-%m-%d %H:%M:%S')]: $@"
-}
+SHA=$(sha256sum "${BASE_IMAGE}")
+echo "SHA: ${SHA}"
 
-log "Checking for any previous images"
-
-if [[ -f "${WORK_DIR}/IMAGE.img" ]]; then
-  log "Previous image found, removing it"
-  rm "${WORK_DIR}/IMAGE.img"
+if [[ "${SHA}" != "${BASE_IMAGE_SHA256}  ${BASE_IMAGE}" ]]; then    
+    log "Checksum failed. Downloading base image."
+    rm -f *.zip *.img *.xz *.7z
+else
+    log "Checksum succeeded. No need to download base image."
+    popd
+    exit 0
 fi
 
-log "Verifying base image checksum"
+log "Downloading base image"
 
-BASE_IMAGE_PATH="${WORK_DIR}/${BASE_IMAGE}"
-EXPECTED_CHECKSUM="$(echo ${BASE_IMAGE_SHA256} | cut -d ' ' -f 1)"
-ACTUAL_CHECKSUM="$(sha256sum ${BASE_IMAGE_PATH} | cut -d ' ' -f 1)"
-
-if [[ "${EXPECTED_CHECKSUM}" != "${ACTUAL_CHECKSUM}" ]]; then
-  log "Invalid checksum, removing base image"
-  rm "${BASE_IMAGE_PATH}"
-fi
-
-if [[ ! -f "${BASE_IMAGE_PATH}" ]]; then
-  log "Downloading base image from ${BASE_IMAGE_URL}"
-  if wget -q --show-progress --progress=bar:force:noscroll "${BASE_IMAGE_URL}/${BASE_IMAGE}" || \
-     curl -L -s "${BASE_IMAGE_URL}/${BASE_IMAGE}" -o "${BASE_IMAGE_PATH}"; then
+if wget -q --show-progress --progress=bar:force:noscroll "${BASE_IMAGE_URL}/${BASE_IMAGE}"; then
     log "Base image download successful"
-  else
-    log "Base image download failed"
+else
+    log "Base image download using wget failed, trying with curl"
+    if curl "${BASE_IMAGE_URL}/${BASE_IMAGE}" -o "${BASE_IMAGE}" -s; then
+        log "Base image download successful"
+    else
+        log "Base image download using curl failed"
+        exit 1
+    fi
+fi
+
+log "Verifying checksum of downloaded image"
+
+SHA=$(sha256sum "${BASE_IMAGE}")
+echo "SHA: ${SHA}"
+
+if [[ "${SHA}" != "${BASE_IMAGE_SHA256}  ${BASE_IMAGE}" ]]; then    
+    log "Checksum failed again. Aborting."
     exit 1
-  fi
 fi
 
-log "Extracting base image"
+log "Unarchiving base image"
 
-if [[ "${BASE_IMAGE}" == *.zip ]]; then
-  unzip -q "${BASE_IMAGE_PATH}" -d "${WORK_DIR}"
-elif [[ "${BASE_IMAGE}" == *.img.xz ]]; then
-  xz -d -k "${BASE_IMAGE_PATH}"
-elif [[ "${BASE_IMAGE}" == *.bz2 ]]; then
-  bunzip2 -d -k "${BASE_IMAGE_PATH}"
-elif [[ "${BASE_IMAGE}" == *.gz ]]; then
-  gunzip -k "${BASE_IMAGE_PATH}"
-elif [[ "${BASE_IMAGE}" == *.7z ]]; then
-  7z e "${BASE_IMAGE_PATH}" -o"${WORK_DIR}"
+if [[ "${BASE_IMAGE: -4}" == ".zip" ]]; then
+    unzip "${BASE_IMAGE}"
+elif [[ "${BASE_IMAGE: -7}" == ".img.xz" ]]; then
+    xz -k -d "${BASE_IMAGE}"
+elif [[ "${BASE_IMAGE: -4}" == ".bz2" ]]; then
+    bunzip2 -k -d "${BASE_IMAGE}"
+elif [[ "${BASE_IMAGE: -3}" == ".gz" ]]; then
+    gunzip -k "${BASE_IMAGE}"
+elif [[ "${BASE_IMAGE: -3}" == ".7z" ]]; then
+    7z e "${BASE_IMAGE}"
+else
+    log "Unknown file type: ${BASE_IMAGE}"
+    exit 1
 fi
 
-mv "${WORK_DIR}"/*.img IMAGE.img
+mv *.[iI][mM][gG] IMAGE.img
 
-log "Image extraction complete"
+popd
