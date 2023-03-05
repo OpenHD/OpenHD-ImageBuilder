@@ -1,6 +1,6 @@
 BASE_IMAGE_URL="https://github.com/radxa/debos-radxa/releases/download/20221031-1045/"
 BASE_IMAGE="rock-5b-debian-bullseye-xfce4-arm64-20221031-1558-gpt.img.xz"
-BASE_IMAGE_SHA256="15a181a133fad160622ee08f6d53b21a"
+BASE_IMAGE_SHA256="147c4359a93dacd0e4f6e3a0393f70529a2b39f477a1fc21de1c14ae4fb7b914  "
 OS="debian"
 DISTRO="bullseye"
 HAVE_BOOT_PART=false
