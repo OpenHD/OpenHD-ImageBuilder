@@ -13,9 +13,7 @@
  sudo apt upgrade
  sudo apt install -y procps git cmake dkms
  systemctl disable lightdm
- git clone -b rock5-tests https://github.com/OpenHD/rtl8812au
- cd rtl8812au
- sudo bash dkms-install.sh
+ PLATFORM_PACKAGES="openhd qopenhd rtl8812au-autocompiler"
 
 
  fi
