@@ -33,10 +33,10 @@ fi
 log "Verifying checksum of downloaded image"
 
 SHA=$(sha256sum "${BASE_IMAGE}")
-echo "SHA: ${SHA}"
+echo "Calculated checksum: ${SHA}"
 
 if [[ "${SHA}" != "${BASE_IMAGE_SHA256}  ${BASE_IMAGE}" ]]; then    
-    log "Checksum failed again. Aborting."
+    log "Checksum failed. Aborting."
     exit 1
 fi
 
