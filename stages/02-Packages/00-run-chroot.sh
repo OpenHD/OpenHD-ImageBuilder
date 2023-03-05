@@ -61,6 +61,11 @@ function clone_github_repos {
     install_jetson_packages
  fi
 
+ # Add OpenHD Repository platform-specific packages
+ apt install curl
+ curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-3-evo/setup.deb.sh'| sudo -E bash
+
+
  # Remove platform-specific packages
  echo "Removing platform-specific packages..."
  for package in ${PLATFORM_PACKAGES_REMOVE}; do
