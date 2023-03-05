@@ -93,7 +93,7 @@ function clone_github_repos {
  echo "Installing platform-specific packages..."
  for package in ${PLATFORM_PACKAGES}; do
      echo "Installing ${package}..."
-     apt -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends ${package}
+     apt install -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends ${package}
      if [ $? -ne 0 ]; then
          echo "Failed to install ${package}!"
          exit 1
