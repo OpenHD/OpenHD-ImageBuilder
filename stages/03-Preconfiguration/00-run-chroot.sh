@@ -10,7 +10,7 @@ mkdir -p /home/openhd
 echo "openhd:openhd" | chpasswd
 adduser openhd sudo
 chown -R openhd:openhd /home/openhd
-
+mkdir -p /boot/openhd/
 
 # On platforms that already have a separate boot partition we just put the config files on there, but some
 # platforms don't have or need a boot partition, so on those we have a separate /conf partition. All
@@ -94,6 +94,10 @@ if [[ "${OS}" == "ubuntu" ]]; then
        cp /opt/additionalFiles/override.conf /etc/systemd/system/getty@tty1.service.d/
        systemctl disable nv-oem-config-gui.service
        systemctl enable getty@tty1.service
+fi
+
+if [[ "${OS}" == "debian" ]]; then
+       systemctl disable lightdm
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
