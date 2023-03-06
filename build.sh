@@ -191,7 +191,7 @@ for STAGE_DIR in "${BASE_DIR}/stages/"*; do
     fi
 done
 
-if [[ "${OS}" != "ubuntu-x86" ]]; then
+if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "debian" ]]; then
 # PiShrink
 log ""
 log "======================================================"
