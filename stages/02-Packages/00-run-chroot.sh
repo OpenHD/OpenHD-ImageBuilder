@@ -19,7 +19,7 @@ function fix_radxa_apt {
 }
 function install_debian_packages {
     PLATFORM_PACKAGES_HOLD="linux-image-5.10.66-27-rockchip linux-5.10-rock-5-latest"
-    PLATFORM_PACKAGES="apt-transport-https git apt-utils openhd qopenhd openhd-linux-rock5 procps git cmake dkms"
+    PLATFORM_PACKAGES="apt-transport-https git apt-utils openhd qopenhd rtl8812au-autocompiler procps git cmake dkms"
 }
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {

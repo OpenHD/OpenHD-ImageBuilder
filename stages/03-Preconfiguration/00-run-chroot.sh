@@ -5,11 +5,11 @@
 
 #!/bin/bash
 # create a use account that should be the same on all platforms
-useradd openhd
-mkdir -p /home/openhd
-echo "openhd:openhd" | chpasswd
-adduser openhd sudo
-chown -R openhd:openhd /home/openhd
+USERNAME="openhd"
+PASSWORD="openhd"
+
+adduser --shell /bin/bash --ingroup sudo --disabled-password --gecos "" "$USERNAME" && echo "$USERNAME:$PASSWORD" | chpasswd
+chown -R $USERNAME:$PASSWORD /home/$USERNAME
 mkdir -p /boot/openhd/
 
 # On platforms that already have a separate boot partition we just put the config files on there, but some
@@ -22,6 +22,12 @@ fi
 # We copy the motd to display a custom OpenHD message in the Terminal
 cd /opt/additionalFiles
 cp motd /etc/motd
+
+ if [[ "${OS}" == "debian" ]] ; then
+ touch /boot/openhd/rock5.txt
+ mv /usr/sbin/login /usr/sbin/nologin
+ rm -Rf /lib/modules/5.10.66-27-rockchip-gea60d388902d/kernel/drivers/net/wireless/realtek
+ fi
 
  if [[ "${OS}" == "raspbian" ]] ; then
      touch /boot/openhd/rpi.txt
