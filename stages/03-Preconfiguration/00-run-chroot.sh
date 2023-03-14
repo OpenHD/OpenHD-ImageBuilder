@@ -27,6 +27,13 @@ cp motd /etc/motd
  touch /boot/openhd/rock5.txt
  mv /usr/sbin/login /usr/sbin/nologin
  rm -Rf /lib/modules/5.10.66-27-rockchip-gea60d388902d/kernel/drivers/net/wireless/realtek
+ mv /etc/motd /etc/motd2
+ cp /opt/additionalFiles/motd2 /etc/motd
+ mkdir -p /boot/openhd/
+ mkdir -p /etc/systemd/system/getty@tty1.service.d
+ touch /boot/openhd/rock5.txt
+ touch /boot/openhd/ground.txt
+
  fi
 
  if [[ "${OS}" == "raspbian" ]] ; then
