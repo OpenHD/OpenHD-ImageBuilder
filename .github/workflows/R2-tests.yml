@@ -60,7 +60,7 @@ jobs:
         aws s3 --endpoint-url $aws_endpoint cp random_data_filex86 s3://$aws_s3_bucket/Downloader/release/
         aws s3 --endpoint-url $aws_endpoint cp random_data_filepi-bullseye s3://$aws_s3_bucket/Downloader/release/
 
-    - name: R2 tests
+    - name: Get all Values of the old images
       shell: bash
       env:
         aws_endpoint: "https://data.openhdfpv.org"
@@ -69,10 +69,35 @@ jobs:
         aws_s3_bucket: openhd-images
         AWS_EC2_METADATA_DISABLED: true
       run: |
-        files=$(aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/Downloader/oldrelease/ --recursive | awk '{print $4}' | grep -E 'pi-bullseye|x86') || true
-        echo "$files" | grep 'pi-bullseye' | xargs basename -a > r_pi.txt
-        echo "$files" | grep 'x86' | xargs basename -a >> x_86.txt
-        aws s3 --endpoint-url $aws_endpoint cp r_pi.txt s3://$aws_s3_bucket/Downloader/release/
-        aws s3 --endpoint-url $aws_endpoint cp x_86.txt s3://$aws_s3_bucket/Downloader/release/
+        aws s3 --endpoint-url $aws_endpoint sync s3://your-bucket/path/to/directory/ s3://$aws_s3_bucket/Downloader/oldrelease/ --exclude "*" --include "*.txt"
+        ls -a
+
+    - name: Download Template for the ImageWriter
+      shell: bash
+      env:
+        aws_endpoint: "https://data.openhdfpv.org"
+        aws_key_id: ${{ secrets.DATA_ACCESS }}
+        aws_secret_access_key: ${{ secrets.DATA_KEY }}
+        aws_s3_bucket: openhd-images
+        AWS_EC2_METADATA_DISABLED: true
+      run: |
+        curl https://data.openhdfpv.org/openhd-images/Downloader/os_list_imagingutility_v3_template.json -o os_list_imagingutility_v3_rpi.json -s
+        ls -a
+        echo "here is where to magic starts"
+        echo "were downloading one image at a time and creating a new json"
+        #to reduce download traffic I'll modify all Release yml's to also upload a textfile for each variable.
+        export NAME=$(cat last.release)
+        export FILESIZE=${{ env.SIZEFULL }}
+        export FILENAME=${{ env.NAME }}
+        export DOWNLOADSIZE=$(wc -c *.xz | cut -f 1 -d " ")
+        export SUM=$(cat sha256)
+        export RELEASEDATE=$(date +%Y-%m-%d)
+        sed -i "s/RELEASENAMErpi/$NAME/ig" os_list_imagingutility_v3_rpi.json
+        sed -i "s/FILENAMErpi/$FILENAME/ig" os_list_imagingutility_v3_rpi.json       
+        sed -i "s/FILESIZErpi/$FILESIZE/ig" os_list_imagingutility_v3_rpi.json       
+        sed -i "s/SHASUMrpi/$SUM/ig" os_list_imagingutility_v3_rpi.json       
+        sed -i "s/DOWNLOADSIZErpi/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_rpi.json        
+        sed -i "s/RELEASEDATErpi/$RELEASEDATE/ig" os_list_imagingutility_v3_rpi.json    
+
 
 
