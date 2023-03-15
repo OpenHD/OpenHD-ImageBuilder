@@ -334,7 +334,7 @@ if [[ $currentsize -eq $minsize ]]; then
 fi
 
 #Add some free space to the end of the filesystem
-extra_space=$(($currentsize - $minsize + 5000))
+extra_space=$(($currentsize - $minsize))
 logVariables $LINENO extra_space
 for space in 5000 1000 100; do
   if [[ $extra_space -gt $space ]]; then
@@ -360,7 +360,7 @@ sleep 1
 
 #Shrink partition
 partnewsize=$(($minsize * $blocksize))
-newpartend=$(($partstart + $partnewsize))
+newpartend=$(($partstart + $partnewsize + 1000000))
 logVariables $LINENO partnewsize newpartend
 parted -s -a minimal "$img" rm "$partnum"
 rc=$?
