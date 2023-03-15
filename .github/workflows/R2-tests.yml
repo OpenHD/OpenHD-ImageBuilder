@@ -48,20 +48,20 @@ jobs:
         aws s3 --endpoint-url $aws_endpoint rm --recursive s3://$aws_s3_bucket/Downloader/release
         aws s3 --endpoint-url $aws_endpoint cp s3://$aws_s3_bucket/Downloader/os_list_imagingutility_v3.json s3://$aws_s3_bucket/Downloader/oldrelease/
 
-  - name: R2 tests
-    shell: bash
-    env:
-      aws_endpoint: "https://data.openhdfpv.org"
-      aws_key_id: ${{ secrets.DATA_ACCESS }}
-      aws_secret_access_key: ${{ secrets.DATA_KEY }}
-      aws_s3_bucket: openhd-images
-      AWS_EC2_METADATA_DISABLED: true
-    run: |
-      aws configure set aws_access_key_id $aws_key_id
-      aws configure set aws_secret_access_key $aws_secret_access_key 
-      files=$(aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/Downloader/oldrelease/ --recursive | awk '{print $4}' | grep -E 'pi-bullseye|x86')
-      echo "::set-env name=RASPBERRY::$(echo "$files" | grep 'pi-bullseye' || true)"
-      echo "::set-env name=X86::$(echo "$files" | grep 'x86' || true)"
+    - name: R2 tests
+      shell: bash
+      env:
+        aws_endpoint: "https://data.openhdfpv.org"
+        aws_key_id: ${{ secrets.DATA_ACCESS }}
+        aws_secret_access_key: ${{ secrets.DATA_KEY }}
+        aws_s3_bucket: openhd-images
+        AWS_EC2_METADATA_DISABLED: true
+      run: |
+        aws configure set aws_access_key_id $aws_key_id
+        aws configure set aws_secret_access_key $aws_secret_access_key 
+        files=$(aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/Downloader/oldrelease/ --recursive | awk '{print $4}' | grep -E 'pi-bullseye|x86')
+        echo "::set-env name=RASPBERRY::$(echo "$files" | grep 'pi-bullseye' || true)"
+        echo "::set-env name=X86::$(echo "$files" | grep 'x86' || true)"
 
     - name: R2 tests
       shell: bash
