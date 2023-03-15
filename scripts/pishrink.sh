@@ -356,6 +356,7 @@ fi
 sleep 1
 
 #Shrink partition
+echo $minsize
 partnewsize=$(($minsize * $blocksize))
 newpartend=$(($partstart + $partnewsize))
 logVariables $LINENO partnewsize newpartend

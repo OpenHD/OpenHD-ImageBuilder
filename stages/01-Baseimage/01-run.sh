@@ -4,8 +4,8 @@ pushd ${STAGE_WORK_DIR}
 function resize_partitions {
 
     #Makes the images flashable with raspberry pi imager
-    log "Calculate difference between original Image and Wanted size (7GB)" 
-    WANTEDSIZE="15168000000"
+    log "We now define the size to be ~16GB (the maximum size we have in our github builder, this doesn't affect the output image because we're resizeing it in the end before uploading the image)" 
+    WANTEDSIZE="15872000000"
     FILESIZE=$(stat -c%s "IMAGE.img")
     DIFFERENCE=$(expr $WANTEDSIZE - $FILESIZE)
     DIFFERENCE=$(expr $DIFFERENCE - 1)
@@ -26,7 +26,7 @@ function resize_partitions {
     
     echo "ROOT OFFSET: $ROOT_OFFSET"
     echo "IF EDITING THIS SCRIPT THE SPACES MATER FOR FDISK COMMANDS"
-    #Now we delete Partition 2, write a new partition 2 and write the calculated size to have a larger root-partition)
+    #Now we delete the root Partition , write a new partition and write the calculated size to have a larger root-partition)
 
 fdisk IMAGE.img <<END_CMD
 d
