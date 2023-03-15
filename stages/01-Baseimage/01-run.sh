@@ -24,6 +24,7 @@ function resize_partitions {
     ROOT_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${ROOT_PART}"| xargs echo -n \
         | cut -d" " -f 2 | tr -d s)
     
+    echo "ROOT PART: ${ROOT_PART}"
     echo "ROOT OFFSET: $ROOT_OFFSET"
     echo "IF EDITING THIS SCRIPT THE SPACES MATER FOR FDISK COMMANDS"
     #Now we delete the root Partition , write a new partition and write the calculated size to have a larger root-partition)
