@@ -69,7 +69,7 @@ jobs:
         aws_s3_bucket: openhd-images
         AWS_EC2_METADATA_DISABLED: true
       run: |
-        aws s3 --endpoint-url $aws_endpoint sync s3://your-bucket/path/to/directory/ s3://$aws_s3_bucket/Downloader/oldrelease/ --exclude "*" --include "*.txt"
+        aws s3 --endpoint-url $aws_endpoint sync s3://$aws_s3_bucket/Downloader/oldrelease/ . --exclude "*" --include "*.txt"
         ls -a
 
     - name: Download Template for the ImageWriter
