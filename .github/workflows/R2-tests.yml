@@ -70,7 +70,7 @@ jobs:
         AWS_EC2_METADATA_DISABLED: true
       run: |
         files=$(aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/Downloader/oldrelease/ --recursive | awk '{print $4}' | grep -E 'pi-bullseye|x86') || true
-        echo "$files" | grep 'pi-bullseye' | xargs basename -a > file.txt
-        echo "$files" | grep 'x86' | xargs basename -a >> file.txt
-        aws s3 --endpoint-url $aws_endpoint cp file.txt s3://$aws_s3_bucket/Downloader/release/
+        echo "$files" | grep 'pi-bullseye' | xargs basename -a > rpi.txt
+        echo "$files" | grep 'x86' | xargs basename -a >> x86.txt
+        aws s3 --endpoint-url $aws_endpoint cp *.txt s3://$aws_s3_bucket/Downloader/release/
 
