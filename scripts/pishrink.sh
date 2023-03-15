@@ -323,7 +323,10 @@ if ! minsize=$(resize2fs -P "$loopback"); then
 	error $LINENO "resize2fs failed with rc $rc"
 	exit 10
 fi
-minsize=$(cut -d ':' -f 2 <<< "$minsize" | tr -d ' ')+5000
+minsize=$(cut -d ':' -f 2 <<< "$minsize" | tr -d ' ')
+echo $minsize
+minsize=($minsize+5000)
+echo $minsize
 logVariables $LINENO currentsize minsize
 if [[ $currentsize -eq $minsize ]]; then
   error $LINENO "Image already shrunk to smallest size"
