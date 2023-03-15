@@ -8,7 +8,7 @@ set -e
 
 # Raspbian-specific code
 function install_raspbian_packages {
-    PLATFORM_PACKAGES_HOLD="firmware-atheros raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc"
+    PLATFORM_PACKAGES_HOLD="raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc"
     PLATFORM_PACKAGES_REMOVE="nfs-common libcamera* raspberrypi-kernel"
     PLATFORM_PACKAGES="apt-transport-https git apt-utils firmware-atheros firmware-misc-nonfree open-hd-web-ui openhd-userland openhd-linux-pi openhd-linux-pi-headers libsdl2-dev libspdlog-dev libcamera-openhd libcamera-apps-openhd libavcodec-dev libavformat-dev mavsdk gstreamer1.0-gl gst-latest openhd-qt openhd qopenhd libsodium-dev libpcap-dev git nano openssh-server libboost-filesystem1.74-dev meson"
 }
