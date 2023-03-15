@@ -28,7 +28,7 @@ jobs:
     
     - name: Debug file
       run: |
-        dd if=/dev/urandom of=random_data_file bs=2M count=1
+        dd if=/dev/urandom of=random_data_file2 bs=2M count=1
 
     - name: R2 tests
       shell: bash
@@ -44,6 +44,6 @@ jobs:
         aws s3 --endpoint-url $aws_endpoint rm --recursive s3://$aws_s3_bucket/Downloader/oldrelease
         aws s3 --endpoint-url $aws_endpoint sync s3://$aws_s3_bucket/Downloader/release s3://$aws_s3_bucket/Downloader/oldrelease
         aws s3 --endpoint-url $aws_endpoint rm --recursive s3://$aws_s3_bucket/Downloader/release
-        aws s3 --endpoint-url $aws_endpoint cp random_data_file s3://$aws_s3_bucket/Downloader/release/random_data_file
+        aws s3 --endpoint-url $aws_endpoint cp random_data_file2 s3://$aws_s3_bucket/Downloader/release/random_data_file2 
 
     
