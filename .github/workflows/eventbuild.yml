@@ -2,7 +2,7 @@ name: Image build on event
 
 on:
   push:
-    branches: [ "2.3-evo", "2.3-evo-refactor" ]
+    branches: [ "2.3-evo", "2.3-evo-refactorX" ]
     paths-ignore:
       - "last.releases"
 
