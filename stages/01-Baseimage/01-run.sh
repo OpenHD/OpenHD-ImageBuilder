@@ -29,13 +29,13 @@ function resize_partitions {
     echo "IF EDITING THIS SCRIPT THE SPACES MATER FOR FDISK COMMANDS"
     #Now we delete the root Partition , write a new partition and write the calculated size to have a larger root-partition)
 
-fdisk IMAGE.img <<EOF
 d
-$ROOT_PART
+2
 n
 p
-$ROOT_PART
-$ROOT_OFFSET
+2
+${ROOT_OFFSET}
+
 w
 EOF
 }
