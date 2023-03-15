@@ -325,7 +325,7 @@ if ! minsize=$(resize2fs -P "$loopback"); then
 fi
 minsize=$(cut -d ':' -f 2 <<< "$minsize" | tr -d ' ')
 echo $minsize
-minsize=($minsize+5000)
+minsize=($minsize)
 echo $minsize
 logVariables $LINENO currentsize minsize
 if [[ $currentsize -eq $minsize ]]; then
@@ -334,7 +334,7 @@ if [[ $currentsize -eq $minsize ]]; then
 fi
 
 #Add some free space to the end of the filesystem
-extra_space=$(($currentsize - $minsize))
+extra_space=$(($currentsize - $minsize + 5000))
 logVariables $LINENO extra_space
 for space in 5000 1000 100; do
   if [[ $extra_space -gt $space ]]; then
