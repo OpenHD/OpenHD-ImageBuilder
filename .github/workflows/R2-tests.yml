@@ -73,5 +73,7 @@ jobs:
         files=$(aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/Downloader/oldrelease/ --recursive | awk '{print $4}' | grep -E 'pi-bullseye|x86') || true
         echo "::set-env name=RASPBERRY::$(echo "$files" | grep 'pi-bullseye' | xargs basename -a || true)"
         echo "::set-env name=X86::$(echo "$files" | grep 'x86' | xargs basename -a || true)" 
-        echo $RASPBERRY
-        echo $X86
+        echo "$RASPBERRY $X86" > file.txt
+        echo "$RASPBERRY $X86" >> file.txt
+        aws s3 --endpoint-url $aws_endpoint cp file.txt s3://$aws_s3_bucket/Downloader/release/
+
