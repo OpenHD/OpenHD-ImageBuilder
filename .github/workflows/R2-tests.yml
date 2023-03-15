@@ -57,7 +57,7 @@ jobs:
         aws_s3_bucket: openhd-images
         AWS_EC2_METADATA_DISABLED: true
       run: |
-        files=$(aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/Downloader/oldrelease/ --recursive | awk '{print $4}' | grep -E 'pi-bullseye|x86')
+        aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/Downloader/oldrelease/ --recursive
         echo "$files"
         #echo "::set-env name=RASPBERRY::$(echo "$files" | grep 'pi-bullseye' || true)"
         #echo "::set-env name=X86::$(echo "$files" | grep 'x86' || true)"
