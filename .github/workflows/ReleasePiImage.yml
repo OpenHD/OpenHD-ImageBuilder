@@ -151,7 +151,6 @@ jobs:
         sed -i "s/SHASUMrpi/$SUM/ig" os_list_imagingutility_v3_rpi.json       
         sed -i "s/DOWNLOADSIZErpi/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_rpi.json        
         sed -i "s/RELEASEDATErpi/$RELEASEDATE/ig" os_list_imagingutility_v3_rpi.json 
-        aws s3 --endpoint-url $aws_endpoint cp . s3://$aws_s3_bucket/Downloader/release/ --recursive --exclude "*" --include "*.txt"   
 
     - name: Debug
       run: cat os_list_imagingutility_v3_rpi.json
@@ -167,3 +166,4 @@ jobs:
         aws configure set aws_access_key_id $aws_key_id
         aws configure set aws_secret_access_key $aws_secret_access_key 
         aws s3 --endpoint-url $aws_endpoint cp os_list_imagingutility_v3_rpi.json s3://$aws_s3_bucket/Downloader/release/os_list_imagingutility_v3_rpi.json
+        aws s3 --endpoint-url $aws_endpoint cp ./ s3://$aws_s3_bucket/Downloader/release/ --recursive --exclude "*" --include "*.txt"   
