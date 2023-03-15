@@ -68,6 +68,7 @@ jobs:
         aws_secret_access_key: ${{ secrets.DATA_KEY }}
         aws_s3_bucket: openhd-images
         AWS_EC2_METADATA_DISABLED: true
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       run: |
         files=$(aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/Downloader/oldrelease/ --recursive | awk '{print $4}' | grep -E 'pi-bullseye|x86') || true
         echo "$files" | grep 'pi-bullseye' | xargs basename -a
