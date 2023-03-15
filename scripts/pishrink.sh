@@ -356,8 +356,8 @@ fi
 sleep 1
 
 #Shrink partition
-echo $minsize
-partnewsize=$(($minsize * $blocksize))
+#I'll add 38400 (150MB) to the min-size
+partnewsize=$(($minsize+38400 * $blocksize))
 newpartend=$(($partstart + $partnewsize))
 logVariables $LINENO partnewsize newpartend
 parted -s -a minimal "$img" rm "$partnum"
