@@ -324,6 +324,9 @@ if ! minsize=$(resize2fs -P "$loopback"); then
 	exit 10
 fi
 minsize=$(cut -d ':' -f 2 <<< "$minsize" | tr -d ' ')
+echo $minsize
+minsize=($minsize)
+echo $minsize
 logVariables $LINENO currentsize minsize
 if [[ $currentsize -eq $minsize ]]; then
   error $LINENO "Image already shrunk to smallest size"
@@ -343,7 +346,7 @@ logVariables $LINENO minsize
 
 #Shrink filesystem
 info "Shrinking filesystem"
-resize2fs -p "$loopback" $minsize
+resize2fs -p "$loopback" $(($minsize+1000000))
 rc=$?
 if (( $rc )); then
   error $LINENO "resize2fs failed with rc $rc"
@@ -357,7 +360,7 @@ sleep 1
 
 #Shrink partition
 partnewsize=$(($minsize * $blocksize))
-newpartend=$(($partstart + $partnewsize))
+newpartend=$(($partstart + $partnewsize + 1000000))
 logVariables $LINENO partnewsize newpartend
 parted -s -a minimal "$img" rm "$partnum"
 rc=$?
