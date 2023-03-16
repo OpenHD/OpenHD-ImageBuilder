@@ -191,11 +191,13 @@ for STAGE_DIR in "${BASE_DIR}/stages/"*; do
     fi
 done
 
+if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "debian" ]]; then
 # PiShrink
 log ""
 log "======================================================"
 log "Shrinking image: ${IMAGE_PATH_NAME}"
 ${SCRIPT_DIR}/pishrink.sh -v ${PREV_WORK_DIR}/*.img
+fi
 
 # rename the image according to the build date, the builder/openhd repo versions
 OPENHD_VERSION=$(cat ${WORK_DIR}/openhd_version.txt)
