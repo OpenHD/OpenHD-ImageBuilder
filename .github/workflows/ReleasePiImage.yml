@@ -2,7 +2,7 @@ name: Image Release RPI
 
 on:
   push:
-    branches: [ "2.3-evo", "2.3-evo-refactor" ]
+    branches: [ "2.3-evo" ]
 
   workflow_dispatch:
 
