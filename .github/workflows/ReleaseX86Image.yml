@@ -127,7 +127,7 @@ jobs:
       run: |
         aws configure set aws_access_key_id $aws_key_id
         aws configure set aws_secret_access_key $aws_secret_access_key 
-        aws s3 --endpoint-url $aws_endpoint cp ${{ env.NAME }} s3://$aws_s3_bucket/Downloader/${{ env.NAME }}
+        aws s3 --endpoint-url $aws_endpoint cp ${{ env.NAME }} s3://$aws_s3_bucket/Downloader/release/${{ env.NAME }}
 
     - name: Download json
       run: curl https://data.openhdfpv.org/openhd-images/Downloader/os_list_imagingutility_v3_rpi.json -o os_list_imagingutility_v3_x86.json -s

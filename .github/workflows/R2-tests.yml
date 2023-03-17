@@ -1,12 +1,10 @@
 name: R2 tests
 
-on: 
+on:
   push:
-    paths-ignore:
-      - '**.md'
-      - '**.asciidoc'
-      - '.gitignore'
-      - 'LICENSE'
+    branches: [ "2.3-evo" ]
+    paths:
+      - 'last.release'
 
 #  schedule:
 #    - cron: '0 2 * * *' # run at 2 AM UTC
