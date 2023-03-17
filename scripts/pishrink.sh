@@ -346,7 +346,7 @@ logVariables $LINENO minsize
 
 #Shrink filesystem
 info "Shrinking filesystem"
-resize2fs -p "$loopback" $($minsize)
+resize2fs -p "$loopback" $minsize
 rc=$?
 if (( $rc )); then
   error $LINENO "resize2fs failed with rc $rc"
@@ -360,7 +360,7 @@ sleep 1
 
 #Shrink partition
 partnewsize=$(($minsize * $blocksize))
-newpartend=$($partstart + $partnewsize)
+newpartend=$(($partstart + $partnewsize))
 logVariables $LINENO partnewsize newpartend
 parted -s -a minimal "$img" rm "$partnum"
 rc=$?
