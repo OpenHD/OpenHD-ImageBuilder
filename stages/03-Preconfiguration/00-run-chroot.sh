@@ -1,16 +1,16 @@
 # This runs in context if the image (CHROOT)
 # Any native compilation can be done here
 # Do not use log here, it will end up in the image
-# Here we disable services, create users, put debug stuff in and set our hostname
+# Here we create users and set our hostname and do additional platform stuff
 
 #!/bin/bash
 # create a use account that should be the same on all platforms
-useradd openhd
-mkdir -p /home/openhd
-echo "openhd:openhd" | chpasswd
-adduser openhd sudo
-chown -R openhd:openhd /home/openhd
+USERNAME="openhd"
+PASSWORD="openhd"
 
+adduser --shell /bin/bash --ingroup sudo --disabled-password --gecos "" "$USERNAME" && echo "$USERNAME:$PASSWORD" | chpasswd
+chown -R $USERNAME:$PASSWORD /home/$USERNAME
+mkdir -p /boot/openhd/
 
 # On platforms that already have a separate boot partition we just put the config files on there, but some
 # platforms don't have or need a boot partition, so on those we have a separate /conf partition. All
@@ -19,81 +19,42 @@ if [[ "${HAVE_CONF_PART}" == "false" ]] && [[ "${HAVE_BOOT_PART}" == "true" ]]; 
     ln -s /boot /conf
 fi
 
- cd /opt
-#Enable autologin
- cd additionalFiles
- cp motd /etc/motd
+# We copy the motd to display a custom OpenHD message in the Terminal
+cd /opt/additionalFiles
+cp motd /etc/motd
 
- if [[ "${OS}" == "raspbian" ]] ; then
-     echo "adding openhd user"
-     touch /boot/openhd/rpi.txt
-     cd /opt
-     cd additionalFiles
-     cp userconf.txt /boot/userconf.txt
-     cp getty@.service /usr/lib/systemd/system/getty@.service
-     cp default_raspi_config.txt /boot/config.txt
-     #remove serial console
-    sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
-    sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
-
-     # enable dualcam-csi
-     cd /boot/
-     rm -Rf dt-blob.bin
-     wget https://openhdfpv.org/wp-content/Downloader/dt-blob.bin
-        
+ if [[ "${OS}" == "debian" ]] ; then
+    touch /boot/openhd/rock5.txt
+    mv /usr/sbin/login /usr/sbin/nologin
+    rm -Rf /lib/modules/5.10.66-27-rockchip-gea60d388902d/kernel/drivers/net/wireless/realtek
+    mv /etc/motd /etc/motd2
+    cp /opt/additionalFiles/motd2 /etc/motd
+    mkdir -p /boot/openhd/
+    mkdir -p /etc/systemd/system/getty@tty1.service.d
+    touch /boot/openhd/rock5.txt
+    touch /boot/openhd/ground.txt
  fi
 
-#Ensure the runlevel is multi-target (3) could possibly be lower...
-#sudo systemctl set-default multi-user.target
+ if [[ "${OS}" == "raspbian" ]] ; then
+     touch /boot/openhd/rpi.txt
+     #allow autologin and remove the raspberryos first boot menu
+     cp /opt/additionalFiles/userconf.txt /boot/userconf.txt
+     cp /opt/additionalFiles/getty@.service /usr/lib/systemd/system/getty@.service
+     cp /opt/additionalFiles/default_raspi_config.txt /boot/config.txt
+     #remove serial console
+     sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
+     sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
+     # enable dualcam-csi this file is the one from the Ochin board, but should work on most carrier boards
+     rm -Rf /boot/dt-blob.bin
+     wget https://openhdfpv.org/wp-content/Downloader/dt-blob.bin -P /boot/
+ fi
 
-#remove networking stuff
-rm -f /etc/init.d/dnsmasq
-rm -f /etc/init.d/dhcpcd
-
-#disable unneeded services
-sudo systemctl disable dnsmasq.service
-sudo systemctl disable syslog.service
-echo "disabling journald"
-
-#replace dhcpcd with network manager
-sudo systemctl disable dhcpcd.service
-sudo systemctl enable NetworkManager
-
-sudo systemctl disable triggerhappy.service
-sudo systemctl disable avahi-daemon.service
-sudo systemctl disable ser2net.service
-sudo systemctl disable hciuart.service
-sudo systemctl disable anacron.service
-sudo systemctl disable exim4.service
-sudo systemctl mask hostapd.service
-sudo systemctl enable ssh #we have ssh constantly enabled
-
-#Install Update-Service
-cp /opt/additionalFiles/update.service /etc/systemd/system/
-cp /opt/additionalFiles/updateOpenHD.sh /usr/local/bin/
-chmod +x /usr/local/bin/updateOpenHD.sh
-systemctl enable update.service
-
-
-#Disable does not work on PLYMOUTH
-sudo systemctl mask plymouth-start.service
-sudo systemctl mask plymouth-read-write.service
-sudo systemctl mask plymouth-quit-wait.service
-sudo systemctl mask plymouth-quit.service
-if [[ "${OS}" != "ubuntu" ]] || [[ "${OS}" != "ubuntu-x86" ]]; then
-    echo "OS is NOT ubuntu..disabling journald flush"
-    sudo systemctl disable systemd-journal-flush.service
-
-fi
-
-if [[ "${OS}" == "ubuntu" ]]; then
+ if [[ "${OS}" == "ubuntu" ]]; then
        mkdir -p /boot/openhd/
        mkdir -p /etc/systemd/system/getty@tty1.service.d
        touch /boot/openhd/jetson.txt
        touch /boot/openhd/air.txt
        cp /opt/additionalFiles/override.conf /etc/systemd/system/getty@tty1.service.d/
-       systemctl disable nv-oem-config-gui.service
-       systemctl enable getty@tty1.service
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
@@ -142,14 +103,13 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        wget https://github.com/mavlink/qgroundcontrol/releases/download/v4.2.4/QGroundControl.AppImage
        chmod a+x QGroundControl.AppImage
        chown openhd:openhd QGroundControl.AppImage
-
-
-fi
-#this service updates runlevel changes. Set desired runlevel prior to this being disabled
-if [[ "${OS}" != "ubuntu-x86" ]]; then
-sudo systemctl disable systemd-update-utmp.service
 fi
 
+#Install Update-Service
+cp /opt/additionalFiles/update.service /etc/systemd/system/
+cp /opt/additionalFiles/updateOpenHD.sh /usr/local/bin/
+chmod +x /usr/local/bin/updateOpenHD.sh
+systemctl enable update.service
 
 #change hostname to openhd
 CURRENT_HOSTNAME=`sudo cat /etc/hostname | sudo tr -d " \t\n\r"`

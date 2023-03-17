@@ -3,8 +3,7 @@ name: Image Release RPI
 on:
   push:
     branches: [ "2.3-evo" ]
-    paths:
-      - 'last.release'
+
   workflow_dispatch:
 
 #  schedule:
@@ -126,7 +125,7 @@ jobs:
       run: |
         aws configure set aws_access_key_id $aws_key_id
         aws configure set aws_secret_access_key $aws_secret_access_key 
-        aws s3 --endpoint-url $aws_endpoint cp ${{ env.NAME }} s3://$aws_s3_bucket/Downloader/${{ env.NAME }}
+        aws s3 --endpoint-url $aws_endpoint cp ${{ env.NAME }} s3://$aws_s3_bucket/Downloader/release/${{ env.NAME }}
 
     - name: Download json
       run: curl https://data.openhdfpv.org/openhd-images/Downloader/os_list_imagingutility_v3_template.json -o os_list_imagingutility_v3_rpi.json -s
@@ -140,12 +139,19 @@ jobs:
         export DOWNLOADSIZE=$(wc -c *.xz | cut -f 1 -d " ")
         export SUM=$(cat sha256)
         export RELEASEDATE=$(date +%Y-%m-%d)
+        echo "$NAME" >> rpi_name.txt
+        echo "$FILESIZE" >> rpi_FILESIZE.txt
+        echo "$FILENAME" >> rpi_FILENAME.txt
+        echo "$DOWNLOADSIZE" >> rpi_DOWNLOADSIZE.txt
+        echo "$SUM" >> rpi_SUM.txt
+        echo "$RELEASEDATE" >> rpi_RELEASEDATE.txt
         sed -i "s/RELEASENAMErpi/$NAME/ig" os_list_imagingutility_v3_rpi.json
         sed -i "s/FILENAMErpi/$FILENAME/ig" os_list_imagingutility_v3_rpi.json       
         sed -i "s/FILESIZErpi/$FILESIZE/ig" os_list_imagingutility_v3_rpi.json       
         sed -i "s/SHASUMrpi/$SUM/ig" os_list_imagingutility_v3_rpi.json       
         sed -i "s/DOWNLOADSIZErpi/$DOWNLOADSIZE/ig" os_list_imagingutility_v3_rpi.json        
-        sed -i "s/RELEASEDATErpi/$RELEASEDATE/ig" os_list_imagingutility_v3_rpi.json    
+        sed -i "s/RELEASEDATErpi/$RELEASEDATE/ig" os_list_imagingutility_v3_rpi.json 
+
     - name: Debug
       run: cat os_list_imagingutility_v3_rpi.json
     - name: Upload to R2
@@ -159,4 +165,5 @@ jobs:
       run: |
         aws configure set aws_access_key_id $aws_key_id
         aws configure set aws_secret_access_key $aws_secret_access_key 
-        aws s3 --endpoint-url $aws_endpoint cp os_list_imagingutility_v3_rpi.json s3://$aws_s3_bucket/Downloader/os_list_imagingutility_v3_rpi.json
+        aws s3 --endpoint-url $aws_endpoint cp os_list_imagingutility_v3_rpi.json s3://$aws_s3_bucket/Downloader/release/os_list_imagingutility_v3_rpi.json
+        aws s3 --endpoint-url $aws_endpoint cp ./ s3://$aws_s3_bucket/Downloader/release/ --recursive --exclude "*" --include "*.txt"   

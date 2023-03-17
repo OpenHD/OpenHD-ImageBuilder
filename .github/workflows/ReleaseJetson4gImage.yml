@@ -150,5 +150,5 @@ jobs:
         aws configure set aws_access_key_id $aws_key_id
         aws configure set aws_secret_access_key $aws_secret_access_key 
         aws s3 --endpoint-url $aws_endpoint cp os_list_imagingutility_v3_j4g.json s3://$aws_s3_bucket/Downloader/os_list_imagingutility_v3_dev.json
-        aws s3 --endpoint-url $aws_endpoint cp ${{ env.NAME }} s3://$aws_s3_bucket/Downloader/${{ env.NAME }}
+        aws s3 --endpoint-url $aws_endpoint cp ${{ env.NAME }} s3://$aws_s3_bucket/Downloader/release/${{ env.NAME }}
 
