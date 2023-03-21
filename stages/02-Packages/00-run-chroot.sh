@@ -44,8 +44,8 @@ function install_jetson_packages {
 
 function clone_github_repos {
     cd /opt
-    git clone --recursive https://github.com/OpenHD/OpenHD
-    git clone --recursive https://github.com/OpenHD/QOpenHD
+    git clone --recursive --depth 1 https://github.com/OpenHD/OpenHD
+    git clone --recursive --depth 1 https://github.com/OpenHD/QOpenHD
     chmod -R 777 /opt
 }
 
