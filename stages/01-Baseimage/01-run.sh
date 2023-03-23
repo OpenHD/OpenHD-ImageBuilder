@@ -18,6 +18,10 @@ pushd ${STAGE_WORK_DIR}
 
     log "fdisk magic to enlarge the main partition"
     #calculating image offsets
+    #debug showing all offsets:
+    echo "Partition information for /dev/sda:"
+    sudo parted -m IMAGE.img unit s print | awk -F: '$1 ~ /^[0-9]+$/ {print "Partition " $1 ": " $2 " - " $3 " (offset: " $2 "s)"}'
+
     PARTED_OUT=$(parted -s IMAGE.img unit s print)
     ROOT_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${ROOT_PART}"| xargs echo -n \
         | cut -d" " -f 2 | tr -d s)
