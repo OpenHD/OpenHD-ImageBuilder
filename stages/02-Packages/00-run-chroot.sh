@@ -53,7 +53,8 @@ function clone_github_repos {
 }
 
 # Main function
- apt update && apt upgrade
+ apt update
+ apt -y upgrade
  
  if [[ "${OS}" == "raspbian" ]]; then
     install_raspbian_packages

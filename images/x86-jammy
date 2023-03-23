@@ -1,10 +1,10 @@
 BASE_IMAGE_URL="https://data.openhdfpv.org/openhd-images/BaseImages"
-BASE_IMAGE="OpenHD-image-x86-jammy-testing--x86-base-resize-2023-03-22_2045.img.xz"
+BASE_IMAGE="OpenHD-image-x86-jammy-testing--x86-base-resize-2023-03-23_1902.img.xz"
 BASE_IMAGE_SHA256="361af46a101cf8d6a91637a72b41c81c4c0ae8b2c9c80e136037ee21d7eaef05"
 OS="ubuntu-x86"
 DISTRO="jammy"
 HAVE_BOOT_PART=false
 HAVE_CONF_PART=false
-BOOT_PART=1
-ROOT_PART=2
+BOOT_PART=2
+ROOT_PART=3
 BIT="64"
