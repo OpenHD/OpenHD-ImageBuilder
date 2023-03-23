@@ -53,8 +53,6 @@ function clone_github_repos {
 }
 
 # Main function
- apt update
- apt -y upgrade
  
  if [[ "${OS}" == "raspbian" ]]; then
     install_raspbian_packages
@@ -72,7 +70,7 @@ function clone_github_repos {
  apt install -y curl
  curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-3-evo/setup.deb.sh'| sudo -E bash
  apt update
-
+ apt upgrade -y
 
  # Remove platform-specific packages
  echo "Removing platform-specific packages..."
