@@ -53,6 +53,8 @@ function clone_github_repos {
 }
 
 # Main function
+ apt update && apt upgrade
+ 
  if [[ "${OS}" == "raspbian" ]]; then
     install_raspbian_packages
  elif [[ "${OS}" == "debian" ]] ; then

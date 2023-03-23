@@ -3,7 +3,8 @@ name: Image Release RPI
 on:
   push:
     branches: [ "2.3-evo" ]
-
+    paths:
+      - 'last.release'
   workflow_dispatch:
 
 #  schedule:
