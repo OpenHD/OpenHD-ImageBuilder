@@ -73,7 +73,7 @@ function clone_github_repos {
 
  # Remove platform-specific packages
  echo "Removing platform-specific packages..."
- for package in ${BASE_PACKAGES} ${PLATFORM_PACKAGES_REMOVE}; do
+ for package in ${PLATFORM_PACKAGES_REMOVE}; do
      echo "Removing ${package}..."
      apt purge -y ${package}
      if [ $? -ne 0 ]; then
@@ -97,7 +97,7 @@ function clone_github_repos {
 
  # Install platform-specific packages
  echo "Installing platform-specific packages..."
- for package in ${PLATFORM_PACKAGES}; do
+ for package in ${BASE_PACKAGES} ${PLATFORM_PACKAGES}; do
      echo "Installing ${package}..."
      apt install -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends ${package}
      if [ $? -ne 0 ]; then
