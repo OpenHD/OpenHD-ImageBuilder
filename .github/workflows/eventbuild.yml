@@ -45,7 +45,6 @@ jobs:
       run: |
           git clone https://github.com/tytso/e2fsprogs
           cd e2fsprogs
-          resize2fs --version
           make
           make install
 
