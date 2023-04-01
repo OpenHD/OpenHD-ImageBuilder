@@ -10,8 +10,6 @@ jobs:
   build:
 
     runs-on: ubuntu-22.04
-    container:
-      image: docker://ubuntu:lunar
     if: "github.event_name == 'push' && !contains(github.event.head_commit.modified, 'last.releases')"      
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
@@ -19,29 +17,38 @@ jobs:
         TESTING: [release]
         TARGET: [x86-lunar] # <-- Add targets here!
 
-    steps:
-    - name: initialise
-      run: |
-        echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
-        echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV 
-        apt update
-        apt install -y git sudo   
-    # - name: Maximize build space
-    #   uses: easimon/maximize-build-space@master
-    #   with:
-    #     root-reserve-mb: 512
-    #     swap-size-mb: 1024
-    #     remove-dotnet: 'true'
-    #     remove-android: 'true'
-    #     remove-haskell: 'true'
-    #     overprovision-lvm: 'true'
 
+    steps:
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 512
+        swap-size-mb: 1024
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+        overprovision-lvm: 'true'
+    - name: Setup env
+      run: |
+
+        echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
+        echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+    
+    
     ### ONLY THIS RELEVANT FOR BUILDING ###
     - uses: actions/checkout@v2
     - name: update
       run: sudo apt-get update
     - name: dep
-      run: sudo apt-get install -y unzip curl git wget parted fdisk xz-utils qemu-user-static binfmt-support
+      run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
+    - name: update e2fsprogs 
+      run: |
+          git clone https://github.com/tytso/e2fsprogs
+          cd e2fsprogs
+          resize2fs --version
+          make
+          make install
+
     - name: configure
       run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
     - name: remove old image to make space
