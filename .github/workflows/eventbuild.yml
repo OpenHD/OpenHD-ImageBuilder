@@ -10,12 +10,14 @@ jobs:
   build:
 
     runs-on: ubuntu-22.04
+    container:
+      image: docker://ubuntu:lunar
     if: "github.event_name == 'push' && !contains(github.event.head_commit.modified, 'last.releases')"      
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TESTING: [release]
-        TARGET: [pi-bullseye, jetson-nano-2gb-bionic, jetson-nano-4gb-bionic, x86-jammy, x86-lunar, rock5] # <-- Add targets here!
+        TARGET: [x86-lunar] # <-- Add targets here!
 
 
     steps:
