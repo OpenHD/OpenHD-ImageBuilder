@@ -11,14 +11,8 @@ BASE_PACKAGES="openhd git apt-transport-https apt-utils open-hd-web-ui"
 
 #debug (remove later)
 cat /etc/fstab
-sudo apt remove -y firefox 
+sudo apt remove -y firefox snapd
 sudo rm /swap.img
-echo "list software"
-dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -nr
-echo "list big files"
-sudo find / -type f -size +100M -exec ls -lh {} \; 2>/dev/null
-echo "size on disk"
-df -h
 
 # Raspbian-specific code
 function install_raspbian_packages {
@@ -133,3 +127,6 @@ export OPENHD_VERSION=$(dpkg -s openhd | grep "^Version" | awk '{ print $2 }')
 
 echo ${OPENHD_VERSION} > /openhd_version.txt
 echo ${OPENHD_VERSION} > /boot/openhd_version.txt
+
+#debug(remove later)
+df -h /
