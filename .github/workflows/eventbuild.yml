@@ -41,7 +41,7 @@ jobs:
     - name: update
       run: sudo apt-get update
     - name: dep
-      run: sudo apt-get install -y unzip curl git wget parted xz-utils qemu-user-static binfmt-support
+      run: sudo apt-get install -y unzip curl git wget parted fdisk xz-utils qemu-user-static binfmt-support
     - name: configure
       run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
     - name: remove old image to make space
