@@ -9,6 +9,13 @@ set -e
 # Packages which are universally needed
 BASE_PACKAGES="openhd git apt-transport-https apt-utils open-hd-web-ui"
 
+#debug (remove later)
+cat /etc/fstab
+echo "list software"
+dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -nr
+echo "list big files"
+find / -type f -size +100M -exec ls -lh {} \; 2>/dev/null
+
 # Raspbian-specific code
 function install_raspbian_packages {
     PLATFORM_PACKAGES_HOLD="raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc raspberrypi-bootloader"

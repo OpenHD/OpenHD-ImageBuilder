@@ -5,6 +5,5 @@ OS="ubuntu-x86"
 DISTRO="jammy"
 HAVE_BOOT_PART=false
 HAVE_CONF_PART=false
-CONF_PART=1
 ROOT_PART=2
 BIT="64"
