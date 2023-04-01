@@ -15,6 +15,8 @@ echo "list software"
 dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -nr
 echo "list big files"
 find / -type f -size +100M -exec ls -lh {} \; 2>/dev/null
+echo "size on disk"
+df -h
 
 # Raspbian-specific code
 function install_raspbian_packages {
