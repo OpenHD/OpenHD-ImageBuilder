@@ -11,10 +11,12 @@ BASE_PACKAGES="openhd git apt-transport-https apt-utils open-hd-web-ui"
 
 #debug (remove later)
 cat /etc/fstab
+sudo apt remove -y firefox 
+sudo rm /swap.img
 echo "list software"
 dpkg-query -Wf '${Installed-Size}\t${Package}\n' | sort -nr
 echo "list big files"
-find / -type f -size +100M -exec ls -lh {} \; 2>/dev/null
+sudo find / -type f -size +100M -exec ls -lh {} \; 2>/dev/null
 echo "size on disk"
 df -h
 
