@@ -49,7 +49,7 @@ jobs:
           cd build
           ../configure
           make
-          make install
+          sudo make install
 
     - name: configure
       run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
