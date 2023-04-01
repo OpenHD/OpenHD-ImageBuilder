@@ -76,14 +76,14 @@ mount_image () {
     if [[ "${HAVE_CONF_PART}" == "true" ]]; then
         echo "mount the conf partition"
         
-        if [ -d "$MNT_DIR/conf" ]; then
+        if [ -d "$MNT_DIR/boot/openhd" ]; then
             echo "conf DIR exists already..."
         else
-            mkdir $MNT_DIR/conf
+            mkdir $MNT_DIR/boot/openhd
             echo "Created conf DIR..."
         fi
         
-        mountpoint -q "${MNT_DIR}/conf" || mount "$IMG_FILE" -o loop,offset=${CONF_OFFSET},rw,sizelimit=${CONF_LENGTH} "${MNT_DIR}/conf"
+        mountpoint -q "${MNT_DIR}/boot/openhd" || mount "$IMG_FILE" -o loop,offset=${CONF_OFFSET},rw,sizelimit=${CONF_LENGTH} "${MNT_DIR}/boot/openhd"
     fi
 
     log "Finished mounting"
