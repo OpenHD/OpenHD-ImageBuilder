@@ -103,6 +103,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        wget https://github.com/mavlink/qgroundcontrol/releases/download/v4.2.4/QGroundControl.AppImage
        chmod a+x QGroundControl.AppImage
        chown openhd:openhd QGroundControl.AppImage
+       sudo mv /boot/openhd /boot/openhd_old
 fi
 
 #Install Update-Service
