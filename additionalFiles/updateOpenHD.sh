@@ -14,6 +14,26 @@ if [ ! -d "/boot/openhd1" ]; then
   sudo mv /boot/openhd1/* /boot/openhd/
 fi
 
+#resize partition in x86
+if [ -f "/boot/openhd/resize" ]; then
+    # Identify the file system type of the partition
+    fs_type=$(sudo blkid /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b | awk '{print $3}' | cut -d '"' -f2)
+
+    # Unmount the partition
+    sudo umount /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b
+
+    # Resize the partition to its maximum size using GParted
+    echo "Resizing partition..."
+    sudo parted /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b resizepart 1 100% | grep "Partition 1" || true
+
+    # Remount the partition
+    sudo mount /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b
+
+    echo "Partition resized successfully!"
+else
+    echo "Resize file not found. Skipping partition resize."
+fi
+
 # Check if the update folder exists
 if [ ! -d "$UPDATE_FOLDER" ]; then
   echo "Error: $UPDATE_FOLDER does not exist"
