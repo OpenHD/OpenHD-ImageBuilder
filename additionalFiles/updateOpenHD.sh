@@ -11,31 +11,8 @@ mkdir -p $TEMP_FOLDER
 #Moving temp-config to config partition
 if [ ! -d "/boot/openhd_old" ]; then
   echo "moving config folder"
-  sudo mv /boot/openhd_old/* /boot/openhd/
+  sudo mv -v /boot/openhd_old/* /boot/openhd/
   rm -Rf /boot/openhd_old/
-fi
-
-#resize partition in x86
-# Check if the resize file exists
-if [ -f "/boot/openhd/resize" ]; then
-
-  # Unmount the partition
-  sudo umount /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b
-  
-  # Resize the filesystem to the maximum available size
-  echo "Resizing filesystem..."
-  sudo resize2fs /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b
-
-  # Remount the partition
-  sudo mount /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b
-
-  echo "Filesystem resized successfully!"
-  
-  # Remove the resize file
-  rm /boot/openhd/resize
-
-else
-  echo "Resize file not found. Skipping filesystem resize."
 fi
 
 # Check if the update folder exists
