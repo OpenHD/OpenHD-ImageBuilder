@@ -9,9 +9,10 @@ LOG_FILE="/boot/openhd/install-log.txt"
 mkdir -p $TEMP_FOLDER
 
 #Moving temp-config to config partition
-if [ ! -d "/boot/openhd1" ]; then
+if [ ! -d "/boot/openhd_old" ]; then
   echo "moving config folder"
-  sudo mv /boot/openhd1/* /boot/openhd/
+  sudo mv /boot/openhd_old/* /boot/openhd/
+  rm -Rf /boot/openhd_old/
 fi
 
 #resize partition in x86
@@ -24,8 +25,7 @@ if [ -f "/boot/openhd/resize" ]; then
 
     # Resize the partition to its maximum size using GParted
     echo "Resizing partition..."
-    sudo parted /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b resizepart 1 100% | grep "Partition 1" || true
-
+    echo -e "d\n1\nn\np\n1\n\n\nt\n82\nw" | sudo fdisk /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b
     # Remount the partition
     sudo mount /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b
 
