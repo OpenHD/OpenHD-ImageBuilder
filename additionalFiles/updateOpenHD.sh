@@ -30,6 +30,7 @@ if [ -f "/boot/openhd/resize" ]; then
     sudo mount /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b
 
     echo "Partition resized successfully!"
+    rm /boot/openhd/resize
 else
     echo "Resize file not found. Skipping partition resize."
 fi

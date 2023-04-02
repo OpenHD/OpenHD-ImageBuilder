@@ -104,6 +104,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        chmod a+x QGroundControl.AppImage
        chown openhd:openhd QGroundControl.AppImage
        sudo mv /boot/openhd /boot/openhd_old
+       touch /boot/openhd/resize
 fi
 
 #Install Update-Service
