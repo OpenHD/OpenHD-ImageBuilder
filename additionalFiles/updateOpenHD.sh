@@ -16,23 +16,26 @@ if [ ! -d "/boot/openhd_old" ]; then
 fi
 
 #resize partition in x86
+# Check if the resize file exists
 if [ -f "/boot/openhd/resize" ]; then
-    # Identify the file system type of the partition
-    fs_type=$(sudo blkid /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b | awk '{print $3}' | cut -d '"' -f2)
 
-    # Unmount the partition
-    sudo umount /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b
+  # Unmount the partition
+  sudo umount /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b
+  
+  # Resize the filesystem to the maximum available size
+  echo "Resizing filesystem..."
+  sudo resize2fs /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b
 
-    # Resize the partition to its maximum size using GParted
-    echo "Resizing partition..."
-    echo -e "d\n1\nn\np\n1\n\n\nt\n82\nw" | sudo fdisk /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b
-    # Remount the partition
-    sudo mount /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b
+  # Remount the partition
+  sudo mount /dev/disk/by-uuid/b391afb8-52a5-44de-a70d-547f5a5c176b
 
-    echo "Partition resized successfully!"
-    rm /boot/openhd/resize
+  echo "Filesystem resized successfully!"
+  
+  # Remove the resize file
+  rm /boot/openhd/resize
+
 else
-    echo "Resize file not found. Skipping partition resize."
+  echo "Resize file not found. Skipping filesystem resize."
 fi
 
 # Check if the update folder exists
