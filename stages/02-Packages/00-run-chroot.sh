@@ -22,7 +22,7 @@ function fix_radxa_apt {
     apt update
 }
 function install_radxa-ubuntu_packages {
-    PLATFORM_PACKAGES_HOLD="linux-image-5.10.66-27-rockchip linux-5.10-rock-5-latest"
+    PLATFORM_PACKAGES_HOLD=""
     PLATFORM_PACKAGES="qopenhd rtl8812au-autocompiler procps cmake dkms"
 }
 # Ubuntu-x86-specific code
