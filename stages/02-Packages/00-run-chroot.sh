@@ -23,7 +23,7 @@ function fix_radxa_apt {
 }
 function install_radxa-ubuntu_packages {
     PLATFORM_PACKAGES_HOLD=""
-    PLATFORM_PACKAGES="qopenhd rtl8812au-autocompiler procps cmake dkms"
+    PLATFORM_PACKAGES="rtl8812au-autocompiler procps cmake dkms"
 }
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
