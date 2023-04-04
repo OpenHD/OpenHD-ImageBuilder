@@ -25,9 +25,8 @@ mount_image () {
         log "Mounting conf partition: ${CONF_PART}"
         echo "Mounting conf partition: ${CONF_PART}"
 
-        #for 2 digit grep matches there is no space here - "^${CONF_PART}"... 
-        CONF_OFFSET=$(echo "$PARTED_OUT" | grep -e "^${CONF_PART}" | xargs echo -n | cut -d" " -f 2 | tr -d B)
-        CONF_LENGTH=$(echo "$PARTED_OUT" | grep -e "^${CONF_PART}" | xargs echo -n | cut -d" " -f 4 | tr -d B)
+        CONF_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${CONF_PART}" | xargs echo -n | cut -d" " -f 2 | tr -d B)
+        CONF_LENGTH=$(echo "$PARTED_OUT" | grep -e "^ ${CONF_PART}" | xargs echo -n | cut -d" " -f 4 | tr -d B)
         CONF_DEV=$(losetup --show -f -o "${CONF_OFFSET}" --sizelimit "${CONF_LENGTH}" "${IMG_FILE}")
         log "/conf: offset $CONF_OFFSET, length $CONF_LENGTH"
         echo "/conf: offset $CONF_OFFSET, length $CONF_LENGTH"

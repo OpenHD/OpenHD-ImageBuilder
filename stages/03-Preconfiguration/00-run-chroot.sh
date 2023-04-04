@@ -23,7 +23,7 @@ fi
 cd /opt/additionalFiles
 cp motd /etc/motd
 
- if [[ "${OS}" == "debian" ]] ; then
+ if [[ "${OS}" == "radxa-ubuntu" ]] ; then
     touch /boot/openhd/rock5.txt
     mv /usr/sbin/login /usr/sbin/nologin
     rm -Rf /lib/modules/5.10.66-27-rockchip-gea60d388902d/kernel/drivers/net/wireless/realtek
@@ -33,6 +33,24 @@ cp motd /etc/motd
     mkdir -p /etc/systemd/system/getty@tty1.service.d
     touch /boot/openhd/rock5.txt
     touch /boot/openhd/ground.txt
+
+    #FIXING DISPLAY DETECTION to 1080/60hz
+        # Search for lines containing "append" in the extlinux.conf file
+        lines=$(grep -n "append" /boot/extlinux/extlinux.conf | cut -d':' -f1)
+
+        # Loop through each line number and check for the presence of "video"
+        for line in $lines
+        do
+            if grep -n "video" /boot/extlinux/extlinux.conf | cut -d: -f1 | grep -q $line
+            then
+                echo "Line $line: video already present"
+            else
+                # Add "video" to the end of the line
+                sed -i "${line}s/$/ video=1920x1080@60/" /boot/extlinux/extlinux.conf
+                echo "Line $line: video added"
+            fi
+        done
+
  fi
 
  if [[ "${OS}" == "raspbian" ]] ; then
