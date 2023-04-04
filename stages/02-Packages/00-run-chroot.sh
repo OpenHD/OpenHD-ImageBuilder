@@ -25,8 +25,12 @@ function install_radxa-ubuntu_packages {
     PLATFORM_PACKAGES_HOLD=""
     PLATFORM_PACKAGES="procps"
     ls -a /boot/openhd
+    echo "config"
     cat /boot/openhd/config.txt
+    echo "before"
     cat /boot/openhd/before.txt
+    echo "extlinux"
+    cat /boot/extlinux/extlinux.cfg
 }
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
