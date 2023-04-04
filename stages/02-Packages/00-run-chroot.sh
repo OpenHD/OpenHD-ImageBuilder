@@ -20,7 +20,7 @@ function install_raspbian_packages {
 function fix_radxa_apt {
     wget -O - apt.radxa.com/bullseye-stable/public.key | apt-key add -
     apt update
-    ls -a /config
+    ls -a /boot2
     cat /boot/extlinux/extlinux.conf
 }
 function install_radxa-ubuntu_packages {

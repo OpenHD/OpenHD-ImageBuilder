@@ -70,7 +70,7 @@ mount_image () {
 
     if [[ "${HAVE_BOOT_PART}" == "true" ]]; then
         echo "mount the BOOT partition"
-        mountpoint -q "${MNT_DIR}/boot" || mount "$IMG_FILE" -o loop,offset=${BOOT_OFFSET},rw,sizelimit=${BOOT_LENGTH} "${MNT_DIR}/boot"
+        mountpoint -q "${MNT_DIR}/boot2" || mount "$IMG_FILE" -o loop,offset=${BOOT_OFFSET},rw,sizelimit=${BOOT_LENGTH} "${MNT_DIR}/boot2"
     fi
 
     if [[ "${HAVE_CONF_PART}" == "true" ]]; then
