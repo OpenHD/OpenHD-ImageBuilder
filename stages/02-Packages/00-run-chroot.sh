@@ -25,7 +25,8 @@ function install_radxa-ubuntu_packages {
     PLATFORM_PACKAGES_HOLD=""
     PLATFORM_PACKAGES="procps"
     ls -a /conf
-    cat /boot/extlinux/extlinux.conf
+    cat /conf/config.txt
+    cat /conf/before.txt
 }
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
