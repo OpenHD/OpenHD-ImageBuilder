@@ -25,8 +25,8 @@ function install_radxa-ubuntu_packages {
     PLATFORM_PACKAGES_HOLD=""
     PLATFORM_PACKAGES="procps"
     ls -a /boot/openhd
-    cat /conf/config.txt
-    cat /conf/before.txt
+    cat /boot/openhd/config.txt
+    cat /boot/openhd/before.txt
 }
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
