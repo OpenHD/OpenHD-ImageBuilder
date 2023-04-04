@@ -43,6 +43,6 @@ ${ROOT_OFFSET}
 w
 EOF
 
-sudo blkid -o list IMAGE.img
+lsblk -f image.dd
 
 popd
