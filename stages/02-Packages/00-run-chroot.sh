@@ -30,7 +30,8 @@ function install_radxa-ubuntu_packages {
     echo "before"
     cat /boot/openhd/before.txt
     echo "extlinux"
-    cat /boot/extlinux/extlinux.cfg
+    ls /boot/
+    ls /boot/extlinux/
 }
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
