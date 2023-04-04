@@ -43,6 +43,6 @@ ${ROOT_OFFSET}
 w
 EOF
 
-lsblk -f image.dd
+sudo partprobe -s IMAGE.img
 
 popd
