@@ -22,7 +22,7 @@ pushd ${STAGE_WORK_DIR}
     echo "Partition information for /dev/sda:"
     sudo parted -m IMAGE.img unit s print | awk -F: '$1 ~ /^[0-9]+$/ {print "Partition " $1 ": " $2 " - " $3 " (offset: " $2 "s)"}'
 
-    PARTED_OUT=$(parted -s IMAGE.img unit s print)
+    PARTED_OUT=$(parted -s -m IMAGE.img unit s print | awk -F: '/^ /{print $1, $8}' | xargs -n2 blkid -s UUID -o value)
     ROOT_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${ROOT_PART}"| xargs echo -n \
         | cut -d" " -f 2 | tr -d s)
     
@@ -43,6 +43,5 @@ ${ROOT_OFFSET}
 w
 EOF
 
-blkid IMAGE.img
-
+PARTED_OUT=$(parted -s -m IMAGE.img unit s print | awk -F: '/^ /{print $1, $8}' | xargs -n2 blkid -s UUID -o value)
 popd

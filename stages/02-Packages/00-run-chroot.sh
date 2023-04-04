@@ -24,7 +24,7 @@ function fix_radxa_apt {
 function install_radxa-ubuntu_packages {
     PLATFORM_PACKAGES_HOLD=""
     PLATFORM_PACKAGES="procps"
-    ls -a /boot2
+    ls -a /conf
     cat /boot/extlinux/extlinux.conf
 }
 # Ubuntu-x86-specific code
