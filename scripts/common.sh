@@ -76,14 +76,14 @@ mount_image () {
     if [[ "${HAVE_CONF_PART}" == "true" ]]; then
         echo "mount the conf partition"
         
-        if [ -d "$MNT_DIR/boot/openhd" ]; then
+        if [ -d "$MNT_DIR/conf" ]; then
             echo "conf DIR exists already..."
         else
-            mkdir $MNT_DIR/boot/openhd
+            mkdir $MNT_DIR/conf
             echo "Created conf DIR..."
         fi
         
-        mountpoint -q "${MNT_DIR}/boot/openhd" || mount "$IMG_FILE" -o loop,offset=${CONF_OFFSET},rw,sizelimit=${CONF_LENGTH} "${MNT_DIR}/boot/openhd"
+        mountpoint -q "${MNT_DIR}/conf" || mount "$IMG_FILE" -o loop,offset=${CONF_OFFSET},rw,sizelimit=${CONF_LENGTH} "${MNT_DIR}/conf"
     fi
 
     log "Finished mounting"
@@ -138,12 +138,10 @@ on_chroot() {
     fi
 
     if ! mount | grep -q "${MNT_DIR}/etc/resolv.conf)"; then
-        rm -Rf "${MNT_DIR}/etc/resolv.conf"
-        echo "nameserver 1.1.1.1" > "${MNT_DIR}/etc/resolv.conf"
         mount --bind /etc/resolv.conf "${MNT_DIR}/etc/resolv.conf"
     fi
 
-    cp -r "${STAGE_DIR}/../../additionalFiles" "${MNT_DIR}/opt"
+    #cp "${STAGE_DIR}/$1" "${MNT_DIR}/home/pi/install.sh"
     #sudo chroot --userspec=1000:1000 "$MNT_DIR" /bin/bash "/home/pi/install.sh"
     capsh --drop=cap_setfcap "--chroot=${MNT_DIR}/" -- "$@"
 
