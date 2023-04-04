@@ -99,8 +99,7 @@ unmount_image(){
     #LOOP_DEV="$(findmnt -nr -o source $MNT_DIR)"
     
     if mount | grep -q "$MNT_DIR/boot"; then
-        echo"debugstep"
-        umount -l "$MNT_DIR/boot"
+        umount -l "$MNT_DIR/boot" || true
     else
         echo "no boot partition needed"
     fi
