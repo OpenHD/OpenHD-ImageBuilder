@@ -7,7 +7,7 @@
 set -e
 
 # Packages which are universally needed
-BASE_PACKAGES="openhd git apt-transport-https apt-utils open-hd-web-ui"
+BASE_PACKAGES="openhd git apt-transport-https apt-utils"
 
 
 # Raspbian-specific code
@@ -23,7 +23,7 @@ function fix_radxa_apt {
 }
 function install_radxa-ubuntu_packages {
     PLATFORM_PACKAGES_HOLD=""
-    PLATFORM_PACKAGES="rtl8812au-autocompiler procps cmake dkms"
+    PLATFORM_PACKAGES="procps"
 }
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
