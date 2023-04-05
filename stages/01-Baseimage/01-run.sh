@@ -43,6 +43,24 @@ ${ROOT_OFFSET}
 w
 EOF
 
-sudo sgdisk -i 2 IMAGE.img
+if [[ "${OS}" == "radxa-ubuntu" ]] ; then
+
+    #show uuid of the Root_Part
+    sudo sgdisk -i ${ROOT_PART} IMAGE.img
+
+    IMAGE="IMAGE.img"
+    NEW_UUID="c04fe533-c342-45ed-8002-97da8a2bc029"
+
+    # Get the starting sector of the partition
+    START_SECTOR=$(sudo sfdisk -d ${IMAGE} | grep "${ROOT_PART} :" | awk '{print $4}')
+
+    # Set the new UUID
+    sudo sgdisk --attributes=${ROOT_PART}:set:2 --typecode=${ROOT_PART}:8300 --partition-guid=${ROOT_PART}:${NEW_UUID} ${IMAGE}
+
+    # Verify the new UUID
+    echo "New UUID:"
+    sudo sgdisk --info=${ROOT_PART} ${IMAGE} | grep "Partition unique GUID"
+
+fi
 
 popd
