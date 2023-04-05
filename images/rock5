@@ -1,6 +1,6 @@
 BASE_IMAGE_URL="https://data.openhdfpv.org/openhd-images/Downloader/release/"
 BASE_IMAGE="RadxaRock5.7z"
-BASE_IMAGE_SHA256="3352222533af797c51fe871f831535e8e88cc529afda01d9f3a661c4ff1e48fe"
+BASE_IMAGE_SHA256="1636dfbaacd661bbb045d18964621f8de2046fd5e09e9cd84dc14766442a5b60"
 OS="radxa-ubuntu"
 DISTRO="bullseye"
 HAVE_BOOT_PART=false
