@@ -43,6 +43,6 @@ ${ROOT_OFFSET}
 w
 EOF
 
-sudo sgdisk -i 1 IMAGE.img
+sudo sgdisk -i 2 IMAGE.img
 
 popd
