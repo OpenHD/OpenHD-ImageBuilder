@@ -43,6 +43,6 @@ ${ROOT_OFFSET}
 w
 EOF
 
-sudo partprobe -s IMAGE.img
+sudo sgdisk -i 1 IMAGE.img
 
 popd
