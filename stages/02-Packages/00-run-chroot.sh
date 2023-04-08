@@ -22,7 +22,7 @@ function fix_radxa_apt {
     apt update
 }
 function install_radxa-ubuntu_packages {
-    PLATFORM_PACKAGES_HOLD=""
+    PLATFORM_PACKAGES_HOLD="linux-image-5.10.110-1-rockchip linux-headers-5.10.110-1-rockchip"
     PLATFORM_PACKAGES="qopenhd"
     PLATFORM_PACKAGES="procps"
 }
