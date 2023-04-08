@@ -97,7 +97,7 @@ function clone_github_repos {
      fi
  done
 
- #apt upgrade -y --allow-downgrades
+ apt upgrade -y --allow-downgrades
 
  # Install platform-specific packages
  echo "Installing platform-specific packages..."
