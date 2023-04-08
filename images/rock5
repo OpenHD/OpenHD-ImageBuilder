@@ -1,8 +1,8 @@
-BASE_IMAGE_URL="https://data.openhdfpv.org/openhd-images/Downloader/release"
-BASE_IMAGE="RadxaRock5.7z"
-BASE_IMAGE_SHA256="a7519cc7b5ea6edbd1b5539a85d0a5941fcabbeab71af69142aa3fcc56562918"
+BASE_IMAGE_URL="https://github.com/radxa-build/rock-5b/releases/download/20230401-0040/"
+BASE_IMAGE="rock-5b_ubuntu_jammy_xfce_b32.img.xz"
+BASE_IMAGE_SHA256="93a9c70866f6c1b51061cf1e7c6c822214d141c9cd398409eb61f3fd60835464"
 OS="radxa-ubuntu"
-DISTRO="bullseye"
+DISTRO="jammy"
 HAVE_BOOT_PART=false
 HAVE_CONF_PART=true
 ROOT_PART=2

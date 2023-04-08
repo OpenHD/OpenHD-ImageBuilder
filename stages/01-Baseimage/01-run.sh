@@ -1,4 +1,5 @@
 # Extend Image Size
+
 pushd ${STAGE_WORK_DIR}
 
     #Makes the images flashable with raspberry pi imager
