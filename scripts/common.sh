@@ -25,9 +25,8 @@ mount_image () {
         log "Mounting conf partition: ${CONF_PART}"
         echo "Mounting conf partition: ${CONF_PART}"
 
-        #for 2 digit grep matches there is no space here - "^${CONF_PART}"... 
-        CONF_OFFSET=$(echo "$PARTED_OUT" | grep -e "^${CONF_PART}" | xargs echo -n | cut -d" " -f 2 | tr -d B)
-        CONF_LENGTH=$(echo "$PARTED_OUT" | grep -e "^${CONF_PART}" | xargs echo -n | cut -d" " -f 4 | tr -d B)
+        CONF_OFFSET=$(echo "$PARTED_OUT" | grep -e "^ ${CONF_PART}" | xargs echo -n | cut -d" " -f 2 | tr -d B)
+        CONF_LENGTH=$(echo "$PARTED_OUT" | grep -e "^ ${CONF_PART}" | xargs echo -n | cut -d" " -f 4 | tr -d B)
         CONF_DEV=$(losetup --show -f -o "${CONF_OFFSET}" --sizelimit "${CONF_LENGTH}" "${IMG_FILE}")
         log "/conf: offset $CONF_OFFSET, length $CONF_LENGTH"
         echo "/conf: offset $CONF_OFFSET, length $CONF_LENGTH"
@@ -70,20 +69,21 @@ mount_image () {
 
     if [[ "${HAVE_BOOT_PART}" == "true" ]]; then
         echo "mount the BOOT partition"
+        mkdir -p ${MNT_DIR}/boot
         mountpoint -q "${MNT_DIR}/boot" || mount "$IMG_FILE" -o loop,offset=${BOOT_OFFSET},rw,sizelimit=${BOOT_LENGTH} "${MNT_DIR}/boot"
     fi
 
     if [[ "${HAVE_CONF_PART}" == "true" ]]; then
         echo "mount the conf partition"
         
-        if [ -d "$MNT_DIR/conf" ]; then
+        if [ -d "$MNT_DIR/boot/openhd" ]; then
             echo "conf DIR exists already..."
         else
-            mkdir $MNT_DIR/conf
+            mkdir $MNT_DIR/boot/openhd
             echo "Created conf DIR..."
         fi
         
-        mountpoint -q "${MNT_DIR}/conf" || mount "$IMG_FILE" -o loop,offset=${CONF_OFFSET},rw,sizelimit=${CONF_LENGTH} "${MNT_DIR}/conf"
+        mountpoint -q "${MNT_DIR}/boot/openhd" || mount "$IMG_FILE" -o loop,offset=${CONF_OFFSET},rw,sizelimit=${CONF_LENGTH} "${MNT_DIR}/boot/openhd"
     fi
 
     log "Finished mounting"
@@ -99,11 +99,13 @@ unmount_image(){
     #LOOP_DEV="$(findmnt -nr -o source $MNT_DIR)"
     
     if mount | grep -q "$MNT_DIR/boot"; then
-        umount -l "$MNT_DIR/boot"
+        umount -l "$MNT_DIR/boot" || true
+    else
+        echo "no boot partition needed"
     fi
 
-    if mount | grep -q "$MNT_DIR/conf"; then
-        umount -l "$MNT_DIR/conf"
+    if mount | grep -q "$MNT_DIR/boot/openhd"; then
+        umount -l "$MNT_DIR/boot/openhd"
     fi
 
     if mount | grep -q "$MNT_DIR"; then
