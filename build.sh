@@ -195,8 +195,11 @@ done
 log ""
 log "======================================================"
 log "Shrinking image: ${IMAGE_PATH_NAME}"
+if [[ "${OS}" == "raspbian" ]]; then
 ${SCRIPT_DIR}/pishrink.sh -v ${PREV_WORK_DIR}/*.img
-
+else
+echo "Shrinking images that aren't made for the raspberry isn't integrated, yet!"
+fi
 
 # rename the image according to the build date, the builder/openhd repo versions
 OPENHD_VERSION=$(cat ${WORK_DIR}/openhd_version.txt)
