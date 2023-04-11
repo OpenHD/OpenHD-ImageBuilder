@@ -8,14 +8,29 @@ pushd ${STAGE_WORK_DIR}
     FILESIZE=$(stat -c%s "IMAGE.img")
     DIFFERENCE=$(expr $WANTEDSIZE - $FILESIZE)
     DIFFERENCE=$(expr $DIFFERENCE - 1)
+    echo "partitions in image:"
+    sudo gdisk -l IMAGE.img
+    echo "IMAGE will be extended with"
+    echo $DIFFERENCE
+    echo "bytes"
+    ls -l
 
+if [[ "${DIFFERENCE}" < 2147483648 ]]; then
 
     log "Create empty image" #this will be attached to the base image to increase the size of it
     dd if=/dev/zero of=temp.img bs=1 count=1 seek=$DIFFERENCE
+    ls -l
 
 
     log "Enlarge the downloaded image"
     cat temp.img >> IMAGE.img
+
+    if [[ "${OS}" == radxa-ubuntu ]]; then
+    echo "resize with parted"
+    echo -e "x\ne\nd\nn\n\n\n\n\nw\ny\n" | sudo gdisk IMAGE.img
+    sudo parted -s IMAGE.img resizepart 2 100%
+    sudo gdisk -l IMAGE.img
+    else
 
     log "fdisk magic to enlarge the main partition"
     #calculating image offsets
@@ -44,5 +59,10 @@ ${ROOT_OFFSET}
 w
 EOF
 
+    fi
+
+else 
+echo "the image doesn't need to be enlarged, just using it like it is"
+fi
 
 popd
