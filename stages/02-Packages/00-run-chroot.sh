@@ -16,15 +16,10 @@ function install_raspbian_packages {
     PLATFORM_PACKAGES_REMOVE="nfs-common libcamera* raspberrypi-kernel"
     PLATFORM_PACKAGES="firmware-atheros firmware-misc-nonfree openhd-userland openhd-linux-pi openhd-linux-pi-headers libsdl2-dev libspdlog-dev libcamera-openhd libcamera-apps-openhd libavcodec-dev libavformat-dev mavsdk gstreamer1.0-gl gst-latest openhd-qt qopenhd libsodium-dev libpcap-dev openssh-server libboost-filesystem1.74-dev meson"
 }
-# Debian-Rockship-specific code
-function fix_radxa_apt {
-    wget -O - apt.radxa.com/bullseye-stable/public.key | apt-key add -
-    apt update
-}
+# Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
     PLATFORM_PACKAGES_HOLD="linux-image-5.10.110-1-rockchip linux-headers-5.10.110-1-rockchip initramfs-tools"
-    PLATFORM_PACKAGES="qopenhd"
-    PLATFORM_PACKAGES="procps"
+    PLATFORM_PACKAGES="qopenhd rtl8812au-autocompiler fan-control-rock5b procps"
 }
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {

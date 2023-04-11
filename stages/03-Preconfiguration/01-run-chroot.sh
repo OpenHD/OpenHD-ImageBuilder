@@ -36,6 +36,10 @@ if [[ "${OS}" != "ubuntu" ]] || [[ "${OS}" != "ubuntu-x86" ]]; then
     echo "OS is NOT ubuntu..disabling journald flush"
     sudo systemctl disable systemd-journal-flush.service
 fi
+if [[ "${OS}" == "ubuntu-radxa" ]]; then
+       systemctl enable fan-control
+
+fi
 
 if [[ "${OS}" == "ubuntu" ]]; then
        systemctl disable nv-oem-config-gui.service
