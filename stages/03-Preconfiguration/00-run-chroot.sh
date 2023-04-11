@@ -33,6 +33,11 @@ cp motd /etc/motd
     mkdir -p /etc/systemd/system/getty@tty1.service.d
     touch /boot/openhd/rock5.txt
     touch /boot/openhd/ground.txt
+    rm /boot/before.txt
+    rm /boot/config.txt
+    cp /opt/additionalFiles/before.txt /boot/before.txt
+    cp /opt/additionalFiles/config.txt /boot/config.txt
+
 
     #FIXING DISPLAY DETECTION to 1080/60hz
         # Search for lines containing "append" in the extlinux.conf file
