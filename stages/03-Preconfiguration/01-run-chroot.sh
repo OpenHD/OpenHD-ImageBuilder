@@ -36,7 +36,8 @@ if [[ "${OS}" != "ubuntu" ]] || [[ "${OS}" != "ubuntu-x86" ]]; then
     echo "OS is NOT ubuntu..disabling journald flush"
     sudo systemctl disable systemd-journal-flush.service
 fi
-elif [[ "${OS}" == "radxa-ubuntu" ]] ; then
+
+if [[ "${OS}" == "radxa-ubuntu" ]] ; then
        systemctl enable fan-control
        systemctl disable openhd
 fi
