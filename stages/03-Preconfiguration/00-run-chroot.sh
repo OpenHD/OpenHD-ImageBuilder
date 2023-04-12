@@ -33,10 +33,10 @@ cp motd /etc/motd
     mkdir -p /etc/systemd/system/getty@tty1.service.d
     touch /boot/openhd/rock5.txt
     touch /boot/openhd/ground.txt
-    rm /boot/before.txt
-    rm /boot/config.txt
-    cp /opt/additionalFiles/before.txt /boot/before.txt
-    cp /opt/additionalFiles/config.txt /boot/config.txt
+    rm /boot/openhd/before.txt
+    rm /boot/openhd/config.txt
+    cp /opt/additionalFiles/before.txt /boot/openhd/before.txt
+    cp /opt/additionalFiles/config.txt /boot/openhd/config.txt
 
 
     #FIXING DISPLAY DETECTION to 1080/60hz
