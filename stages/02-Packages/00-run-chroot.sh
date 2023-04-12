@@ -14,7 +14,7 @@ BASE_PACKAGES="openhd git apt-transport-https apt-utils"
 function install_raspbian_packages {
     PLATFORM_PACKAGES_HOLD="raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc raspberrypi-bootloader"
     PLATFORM_PACKAGES_REMOVE="nfs-common libcamera* raspberrypi-kernel"
-    PLATFORM_PACKAGES="firmware-atheros firmware-misc-nonfree openhd-userland openhd-linux-pi openhd-linux-pi-headers libsdl2-dev libspdlog-dev libcamera-openhd libcamera-apps-openhd libavcodec-dev libavformat-dev mavsdk gstreamer1.0-gl gst-latest openhd-qt qopenhd libsodium-dev libpcap-dev openssh-server libboost-filesystem1.74-dev meson"
+    PLATFORM_PACKAGES="firmware-atheros firmware-misc-nonfree openhd-userland openhd-linux-pi openhd-linux-pi-headers libcamera-openhd libcamera-apps-openhd openhd-qt qopenhd openssh-server"
 }
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {

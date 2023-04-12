@@ -25,7 +25,6 @@ cp motd /etc/motd
 
  if [[ "${OS}" == "radxa-ubuntu" ]] ; then
     touch /boot/openhd/rock5.txt
-    mv /usr/sbin/login /usr/sbin/nologin
     rm -Rf /lib/modules/5.10.66-27-rockchip-gea60d388902d/kernel/drivers/net/wireless/realtek
     mv /etc/motd /etc/motd2
     cp /opt/additionalFiles/motd2 /etc/motd
