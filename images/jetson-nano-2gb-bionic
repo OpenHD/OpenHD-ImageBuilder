@@ -1,4 +1,4 @@
-BASE_IMAGE_URL="https://data.openhdfpv.org/openhd-images/BaseImages"
+BASE_IMAGE_URL="https://openhd-images.fra1.cdn.digitaloceanspaces.com/BaseImages"
 BASE_IMAGE="jetson-2GB.7z"
 BASE_IMAGE_SHA256="2264891056bbd23d3482003c653d4c124ddbd3615b639b5a14d6043dac70fc8a"
 OS="ubuntu"

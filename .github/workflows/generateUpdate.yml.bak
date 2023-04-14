@@ -23,7 +23,7 @@ jobs:
     - uses: pguyot/arm-runner-action@v2.5.2
       id: build_image
       with:
-        base_image: https://openhdfpv.org/wp-content/Downloader/OpenHD-image-pi-bullseye-configurable-release--2.3-evo-2023-02-04_0212.img.xz
+        base_image: https://openhd-images.fra1.cdn.digitaloceanspaces.com/Downloader/OpenHD-image-pi-bullseye-configurable-release--2.3-evo-2023-02-04_0212.img.xz
         image_additional_mb: 4000
         copy_repository_path: /opt
         copy_artifact_path: update

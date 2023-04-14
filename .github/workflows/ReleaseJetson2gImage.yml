@@ -115,7 +115,7 @@ jobs:
         echo "${{ env.NAME }}"    
         
     - name: Download json
-      run: curl https://data.openhdfpv.org/openhd-images/Downloader/os_list_imagingutility_v3_x86.json -o os_list_imagingutility_v3_j2g.json -s
+      run: curl https://openhd-images.fra1.cdn.digitaloceanspaces.com/Downloader/os_list_imagingutility_v3_x86.json -o os_list_imagingutility_v3_j2g.json -s
 
     - name: update json for the ImageWriter
       run: |
@@ -140,9 +140,9 @@ jobs:
     - name: Upload to R2
       shell: bash
       env:
-        aws_endpoint: "https://data.openhdfpv.org"
-        aws_key_id: ${{ secrets.DATA_ACCESS }}
-        aws_secret_access_key: ${{ secrets.DATA_KEY }}
+        aws_endpoint: "https://fra1.digitaloceanspaces.com"
+        aws_key_id: ${{ secrets.DIGITALOCEAN_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.DIGITALOCEAN_SECRET_ACCESS_KEY }}
         aws_s3_bucket: openhd-images
         AWS_EC2_METADATA_DISABLED: true
       run: |

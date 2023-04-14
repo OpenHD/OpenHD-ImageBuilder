@@ -33,9 +33,9 @@ jobs:
     - name: R2 copy old files in oldrelease folder
       shell: bash
       env:
-        aws_endpoint: "https://data.openhdfpv.org"
-        aws_key_id: ${{ secrets.DATA_ACCESS }}
-        aws_secret_access_key: ${{ secrets.DATA_KEY }}
+        aws_endpoint: "https://fra1.digitaloceanspaces.com"
+        aws_key_id: ${{ secrets.DIGITALOCEAN_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.DIGITALOCEAN_SECRET_ACCESS_KEY }}
         aws_s3_bucket: openhd-images
         AWS_EC2_METADATA_DISABLED: true
       run: |
@@ -49,9 +49,9 @@ jobs:
     # - name: R2 tests
     #   shell: bash
     #   env:
-    #     aws_endpoint: "https://data.openhdfpv.org"
-    #     aws_key_id: ${{ secrets.DATA_ACCESS }}
-    #     aws_secret_access_key: ${{ secrets.DATA_KEY }}
+    #     aws_endpoint: "https://fra1.digitaloceanspaces.com"
+    #     aws_key_id: ${{ secrets.DIGITALOCEAN_ACCESS_KEY_ID }}
+    #     aws_secret_access_key: ${{ secrets.DIGITALOCEAN_SECRET_ACCESS_KEY }}
     #     aws_s3_bucket: openhd-images
     #     AWS_EC2_METADATA_DISABLED: true
     #   run: |
@@ -61,9 +61,9 @@ jobs:
     - name: Get all Values of the old images
       shell: bash
       env:
-        aws_endpoint: "https://data.openhdfpv.org"
-        aws_key_id: ${{ secrets.DATA_ACCESS }}
-        aws_secret_access_key: ${{ secrets.DATA_KEY }}
+        aws_endpoint: "https://fra1.digitaloceanspaces.com"
+        aws_key_id: ${{ secrets.DIGITALOCEAN_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.DIGITALOCEAN_SECRET_ACCESS_KEY }}
         aws_s3_bucket: openhd-images
         AWS_EC2_METADATA_DISABLED: true
       run: |
@@ -73,13 +73,13 @@ jobs:
     - name: Download Template for the ImageWriter
       shell: bash
       env:
-        aws_endpoint: "https://data.openhdfpv.org"
-        aws_key_id: ${{ secrets.DATA_ACCESS }}
-        aws_secret_access_key: ${{ secrets.DATA_KEY }}
+        aws_endpoint: "https://fra1.digitaloceanspaces.com"
+        aws_key_id: ${{ secrets.DIGITALOCEAN_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.DIGITALOCEAN_SECRET_ACCESS_KEY }}
         aws_s3_bucket: openhd-images
         AWS_EC2_METADATA_DISABLED: true
       run: |
-        curl https://data.openhdfpv.org/openhd-images/Downloader/os_list_imagingutility_v3_template.json -o os_list_imagingutility_v3_rpi.json -s
+        curl https://openhd-images.fra1.cdn.digitaloceanspaces.com/Downloader/os_list_imagingutility_v3_template.json -o os_list_imagingutility_v3_rpi.json -s
         ls -a
         echo "here is where to magic starts"
         echo "were downloading one image at a time and creating a new json"

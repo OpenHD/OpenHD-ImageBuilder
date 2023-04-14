@@ -1,4 +1,4 @@
-BASE_IMAGE_URL="https://data.openhdfpv.org/openhd-images/BaseImages"
+BASE_IMAGE_URL="https://openhd-images.fra1.cdn.digitaloceanspaces.com/BaseImages"
 BASE_IMAGE="OpenHD-image-x86-jammy-testing--x86-base-resize-2023-04-01_1110.img.xz"
 BASE_IMAGE_SHA256="9319253e6dfc3e9d2a3ab94dd36e3cde57e4af9216ed494423f6c847098b01c7"
 OS="ubuntu-x86"

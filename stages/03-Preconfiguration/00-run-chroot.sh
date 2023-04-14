@@ -68,7 +68,7 @@ cp motd /etc/motd
      sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
      # enable dualcam-csi this file is the one from the Ochin board, but should work on most carrier boards
      rm -Rf /boot/dt-blob.bin
-     wget https://openhdfpv.org/wp-content/Downloader/dt-blob.bin -P /boot/
+     wget https://openhd-images.fra1.cdn.digitaloceanspaces.com/Downloader/dt-blob.bin -P /boot/
  fi
 
  if [[ "${OS}" == "ubuntu" ]]; then
