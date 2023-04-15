@@ -18,8 +18,7 @@ prepareOpenHD()
 	touch /boot/openhd/x86.txt
 	touch /boot/openhd/ground.txt
 	git clone https://github.com/OpenHD/rtl88x2bu /usr/src/rtl88x2bu-git
-	git clone https://github.com/OpenHD/rtl8812au
-	git clone https://github.com/aircrack-ng/rtl8188eus  
+	git clone https://github.com/OpenHD/rtl8812au /usr/src/rtl8812au-git
 }
 installShortcuts()
 {
@@ -42,7 +41,7 @@ cd OpenHD-ImageBuilder
 }
 installRtl8812au()
 {
-cd /opt/X86/rtl8812au
+cd /usr/src/rtl8812au-git
 ./dkms-install.sh
 echo "Installed RTL8812AU"
 }
@@ -72,10 +71,8 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
+installOpenHDRepositories
 prepareOpenHD
 installRtl8812au
 installRtl8812bu
 installOpenHD
-
-
-
