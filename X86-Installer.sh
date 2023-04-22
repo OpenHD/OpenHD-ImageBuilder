@@ -77,3 +77,4 @@ prepareOpenHD
 installRtl8812au
 installRtl8812bu
 installOpenHD
+installShortcuts
