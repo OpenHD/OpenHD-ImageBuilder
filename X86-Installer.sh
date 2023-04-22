@@ -59,6 +59,7 @@ echo "Cloned Qopenhd and Openhd github repositories"
 }
 installOpenHD()
 {
+sudo apt update
 sudo apt install -y openhd qopenhd open-hd-web-ui 
 systemctl disable openhd
 systemctl disable qopenhd
