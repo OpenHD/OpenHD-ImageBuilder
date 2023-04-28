@@ -5,7 +5,7 @@ pushd ${STAGE_WORK_DIR}
     #Makes the images flashable with raspberry pi imager
     log "We now define the size to be ~15GB (the maximum size we have in our github builder, this doesn't affect the output image because we're resizeing it in the end before uploading the image)" 
     if [[ "${OS}" == radxa-ubuntu ]] || [[ "${OS}" == radxa-debian ]] ; then
-    WANTEDSIZE="10500000256"
+    WANTEDSIZE="8500000256"
     else
     WANTEDSIZE="16500000256"
     fi
@@ -18,8 +18,6 @@ pushd ${STAGE_WORK_DIR}
     echo $DIFFERENCE
     echo "bytes"
     ls -l
-
-if [[ "${DIFFERENCE}" < 27483648 ]]; then
 
     log "Create empty image" #this will be attached to the base image to increase the size of it
     dd if=/dev/zero of=temp.img bs=1 count=1 seek=$DIFFERENCE
@@ -65,9 +63,5 @@ w
 EOF
 
     fi
-
-else 
-echo "the image doesn't need to be enlarged, just using it like it is"
-fi
 
 popd
