@@ -42,9 +42,10 @@ if [[ "${OS}" == "radxa-ubuntu" ]] ; then
        systemctl disable openhd
 fi
 
-if [[ "${OS}" == "ubuntu" ]]; then
-       systemctl disable nv-oem-config-gui.service
-       systemctl enable getty@tty1.service
+if [[ "${OS}" == "radxa-ubuntu" ]] || [[ "${OS}" == "radxa-debian" ]] ; then
+       systemctl enable fan-control
+       systemctl disable openhd
+       systemctl disable lightdm
 fi
 
 if [[ "${OS}" == "debian" ]]; then

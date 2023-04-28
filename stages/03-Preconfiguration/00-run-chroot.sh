@@ -23,9 +23,10 @@ fi
 cd /opt/additionalFiles
 cp motd /etc/motd
 
- if [[ "${OS}" == "radxa-ubuntu" ]] ; then
+ if [[ "${OS}" == "radxa-ubuntu" ]] || [[ "${OS}" == "radxa-debian" ]]; then
     touch /boot/openhd/rock5.txt
     rm -Rf /lib/modules/5.10.66-27-rockchip-gea60d388902d/kernel/drivers/net/wireless/realtek
+    rm -Rf /lib/modules/5.10.110-5-rockchip/kernel/drivers/net/wireless/realtek
     mv /etc/motd /etc/motd2
     cp /opt/additionalFiles/motd2 /etc/motd
     mkdir -p /boot/openhd/
@@ -36,6 +37,8 @@ cp motd /etc/motd
     rm /boot/openhd/config.txt
     cp /opt/additionalFiles/before.txt /boot/openhd/before.txt
     cp /opt/additionalFiles/config.txt /boot/openhd/config.txt
+    mv /boot/dtbo/rock-5a-radxa-camera-4k.dtbo.disabled /boot/dtbo/rock-5a-radxa-camera-4k.dtbo
+    sudo sed -i 's/rock-5a-radxa-display-8hd.dtbo/rock-5a-radxa-camera-4k.dtbo/g' /boot/extlinux/extlinux.conf
 
 
     #FIXING DISPLAY DETECTION to 1080/60hz

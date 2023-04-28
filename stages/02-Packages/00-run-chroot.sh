@@ -21,6 +21,10 @@ function install_radxa-ubuntu_packages {
     PLATFORM_PACKAGES_HOLD="u-boot-rock-5b linux-image-5.10.110-1-rockchip linux-headers-5.10.110-1-rockchip initramfs-tools"
     PLATFORM_PACKAGES="qopenhd rtl8812au-autocompiler fan-control-rock5b procps"
 }
+function install_radxa-debian_packages {
+    PLATFORM_PACKAGES_HOLD="8852be-dkms linux-image-5.10.110-5-rockchip linux-headers-5.10.110-5-rockchip initramfs-tools linux-headers-rock-5a radxa-firmware linux-image-rock-5a"
+    PLATFORM_PACKAGES="qopenhd rtl8812au-autocompiler procps camera-engine-rkaiq"
+}
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
         if [[ "${DISTRO}" == "jammy" ]]; then
@@ -62,6 +66,8 @@ function clone_github_repos {
     install_raspbian_packages
  elif [[ "${OS}" == "radxa-ubuntu" ]] ; then
     install_radxa-ubuntu_packages
+ elif [[ "${OS}" == "radxa-debian" ]] ; then
+    install_radxa-debian_packages
  elif [[ "${OS}" == "ubuntu-x86" ]] ; then
     install_ubuntu_x86_packages
  elif [[ "${OS}" == "ubuntu" ]] ; then
