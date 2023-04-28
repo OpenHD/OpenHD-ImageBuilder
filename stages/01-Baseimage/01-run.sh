@@ -19,7 +19,7 @@ pushd ${STAGE_WORK_DIR}
     echo "bytes"
     ls -l
 
-if [[ "${DIFFERENCE}" < 2147483648 ]]; then
+if [[ "${DIFFERENCE}" < 27483648 ]]; then
 
     log "Create empty image" #this will be attached to the base image to increase the size of it
     dd if=/dev/zero of=temp.img bs=1 count=1 seek=$DIFFERENCE
