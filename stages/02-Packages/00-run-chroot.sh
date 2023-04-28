@@ -23,6 +23,7 @@ function install_radxa-ubuntu_packages {
 }
 function install_radxa-debian_packages {
     PLATFORM_PACKAGES_HOLD="8852be-dkms linux-image-5.10.110-5-rockchip linux-headers-5.10.110-5-rockchip initramfs-tools linux-headers-rock-5a radxa-firmware linux-image-rock-5a"
+    PLATFORM_PACKAGES_REMOVE="lightdm"
     PLATFORM_PACKAGES="qopenhd rtl8812au-autocompiler procps camera-engine-rkaiq"
 }
 # Ubuntu-x86-specific code
