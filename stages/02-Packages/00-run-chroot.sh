@@ -18,6 +18,7 @@ function install_raspbian_packages {
 }
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 8065BE1FC67AABDE
     echo "deb https://ppa.launchpadcontent.net/liujianfeng1994/rockchip-multimedia/ubuntu jammy main" | sudo tee /etc/apt/sources.list.d/mylist.list
     echo "deb-src https://ppa.launchpadcontent.net/liujianfeng1994/rockchip-multimedia/ubuntu jammy main" | sudo tee -a /etc/apt/sources.list.d/mylist.list
     PLATFORM_PACKAGES_HOLD="u-boot-rock-5b linux-image-5.10.110-1-rockchip linux-headers-5.10.110-1-rockchip initramfs-tools"
