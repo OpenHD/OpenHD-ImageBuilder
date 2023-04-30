@@ -18,7 +18,6 @@ function install_raspbian_packages {
 }
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
-    dpkg -l | grep linux
     PLATFORM_PACKAGES_HOLD="u-boot-rock-5b linux-image-5.10.110-1-rockchip linux-headers-5.10.110-1-rockchip initramfs-tools"
     PLATFORM_PACKAGES="rsync camera-engine-rkaiq gstreamer1.0-rockchip1 qopenhd rtl8812au-autocompiler fan-control-rock5b procps"
 }

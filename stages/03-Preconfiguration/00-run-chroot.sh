@@ -38,6 +38,7 @@ cp motd /etc/motd
     cp /opt/additionalFiles/before.txt /boot/openhd/before.txt
     cp /opt/additionalFiles/config.txt /boot/openhd/config.txt
     mv /boot/dtbo/rock-5a-radxa-camera-4k.dtbo.disabled /boot/dtbo/rock-5a-radxa-camera-4k.dtbo
+    mv /boot/dtbo/rock-5b-radxa-camera-4k.dtbo.disabled /boot/dtbo/rock-5b-radxa-camera-4k.dtbo
     sudo sed -i 's/rock-5a-radxa-display-8hd.dtbo/rock-5a-radxa-camera-4k.dtbo/g' /boot/extlinux/extlinux.conf
 
 
