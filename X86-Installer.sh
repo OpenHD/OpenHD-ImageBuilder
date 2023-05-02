@@ -12,6 +12,8 @@ echo ""
 
 prepareOpenHD()
 {
+	mkdir -p /opt/X86
+	cp * /opt/X86/
 	apt update 
 	apt install -y git dkms curl
 	mkdir -p /boot/openhd/
