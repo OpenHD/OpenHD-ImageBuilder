@@ -15,7 +15,6 @@ prepareOpenHD()
 	mkdir -p /opt/X86
 	mv * /opt/X86/
 	apt update 
-	apt install -y git dkms curl
 	mkdir -p /boot/openhd/
 	touch /boot/openhd/x86.txt
 	touch /boot/openhd/ground.txt
@@ -56,6 +55,7 @@ echo "Installed RTL8812BU"
 }
 installOpenHDRepositories()
 {
+apt install -y git dkms curl
 curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-3-evo/setup.deb.sh'	| sudo -E bash
 echo "Cloned Qopenhd and Openhd github repositories"
 }
