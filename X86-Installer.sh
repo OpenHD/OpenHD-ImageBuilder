@@ -26,7 +26,7 @@ prepareOpenHD()
 }
 installShortcuts()
 {
-	cd /opt/X86/OpenHD-ImageBuilder
+	cd /opt/X86/
 	cp additionalFiles/desktop-truster.sh /etc/profile.d/desktop-truster.sh
 	chmod +777 /etc/profile.d/desktop-truster.sh
 	chmod a+x  /etc/profile.d/desktop-truster.sh
