@@ -75,7 +75,7 @@ cleanup()
 {
 rm -Rf /opt/X86
 echo "Installer finished"
-echo "Installer please reboot"
+echo "Please reboot now"
 }
 
 #Main Setup
