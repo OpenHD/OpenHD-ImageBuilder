@@ -13,12 +13,10 @@ echo ""
 prepareOpenHD()
 {
 	mkdir -p /opt/X86
-	mv * /opt/X86/
-	
+	cp -r * /opt/X86/
 	current_dir=$(pwd)
 	cd ..
 	rm -Rf $current_dir
-	
 	apt update 
 	mkdir -p /boot/openhd/
 	touch /boot/openhd/x86.txt
