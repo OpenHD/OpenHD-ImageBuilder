@@ -13,7 +13,7 @@ echo ""
 prepareOpenHD()
 {
 	mkdir -p /opt/X86
-	cp -r * /opt/X86/
+	cp -rv * /opt/X86/
 	current_dir=$(pwd)
 	cd ..
 	rm -Rf $current_dir
