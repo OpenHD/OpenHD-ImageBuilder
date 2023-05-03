@@ -23,11 +23,8 @@ prepareOpenHD()
 }
 installShortcuts()
 {
-cd OpenHD-ImageBuilder
-	cd /opt/X86
-	rm -Rf *
-	git clone https://github.com/OpenHD/OpenHD-ImageBuilder
-	cp desktop-truster.sh /etc/profile.d/desktop-truster.sh
+	cd /opt/X86/OpenHD-ImageBuilder
+	cp additionalFiles/desktop-truster.sh /etc/profile.d/desktop-truster.sh
 	chmod +777 /etc/profile.d/desktop-truster.sh
 	chmod a+x  /etc/profile.d/desktop-truster.sh
 	chmod a+x  shortcuts/OpenHD-Air.desktop
@@ -66,6 +63,10 @@ sudo apt install -y openhd qopenhd open-hd-web-ui
 systemctl disable openhd
 systemctl disable qopenhd
 }
+cleanup()
+{
+rm -Rf /opt/X86
+}
 
 #Main Setup
 
@@ -80,3 +81,4 @@ installRtl8812au
 installRtl8812bu
 installOpenHD
 installShortcuts
+cleanup
