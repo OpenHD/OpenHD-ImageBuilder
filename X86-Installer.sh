@@ -33,7 +33,7 @@ installShortcuts()
 	chmod a+x  shortcuts/OpenHD-Air.desktop
 	chmod a+x  shortcuts/OpenHD-Ground.desktop
 	chmod a+x  shortcuts/QOpenHD.desktop
-	for homedir in /home/*; do sudo cp shortcuts/*.desktop "$homedir"; done
+	for homedir in /home/*; do sudo cp shortcuts/*.desktop "$homedir"/Desktop/; done
 	for homedir in /home/*; do gio set /home/$homedir/Desktop/OpenHD-Air.desktop metadata::trusted true; done
 	for homedir in /home/*; do gio set /home/$homedir/Desktop/OpenHD-Ground.desktop metadata::trusted true; done
 	for homedir in /home/*; do gio set /home/$homedir/Desktop/QOpenHD.desktop metadata::trusted true; done
@@ -76,9 +76,7 @@ echo "Installer finished"
 #Main Setup
 
 if [ "$(id -u)" -ne 0 ]; then
-  echo "Installing OpenHD"
-else
-  echo "This script must be run as user. Aborting."
+  echo "This script must be run as root. Aborting."
   exit 1
 fi
 
