@@ -14,6 +14,7 @@ prepareOpenHD()
 {
 	mkdir -p /opt/X86
 	mv * /opt/X86/
+	echo "debug"
 	rm -r .
 	apt update 
 	mkdir -p /boot/openhd/
