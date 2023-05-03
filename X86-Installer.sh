@@ -76,7 +76,9 @@ echo "Installer finished"
 #Main Setup
 
 if [ "$(id -u)" -ne 0 ]; then
-  echo "This script must be run as root. Aborting."
+  echo "Installing OpenHD"
+else
+  echo "This script must be run as user. Aborting."
   exit 1
 fi
 
