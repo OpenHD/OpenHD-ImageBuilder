@@ -34,6 +34,7 @@ installShortcuts()
 	for homedir in /home/*; do gio set /home/$homedir/Desktop/OpenHD-Air.desktop metadata::trusted true; done
 	for homedir in /home/*; do gio set /home/$homedir/Desktop/OpenHD-Ground.desktop metadata::trusted true; done
 	for homedir in /home/*; do gio set /home/$homedir/Desktop/QOpenHD.desktop metadata::trusted true; done
+	echo "Service and GIO ERRORS CAN BE IGNORED"
 	sudo cp shortcuts/* /usr/share/applications/
 	sudo cp shortcuts/OpenHD.ico /opt/
 }
@@ -66,6 +67,7 @@ systemctl disable qopenhd
 cleanup()
 {
 rm -Rf /opt/X86
+echo "Installer finished"
 }
 
 #Main Setup
