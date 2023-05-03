@@ -13,8 +13,10 @@ echo ""
 prepareOpenHD()
 {
 	mkdir -p /opt/X86
-	mv * /opt/X86/
-	rm -r .
+	cp -rv * /opt/X86/
+	current_dir=$(pwd)
+	cd ..
+	rm -Rf $current_dir
 	apt update 
 	mkdir -p /boot/openhd/
 	touch /boot/openhd/x86.txt
@@ -24,14 +26,18 @@ prepareOpenHD()
 }
 installShortcuts()
 {
-	cd /opt/X86/OpenHD-ImageBuilder
+	cd /opt/X86/
 	cp additionalFiles/desktop-truster.sh /etc/profile.d/desktop-truster.sh
 	chmod +777 /etc/profile.d/desktop-truster.sh
 	chmod a+x  /etc/profile.d/desktop-truster.sh
 	chmod a+x  shortcuts/OpenHD-Air.desktop
 	chmod a+x  shortcuts/OpenHD-Ground.desktop
 	chmod a+x  shortcuts/QOpenHD.desktop
-	for homedir in /home/*; do sudo cp shortcuts/*.desktop "$homedir"; done
+	rm -Rf shortcuts/MissionPlanner.desktop
+	rm -Rf shortcuts/INAV.desktop
+	rm -Rf shortcuts/qgroundcontrol.desktop
+	rm -Rf shortcuts/OpenHD-ImageWriter.desktop
+	for homedir in /home/*; do sudo cp shortcuts/*.desktop "$homedir"/Desktop/; done
 	for homedir in /home/*; do gio set /home/$homedir/Desktop/OpenHD-Air.desktop metadata::trusted true; done
 	for homedir in /home/*; do gio set /home/$homedir/Desktop/OpenHD-Ground.desktop metadata::trusted true; done
 	for homedir in /home/*; do gio set /home/$homedir/Desktop/QOpenHD.desktop metadata::trusted true; done
@@ -69,6 +75,7 @@ cleanup()
 {
 rm -Rf /opt/X86
 echo "Installer finished"
+echo "Installer please reboot"
 }
 
 #Main Setup
