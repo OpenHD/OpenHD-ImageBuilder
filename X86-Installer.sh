@@ -33,6 +33,10 @@ installShortcuts()
 	chmod a+x  shortcuts/OpenHD-Air.desktop
 	chmod a+x  shortcuts/OpenHD-Ground.desktop
 	chmod a+x  shortcuts/QOpenHD.desktop
+	rm -Rf shortcuts/MissionPlanner.desktop
+	rm -Rf shortcuts/INAV.desktop
+	rm -Rf shortcuts/qgroundcontrol.desktop
+	rm -Rf shortcuts/OpenHD-ImageWriter.desktop
 	for homedir in /home/*; do sudo cp shortcuts/*.desktop "$homedir"/Desktop/; done
 	for homedir in /home/*; do gio set /home/$homedir/Desktop/OpenHD-Air.desktop metadata::trusted true; done
 	for homedir in /home/*; do gio set /home/$homedir/Desktop/OpenHD-Ground.desktop metadata::trusted true; done
@@ -71,6 +75,7 @@ cleanup()
 {
 rm -Rf /opt/X86
 echo "Installer finished"
+echo "Installer please reboot"
 }
 
 #Main Setup
