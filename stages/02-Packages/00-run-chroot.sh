@@ -13,7 +13,7 @@ BASE_PACKAGES="openhd git apt-transport-https apt-utils open-hd-web-ui"
 # Raspbian-specific code
 function install_raspbian_packages {
     PLATFORM_PACKAGES_REMOVE="nfs-common libcamera*"
-    PLATFORM_PACKAGES="firmware-atheros firmware-misc-nonfree openhd-userland rtl8812au-autocompiler libcamera-openhd libcamera-apps-openhd openhd-qt qopenhd openssh-server"
+    PLATFORM_PACKAGES="firmware-atheros firmware-misc-nonfree openhd-userland libcamera-openhd libcamera-apps-openhd openhd-qt qopenhd openssh-server"
 }
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
