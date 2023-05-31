@@ -1,6 +1,6 @@
 BASE_IMAGE_URL="https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2023-05-03/"
 BASE_IMAGE="2023-05-03-raspios-bullseye-armhf-lite.img.xz"
-BASE_IMAGE_SHA256="b5e3a1d984a7eaa402a6e078d707b506b962f6804d331dcc0daa61debae3a19a  "
+BASE_IMAGE_SHA256="b5e3a1d984a7eaa402a6e078d707b506b962f6804d331dcc0daa61debae3a19a"
 OS="raspbian"
 DISTRO="bullseye"
 HAVE_BOOT_PART=true
