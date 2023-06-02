@@ -1,6 +1,6 @@
 BASE_IMAGE_URL="https://openhd-images.fra1.cdn.digitaloceanspaces.com/BaseImages"
 BASE_IMAGE="OpenHD-image-x86-jammy-testing--x86-base-resize-2023-03-23_1902.img.xz"
-BASE_IMAGE_SHA256="3827f10f2f3858429a0ddfe3e460d3b31b92194c734c069d7a64cea3d542aae9"
+BASE_IMAGE_SHA256="4bd10c2821d3964c94476f34d1ba80a5e21d9d97073bd4d250d440c42f127e8f"
 OS="ubuntu-x86"
 DISTRO="jammy"
 HAVE_BOOT_PART=false
