@@ -3,6 +3,6 @@ Encoding=UTF-8
 Version=1.0
 Type=Application
 Terminal=false
-Exec=gnome-terminal -e "bash -c 'sudo QOpenHD'"
+Exec=bash -c 'if [ -f /boot/openhd/ground.txt ]; then sudo QOpenHD; else echo "File /boot/openhd/ground.txt not found"; fi'
 Name=QOpenHD
 Icon=/opt/OpenHD.ico

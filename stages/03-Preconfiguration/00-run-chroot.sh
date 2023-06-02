@@ -118,7 +118,8 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        mkdir -p /boot/openhd/
        git clone https://github.com/OpenHD/OpenHD-ImageBuilder
        cd OpenHD-ImageBuilder
-       chmod a+x  shortcuts/OpenHD.desktop
+       chmod a+x  additionalFiles/OpenHD.desktop
+       chmod a+x  additionalFiles/QOpenHD.desktop
        chmod a+x  shortcuts/OpenHD-Air.desktop
        chmod a+x  shortcuts/OpenHD-Ground.desktop
        chmod a+x  shortcuts/QOpenHD.desktop
@@ -127,6 +128,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        chmod a+x  shortcuts/qgroundcontrol.desktop
        chmod a+x  shortcuts/OpenHD-ImageWriter.desktop
        sudo cp additionalFiles/OpenHD.desktop /etc/xdg/autostart/
+       sudo cp additionalFiles/QOpenHD.desktop /etc/xdg/autostart/
        sudo cp shortcuts/* /usr/share/applications/
        sudo cp shortcuts/*.desktop /home/openhd/Desktop/
        sudo cp shortcuts/*.ico /opt/
