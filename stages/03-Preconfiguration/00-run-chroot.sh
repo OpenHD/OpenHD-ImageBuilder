@@ -115,8 +115,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        cp /opt/additionalFiles/desktop-truster.sh /etc/profile.d/desktop-truster.sh
        #this script needs to be executable by every user
        chmod +777 /etc/profile.d/desktop-truster.sh
-       mkdir -p /boot/openhd/
-       git clone https://github.com/OpenHD/OpenHD-ImageBuilder
+       git clone https://github.com/OpenHD/OpenHD-ImageBuilder --branch 2.4-evo
        cd OpenHD-ImageBuilder
        chmod a+x  shortcuts/OpenHD.desktop
        chmod a+x  shortcuts/QOpenHD2.desktop
@@ -161,7 +160,8 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        chown openhd:openhd QGroundControl.AppImage
        mkdir -p /boot/openhd_old
        sudo mv -v /boot/openhd/* /boot/openhd_old/
-       touch /boot/openhd/resize
+       sudo echo -e "UUID=099D-7546\t/boot/openhd\tvfat\tumask=0000\t0\t1" | sudo tee -a /etc/fstab
+
 fi
 
 #Install Update-Service
