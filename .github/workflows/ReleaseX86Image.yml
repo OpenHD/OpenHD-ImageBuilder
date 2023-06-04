@@ -142,6 +142,15 @@ jobs:
         export DOWNLOADSIZE=$(wc -c *.xz | cut -f 1 -d " ")
         export SUM=$(cat sha256)
         export RELEASEDATE=$(date +%Y-%m-%d)
+        
+        echo "Debug Info"
+        cat last.release
+        echo env.SIZEFULL
+        echo env.NAME
+        wc -c *.xz | cut -f 1 -d " "
+        cat sha256
+        echo date +%Y-%m-%d
+
 
         sed -i "s/RELEASENAMEx86/$NAME/ig" os_list_imagingutility_v3_x86.json
         sed -i "s/FILENAMEx86/$FILENAME/ig" os_list_imagingutility_v3_x86.json       

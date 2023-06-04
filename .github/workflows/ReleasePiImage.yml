@@ -146,6 +146,13 @@ jobs:
         echo "$DOWNLOADSIZE" >> rpi_DOWNLOADSIZE.txt
         echo "$SUM" >> rpi_SUM.txt
         echo "$RELEASEDATE" >> rpi_RELEASEDATE.txt
+        echo "Debug Info"
+        cat last.release
+        echo env.SIZEFULL
+        echo env.NAME
+        wc -c *.xz | cut -f 1 -d " "
+        cat sha256
+        echo date +%Y-%m-%d
         sed -i "s/RELEASENAMErpi/$NAME/ig" os_list_imagingutility_v3_rpi.json
         sed -i "s/FILENAMErpi/$FILENAME/ig" os_list_imagingutility_v3_rpi.json       
         sed -i "s/FILESIZErpi/$FILESIZE/ig" os_list_imagingutility_v3_rpi.json       
