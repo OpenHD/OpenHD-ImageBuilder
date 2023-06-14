@@ -1,6 +1,6 @@
 BASE_IMAGE_URL="https://github.com/radxa-build/rock-5b/releases/download/b33/"
 BASE_IMAGE="rock-5b_ubuntu_jammy_cli_b33.img.xz"
-BASE_IMAGE_SHA256="93a9c70866f6c1b51061cf1e7c6c822214d141c9cd398409eb61f3fd60835464"
+BASE_IMAGE_SHA256="fe063f5c18f4d6ab3a1a70491f53623f911dec1cedfa8367960daf78cbc89b56"
 OS="radxa-ubuntu"
 DISTRO="jammy"
 HAVE_BOOT_PART=false
