@@ -42,22 +42,22 @@ cp motd /etc/motd
     sudo sed -i 's/rock-5a-radxa-display-8hd.dtbo/rock-5a-radxa-camera-4k.dtbo/g' /boot/extlinux/extlinux.conf
 
 
-    #FIXING DISPLAY DETECTION to 1080/60hz
-        # Search for lines containing "append" in the extlinux.conf file
-        lines=$(grep -n "append" /boot/extlinux/extlinux.conf | cut -d':' -f1)
+    # #FIXING DISPLAY DETECTION to 1080/60hz
+    #     # Search for lines containing "append" in the extlinux.conf file
+    #     lines=$(grep -n "append" /boot/extlinux/extlinux.conf | cut -d':' -f1)
 
-        # Loop through each line number and check for the presence of "video"
-        for line in $lines
-        do
-            if grep -n "video" /boot/extlinux/extlinux.conf | cut -d: -f1 | grep -q $line
-            then
-                echo "Line $line: video already present"
-            else
-                # Add "video" to the end of the line
-                sed -i "${line}s/$/ video=1920x1080@60/" /boot/extlinux/extlinux.conf
-                echo "Line $line: video added"
-            fi
-        done
+    #     # Loop through each line number and check for the presence of "video"
+    #     for line in $lines
+    #     do
+    #         if grep -n "video" /boot/extlinux/extlinux.conf | cut -d: -f1 | grep -q $line
+    #         then
+    #             echo "Line $line: video already present"
+    #         else
+    #             # Add "video" to the end of the line
+    #             sed -i "${line}s/$/ video=1920x1080@60/" /boot/extlinux/extlinux.conf
+    #             echo "Line $line: video added"
+    #         fi
+    #     done
  
     #Enable Radxa-4K-camera-Overlay
     kernel_versions=$(grep -o 'fdtdir' /boot/extlinux/extlinux.conf | wc -l)
