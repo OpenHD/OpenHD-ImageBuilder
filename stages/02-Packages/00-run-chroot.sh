@@ -14,12 +14,12 @@ BASE_PACKAGES="openhd git apt-transport-https apt-utils open-hd-web-ui"
 function install_raspbian_packages {
     PLATFORM_PACKAGES_HOLD="raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc raspberrypi-bootloader"
     PLATFORM_PACKAGES_REMOVE="nfs-common libcamera* raspberrypi-kernel"
-    PLATFORM_PACKAGES="firmware-atheros firmware-misc-nonfree openhd-userland openhd-linux-pi openhd-linux-pi-headers libcamera-openhd libcamera-apps-openhd openhd-qt qopenhd openssh-server"
+    PLATFORM_PACKAGES="firmware-atheros firmware-misc-nonfree openhd-userland openhd-linux-pi openhd-linux-pi-headers libcamera-openhd openhd-qt qopenhd openssh-server"
 }
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
-    PLATFORM_PACKAGES_HOLD="u-boot-rock-5b linux-image-5.10.110-1-rockchip linux-headers-5.10.110-1-rockchip initramfs-tools"
-    PLATFORM_PACKAGES="rsync gstreamer1.0-rockchip1 qopenhd rtl8812au-autocompiler fan-control-rock5b procps"
+    PLATFORM_PACKAGES_HOLD="u-boot-rock-5b linux-image-5.10.110-8-rockchip linux-headers-5.10.110-8-rockchip initramfs-tools"
+    PLATFORM_PACKAGES="rsync camera-engine-rkaiq gstreamer1.0-rockchip1 qopenhd rtl8812au-autocompiler fan-control-rock5b procps"
 }
 function install_radxa-debian_packages {
     PLATFORM_PACKAGES_HOLD="8852be-dkms linux-image-5.10.110-5-rockchip linux-headers-5.10.110-5-rockchip initramfs-tools linux-headers-rock-5a radxa-firmware linux-image-rock-5a"
@@ -29,7 +29,7 @@ function install_radxa-debian_packages {
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
         if [[ "${DISTRO}" == "jammy" ]]; then
-        PLATFORM_PACKAGES_HOLD="linux-image-5.15.0-57-generic grub-efi-amd64-signed linux-generic linux-headers-generic linux-image-generic linux-generic-hwe-22.04 linux-image-generic-hwe-22.04 linux-headers-generic-hwe-22.04"
+        PLATFORM_PACKAGES_HOLD="grub-pc linux-image-5.15.0-57-generic grub-efi-amd64-signed linux-generic linux-headers-generic linux-image-generic linux-generic-hwe-22.04 linux-image-generic-hwe-22.04 linux-headers-generic-hwe-22.04"
         else
         PLATFORM_PACKAGES_HOLD=""
         fi
