@@ -38,12 +38,10 @@ if [[ "${OS}" != "ubuntu" ]] || [[ "${OS}" != "ubuntu-x86" ]]; then
 fi
 
 if [[ "${OS}" == "radxa-ubuntu" ]] ; then
-       systemctl enable fan-control
        systemctl disable openhd
 fi
 
 if [[ "${OS}" == "radxa-ubuntu" ]] || [[ "${OS}" == "radxa-debian" ]] ; then
-       systemctl enable fan-control
        systemctl disable openhd
        systemctl disable lightdm
 fi
