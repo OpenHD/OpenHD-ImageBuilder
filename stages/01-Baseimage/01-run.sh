@@ -4,7 +4,7 @@ pushd ${STAGE_WORK_DIR}
 
     #Makes the images flashable with raspberry pi imager
     log "We now define the size to be ~15GB (the maximum size we have in our github builder, this doesn't affect the output image because we're resizeing it in the end before uploading the image)" 
-    if [[ "${OS}" == radxa-ubuntu ]] || [[ "${OS}" == radxa-debian ]] ; then
+    if [[ "${OS}" == radxa ]] || [[ "${OS}" == radxa-debian ]] ; then
     WANTEDSIZE="6500000256"
     else
     WANTEDSIZE="16500000256"
