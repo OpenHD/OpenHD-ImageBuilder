@@ -18,7 +18,7 @@ function install_raspbian_packages {
 }
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
-    PLATFORM_PACKAGES="rsync qopenhd rtl8812au-autocompiler procps"
+    PLATFORM_PACKAGES="rsync qopenhd rtl8812au-autocompiler dkms procps"
 }
 function install_radxa-debian_packages {
     PLATFORM_PACKAGES_HOLD="8852be-dkms linux-image-5.10.110-5-rockchip linux-headers-5.10.110-5-rockchip initramfs-tools linux-headers-rock-5a radxa-firmware linux-image-rock-5a"
