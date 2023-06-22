@@ -18,7 +18,6 @@ function install_raspbian_packages {
 }
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
-    PLATFORM_PACKAGES_REMOVE="gdm3 ubiquity"
     PLATFORM_PACKAGES="rsync qopenhd rtl8812au-autocompiler procps"
 }
 function install_radxa-debian_packages {
