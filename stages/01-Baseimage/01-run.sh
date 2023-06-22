@@ -62,6 +62,4 @@ ${ROOT_OFFSET}
 w
 EOF
 
-    fi
-
 popd
