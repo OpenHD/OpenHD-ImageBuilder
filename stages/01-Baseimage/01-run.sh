@@ -27,13 +27,13 @@ pushd ${STAGE_WORK_DIR}
     log "Enlarge the downloaded image"
     cat temp.img >> IMAGE.img
 
-    if [[ "${OS}" == radxa-ubuntu ]] || [[ "${OS}" == radxa-debian ]] ; then
-    echo "resize with parted"
-    #fixing bad partition table
-    echo -e "x\ne\nd\nn\n\n\n\n\nw\ny\n" | sudo gdisk IMAGE.img
-    sudo parted -s IMAGE.img resizepart 2 100%
-    sudo gdisk -l IMAGE.img
-    else
+    # if [[ "${OS}" == radxa-ubuntu ]] || [[ "${OS}" == radxa-debian ]] ; then
+    # echo "resize with parted"
+    # #fixing bad partition table
+    # echo -e "x\ne\nd\nn\n\n\n\n\nw\ny\n" | sudo gdisk IMAGE.img
+    # sudo parted -s IMAGE.img resizepart 2 100%
+    # sudo gdisk -l IMAGE.img
+    # else
 
     log "fdisk magic to enlarge the main partition"
     #calculating image offsets
