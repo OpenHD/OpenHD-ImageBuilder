@@ -1,6 +1,6 @@
-BASE_IMAGE_URL="https://github.com/radxa-build/rock-5b/releases/download/b33/"
-BASE_IMAGE="rock-5b_ubuntu_jammy_cli_b33.img.xz"
-BASE_IMAGE_SHA256="fe063f5c18f4d6ab3a1a70491f53623f911dec1cedfa8367960daf78cbc89b56"
+BASE_IMAGE_URL="https://openhd-images.fra1.cdn.digitaloceanspaces.com/BaseImages"
+BASE_IMAGE="ubuntu-22.04.2-preinstalled-desktop-arm64-rock5b.img.xz"
+BASE_IMAGE_SHA256="0f9050a9b4f8b85ed6adcd125c9c94d43988f1b86c3a369cdd377c015f931c47"
 OS="radxa-ubuntu"
 DISTRO="jammy"
 HAVE_BOOT_PART=false
