@@ -1,11 +1,10 @@
-BASE_IMAGE_URL="https://github.com/radxa-build/rock-5a/releases/download/b15/"
-BASE_IMAGE="rock-5a_debian_bullseye_xfce_b15.img.xz"
-BASE_IMAGE_SHA256="477e48b40425b828046494a6cd2b2aeb453af945d8fee06adbc45c9c87454926"
-OS="radxa-debian"
-DISTRO="bullseye"
+BASE_IMAGE_URL="https://openhd-images.fra1.cdn.digitaloceanspaces.com/BaseImages"
+BASE_IMAGE="ubuntu-22.04.2-preinstalled-desktop-arm64-rock5a.img.xz"
+BASE_IMAGE_SHA256="0f9050a9b4f8b85ed6adcd125c9c94d43988f1b86c3a369cdd377c015f931c47"
+OS="radxa-ubuntu"
+DISTRO="jammy"
 HAVE_BOOT_PART=false
 HAVE_CONF_PART=true
 ROOT_PART=2
 BOOT_PART=1
 BIT="64"
-BUILDSIZE_UNRESIZED="15000000256"

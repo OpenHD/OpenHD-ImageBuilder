@@ -13,7 +13,7 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TESTING: [release]
-        TARGET: [rock5b] # <-- Add targets here!
+        TARGET: [rock5b, rock5a] # <-- Add targets here!
 
 
     steps:
