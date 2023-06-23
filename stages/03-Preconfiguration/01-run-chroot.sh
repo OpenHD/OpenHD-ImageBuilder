@@ -37,8 +37,10 @@ if [[ "${OS}" != "ubuntu" ]] || [[ "${OS}" != "ubuntu-x86" ]]; then
     sudo systemctl disable systemd-journal-flush.service
 fi
 
-if [[ "${OS}" == "radxa-ubuntu" ]] ; then
+if [[ "${OS}" == "radxa" ]] ; then
        systemctl disable openhd
+       systemctl disable lightdm
+
 fi
 
 if [[ "${OS}" == "radxa-ubuntu" ]] || [[ "${OS}" == "radxa-debian" ]] ; then
