@@ -2,9 +2,7 @@ name: Image build on event
 
 on:
   push:
-    branches: [ "2.4-evo" ]
-    paths-ignore:
-      - "last.releases"
+
 
 jobs:
   build:

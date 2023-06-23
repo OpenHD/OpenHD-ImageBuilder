@@ -23,7 +23,11 @@ fi
 cd /opt/additionalFiles
 cp motd /etc/motd
 
- if [[ "${OS}" == "radxa" ]] || [[ "${OS}" == "radxa-debian" ]]; then
+ if [[ "${OS}" == "radxa-ubuntu" ]] || [[ "${OS}" == "radxa-debian" ]]; then
+    systemctl disable gdm3
+    systemctl disable gdm
+    sudo systemctl set-default multi-user.target
+    echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo tee -a /etc/hosts
     touch /boot/openhd/rock5.txt
     rm -Rf /lib/modules/5.10.66-27-rockchip-gea60d388902d/kernel/drivers/net/wireless/realtek
     rm -Rf /lib/modules/5.10.110-5-rockchip/kernel/drivers/net/wireless/realtek

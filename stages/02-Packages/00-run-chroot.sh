@@ -17,13 +17,8 @@ function install_raspbian_packages {
     PLATFORM_PACKAGES="firmware-atheros firmware-misc-nonfree openhd-userland openhd-linux-pi openhd-linux-pi-headers libcamera-openhd openhd-qt qopenhd openssh-server"
 }
 # Ubuntu-Rockship-specific code
-function fix_radxa_apt {
-    wget -O - apt.radxa.com/bullseye-stable/public.key | apt-key add -
-    apt update
-}
-function install_radxa_packages {
-PLATFORM_PACKAGES_HOLD="linux-image-5.10.66-27-rockchip linux-5.10-rock-5-latest"
-    PLATFORM_PACKAGES="apt-transport-https git apt-utils openhd qopenhd rtl8812au-autocompiler procps git cmake dkms"
+function install_radxa-ubuntu_packages {
+    PLATFORM_PACKAGES="rsync qopenhd rtl8812au-autocompiler dkms procps"
 }
 function install_radxa-debian_packages {
     PLATFORM_PACKAGES_HOLD="8852be-dkms linux-image-5.10.110-5-rockchip linux-headers-5.10.110-5-rockchip initramfs-tools linux-headers-rock-5a radxa-firmware linux-image-rock-5a"
