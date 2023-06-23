@@ -78,3 +78,69 @@ jobs:
         path: |
           *.img
           if-no-files-found: error
+
+
+upload:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: "${{ env.artifact_name }}"
+    
+    - name: compress
+      run: |
+        ls -a
+        cd OpenHD*
+        sha256sum * | cut -f 1 -d " " > ../sha256
+        echo 'NAME<<EOF' >> $GITHUB_ENV
+        ls -1 | sed -e 's/.img/.img.xz/g' >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+        echo 'SIZEFULL<<EOF' >> $GITHUB_ENV
+        wc -c *.img | cut -f 1 -d " " >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+        xz -v7T0 *.img
+        ls -a
+        mv * ../
+        ls -a
+    - name: debug
+      run: |
+        echo "${{ env.NAME }}"    
+
+    - name: Upload to R2
+      shell: bash
+      env:
+        aws_endpoint: "https://fra1.digitaloceanspaces.com"
+        aws_key_id: ${{ secrets.DIGITALOCEAN_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.DIGITALOCEAN_SECRET_ACCESS_KEY }}
+        aws_s3_bucket: openhd-images
+        AWS_EC2_METADATA_DISABLED: true
+      run: |
+        aws configure set aws_access_key_id $aws_key_id
+        aws configure set aws_secret_access_key $aws_secret_access_key 
+        aws s3 --endpoint-url $aws_endpoint cp ${{ env.NAME }} s3://$aws_s3_bucket/Downloader/temp/${{ env.NAME }}
+
+  - name: generate variables for the ImageWriter
+      run: |
+        ls -a      
+        export NAME=$(cat last.release)
+        export FILESIZE=${{ env.SIZEFULL }}
+        export FILENAME=${{ env.NAME }}
+        export DOWNLOADSIZE=$(wc -c *.xz | cut -f 1 -d " ")
+        export SUM=$(cat sha256)
+        export RELEASEDATE=$(date +%Y-%m-%d)
+        echo "$NAME" >> ${{ matrix.TARGET }}_name.txt
+        echo "$FILESIZE" >> ${{ matrix.TARGET }}_FILESIZE.txt
+        echo "$FILENAME" >> ${{ matrix.TARGET }}_FILENAME.txt
+        echo "$DOWNLOADSIZE" >> ${{ matrix.TARGET }}_DOWNLOADSIZE.txt
+        echo "$SUM" >> ${{ matrix.TARGET }}_SUM.txt
+        echo "$RELEASEDATE" >> ${{ matrix.TARGET }}_RELEASEDATE.txt
+        echo "Debug Info"
+        cat last.release
+        echo env.SIZEFULL
+        echo env.NAME
+        wc -c *.xz | cut -f 1 -d " "
+        cat sha256
+        echo date +%Y-%m-%d
