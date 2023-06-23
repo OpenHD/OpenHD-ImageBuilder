@@ -122,7 +122,7 @@ upload:
         aws configure set aws_secret_access_key $aws_secret_access_key 
         aws s3 --endpoint-url $aws_endpoint cp ${{ env.NAME }} s3://$aws_s3_bucket/Downloader/temp/${{ env.NAME }}
 
-  - name: generate variables for the ImageWriter
+    - name: generate variables for the ImageWriter
       run: |
         ls -a      
         export NAME=$(cat last.release)
