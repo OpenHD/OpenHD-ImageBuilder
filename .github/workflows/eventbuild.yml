@@ -80,7 +80,7 @@ jobs:
           if-no-files-found: error
 
 
-upload:
+  upload:
     needs: build
     runs-on: ubuntu-latest
     steps:
