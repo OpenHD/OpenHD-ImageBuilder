@@ -103,6 +103,8 @@ jobs:
     - name: compress
       run: |
         ls -a
+        mkdir OpenHD
+        mv *.img OpenHD
         cd OpenHD*
         sha256sum * | cut -f 1 -d " " > ../sha256
         echo 'NAME<<EOF' >> $GITHUB_ENV
@@ -115,9 +117,6 @@ jobs:
         ls -a
         mv * ../
         ls -a
-    - name: debug
-      run: |
-        echo "${{ env.NAME }}"    
 
     - name: Upload to R2
       shell: bash
