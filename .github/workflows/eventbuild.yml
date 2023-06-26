@@ -153,3 +153,16 @@ jobs:
         wc -c *.xz | cut -f 1 -d " "
         cat sha256
         echo date +%Y-%m-%d
+
+    - name: Upload text-files
+      shell: bash
+      env:
+        aws_endpoint: "https://fra1.digitaloceanspaces.com"
+        aws_key_id: ${{ secrets.DIGITALOCEAN_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.DIGITALOCEAN_SECRET_ACCESS_KEY }}
+        aws_s3_bucket: openhd-images
+        AWS_EC2_METADATA_DISABLED: true
+      run: |
+        aws configure set aws_access_key_id $aws_key_id
+        aws configure set aws_secret_access_key $aws_secret_access_key 
+        aws s3 --endpoint-url $aws_endpoint cp * s3://$aws_s3_bucket/Downloader/temp/
