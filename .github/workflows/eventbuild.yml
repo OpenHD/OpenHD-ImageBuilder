@@ -85,6 +85,11 @@ jobs:
   upload:
     needs: build
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false # Don't fail all if any of the jobs is failing
+      matrix:
+        TESTING: [release]
+        TARGET: [pi-bullseye, x86-jammy, rock5b, rock5a] # <-- Add targets here!
     steps:
     - name: debug
       run: df -h
