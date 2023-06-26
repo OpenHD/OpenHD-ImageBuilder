@@ -140,12 +140,18 @@ jobs:
         export DOWNLOADSIZE=$(wc -c *.xz | cut -f 1 -d " ")
         export SUM=$(cat sha256)
         export RELEASEDATE=$(date +%Y-%m-%d)
-        echo "$NAME" >> ${{ matrix.TARGET }}_name.txt
-        echo "$FILESIZE" >> ${{ matrix.TARGET }}_FILESIZE.txt
-        echo "$FILENAME" >> ${{ matrix.TARGET }}_FILENAME.txt
-        echo "$DOWNLOADSIZE" >> ${{ matrix.TARGET }}_DOWNLOADSIZE.txt
-        echo "$SUM" >> ${{ matrix.TARGET }}_SUM.txt
-        echo "$RELEASEDATE" >> ${{ matrix.TARGET }}_RELEASEDATE.txt
+        echo "NAME" > ${{ matrix.TARGET }}.txt
+        echo "$NAME" > ${{ matrix.TARGET }}.txt
+        echo "FILESIZE" > ${{ matrix.TARGET }}.txt
+        echo "$FILESIZE" > ${{ matrix.TARGET }}.txt
+        echo "FILENAME" > ${{ matrix.TARGET }}.txt
+        echo "$FILENAME" > ${{ matrix.TARGET }}.txt
+        echo "DOWNLOADSIZE" > ${{ matrix.TARGET }}.txt
+        echo "$DOWNLOADSIZE" > ${{ matrix.TARGET }}.txt
+        echo "SUM" > ${{ matrix.TARGET }}.txt
+        echo "$SUM" > ${{ matrix.TARGET }}.txt
+        echo "RELEASEDATE" > ${{ matrix.TARGET }}.txt
+        echo "$RELEASEDATE" > ${{ matrix.TARGET }}.txt
         echo "Debug Info"
         cat last.release
         echo env.SIZEFULL
@@ -165,4 +171,4 @@ jobs:
       run: |
         aws configure set aws_access_key_id $aws_key_id
         aws configure set aws_secret_access_key $aws_secret_access_key 
-        aws s3 --endpoint-url $aws_endpoint cp * s3://$aws_s3_bucket/Downloader/temp/
+        aws s3 --endpoint-url $aws_endpoint cp ${{ matrix.TARGET }}.txt s3://$aws_s3_bucket/Downloader/temp/${{ env.NAME }}
