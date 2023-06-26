@@ -76,7 +76,7 @@ jobs:
     - name: Pack image for ${{ matrix.TARGET }}
       uses: 'actions/upload-artifact@v2'
       with:
-        name: "${{ env.artifact_name }}"
+        name: "${{ env.artifact_name }}-${{ matrix.TARGET }}"
         path: |
           *.img
           if-no-files-found: error
@@ -98,7 +98,7 @@ jobs:
 
     - uses: actions/download-artifact@v3
       with:
-        name: "${{ env.artifact_name }}"
+        name: "${{ env.artifact_name }}-${{ matrix.TARGET }}"
     
     - name: compress
       run: |
