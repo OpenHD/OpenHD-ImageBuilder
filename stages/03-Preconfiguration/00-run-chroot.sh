@@ -23,7 +23,7 @@ fi
 cd /opt/additionalFiles
 cp motd /etc/motd
 
- if [[ "${OS}" == "radxa-ubuntu" ]] || [[ "${OS}" == "radxa-debian" ]]; then
+ if [[ "${OS}" == "radxa-ubuntu-rock5a" ]] || [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
     systemctl disable gdm3
     systemctl disable gdm
     sudo systemctl set-default multi-user.target
@@ -41,11 +41,17 @@ cp motd /etc/motd
     rm /boot/openhd/config.txt
     cp /opt/additionalFiles/before.txt /boot/openhd/before.txt
     cp /opt/additionalFiles/config.txt /boot/openhd/config.txt
+    rock-5b-radxa-camera-4k
     #mv /boot/dtbo/rock-5a-radxa-camera-4k.dtbo.disabled /boot/dtbo/rock-5a-radxa-camera-4k.dtbo
     #mv /boot/dtbo/rock-5b-radxa-camera-4k.dtbo.disabled /boot/dtbo/rock-5b-radxa-camera-4k.dtbo
     #sudo sed -i 's/rock-5a-radxa-display-8hd.dtbo/rock-5a-radxa-camera-4k.dtbo/g' /boot/extlinux/extlinux.conf
 
-
+    if [[ "${OS}" == "radxa-ubuntu-rock5b" ]]
+        sed -i 's/\(overlays=\)/\1rock-5b-radxa-camera-4k/' /boot/firmware/ubuntuEnv.txt
+    fi
+    if [[ "${OS}" == "radxa-ubuntu-rock5a" ]]
+        sed -i 's/\(overlays=\)/\1rock-5a-radxa-camera-4k/' /boot/firmware/ubuntuEnv.txt
+    fi
     # #FIXING DISPLAY DETECTION to 1080/60hz
     #     # Search for lines containing "append" in the extlinux.conf file
     #     lines=$(grep -n "append" /boot/extlinux/extlinux.conf | cut -d':' -f1)

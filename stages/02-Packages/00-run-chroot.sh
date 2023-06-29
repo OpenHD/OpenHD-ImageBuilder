@@ -64,7 +64,7 @@ function clone_github_repos {
  
  if [[ "${OS}" == "raspbian" ]]; then
     install_raspbian_packages
- elif [[ "${OS}" == "radxa-ubuntu" ]] ; then
+ elif [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == radxa-ubuntu-rock5a ]] ; then
     install_radxa-ubuntu_packages
  elif [[ "${OS}" == "radxa-debian" ]] ; then
     install_radxa-debian_packages

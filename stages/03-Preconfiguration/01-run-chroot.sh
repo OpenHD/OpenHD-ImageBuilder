@@ -43,7 +43,7 @@ if [[ "${OS}" == "radxa" ]] ; then
 
 fi
 
-if [[ "${OS}" == "radxa-ubuntu" ]] || [[ "${OS}" == "radxa-debian" ]] ; then
+if [[ "${OS}" == "radxa-ubuntu-rock5a" ]] || [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]] ; then
        systemctl disable openhd
        systemctl disable lightdm
 fi

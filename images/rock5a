@@ -1,7 +1,7 @@
 BASE_IMAGE_URL="https://openhd-images.fra1.cdn.digitaloceanspaces.com/BaseImages"
 BASE_IMAGE="ubuntu-22.04.2-preinstalled-desktop-arm64-rock5a.img.xz"
 BASE_IMAGE_SHA256="d5eb017020396368439bb6ea2bcbf475704995aa5d6b58d5df3ebffa1e6ab032"
-OS="radxa-ubuntu"
+OS="radxa-ubuntu-rock5a"
 DISTRO="jammy"
 HAVE_BOOT_PART=false
 HAVE_CONF_PART=true
