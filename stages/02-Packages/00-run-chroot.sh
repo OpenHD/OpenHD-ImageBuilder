@@ -64,7 +64,8 @@ function clone_github_repos {
  
  if [[ "${OS}" == "raspbian" ]]; then
     install_raspbian_packages
- elif [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == radxa-ubuntu-rock5a ]] ; then
+ elif [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-ubuntu-rock5a" ]] ; then
+    sudo add-apt-repository -r "deb https://ppa.launchpadcontent.net/jjriek/rockchip/ubuntu jammy main"
     install_radxa-ubuntu_packages
  elif [[ "${OS}" == "radxa-debian" ]] ; then
     install_radxa-debian_packages
