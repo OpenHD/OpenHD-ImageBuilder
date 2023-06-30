@@ -45,11 +45,13 @@ cp motd /etc/motd
     #mv /boot/dtbo/rock-5a-radxa-camera-4k.dtbo.disabled /boot/dtbo/rock-5a-radxa-camera-4k.dtbo
     #mv /boot/dtbo/rock-5b-radxa-camera-4k.dtbo.disabled /boot/dtbo/rock-5b-radxa-camera-4k.dtbo
     #sudo sed -i 's/rock-5a-radxa-display-8hd.dtbo/rock-5a-radxa-camera-4k.dtbo/g' /boot/extlinux/extlinux.conf
-
+    fi
+    
     if [[ "${OS}" == "radxa-ubuntu-rock5b" ]]
         sed -i 's/\(overlays=\)/\1rock-5b-radxa-camera-4k/' /boot/firmware/ubuntuEnv.txt
         depmod -a
     fi
+
     if [[ "${OS}" == "radxa-ubuntu-rock5a" ]]
         sed -i 's/\(overlays=\)/\1rock-5a-radxa-camera-4k/' /boot/firmware/ubuntuEnv.txt
         depmod -a
@@ -96,8 +98,6 @@ cp motd /etc/motd
 #     done
 # done
 
-
- fi
 
  if [[ "${OS}" == "raspbian" ]] ; then
      touch /boot/openhd/rpi.txt
