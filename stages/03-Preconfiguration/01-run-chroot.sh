@@ -38,13 +38,11 @@ if [[ "${OS}" != "ubuntu" ]] || [[ "${OS}" != "ubuntu-x86" ]]; then
 fi
 
 if [[ "${OS}" == "radxa" ]] ; then
-       systemctl disable openhd
        systemctl disable lightdm
 
 fi
 
 if [[ "${OS}" == "radxa-ubuntu-rock5a" ]] || [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]] ; then
-       systemctl disable openhd
        systemctl disable lightdm
 fi
 
