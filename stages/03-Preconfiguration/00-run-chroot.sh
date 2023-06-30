@@ -24,10 +24,6 @@ if [[ "${OS}" == "radxa-ubuntu-rock5a" ]] || [[ "${OS}" == "radxa-ubuntu-rock5b"
     sudo systemctl set-default multi-user.target
     echo "$(hostname -I | cut -d' ' -f1) $(hostname)" | sudo tee -a /etc/hosts
     touch /boot/openhd/rock5.txt
-    rm -Rf /lib/modules/5.10.66-27-rockchip-gea60d388902d/kernel/drivers/net/wireless/realtek
-    rm -Rf /lib/modules/5.10.110-5-rockchip/kernel/drivers/net/wireless/realtek
-    mv /etc/motd /etc/motd2
-    cp /opt/additionalFiles/motd2 /etc/motd
     mkdir -p /boot/openhd/
     mkdir -p /etc/systemd/system/getty@tty1.service.d
     touch /boot/openhd/rock5.txt
@@ -36,7 +32,6 @@ if [[ "${OS}" == "radxa-ubuntu-rock5a" ]] || [[ "${OS}" == "radxa-ubuntu-rock5b"
     rm -Rf /boot/openhd/config.txt
     cp /opt/additionalFiles/before.txt /boot/openhd/before.txt
     cp /opt/additionalFiles/config.txt /boot/openhd/config.txt
-    rock-5b-radxa-camera-4k
 fi
 
 if [[ "${OS}" == "radxa-ubuntu-rock5b" ]]; then
