@@ -1,10 +1,5 @@
-# This runs in context if the image (CHROOT)
-# Any native compilation can be done here
-# Do not use log here, it will end up in the image
-# Here we create users and set our hostname and do additional platform stuff
-
 #!/bin/bash
-# create a use account that should be the same on all platforms
+# create a user account that should be the same on all platforms
 USERNAME="openhd"
 PASSWORD="openhd"
 
@@ -23,11 +18,11 @@ fi
 cd /opt/additionalFiles
 cp motd /etc/motd
 
- if [[ "${OS}" == "radxa-ubuntu-rock5a" ]] || [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
+if [[ "${OS}" == "radxa-ubuntu-rock5a" ]] || [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
     systemctl disable gdm3
     systemctl disable gdm
     sudo systemctl set-default multi-user.target
-    echo $(hostname -I | cut -d\  -f1) $(hostname) | sudo tee -a /etc/hosts
+    echo "$(hostname -I | cut -d' ' -f1) $(hostname)" | sudo tee -a /etc/hosts
     touch /boot/openhd/rock5.txt
     rm -Rf /lib/modules/5.10.66-27-rockchip-gea60d388902d/kernel/drivers/net/wireless/realtek
     rm -Rf /lib/modules/5.10.110-5-rockchip/kernel/drivers/net/wireless/realtek
@@ -37,25 +32,22 @@ cp motd /etc/motd
     mkdir -p /etc/systemd/system/getty@tty1.service.d
     touch /boot/openhd/rock5.txt
     touch /boot/openhd/ground.txt
-    rm /boot/openhd/before.txt
-    rm /boot/openhd/config.txt
+    rm -Rf /boot/openhd/before.txt
+    rm -Rf /boot/openhd/config.txt
     cp /opt/additionalFiles/before.txt /boot/openhd/before.txt
     cp /opt/additionalFiles/config.txt /boot/openhd/config.txt
     rock-5b-radxa-camera-4k
-    #mv /boot/dtbo/rock-5a-radxa-camera-4k.dtbo.disabled /boot/dtbo/rock-5a-radxa-camera-4k.dtbo
-    #mv /boot/dtbo/rock-5b-radxa-camera-4k.dtbo.disabled /boot/dtbo/rock-5b-radxa-camera-4k.dtbo
-    #sudo sed -i 's/rock-5a-radxa-display-8hd.dtbo/rock-5a-radxa-camera-4k.dtbo/g' /boot/extlinux/extlinux.conf
-    fi
-    
-    if [[ "${OS}" == "radxa-ubuntu-rock5b" ]]
-        sed -i 's/\(overlays=\)/\1rock-5b-radxa-camera-4k/' /boot/firmware/ubuntuEnv.txt
-        depmod -a
-    fi
+fi
 
-    if [[ "${OS}" == "radxa-ubuntu-rock5a" ]]
-        sed -i 's/\(overlays=\)/\1rock-5a-radxa-camera-4k/' /boot/firmware/ubuntuEnv.txt
-        depmod -a
-    fi
+if [[ "${OS}" == "radxa-ubuntu-rock5b" ]]; then
+    sed -i 's/\(overlays=\)/\1rock-5b-radxa-camera-4k/' /boot/firmware/ubuntuEnv.txt
+    depmod -a
+fi
+
+if [[ "${OS}" == "radxa-ubuntu-rock5a" ]]; then
+    sed -i 's/\(overlays=\)/\1rock-5a-radxa-camera-4k/' /boot/firmware/ubuntuEnv.txt
+    depmod -a
+fi
     # #FIXING DISPLAY DETECTION to 1080/60hz
     #     # Search for lines containing "append" in the extlinux.conf file
     #     lines=$(grep -n "append" /boot/extlinux/extlinux.conf | cut -d':' -f1)
