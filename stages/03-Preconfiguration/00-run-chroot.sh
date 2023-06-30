@@ -21,6 +21,7 @@ cp motd /etc/motd
 if [[ "${OS}" == "radxa-ubuntu-rock5a" ]] || [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
     systemctl disable gdm3
     systemctl disable gdm
+    systemctl enable openhd
     sudo systemctl set-default multi-user.target
     echo "$(hostname -I | cut -d' ' -f1) $(hostname)" | sudo tee -a /etc/hosts
     touch /boot/openhd/rock5.txt
