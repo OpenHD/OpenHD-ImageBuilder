@@ -48,9 +48,11 @@ cp motd /etc/motd
 
     if [[ "${OS}" == "radxa-ubuntu-rock5b" ]]
         sed -i 's/\(overlays=\)/\1rock-5b-radxa-camera-4k/' /boot/firmware/ubuntuEnv.txt
+        depmod -a
     fi
     if [[ "${OS}" == "radxa-ubuntu-rock5a" ]]
         sed -i 's/\(overlays=\)/\1rock-5a-radxa-camera-4k/' /boot/firmware/ubuntuEnv.txt
+        depmod -a
     fi
     # #FIXING DISPLAY DETECTION to 1080/60hz
     #     # Search for lines containing "append" in the extlinux.conf file
