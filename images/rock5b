@@ -1,5 +1,5 @@
-BASE_IMAGE_URL="https://openhd-images.fra1.cdn.digitaloceanspaces.com/BaseImages"
-BASE_IMAGE="ubuntu-22.04.2-preinstalled-desktop-arm64-rock5b.img.xz"
+BASE_IMAGE_URL="https://github.com/Joshua-Riek/ubuntu-rockchip/releases/download/v1.19/"
+BASE_IMAGE="ubuntu-22.04.2-preinstalled-server-arm64-rock5b.img.xz"
 BASE_IMAGE_SHA256="0f9050a9b4f8b85ed6adcd125c9c94d43988f1b86c3a369cdd377c015f931c47"
 OS="radxa-ubuntu-rock5b"
 DISTRO="jammy"
