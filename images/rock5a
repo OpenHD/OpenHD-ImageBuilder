@@ -1,5 +1,5 @@
 BASE_IMAGE_URL="https://github.com/Joshua-Riek/ubuntu-rockchip/releases/download/v1.19/"
-BASE_IMAGE="ubuntu-22.04.2-preinstalled-desktop-arm64-rock5a.img.xz"
+BASE_IMAGE="ubuntu-22.04.2-preinstalled-server-arm64-rock5a.img.xz"
 BASE_IMAGE_SHA256="f4bce0675d1af771963bdbab7acfc2b5079e7faa9793692fe901d8342f1d829c"
 OS="radxa-ubuntu-rock5a"
 DISTRO="jammy"
