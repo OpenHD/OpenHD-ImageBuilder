@@ -40,6 +40,7 @@ if [[ "${OS}" == "radxa-ubuntu-rock5b" ]]; then
 fi
 
 if [[ "${OS}" == "radxa-ubuntu-rock5a" ]]; then
+    tree /boot
     sed -i 's/\(overlays=\)/\1rock-5a-radxa-camera-4k/' /boot/firmware/ubuntuEnv.txt
     depmod -a
 fi
