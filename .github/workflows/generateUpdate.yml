@@ -37,7 +37,6 @@ jobs:
         FILENAME2=$(cat last.release)
 
         echo "VERSION=$FILENAME" >> $GITHUB_ENV
-        echo "OLDVERSION=$FILENAME3" >> $GITHUB_ENV
         echo "NEWVERSION=$FILENAME2" >> $GITHUB_ENV
 
           
@@ -66,7 +65,7 @@ jobs:
     - name: Pack image for Pi-bullseye
       uses: 'actions/upload-artifact@v2'
       with:
-        name: ${{ env.VERSION }}-update-to${{ env.VERSION2 }}
+        name: ${{ env.VERSION::(-7) }}-update-to${{ env.NEWVERSION }}
         path: |
           update/*.zip
           if-no-files-found: error
