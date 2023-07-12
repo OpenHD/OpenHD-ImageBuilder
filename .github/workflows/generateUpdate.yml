@@ -32,7 +32,7 @@ jobs:
       run: |
         aws configure set aws_access_key_id $aws_key_id
         aws configure set aws_secret_access_key $aws_secret_access_key 
-        aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/Downloader/release/ | grep "rpi"
+        aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/Downloader/release/ | grep "pi-bullseye"
           
     - name: Getting last Image link
       id: read_file
@@ -47,7 +47,7 @@ jobs:
       run: |
         echo "Previous version: $VERSION"
         echo "Download link: $LINK"
-        exit 1
+        exit 0
 
     
     - uses: pguyot/arm-runner-action@v2.5.2
