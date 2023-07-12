@@ -24,7 +24,7 @@ jobs:
     - name: Getting last Image link
       id: read_file
       run: |
-          VERSION=$(cat previous.version)
+          VERSION=$(cat previous.release)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "LINK=https://openhdfpv.com/files$VERSION.xz" >> $GITHUB_ENV
           
