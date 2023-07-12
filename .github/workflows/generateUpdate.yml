@@ -40,7 +40,7 @@ jobs:
     - name: Getting last Image link
       id: read_file
       run: |
-          echo "LINK=https://fra1.digitaloceanspaces.com/openhd-images/Downloader/releases/$VERSION.xz" >> $GITHUB_ENV
+          echo "LINK=https://fra1.digitaloceanspaces.com/openhd-images/Downloader/releases/$VERSION" >> $GITHUB_ENV
           
 
           
