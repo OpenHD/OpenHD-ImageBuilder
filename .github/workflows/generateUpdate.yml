@@ -65,7 +65,7 @@ jobs:
     - name: Pack image for Pi-bullseye
       uses: 'actions/upload-artifact@v2'
       with:
-        name: ${{ env.VERSION::(-7) }}-update-to${{ env.NEWVERSION }}
+        name: ${{ env.VERSION.replace('.img.xz', '') }}-update-to${{ env.NEWVERSION }}
         path: |
           update/*.zip
           if-no-files-found: error
