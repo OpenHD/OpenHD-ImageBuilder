@@ -20,13 +20,26 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: recursive
-         
+
+    - name: Get last release URL
+      shell: bash
+      env:
+        aws_endpoint: "https://fra1.digitaloceanspaces.com"
+        aws_key_id: ${{ secrets.DIGITALOCEAN_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.DIGITALOCEAN_SECRET_ACCESS_KEY }}
+        aws_s3_bucket: openhd-images
+        AWS_EC2_METADATA_DISABLED: true
+      run: |
+        aws configure set aws_access_key_id $aws_key_id
+        aws configure set aws_secret_access_key $aws_secret_access_key 
+        aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/releases/ | grep "rpi"
+          
     - name: Getting last Image link
       id: read_file
       run: |
           VERSION=$(cat previous.release)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "LINK=https://openhdfpv.com/files$VERSION.xz" >> $GITHUB_ENV
+          echo "LINK=https://fra1.digitaloceanspaces.com/openhd-images/Downloader/releases/$VERSION.xz" >> $GITHUB_ENV
           
 
           
