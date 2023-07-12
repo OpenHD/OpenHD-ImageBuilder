@@ -32,13 +32,12 @@ jobs:
       run: |
         aws configure set aws_access_key_id $aws_key_id
         aws configure set aws_secret_access_key $aws_secret_access_key 
-        aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/Downloader/release/ | sort -r | grep "OpenHD-image-pi-bullseye-configurable-2.4-evo" | head -n 1 | awk '{print $NF}'
+        VERSION=aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/Downloader/release/ | sort -r | grep "OpenHD-image-pi-bullseye-configurable-2.4-evo" | head -n 1 | awk '{print $NF}'
 
           
     - name: Getting last Image link
       id: read_file
       run: |
-          VERSION=$(cat previous.release)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "LINK=https://fra1.digitaloceanspaces.com/openhd-images/Downloader/releases/$VERSION.xz" >> $GITHUB_ENV
           
