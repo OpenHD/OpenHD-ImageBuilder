@@ -23,7 +23,7 @@ jobs:
     - name: Getting last Image link
       id: read_file
       run: |
-        echo "::set-output name=version::$(cat previous.version)"
+        echo "::set-output name=version::$(cat previous.release)"
           
     - name: Use the previous version
       run: |
