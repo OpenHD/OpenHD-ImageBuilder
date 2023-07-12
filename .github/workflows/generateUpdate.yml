@@ -23,8 +23,7 @@ jobs:
     - name: Getting last Image link
       id: read_file
       run: |
-        ls -a
-        echo "::set-output name=version::$(cat OpenHD-ImageBuilder/previous.version)"
+        echo "::set-output name=version::$(cat previous.version)"
           
     - name: Use the previous version
       run: |
