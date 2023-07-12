@@ -2,7 +2,9 @@ name: Image build on event
 
 on:
   push:
-
+    branches: [ "2.4-evo" ]
+  pull_request:
+    branches: [ "2.4-evo" ]
 
 jobs:
   build:

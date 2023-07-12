@@ -1,0 +1,73 @@
+name: Image build on event
+
+on:
+  push:
+    branches: [ "2.4-evo" ]
+  pull_request:
+    branches: [ "2.4-evo" ]
+  workflow_dispatch:
+#  schedule:
+#    - cron: '0 2 * * *' # run at 2 AM UTC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+      
+    steps:
+    
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Get last release URL
+      shell: bash
+      env:
+        aws_endpoint: "https://fra1.digitaloceanspaces.com"
+        aws_key_id: ${{ secrets.DIGITALOCEAN_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.DIGITALOCEAN_SECRET_ACCESS_KEY }}
+        aws_s3_bucket: openhd-images
+        AWS_EC2_METADATA_DISABLED: true
+      run: |
+        aws configure set aws_access_key_id $aws_key_id
+        aws configure set aws_secret_access_key $aws_secret_access_key 
+        FILENAME=$(aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/Downloader/release/ | sort -r | grep "OpenHD-image-pi-bullseye-configurable-2.4-evo" | head -n 1 | awk '{print $NF}')
+        echo $FILENAME
+        FILENAME2=$(cat last.release)
+
+        echo "VERSION=$FILENAME" >> $GITHUB_ENV
+        echo "NEWVERSION=$FILENAME2" >> $GITHUB_ENV
+
+          
+    - name: Getting last Image link
+      id: read_file
+      run: |
+        echo "LINK=https://fra1.digitaloceanspaces.com/openhd-images/Downloader/release/${{ env.VERSION }}" >> $GITHUB_ENV   
+    
+    - uses: pguyot/arm-runner-action@v2.5.2
+      id: build_image
+      with:
+        base_image: $LINK
+        image_additional_mb: 4000
+        copy_repository_path: /opt
+        copy_artifact_path: update
+        import_github_env: true
+        commands: |
+          ls -a
+          cd OpenHD-ImageBuilder
+          bash scripts/createUpdateZip.sh
+          ls -a /opt/update
+
+    - name: Reformat version
+      run: |
+        VERSION=$(echo "${{ env.VERSION }}" | sed 's/\.img\.xz$//')
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+    - name: Pack image for Pi-bullseye
+      uses: 'actions/upload-artifact@v2'
+      with:
+        name: ${{ env.VERSION}}-update-to${{ env.NEWVERSION }}
+        path: |
+          update/*.zip
+          if-no-files-found: error
