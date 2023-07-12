@@ -32,7 +32,7 @@ jobs:
       run: |
         aws configure set aws_access_key_id $aws_key_id
         aws configure set aws_secret_access_key $aws_secret_access_key 
-        newest_file=$(aws s3api --endpoint-url $aws_endpoint list-objects-v2 --bucket $aws_s3_bucket --prefix "Downloader/releases/" --query 'max_by(Contents,&LastModified).Key' --output text)
+        newest_file=$(aws s3api --endpoint-url $aws_endpoint list-objects-v2 --bucket $aws_s3_bucket --prefix "" --query 'max_by(Contents,&LastModified).Key' --output text)
         echo $newest_file | grep "OpenHD-image-pi-bullseye-configurable-2.4-evo"
 
           
