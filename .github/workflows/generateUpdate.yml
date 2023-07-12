@@ -40,7 +40,7 @@ jobs:
     - name: Getting last Image link
       id: read_file
       run: |
-        echo "LINK=https://fra1.digitaloceanspaces.com/openhd-images/Downloader/releases/${{ env.VERSION }}" >> $GITHUB_ENV   
+        echo "LINK=https://fra1.digitaloceanspaces.com/openhd-images/Downloader/release/${{ env.VERSION }}" >> $GITHUB_ENV   
     
     - uses: pguyot/arm-runner-action@v2.5.2
       id: build_image
