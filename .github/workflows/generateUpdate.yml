@@ -2,7 +2,13 @@ name: Image build on event
 
 on:
   push:
-  
+    branches: [ "2.4-evo-testing" ]
+  pull_request:
+    branches: [ "2.4-evo-testing" ]
+  workflow_dispatch:
+#  schedule:
+#    - cron: '0 2 * * *' # run at 2 AM UTC
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,6 +23,7 @@ jobs:
     - name: Getting last Image link
       id: read_file
       run: |
+        ls -a
         echo "::set-output name=version::$(cat OpenHD-ImageBuilder/previous.version)"
           
     - name: Use the previous version
