@@ -34,7 +34,11 @@ jobs:
         aws configure set aws_secret_access_key $aws_secret_access_key 
         FILENAME=$(aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/Downloader/release/ | sort -r | grep "OpenHD-image-pi-bullseye-configurable-2.4-evo" | head -n 1 | awk '{print $NF}')
         echo $FILENAME
+        FILENAME2=$(cat last.release)
+
         echo "VERSION=$FILENAME" >> $GITHUB_ENV
+        echo "OLDVERSION=$FILENAME3" >> $GITHUB_ENV
+        echo "NEWVERSION=$FILENAME2" >> $GITHUB_ENV
 
           
     - name: Getting last Image link
@@ -62,7 +66,7 @@ jobs:
     - name: Pack image for Pi-bullseye
       uses: 'actions/upload-artifact@v2'
       with:
-        name: "update"
+        name: "{{ env.VERSION }}-update-to{{ env.VERSION2 }}"
         path: |
           update/*.zip
           if-no-files-found: error
