@@ -59,13 +59,15 @@ jobs:
           bash scripts/createUpdateZip.sh
           ls -a /opt/update
 
-    - name: show directory
-      run: ls -a | tree
+    - name: Reformat version
+      run: |
+        VERSION=$(echo "${{ env.VERSION }}" | sed 's/\.img\.xz$//')
+        echo "VERSION=${VERSION}" >> $GITHUB_ENV
 
     - name: Pack image for Pi-bullseye
       uses: 'actions/upload-artifact@v2'
       with:
-        name: ${{ env.VERSION.replace('.img.xz', '') }}-update-to${{ env.NEWVERSION }}
+        name: ${{ env.VERSION}}-update-to${{ env.NEWVERSION }}
         path: |
           update/*.zip
           if-no-files-found: error
