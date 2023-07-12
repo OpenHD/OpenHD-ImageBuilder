@@ -21,17 +21,17 @@ jobs:
       with:
         submodules: recursive
          
-      - name: Getting last Image link
-        id: read_file
-        run: |
-          echo "VERSION=$(cat previous.release)" >> $GITHUB_ENV
-          echo "LINK=https://openhdfpv.com/files$VERSION.xz" >> $GITHUB_ENV
+    - name: Getting last Image link
+      id: read_file
+      run: |
+        echo "VERSION=$(cat previous.release)" >> $GITHUB_ENV
+        echo "LINK=https://openhdfpv.com/files$VERSION.xz" >> $GITHUB_ENV
 
           
-      - name: Use the previous version
-        run: |
-          echo "Previous version: $VERSION"
-          echo "Link=$(cat previous.release)" >> $GITHUB_ENV
+    - name: Debug
+      run: |
+        echo "Previous version: $VERSION"
+        echo "Link=$(cat previous.release)" >> $GITHUB_ENV
 
     
     - uses: pguyot/arm-runner-action@v2.5.2
