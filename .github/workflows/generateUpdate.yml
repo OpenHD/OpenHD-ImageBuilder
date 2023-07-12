@@ -34,7 +34,7 @@ jobs:
         aws configure set aws_secret_access_key $aws_secret_access_key 
         FILENAME=$(aws s3 --endpoint-url $aws_endpoint ls s3://$aws_s3_bucket/Downloader/release/ | sort -r | grep "OpenHD-image-pi-bullseye-configurable-2.4-evo" | head -n 1 | awk '{print $NF}')
         echo $FILENAME
-        echo "FILENAME=$VERSION" >> $GITHUB_ENV
+        echo "VERSION=$FILENAME" >> $GITHUB_ENV
 
           
     - name: Getting last Image link
