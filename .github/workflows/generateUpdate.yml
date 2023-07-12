@@ -47,6 +47,7 @@ jobs:
       run: |
         echo "Previous version: $VERSION"
         echo "Download link: $LINK"
+        exit 1
 
     
     - uses: pguyot/arm-runner-action@v2.5.2
