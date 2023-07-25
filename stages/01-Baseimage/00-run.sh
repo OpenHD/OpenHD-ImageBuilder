@@ -44,7 +44,7 @@ log "Unarchiving base image"
 
 if [[ "${BASE_IMAGE: -4}" == ".zip" ]]; then
     unzip "${BASE_IMAGE}"
-elif [[ "${BASE_IMAGE: -3}" == ".xz" ]]; then
+elif [[ "${BASE_IMAGE: -7}" == ".img.xz" ]]; then
     xz -k -d "${BASE_IMAGE}"
 elif [[ "${BASE_IMAGE: -4}" == ".bz2" ]]; then
     bunzip2 -k -d "${BASE_IMAGE}"
@@ -57,6 +57,6 @@ else
     exit 1
 fi
 
-mv * IMAGE.img
+mv *.[iI][mM][gG] IMAGE.img
 
 popd
