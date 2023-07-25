@@ -160,7 +160,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        chown openhd:openhd QGroundControl.AppImage
        mkdir -p /boot/openhd_old
        sudo mv -v /boot/openhd/* /boot/openhd_old/
-       sudo echo -e "UUID=099D-7546\t/boot/openhd\tvfat\tumask=0000\t0\t1" | sudo tee -a /etc/fstab
+       #sudo echo -e "UUID=099D-7546\t/boot/openhd\tvfat\tumask=0000\t0\t1" | sudo tee -a /etc/fstab
 
 fi
 
