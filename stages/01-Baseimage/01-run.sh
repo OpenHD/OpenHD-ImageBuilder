@@ -5,11 +5,11 @@ pushd ${STAGE_WORK_DIR}
 if [[ "${OS}" != ubuntu-x86 ]] 
     #Makes the images flashable with raspberry pi imager
     log "We now define the size to be ~15GB (the maximum size we have in our github builder, this doesn't affect the output image because we're resizeing it in the end before uploading the image)" 
-    if [[ "${OS}" == radxa-ubuntu-rock5a ]] || [[ "${OS}" == radxa-ubuntu-rock5b ]] || [[ "${OS}" == radxa-debian ]] ; then
-    WANTEDSIZE="4500000256"
-    else
-    WANTEDSIZE="16500000256"
-    fi
+        if [[ "${OS}" == radxa-ubuntu-rock5a ]] || [[ "${OS}" == radxa-ubuntu-rock5b ]] || [[ "${OS}" == radxa-debian ]] ; then
+        WANTEDSIZE="4500000256"
+        else
+        WANTEDSIZE="16500000256"
+        fi
     FILESIZE=$(stat -c%s "IMAGE.img")
     DIFFERENCE=$(expr $WANTEDSIZE - $FILESIZE)
     DIFFERENCE=$(expr $DIFFERENCE - 1)
@@ -51,7 +51,7 @@ if [[ "${OS}" != ubuntu-x86 ]]
     echo "IF EDITING THIS SCRIPT THE SPACES MATER FOR FDISK COMMANDS"
     #Now we delete the root Partition , write a new partition and write the calculated size to have a larger root-partition)
     #DO NOT TOUCH OR REFORMAT .. this is quite annoying
-
+fi
     fdisk IMAGE.img <<EOF
 d
 ${ROOT_PART}
@@ -64,5 +64,3 @@ w
 EOF
 
 popd
-
-fi
