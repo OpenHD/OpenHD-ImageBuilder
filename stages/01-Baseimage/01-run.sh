@@ -52,6 +52,8 @@ if [[ "${OS}" != ubuntu-x86 ]]
     #Now we delete the root Partition , write a new partition and write the calculated size to have a larger root-partition)
     #DO NOT TOUCH OR REFORMAT .. this is quite annoying
 fi
+if [[ "${OS}" != ubuntu-x86 ]] 
+
     fdisk IMAGE.img <<EOF
 d
 ${ROOT_PART}
@@ -63,4 +65,5 @@ ${ROOT_OFFSET}
 w
 EOF
 
+fi
 popd
