@@ -57,6 +57,6 @@ else
     exit 1
 fi
 
-mv *.[iI][mM][gG] IMAGE.img
+mv * IMAGE.img
 
 popd
