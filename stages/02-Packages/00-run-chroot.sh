@@ -84,10 +84,9 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
  echo "Holding back platform-specific packages..."
  for package in ${PLATFORM_PACKAGES_HOLD}; do
      echo "Holding ${package}..."
-     apt-mark hold ${package}
+     ( set --ignore-error; apt-mark hold ${package} )
      if [ $? -ne 0 ]; then
-         echo "Failed to remove ${package}!"
-         exit 1
+         echo "Failed to hold ${package}!"
      fi
  done
 
