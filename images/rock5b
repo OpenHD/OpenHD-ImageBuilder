@@ -1,10 +1,10 @@
 BASE_IMAGE_URL="https://github.com/radxa-build/rock-5b/releases/download/b36/"
 BASE_IMAGE="rock-5b_debian_bullseye_kde_b36.img.xz"
-BASE_IMAGE_SHA256="1c4022ec2d85bf3975a130beebee18dda9e4497cd6be3e206a1c95de3cf60616"
+BASE_IMAGE_SHA256="e724d3c5ad96abd5d55647195f4fc1a8b94120fb452b5eb07ea68dc8e61d62c8"
 OS="radxa-debian-rock5a"
 DISTRO="bullseye"
 HAVE_BOOT_PART=false
 HAVE_CONF_PART=false
-BOOT_PART=1
-ROOT_PART=2
+BOOT_PART=2
+ROOT_PART=3
 BIT="64"
