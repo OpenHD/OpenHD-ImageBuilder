@@ -158,10 +158,6 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        wget https://github.com/mavlink/qgroundcontrol/releases/download/v4.2.4/QGroundControl.AppImage
        chmod a+x QGroundControl.AppImage
        chown openhd:openhd QGroundControl.AppImage
-       mkdir -p /boot/openhd_old
-       sudo mv -v /boot/openhd/* /boot/openhd_old/
-       cat /etc/xdg/openbox/autostart
-       #sudo echo -e "UUID=099D-7546\t/boot/openhd\tvfat\tumask=0000\t0\t1" | sudo tee -a /etc/fstab
 
 fi
 
