@@ -21,9 +21,9 @@ function install_radxa-ubuntu_packages {
     PLATFORM_PACKAGES="rsync qopenhd procps gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-tools gstreamer1.0-rockchip1 gstreamer1.0-gl mali-g610-firmware malirun rockchip-multimedia-config librist4 librist-dev rist-tools libv4l-0 libv4l2rds0 libv4lconvert0 libv4l-dev libv4l-rkmpp qv4l2 v4l-utils librockchip-mpp1 librockchip-mpp-dev librockchip-vpu0 rockchip-mpp-demos librga2 librga-dev libegl-mesa0 libegl1-mesa-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev libglx-mesa0 mesa-common-dev mesa-vulkan-drivers mesa-utils libwidevinecdm"
 }
 function install_radxa-debian_packages {
-    PLATFORM_PACKAGES_HOLD="8852be-dkms linux-image-5.10.110-5-rockchip linux-headers-5.10.110-5-rockchip initramfs-tools linux-headers-rock-5a radxa-firmware linux-image-rock-5a"
-    PLATFORM_PACKAGES_REMOVE="lightdm plymouth"
-    PLATFORM_PACKAGES="rsync qopenhd rtl8812au-autocompiler procps camera-engine-rkaiq"
+    PLATFORM_PACKAGES_HOLD="8852be-dkms"
+    PLATFORM_PACKAGES_REMOVE="sddm plasma-desktop kde*"
+    PLATFORM_PACKAGES="linux-headers-5.10.110-99-rockchip-g1bbc04113 linux-image-5.10.110-99-rockchip-g1bbc04113 rsync qopenhd procps camera-engine-rkaiq"
 }
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
@@ -34,21 +34,6 @@ function install_ubuntu_x86_packages {
         fi
     PLATFORM_PACKAGES="gnome-terminal qopenhd python3-pip htop libavcodec-dev libavformat-dev libelf-dev libboost-filesystem-dev libspdlog-dev build-essential libfontconfig1-dev libdbus-1-dev libfreetype6-dev libicu-dev libinput-dev libxkbcommon-dev libsqlite3-dev libssl-dev libpng-dev libjpeg-dev libglib2.0-dev libgles2-mesa-dev libgbm-dev libdrm-dev libwayland-dev pulseaudio libpulse-dev flex bison gperf libre2-dev libnss3-dev libdrm-dev libxml2-dev libxslt1-dev libminizip-dev libjsoncpp-dev liblcms2-dev libevent-dev libprotobuf-dev protobuf-compiler libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-x11-dev libgtk2.0-dev libgtk-3-dev libfuse2 mono-complete mono-runtime libmono-system-windows-forms4.0-cil libmono-system-core4.0-cil libmono-system-management4.0-cil libmono-system-xml-linq4.0-cil libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-plugins-bad libgstreamer-plugins-bad1.0-dev gstreamer1.0-pulseaudio gstreamer1.0-tools gstreamer1.0-alsa gstreamer1.0-qt5 openhdimagewriter"
     PLATFORM_PACKAGES_REMOVE="lightdm"
-}
-
-# Ubuntu-Jetson-specific code
-function fix_jetson_apt {
-         rm /etc/apt/sources.list.d/nvidia-l4t-apt-source.list || true
-         echo "deb https://repo.download.nvidia.com/jetson/common r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source2.list
-         echo "deb https://repo.download.nvidia.com/jetson/t210 r32.6 main" > /etc/apt/sources.list.d/nvidia-l4t-apt-source.list
-         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-         sudo add-apt-repository ppa:mhier/libboost-latest -y
-         sudo add-apt-repository ppa:git-core/ppa -y
-         apt update
-}
-function install_jetson_packages {
-    PLATFORM_PACKAGES_REMOVE="libreoffice* gnome-applet* gnome-bluetooth gnome-desktop* gnome-sessio* gnome-user* gnome-shell-common gnome-control-center gnome-screenshot ubuntu-release-upgrader-gtk ubuntu-web-launchers unity-settings-daemon packagekit wamerican mysql-common libgdm1 vlc-data lightdm ubuntu-artwork ubuntu-sounds ubuntu-wallpapers ubuntu-wallpapers-bionic ubuntu-desktop gdm3 gnome-* libreoffice-writer chromium-browser chromium* yelp unity thunderbird rhythmbox nautilus gnome-software"
-    PLATFORM_PACKAGES="mingetty libgstreamer-plugins-base1.0-dev python-pip libelf-dev libboost1.74-dev openhd-linux-jetson"
 }
 
 function clone_github_repos {
@@ -65,7 +50,7 @@ function clone_github_repos {
  elif [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-ubuntu-rock5a" ]] ; then
     sudo add-apt-repository -r "deb https://ppa.launchpadcontent.net/jjriek/rockchip/ubuntu jammy main"
     install_radxa-ubuntu_packages
- elif [[ "${OS}" == "radxa-debian" ]] ; then
+ elif [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]  ; then
     install_radxa-debian_packages
  elif [[ "${OS}" == "ubuntu-x86" ]] ; then
     install_ubuntu_x86_packages
