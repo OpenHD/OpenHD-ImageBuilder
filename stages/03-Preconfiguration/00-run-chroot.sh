@@ -161,6 +161,9 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 
 fi
 
+ls -a /
+ls -a /conf
+
 #Install Update-Service
 cp /opt/additionalFiles/update.service /etc/systemd/system/
 cp /opt/additionalFiles/updateOpenHD.sh /usr/local/bin/
@@ -173,12 +176,6 @@ NEW_HOSTNAME="openhd"
 if [ $? -eq 0 ]; then
   sudo sh -c "echo '$NEW_HOSTNAME' > /etc/hostname"
   sudo sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
-fi
-
-if [[ "${HAVE_CONF_PART}" == "false" ]] && [[ "${HAVE_BOOT_PART}" == "true" ]]; then
-    # the system expects things to be in /conf now, but on some platforms we use the boot
-    # partition instead of making another one, we may change this in the future
-    ln -s /boot /conf
 fi
 
 apt -y autoremove
