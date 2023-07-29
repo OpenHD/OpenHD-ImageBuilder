@@ -20,7 +20,7 @@ pushd ${STAGE_WORK_DIR}
     ls -l
 
 
-    if [[ "${OS}" != "ubuntu-x86" ]] || [[ "${OS}" != radxa-debian-rock5a ]] || [[ "${OS}" != radxa-debian-rock5b ]]; then
+    if [[ "${OS}" != "ubuntu-x86" ]] ; then
     log "Create empty image" #this will be attached to the base image to increase the size of it
     dd if=/dev/zero of=temp.img bs=1 count=1 seek=$DIFFERENCE
     ls -l
