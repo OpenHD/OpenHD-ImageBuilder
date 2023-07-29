@@ -96,7 +96,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
  echo "Installing platform-specific packages..."
  for package in ${BASE_PACKAGES} ${PLATFORM_PACKAGES}; do
      echo "Installing ${package}..."
-     apt install -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends ${package}
+     apt install -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends --allow-downgrades ${package}
      if [ $? -ne 0 ]; then
          echo "Failed to install ${package}!"
          exit 1
