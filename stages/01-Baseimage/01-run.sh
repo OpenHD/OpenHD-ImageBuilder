@@ -25,7 +25,7 @@ if [[ "${OS}" != ubuntu-x86 ]]; then
     log "Enlarge the downloaded image"
     cat temp.img >> IMAGE.img
 
-    if [[ "${OS}" == radxa-debian-rock5a ]] || [[ "${OS}" == radxa-debian-rock5a ]]; then
+    if [[ "${OS}" == radxa-debian-rock5a ]] || [[ "${OS}" == radxa-debian-rock5b ]]; then
     echo "resize with parted"
     echo -e "x\ne\nd\nn\n\n\n\n\nw\ny\n" | sudo gdisk IMAGE.img
     sudo parted -s IMAGE.img resizepart 2 100%
