@@ -14,6 +14,7 @@ cp motd /etc/motd
 if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
     mkdir -p /config/openhd
     cp -rv /boot/openhd/* /config/openhd
+    cp -rv /config/* /config/openhd/
     umount /boot/openhd
     rm -Rf /boot/openhd
     sudo ln -s /config/openhd/ /boot/openhd
@@ -22,8 +23,8 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     mkdir -p /etc/systemd/system/getty@tty1.service.d
     touch /boot/openhd/rock5.txt
     touch /boot/openhd/ground.txt
-    rm /boot/before.txt
-    cp /opt/additionalFiles/before.txt /boot/before.txt
+    rm /config/before.txt
+    cp /opt/additionalFiles/before.txt /config/before.txt
 
     cp -r /usr/lib/linux-image-5.10.110-99-rockchip-g1bbc04113/rockchip/* /boot/dtbo/
 fi
