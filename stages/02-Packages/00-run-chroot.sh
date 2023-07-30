@@ -21,7 +21,7 @@ function install_radxa-ubuntu_packages {
 }
 function install_radxa-debian_packages {
     PLATFORM_PACKAGES_HOLD="8852be-dkms linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip linux-image-rock-5a"
-    PLATFORM_PACKAGES_REMOVE="dkms sddm plasma-desktop kde*"
+    PLATFORM_PACKAGES_REMOVE="dkms sddm plymouth plasma-desktop kde*"
     PLATFORM_PACKAGES="linux-headers-5.10.110-99-rockchip-g1bbc04113 linux-image-5.10.110-99-rockchip-g1bbc04113 rsync qopenhd procps camera-engine-rkaiq"
 }
 # Ubuntu-x86-specific code
@@ -32,7 +32,7 @@ function install_ubuntu_x86_packages {
         PLATFORM_PACKAGES_HOLD="linux-generic linux-headers-generic linux-image-generic linux-libc-dev"
         fi
     PLATFORM_PACKAGES="gnome-terminal qopenhd python3-pip htop libavcodec-dev libavformat-dev libelf-dev libboost-filesystem-dev libspdlog-dev build-essential libfontconfig1-dev libdbus-1-dev libfreetype6-dev libicu-dev libinput-dev libxkbcommon-dev libsqlite3-dev libssl-dev libpng-dev libjpeg-dev libglib2.0-dev libgles2-mesa-dev libgbm-dev libdrm-dev libwayland-dev pulseaudio libpulse-dev flex bison gperf libre2-dev libnss3-dev libdrm-dev libxml2-dev libxslt1-dev libminizip-dev libjsoncpp-dev liblcms2-dev libevent-dev libprotobuf-dev protobuf-compiler libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-x11-dev libgtk2.0-dev libgtk-3-dev libfuse2 mono-complete mono-runtime libmono-system-windows-forms4.0-cil libmono-system-core4.0-cil libmono-system-management4.0-cil libmono-system-xml-linq4.0-cil libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-plugins-bad libgstreamer-plugins-bad1.0-dev gstreamer1.0-pulseaudio gstreamer1.0-tools gstreamer1.0-alsa gstreamer1.0-qt5 openhdimagewriter"
-    PLATFORM_PACKAGES_REMOVE="lightdm"
+    PLATFORM_PACKAGES_REMOVE="plymouth lightdm"
 }
 
 function clone_github_repos {
