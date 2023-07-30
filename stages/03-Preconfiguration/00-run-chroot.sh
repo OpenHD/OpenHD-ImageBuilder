@@ -21,6 +21,9 @@ if [[ "${OS}" == "radxa-ubuntu-rock5a" ]] || [[ "${OS}" == "radxa-ubuntu-rock5b"
     mkdir -p /etc/systemd/system/getty@tty1.service.d
     touch /boot/openhd/rock5.txt
     touch /boot/openhd/ground.txt
+    rm /boot/before.txt
+    cp /opt/additionalFiles/before.txt /boot/before.txt
+
     cp -r /usr/lib/linux-image-5.10.110-99-rockchip-g1bbc04113/rockchip/* /boot/dtbo/
 fi
 
