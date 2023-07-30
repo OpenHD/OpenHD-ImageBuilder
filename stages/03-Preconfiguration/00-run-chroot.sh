@@ -12,7 +12,9 @@ cd /opt/additionalFiles
 cp motd /etc/motd
 
 if [[ "${OS}" == "radxa-ubuntu-rock5a" ]] || [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
-    ln -s /config /boot/openhd
+    mkdir -p /config/openhd
+    cp -r /boot/openhd/* /config/openhd
+    ln -s /config/openhd/ /boot/openhd
     touch /boot/openhd/rock5.txt
     mkdir -p /boot/openhd/
     mkdir -p /etc/systemd/system/getty@tty1.service.d
