@@ -14,6 +14,7 @@ cp motd /etc/motd
 if [[ "${OS}" == "radxa-ubuntu-rock5a" ]] || [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
     mkdir -p /config/openhd
     cp -r /boot/openhd/* /config/openhd
+    rm -Rf /boot/openhd/*
     ln -s /config/openhd/ /boot/openhd
     touch /boot/openhd/rock5.txt
     mkdir -p /boot/openhd/
