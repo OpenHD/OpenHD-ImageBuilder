@@ -15,7 +15,7 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     mkdir -p /config/openhd
     cp -r /boot/openhd/* /config/openhd
     rm -Rf /boot/openhd/*
-    ln -s /config/openhd/ /boot/openhd
+    sudo ln -s /config/openhd/ /boot/openhd
     touch /boot/openhd/rock5.txt
     mkdir -p /boot/openhd/
     mkdir -p /etc/systemd/system/getty@tty1.service.d
