@@ -12,7 +12,7 @@ cd /opt/additionalFiles
 cp motd /etc/motd
 
 if [[ "${OS}" == "radxa-ubuntu-rock5a" ]] || [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
-    ln -s /conf /boot/openhd
+    ln -s /config /boot/openhd
     touch /boot/openhd/rock5.txt
     mkdir -p /boot/openhd/
     mkdir -p /etc/systemd/system/getty@tty1.service.d
@@ -149,7 +149,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 fi
 
 ls -a /
-ls -a /conf
+ls -a /config
 
 #Install Update-Service
 cp /opt/additionalFiles/update.service /etc/systemd/system/
