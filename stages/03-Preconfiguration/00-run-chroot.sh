@@ -11,7 +11,7 @@ mkdir -p /boot/openhd/
 cd /opt/additionalFiles
 cp motd /etc/motd
 
-if [[ "${OS}" == "radxa-ubuntu-rock5a" ]] || [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
+if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
     mkdir -p /config/openhd
     cp -r /boot/openhd/* /config/openhd
     rm -Rf /boot/openhd/*
