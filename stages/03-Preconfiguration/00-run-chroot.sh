@@ -12,11 +12,15 @@ cd /opt/additionalFiles
 cp motd /etc/motd
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
+    echo "this is the config partition"
+    ls /config/openhd
     mkdir -p /config/openhd
+    echo "this is in the openhd boot partition"
+    ls /boot/openhd/
     cp -rv /boot/openhd/* /config/openhd
     umount /boot/openhd
     rm -Rf /boot/openhd
-    sudo ln -s /config/openhd/ /boot/openhd
+    #sudo ln -s /config/openhd/ /boot/openhd
     touch /boot/openhd/rock5.txt
     mkdir -p /etc/systemd/system/getty@tty1.service.d
     rm /config/before.txt
