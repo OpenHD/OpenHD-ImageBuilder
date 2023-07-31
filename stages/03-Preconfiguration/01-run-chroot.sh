@@ -20,7 +20,7 @@ sudo systemctl disable anacron.service
 sudo systemctl disable exim4.service
 sudo systemctl mask hostapd.service
 
-#Disable plymoth (booot animation)
+#Disable plymoth (boot animation)
 sudo systemctl mask plymouth-start.service
 sudo systemctl mask plymouth-read-write.service
 sudo systemctl mask plymouth-quit-wait.service
