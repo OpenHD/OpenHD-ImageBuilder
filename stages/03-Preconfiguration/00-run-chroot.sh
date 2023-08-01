@@ -16,6 +16,8 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     rm /boot/before.txt
     cp /opt/additionalFiles/before.txt /boot/before.txt
     touch /boot/config.txt
+    #mounting config partition
+    ls -a /conf
     cp -r /usr/lib/linux-image-5.10.110-99-rockchip-g1bbc04113/rockchip/* /boot/dtbo/
 fi
 

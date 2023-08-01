@@ -7,7 +7,7 @@
 set -e
 
 # Packages which are universally needed
-BASE_PACKAGES="openhd git apt-transport-https apt-utils"
+BASE_PACKAGES="openhd git apt-transport-https apt-utils open-hd-web-ui"
 
 # Raspbian-specific code
 function install_raspbian_packages {
