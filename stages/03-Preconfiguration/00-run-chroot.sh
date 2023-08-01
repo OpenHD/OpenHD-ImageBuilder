@@ -12,13 +12,10 @@ cd /opt/additionalFiles
 cp motd /etc/motd
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
-    #looks really strange with the two openhd folders, but because of weird mounting in the image builder I need to do this to correctly copy important files to be edited in the imagewriter
-    mkdir -p /boot/openhd/openhd
-    rsync -av --progress /boot/openhd /boot/openhd/openhd --exclude openhd
-    touch /boot/openhd/openhd/rock5.txt
-    rm /boot/openhd/before.txt
-    cp /opt/additionalFiles/before.txt /boot/openhd/openhd/before.txt
-    touch /boot/openhd/config.txt
+    touch /boot/openhd/rock5.txt
+    rm /boot/before.txt
+    cp /opt/additionalFiles/before.txt /boot/before.txt
+    touch /boot/config.txt
     cp -r /usr/lib/linux-image-5.10.110-99-rockchip-g1bbc04113/rockchip/* /boot/dtbo/
 fi
 
