@@ -91,6 +91,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
  done
 
  apt upgrade -y --allow-downgrades
+ apt autoremove -y
 
  # Install platform-specific packages
  echo "Installing platform-specific packages..."
