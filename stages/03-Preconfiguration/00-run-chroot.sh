@@ -12,12 +12,14 @@ cd /opt/additionalFiles
 cp motd /etc/motd
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
-    touch /boot/openhd/rock5.txt
-    rm /boot/before.txt
-    cp /opt/additionalFiles/before.txt /boot/before.txt
-    touch /boot/config.txt
+    rm /conf/before.txt
+    cp /opt/additionalFiles/before.txt /conf/before.txt
+    touch /conf/config.txt
     #mounting config partition
     ls -a /conf
+    mkdir -p /conf/openhd
+    cp -rv /boot/openhd/* /conf/openhd/
+    touch /conf/openhd/rock5.txt
     cp -r /usr/lib/linux-image-5.10.110-99-rockchip-g1bbc04113/rockchip/* /boot/dtbo/
 fi
 
