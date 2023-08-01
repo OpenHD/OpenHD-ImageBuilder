@@ -21,7 +21,7 @@ function install_radxa-ubuntu_packages {
 }
 function install_radxa-debian_packages {
     PLATFORM_PACKAGES_HOLD="8852be-dkms linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip linux-image-rock-5a"
-    PLATFORM_PACKAGES_REMOVE="libx11-.* dkms sddm plymouth plasma-desktop kde*"
+    PLATFORM_PACKAGES_REMOVE="dkms sddm plymouth plasma-desktop kde*"
     PLATFORM_PACKAGES="linux-headers-5.10.110-99-rockchip-g1bbc04113 linux-image-5.10.110-99-rockchip-g1bbc04113 rsync qopenhd procps mpp mpv camera-engine-rkaiq"
 }
 # Ubuntu-x86-specific code
@@ -91,7 +91,6 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
  done
 
  apt upgrade -y --allow-downgrades
- apt autoremove -y
 
  # Install platform-specific packages
  echo "Installing platform-specific packages..."
