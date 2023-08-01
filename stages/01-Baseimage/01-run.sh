@@ -4,11 +4,7 @@ pushd ${STAGE_WORK_DIR}
 
     #Makes the images flashable with raspberry pi imager
     log "We now define the size to be ~15GB (the maximum size we have in our github builder, this doesn't affect the output image because we're resizeing it in the end before uploading the image)" 
-        if [[ "${OS}" == radxa-ubuntu-rock5a ]] || [[ "${OS}" == radxa-ubuntu-rock5b ]] || [[ "${OS}" == radxa-debian ]] ; then
-        WANTEDSIZE="4500000256"
-        else
-        WANTEDSIZE="16500000256"
-        fi
+    WANTEDSIZE="6500000256"
     FILESIZE=$(stat -c%s "IMAGE.img")
     DIFFERENCE=$(expr $WANTEDSIZE - $FILESIZE)
     DIFFERENCE=$(expr $DIFFERENCE - 1)
@@ -19,13 +15,23 @@ pushd ${STAGE_WORK_DIR}
     echo "bytes"
     ls -l
 
+if [[ "${OS}" != ubuntu-x86 ]]; then
 
-    if [[ "${OS}" != "ubuntu-x86" ]]; then
     log "Create empty image" #this will be attached to the base image to increase the size of it
     dd if=/dev/zero of=temp.img bs=1 count=1 seek=$DIFFERENCE
     ls -l
+
+
     log "Enlarge the downloaded image"
     cat temp.img >> IMAGE.img
+
+    if [[ "${OS}" == radxa-debian-rock5a ]] || [[ "${OS}" == radxa-debian-rock5b ]]; then
+    echo "resize with parted"
+    echo -e "x\ne\nd\nn\n\n\n\n\nw\ny\n" | sudo gdisk IMAGE.img
+    sudo parted -s IMAGE.img resizepart 2 100%
+    sudo gdisk -l IMAGE.img
+    else
+
     log "fdisk magic to enlarge the main partition"
     #calculating image offsets
     #debug showing all offsets:
@@ -52,6 +58,11 @@ ${ROOT_OFFSET}
 
 w
 EOF
+
+    fi
+
+else 
+echo "the image doesn't need to be enlarged, just using it like it is"
 fi
 
 popd

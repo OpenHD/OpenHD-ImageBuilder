@@ -7,31 +7,20 @@ adduser --shell /bin/bash --ingroup sudo --disabled-password --gecos "" "$USERNA
 chown -R $USERNAME:$PASSWORD /home/$USERNAME
 mkdir -p /boot/openhd/
 
-# On platforms that already have a separate boot partition we just put the config files on there, but some
-# platforms don't have or need a boot partition, so on those we have a separate /conf partition. All
-# openhd components look to /conf, so a symlink works well here. We may end up using separate /conf on everything.
-if [[ "${HAVE_CONF_PART}" == "false" ]] && [[ "${HAVE_BOOT_PART}" == "true" ]]; then
-    ln -s /boot /conf
-fi
-
 # We copy the motd to display a custom OpenHD message in the Terminal
 cd /opt/additionalFiles
 cp motd /etc/motd
 
-if [[ "${OS}" == "radxa-ubuntu-rock5a" ]] || [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
-    systemctl disable gdm3
-    systemctl disable gdm
-    sudo systemctl set-default multi-user.target
-    echo "$(hostname -I | cut -d' ' -f1) $(hostname)" | sudo tee -a /etc/hosts
-    touch /boot/openhd/rock5.txt
-    mkdir -p /boot/openhd/
-    mkdir -p /etc/systemd/system/getty@tty1.service.d
-    touch /boot/openhd/rock5.txt
-    touch /boot/openhd/ground.txt
-    rm -Rf /boot/openhd/before.txt
-    rm -Rf /boot/openhd/config.txt
-    cp /opt/additionalFiles/before.txt /boot/openhd/before.txt
-    cp /opt/additionalFiles/config.txt /boot/openhd/config.txt
+if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
+    rm /conf/before.txt
+    cp /opt/additionalFiles/before.txt /conf/before.txt
+    touch /conf/config.txt
+    #mounting config partition
+    ls -a /conf
+    mkdir -p /conf/openhd
+    cp -rv /boot/openhd/* /conf/openhd/
+    touch /conf/openhd/rock5.txt
+    cp -r /usr/lib/linux-image-5.10.110-99-rockchip-g1bbc04113/rockchip/* /boot/dtbo/
 fi
 
 if [[ "${OS}" == "radxa-ubuntu-rock5b" ]]; then
@@ -161,6 +150,9 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 
 fi
 
+ls -a /
+ls -a /config
+
 #Install Update-Service
 cp /opt/additionalFiles/update.service /etc/systemd/system/
 cp /opt/additionalFiles/updateOpenHD.sh /usr/local/bin/
@@ -173,12 +165,6 @@ NEW_HOSTNAME="openhd"
 if [ $? -eq 0 ]; then
   sudo sh -c "echo '$NEW_HOSTNAME' > /etc/hostname"
   sudo sed -i "s/127.0.1.1.*$CURRENT_HOSTNAME/127.0.1.1\t$NEW_HOSTNAME/g" /etc/hosts
-fi
-
-if [[ "${HAVE_CONF_PART}" == "false" ]] && [[ "${HAVE_BOOT_PART}" == "true" ]]; then
-    # the system expects things to be in /conf now, but on some platforms we use the boot
-    # partition instead of making another one, we may change this in the future
-    ln -s /boot /conf
 fi
 
 apt -y autoremove
