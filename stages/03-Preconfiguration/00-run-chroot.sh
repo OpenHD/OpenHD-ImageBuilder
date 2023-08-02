@@ -14,6 +14,8 @@ cp motd /etc/motd
 if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
     rm /conf/before.txt
     cp /opt/additionalFiles/before.txt /conf/before.txt
+    #allow offline auto detection of image format
+    cp /opt/additionalFiles/issue.txt /conf/issue.txt
     touch /conf/config.txt
     #mounting config partition
     ls -a /conf
@@ -21,7 +23,7 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     cp -rv /boot/openhd/* /conf/openhd/
     rm -Rf /boot/openhd
     touch /conf/openhd/rock5.txt
-    ln -s /conf/openhd /boot/openhd
+    ln -s /config/openhd /boot/openhd
     cp -r /usr/lib/linux-image-5.10.110-99-rockchip-g1bbc04113/rockchip/* /boot/dtbo/
 fi
 
