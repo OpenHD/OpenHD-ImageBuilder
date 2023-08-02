@@ -19,7 +19,9 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     ls -a /conf
     mkdir -p /conf/openhd
     cp -rv /boot/openhd/* /conf/openhd/
+    rm -Rf /boot/openhd
     touch /conf/openhd/rock5.txt
+    ln -s /conf/openhd /boot/openhd
     cp -r /usr/lib/linux-image-5.10.110-99-rockchip-g1bbc04113/rockchip/* /boot/dtbo/
 fi
 
