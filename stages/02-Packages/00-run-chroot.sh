@@ -4,6 +4,9 @@
 # # If anything fails here the script is failing!
 #!/bin/bash
 
+#Debug needs removal
+ls -a /home/openhd.config/autostart
+
 set -e
 
 # Packages which are universally needed
