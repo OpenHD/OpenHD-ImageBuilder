@@ -111,6 +111,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        git clone https://github.com/OpenHD/OpenHD-ImageBuilder --branch 2.4-evo
        cd OpenHD-ImageBuilder
        chmod a+x  shortcuts/OpenHD.desktop
+       chmod a+x  shortcuts/steamdeck.desktop
        chmod a+x  shortcuts/QOpenHD2.desktop
        chmod a+x  shortcuts/OpenHD-Air.desktop
        chmod a+x  shortcuts/OpenHD-Ground.desktop
@@ -121,6 +122,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        chmod a+x  shortcuts/OpenHD-ImageWriter.desktop
        sudo mv shortcuts/OpenHD.desktop /etc/xdg/autostart/
        sudo mv shortcuts/QOpenHD2.desktop /etc/xdg/autostart/
+       sudo mv shortcuts/steamdeck.desktop /etc/xdg/autostart/
        sudo cp shortcuts/* /usr/share/applications/
        sudo cp shortcuts/*.desktop /home/openhd/Desktop/
        sudo cp shortcuts/*.ico /opt/
@@ -138,9 +140,9 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        unzip MissionPlanner-latest.zip
        rm MissionPlanner-latest.zip
        cd /opt
-       wget https://github.com/iNavFlight/inav-configurator/releases/download/6.0.0/INAV-Configurator_linux64_6.0.0.tar.gz
-       tar -zxvf INAV-Configurator_linux64_6.0.0.tar.gz
-       rm INAV-Configurator_linux64_6.0.0.tar.gz
+       wget https://github.com/iNavFlight/inav-configurator/releases/download/6.1.0/INAV-Configurator_linux64_6.1.0.tar.gz
+       tar -zxvf INAV-Configurator_linux64_6.1.0.tar.gz
+       rm INAV-Configurator_linux64_6.1.0.tar.gz
        mv INAV\ Configurator/ INAV
        cd INAV
        chmod +x inav-configurator
@@ -148,7 +150,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        cd /opt
        mkdir QGC
        cd QGC
-       wget https://github.com/mavlink/qgroundcontrol/releases/download/v4.2.4/QGroundControl.AppImage
+       wget https://github.com/mavlink/qgroundcontrol/releases/download/v4.2.8/QGroundControl.AppImage
        chmod a+x QGroundControl.AppImage
        chown openhd:openhd QGroundControl.AppImage
 

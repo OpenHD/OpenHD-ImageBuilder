@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=RotateScreen
+Exec=/usr/local/bin/steamdeck.sh
+Type=Application
+X-GNOME-Autostart-enabled=true
