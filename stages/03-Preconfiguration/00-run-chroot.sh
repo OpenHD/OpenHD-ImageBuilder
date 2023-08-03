@@ -7,6 +7,8 @@ adduser --shell /bin/bash --ingroup sudo --disabled-password --gecos "" "$USERNA
 chown -R $USERNAME:$PASSWORD /home/$USERNAME
 mkdir -p /boot/openhd/
 
+ls -a /home/openhd.config/autostart
+
 # We copy the motd to display a custom OpenHD message in the Terminal
 cd /opt/additionalFiles
 cp motd /etc/motd
@@ -112,6 +114,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        cd OpenHD-ImageBuilder
        chmod a+x  shortcuts/OpenHD.desktop
        chmod a+x  shortcuts/steamdeck.desktop
+       chmod a+x  shortcuts/power.desktop
        chmod a+x  shortcuts/QOpenHD2.desktop
        chmod a+x  shortcuts/OpenHD-Air.desktop
        chmod a+x  shortcuts/OpenHD-Ground.desktop
@@ -123,6 +126,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        sudo mv shortcuts/OpenHD.desktop /etc/xdg/autostart/
        sudo mv shortcuts/QOpenHD2.desktop /etc/xdg/autostart/
        sudo mv shortcuts/steamdeck.desktop /etc/xdg/autostart/
+       sudo mv shortcuts/power.desktop /etc/xdg/autostart/
        sudo cp shortcuts/* /usr/share/applications/
        sudo cp shortcuts/*.desktop /home/openhd/Desktop/
        sudo cp shortcuts/*.ico /opt/
