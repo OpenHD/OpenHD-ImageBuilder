@@ -1,2 +1,2 @@
-Rockchip RK3588(s)
+
 Not generated using pi-gen, but by Raphael for OpenHD

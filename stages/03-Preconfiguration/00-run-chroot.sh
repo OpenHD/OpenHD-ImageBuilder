@@ -54,30 +54,30 @@ fi
     #         fi
     #     done
  
-#     #Enable Radxa-4K-camera-Overlay
-#     kernel_versions=$(grep -o 'fdtdir' /boot/extlinux/extlinux.conf | wc -l)
-#     for ((i=1; i<=kernel_versions; i++)); do
-#     file="/boot/extlinux/extlinux.conf"
-#     # use grep to find lines with "fdtdir" in the file
-#     # and print the line numbers
-#     grep -n "fdtdir" "$file" | cut -d: -f1 | while read line_num; do
-#         # print the line(s) immediately following the matching line
-#         line="$(sed -n "$((line_num+1))p" "$file")"
-#         if [[ "$line" == *"rock-5b-radxa-camera-4k"* ]]; then
-#             echo "$line_num is already patched"
-#         else
-#             sed -i "$((line_num+1))i \        fdtoverlays  /boot/dtbo/rock-5b-radxa-camera-4k.dtbo" "$file"
-#             echo "Camera-Config $line_num"
-#             # Set flag to break out of while loop
-#             break_while=true
-#         fi
-#         # Check flag to break out of while loop
-#         if [[ "$break_while" == true ]]; then
-#             break_while=false
-#             break
-#         fi
-#     done
-# done
+    #Enable Radxa-4K-camera-Overlay
+    kernel_versions=$(grep -o 'fdtdir' /boot/extlinux/extlinux.conf | wc -l)
+    for ((i=1; i<=kernel_versions; i++)); do
+    file="/boot/extlinux/extlinux.conf"
+    # use grep to find lines with "fdtdir" in the file
+    # and print the line numbers
+    grep -n "fdtdir" "$file" | cut -d: -f1 | while read line_num; do
+        # print the line(s) immediately following the matching line
+        line="$(sed -n "$((line_num+1))p" "$file")"
+        if [[ "$line" == *"rock-5b-radxa-camera-4k"* ]]; then
+            echo "$line_num is already patched"
+        else
+            sed -i "$((line_num+1))i \        fdtoverlays  /boot/dtbo/rock-5b-radxa-camera-4k.dtbo" "$file"
+            echo "Camera-Config $line_num"
+            # Set flag to break out of while loop
+            break_while=true
+        fi
+        # Check flag to break out of while loop
+        if [[ "$break_while" == true ]]; then
+            break_while=false
+            break
+        fi
+    done
+done
 
 
  if [[ "${OS}" == "raspbian" ]] ; then
@@ -151,6 +151,16 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        wget https://github.com/mavlink/qgroundcontrol/releases/download/v4.2.4/QGroundControl.AppImage
        chmod a+x QGroundControl.AppImage
        chown openhd:openhd QGroundControl.AppImage
+
+        #mounting config partition
+        cp /opt/additionalFiles/issue.txt /conf/issue.txt
+        touch /conf/config.txt
+        ls -a /conf
+        mkdir -p /conf/openhd
+        cp -rv /boot/openhd/* /conf/openhd/
+        rm -Rf /boot/openhd
+        touch /conf/openhd/rock5.txt
+        ln -s /config/openhd /boot/openhd
 
 fi
 
