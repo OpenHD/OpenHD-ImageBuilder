@@ -106,6 +106,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        sudo usermod -a -G dialout openhd
        sudo apt remove modemmanager
        cp /opt/additionalFiles/desktop-truster.sh /etc/profile.d/desktop-truster.sh
+       cp /opt/additionalFiles/steamdeck.sh /usr/local/bin/steamdeck.sh
        #this script needs to be executable by every user
        chmod +777 /etc/profile.d/desktop-truster.sh
        git clone https://github.com/OpenHD/OpenHD-ImageBuilder --branch 2.4-evo
