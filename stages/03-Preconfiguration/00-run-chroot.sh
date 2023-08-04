@@ -124,7 +124,6 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        sudo mv shortcuts/OpenHD.desktop /etc/xdg/autostart/
        sudo mv shortcuts/QOpenHD2.desktop /etc/xdg/autostart/
        sudo mv shortcuts/steamdeck.desktop /etc/xdg/autostart/
-       sudo mv shortcuts/power.desktop /etc/xdg/autostart/
        sudo cp shortcuts/* /usr/share/applications/
        sudo cp shortcuts/*.desktop /home/openhd/Desktop/
        sudo cp shortcuts/*.ico /opt/
