@@ -112,6 +112,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        cd OpenHD-ImageBuilder
        chmod a+x  shortcuts/OpenHD.desktop
        chmod a+x  shortcuts/steamdeck.desktop
+       chmod a+x  shortcuts/power.desktop
        chmod a+x  shortcuts/QOpenHD2.desktop
        chmod a+x  shortcuts/OpenHD-Air.desktop
        chmod a+x  shortcuts/OpenHD-Ground.desktop
@@ -123,6 +124,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        sudo mv shortcuts/OpenHD.desktop /etc/xdg/autostart/
        sudo mv shortcuts/QOpenHD2.desktop /etc/xdg/autostart/
        sudo mv shortcuts/steamdeck.desktop /etc/xdg/autostart/
+       sudo mv shortcuts/power.desktop /etc/xdg/autostart/
        sudo cp shortcuts/* /usr/share/applications/
        sudo cp shortcuts/*.desktop /home/openhd/Desktop/
        sudo cp shortcuts/*.ico /opt/
@@ -155,6 +157,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        chown openhd:openhd QGroundControl.AppImage
 
         #mounting config partition
+        sudo echo "UUID=4A7B-3DF7  /boot/openhd  auto  defaults  0  2" | sudo tee -a /etc/fstab
         cp /opt/additionalFiles/issue.txt /conf/issue.txt
         touch /conf/config.txt
         ls -a /conf
@@ -165,9 +168,6 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
         ln -s /config/openhd /boot/openhd
 
 fi
-
-ls -a /
-ls -a /config
 
 #Install Update-Service
 cp /opt/additionalFiles/update.service /etc/systemd/system/
