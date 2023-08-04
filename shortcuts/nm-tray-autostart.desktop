@@ -1,0 +1,8 @@
+[Desktop Entry]
+Exec=nm-tray
+Hidden=true
+Name=nm-tray
+NotShowIn=KDE;GNOME;
+TryExec=nm-tray
+Type=Application
+X-LXQt-Need-Tray=true
