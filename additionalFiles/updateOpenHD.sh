@@ -15,13 +15,6 @@ TEMP_FOLDER="/tmp/updateOpenHD"
 LOG_FILE="/boot/openhd/install-log.txt"
 mkdir -p $TEMP_FOLDER
 
-#Moving temp-config to config partition
-if [ ! -d "/boot/openhd_old" ]; then
-  echo "moving config folder"
-  sudo mv -v /boot/openhd_old/* /boot/openhd/
-  rm -Rf /boot/openhd_old/
-fi
-
 # Check if the update folder exists
 if [ ! -d "$UPDATE_FOLDER" ]; then
   echo "Error: $UPDATE_FOLDER does not exist"
@@ -56,11 +49,13 @@ for deb_file in "$TEMP_FOLDER"/*.deb; do
   fi
 done
 
-# remove the update folder
-rm -rf "$UPDATE_FOLDER"
-rm -rf "$TEMP_FOLDER"
 
 if $all_successful; then
   echo "All .deb files were installed successfully, rebooting the system"
-  reboot
+  # remove the update folder
+  rm -rf "$UPDATE_FOLDER"
+  rm -rf "$TEMP_FOLDER"
+  sudo reboot
+else
+  wall The update has failed, please do a manual flash
 fi
