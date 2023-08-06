@@ -66,7 +66,7 @@ fi
         if [[ "$line" == *"rock-5b-radxa-camera-4k"* ]]; then
             echo "$line_num is already patched"
         else
-            sed -i "$((line_num+1))i \        fdtoverlays  /boot/dtbo/rock-5b-radxa-camera-4k.dtbo" "$file"
+            sed -i "$((line_num+1))i \        fdtoverlays  /boot/dtbo/overlays/rock-5b-radxa-camera-4k.dtbo" "$file"
             echo "Camera-Config $line_num"
             # Set flag to break out of while loop
             break_while=true
@@ -109,6 +109,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        cp /opt/additionalFiles/steamdeck.sh /usr/local/bin/steamdeck.sh
        #this script needs to be executable by every user
        chmod +777 /etc/profile.d/desktop-truster.sh
+       chmod +x /etc/profile.d/steamdeck.sh
        git clone https://github.com/OpenHD/OpenHD-ImageBuilder --branch 2.4-evo
        cd OpenHD-ImageBuilder
        chmod a+x  shortcuts/OpenHD.desktop
