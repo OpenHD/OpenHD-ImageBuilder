@@ -38,6 +38,7 @@ EOF
         resize2fs "/dev/disk/by-uuid/$PARTITION_UUID"
 
         echo "Partition resized and filesystem expanded."
+        rm -Rf /boot/openhd/resize.txt
     else
         echo "Partition with UUID $PARTITION_UUID not found."
     fi
