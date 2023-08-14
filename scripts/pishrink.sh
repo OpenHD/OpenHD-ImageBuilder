@@ -324,9 +324,6 @@ if ! minsize=$(resize2fs -P "$loopback"); then
 	exit 10
 fi
 minsize=$(cut -d ':' -f 2 <<< "$minsize" | tr -d ' ')
-echo $minsize
-minsize=($minsize)
-echo $minsize
 logVariables $LINENO currentsize minsize
 if [[ $currentsize -eq $minsize ]]; then
   error $LINENO "Image already shrunk to smallest size"
@@ -334,7 +331,7 @@ if [[ $currentsize -eq $minsize ]]; then
 fi
 
 #Add some free space to the end of the filesystem
-extra_space=$(($currentsize - $minsize))
+//extra_space=$(($currentsize - $minsize))
 logVariables $LINENO extra_space
 echo extra_space
 for space in 5000 1000 100; do
