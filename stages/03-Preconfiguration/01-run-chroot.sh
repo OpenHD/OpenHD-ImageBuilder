@@ -39,4 +39,6 @@ sudo systemctl disable syslog.service
 #enable ssh for debug connections
 sudo systemctl enable ssh
 
-
+#Debug message
+echo "The image now is this big"
+df -h
