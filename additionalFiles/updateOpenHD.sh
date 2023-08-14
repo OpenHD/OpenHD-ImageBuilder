@@ -10,7 +10,7 @@ fi
 #resize function for x86
 
 # Specify the UUID of the partition you want to resize
-PARTITION_UUID="53aa3d65-1043-49fa-8740-148cba90bbae"
+PARTITION_UUID="9266e0aa-591a-483d-97b3-def06fabc605"
 
 # Check if the resize.txt file exists
 if [ -f "/boot/openhd/resize.txt" ]; then
@@ -21,6 +21,7 @@ if [ -f "/boot/openhd/resize.txt" ]; then
         # Resize the partition using gdisk DO NOT EDIT
 
 gdisk "$DEVICE_PATH" <<EOF
+p
 x
 e
 $PARTITION_UUID
@@ -31,13 +32,16 @@ w
 Y
 EOF
 
-        # Refresh partition table
-        partprobe "$DEVICE_PATH"
+gdisk "$DEVICE_PATH" <<EOF
+p
+EOF
+        # # Refresh partition table
+        # partprobe "$DEVICE_PATH"
 
-        # Resize the filesystem using resize2fs
-        resize2fs "/dev/disk/by-uuid/$PARTITION_UUID"
+        # # Resize the filesystem using resize2fs
+        # resize2fs "/dev/disk/by-uuid/$PARTITION_UUID"
 
-        echo "Partition resized and filesystem expanded."
+        # echo "Partition resized and filesystem expanded."
         rm -Rf /boot/openhd/resize.txt
     else
         echo "Partition with UUID $PARTITION_UUID not found."
