@@ -344,7 +344,7 @@ logVariables $LINENO minsize
 
 #Shrink filesystem
 info "Shrinking filesystem"
-resize2fs -p "$loopback" 2G
+resize2fs -p -M "$loopback" $minsize
 rc=$?
 if (( $rc )); then
   error $LINENO "resize2fs failed with rc $rc"
