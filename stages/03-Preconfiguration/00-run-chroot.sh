@@ -166,7 +166,6 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
         mkdir -p /conf/openhd
         cp -rv /boot/openhd/* /conf/openhd/
         rm -Rf /boot/openhd
-        touch /conf/openhd/rock5.txt
         touch /conf/openhd/resize.txt
         ln -s /config/openhd /boot/openhd
 
