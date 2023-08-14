@@ -19,6 +19,10 @@ sudo systemctl disable hciuart.service
 sudo systemctl disable anacron.service
 sudo systemctl disable exim4.service
 sudo systemctl mask hostapd.service
+apt clean
+sudo journalctl --rotate
+sudo journalctl --vacuum-time=1s
+
 
 #Disable plymoth (boot animation)
 sudo systemctl mask plymouth-start.service
