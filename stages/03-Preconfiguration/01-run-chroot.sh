@@ -19,9 +19,13 @@ sudo systemctl disable hciuart.service
 sudo systemctl disable anacron.service
 sudo systemctl disable exim4.service
 sudo systemctl mask hostapd.service
+#remove every last bit of crap
 apt clean
 sudo journalctl --rotate
 sudo journalctl --vacuum-time=1s
+rm -Rf /usr/share/locale/*
+rm -Rf /usr/share/man/*
+rm -Rf /var/swap
 
 
 #Disable plymoth (boot animation)
