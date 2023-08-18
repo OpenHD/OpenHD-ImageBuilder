@@ -5,13 +5,15 @@
 # Do not use log here, it will end up in the image
 # Here we configue all our services
 
+sudo systemctl enable NetworkManager
+
+
 if [[ "${OS}" == "raspian" ]] ; then
 #We now use NetworkManager
 rm -f /etc/init.d/dnsmasq
 rm -f /etc/init.d/dhcpcd
 sudo systemctl disable dnsmasq.service
 sudo systemctl disable dhcpcd.service
-sudo systemctl enable NetworkManager
 sudo systemctl disable triggerhappy.service
 sudo systemctl disable avahi-daemon.service
 sudo systemctl disable ser2net.service
