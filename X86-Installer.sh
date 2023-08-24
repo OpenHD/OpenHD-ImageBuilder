@@ -36,6 +36,10 @@ installShortcuts()
 	rm -Rf shortcuts/MissionPlanner.desktop
 	rm -Rf shortcuts/INAV.desktop
 	rm -Rf shortcuts/qgroundcontrol.desktop
+	rm -Rf shortcuts/QOpenHD2.desktop
+	rm -Rf shortcuts/OpenHD.desktop
+	rm -Rf shortcuts/nm-tray-autostart.desktop
+	rm -Rf shortcuts/steamdeck.desktop
 	rm -Rf shortcuts/OpenHD-ImageWriter.desktop
 	for homedir in /home/*; do sudo cp shortcuts/*.desktop "$homedir"/Desktop/; done
 	for homedir in /home/*; do gio set /home/$homedir/Desktop/OpenHD-Air.desktop metadata::trusted true; done
@@ -61,7 +65,7 @@ echo "Installed RTL8812BU"
 installOpenHDRepositories()
 {
 apt install -y git dkms curl
-curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-3-evo/setup.deb.sh'	| sudo -E bash
+curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-x86-evo/setup.deb.sh'	| sudo -E bash
 echo "Cloned Qopenhd and Openhd github repositories"
 }
 installOpenHD()
