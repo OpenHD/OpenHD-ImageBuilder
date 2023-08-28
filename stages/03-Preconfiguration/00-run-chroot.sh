@@ -24,7 +24,8 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     rm -Rf /boot/openhd
     touch /conf/openhd/rock5.txt
     ln -s /config/openhd /boot/openhd
-    cp -r /usr/lib/linux-image-5.10.110-99-rockchip-g1bbc04113/rockchip/* /boot/dtbo/
+    cp -r /usr/lib/linux-image-5.10.110-99-rockchip-ga98fc3587/rockchip/overlay/rock-5a* /boot/dtbo/
+    cp -r /usr/lib/linux-image-5.10.110-99-rockchip-ga98fc3587/rockchip/overlay/rock-5b* /boot/dtbo/
 fi
 
 if [[ "${OS}" == "radxa-ubuntu-rock5b" ]]; then
