@@ -55,29 +55,29 @@ fi
     #     done
  
     #Enable Radxa-4K-camera-Overlay
-    kernel_versions=$(grep -o 'fdtdir' /boot/extlinux/extlinux.conf | wc -l)
-    for ((i=1; i<=kernel_versions; i++)); do
-    file="/boot/extlinux/extlinux.conf"
-    # use grep to find lines with "fdtdir" in the file
-    # and print the line numbers
-    grep -n "fdtdir" "$file" | cut -d: -f1 | while read line_num; do
-        # print the line(s) immediately following the matching line
-        line="$(sed -n "$((line_num+1))p" "$file")"
-        if [[ "$line" == *"rock-5b-radxa-camera-4k"* ]]; then
-            echo "$line_num is already patched"
-        else
-            sed -i "$((line_num+1))i \        fdtoverlays  /boot/dtbo/overlays/rock-5b-radxa-camera-4k.dtbo" "$file"
-            echo "Camera-Config $line_num"
-            # Set flag to break out of while loop
-            break_while=true
-        fi
-        # Check flag to break out of while loop
-        if [[ "$break_while" == true ]]; then
-            break_while=false
-            break
-        fi
-    done
-done
+#     kernel_versions=$(grep -o 'fdtdir' /boot/extlinux/extlinux.conf | wc -l)
+#     for ((i=1; i<=kernel_versions; i++)); do
+#     file="/boot/extlinux/extlinux.conf"
+#     # use grep to find lines with "fdtdir" in the file
+#     # and print the line numbers
+#     grep -n "fdtdir" "$file" | cut -d: -f1 | while read line_num; do
+#         # print the line(s) immediately following the matching line
+#         line="$(sed -n "$((line_num+1))p" "$file")"
+#         if [[ "$line" == *"rock-5b-radxa-camera-4k"* ]]; then
+#             echo "$line_num is already patched"
+#         else
+#             sed -i "$((line_num+1))i \        fdtoverlays  /boot/dtbo/overlays/rock-5b-radxa-camera-4k.dtbo" "$file"
+#             echo "Camera-Config $line_num"
+#             # Set flag to break out of while loop
+#             break_while=true
+#         fi
+#         # Check flag to break out of while loop
+#         if [[ "$break_while" == true ]]; then
+#             break_while=false
+#             break
+#         fi
+#     done
+# done
 
 
  if [[ "${OS}" == "raspbian" ]] ; then
