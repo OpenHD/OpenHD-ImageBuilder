@@ -27,10 +27,11 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     #copy overlays from linux kernel into the correct folder
     package_name=$(dpkg -l | awk '/^ii/ && $2 ~ /^linux-image-5\.10\.110-99-rockchip-/{print $2}')
     version=$(echo "$package_name" | cut -d '-' -f 4-)
-    source_dirA="/usr/lib/$package_name/rockchip/overlay/rock-5a*"
-    source_dirB="/usr/lib/$package_name/rockchip/overlay/rock-5b*"
-    cp -r "$source_dirA" "/boot/dtbo/"
-    cp -r "$source_dirB" "/boot/dtbo/"
+    source_dirA="/usr/lib/$package_name/rockchip/overlay/rock-5a-*"
+    source_dirB="/usr/lib/$package_name/rockchip/overlay/rock-5b-*"
+
+    sudo cp -r $source_dirA "/boot/dtbo/"
+    sudo cp -r $source_dirB "/boot/dtbo/"
 fi
 
 if [[ "${OS}" == "radxa-ubuntu-rock5b" ]]; then
