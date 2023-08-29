@@ -7,6 +7,17 @@ else
     echo "Not running on a Steam Deck."
 fi
 
+if [ -f "/boot/openhd/rock-5a.txt" ]; then
+  sudo bash /boot/initRock.sh
+  rm /boot/openhd/rock-5a.txt
+fi
+
+if [ -f "/boot/openhd/rock-5b.txt" ]; then
+  sudo bash /boot/initRock.sh
+  rm /boot/openhd/rock-5b.txt
+fi
+
+
 #resize function for x86
 
 # Specify the UUID of the partition you want to resize

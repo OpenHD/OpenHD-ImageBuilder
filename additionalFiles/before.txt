@@ -30,6 +30,3 @@ regenerate_ssh_hostkey
 #   update_locale <locale>
 #
 update_locale en_US.UTF-8
-
-# OpenHD Stuff
-bash /boot/openhd/initRock.sh
