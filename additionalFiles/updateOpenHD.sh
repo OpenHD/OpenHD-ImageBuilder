@@ -10,11 +10,13 @@ fi
 if [ -f "/boot/openhd/rock-5a.txt" ]; then
   sudo bash /boot/openhd/initRock.sh
   rm /boot/openhd/rock-5a.txt
+  reboot
 fi
 
 if [ -f "/boot/openhd/rock-5b.txt" ]; then
   sudo bash /boot/openhd/initRock.sh
   rm /boot/openhd/rock-5b.txt
+  reboot
 fi
 
 
