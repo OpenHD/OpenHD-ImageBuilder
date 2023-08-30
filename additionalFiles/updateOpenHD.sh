@@ -8,12 +8,12 @@ else
 fi
 
 if [ -f "/boot/openhd/rock-5a.txt" ]; then
-  sudo bash /boot/initRock.sh
+  sudo bash /boot/openhd/initRock.sh
   rm /boot/openhd/rock-5a.txt
 fi
 
 if [ -f "/boot/openhd/rock-5b.txt" ]; then
-  sudo bash /boot/initRock.sh
+  sudo bash /boot/openhd/initRock.sh
   rm /boot/openhd/rock-5b.txt
 fi
 
