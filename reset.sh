@@ -2,7 +2,7 @@
 
 IMAGE_TYPE=$1
 
-echo "Reset Open.HD Builder"
+echo "Reset OpenHD Builder"
 echo "------------------------------------------------------"
 echo ""
 
