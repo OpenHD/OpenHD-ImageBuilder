@@ -178,11 +178,11 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 
 fi
 
-#Install Update-Service
-cp /opt/additionalFiles/update.service /etc/systemd/system/
-cp /opt/additionalFiles/updateOpenHD.sh /usr/local/bin/
-chmod +x /usr/local/bin/updateOpenHD.sh
-systemctl enable update.service
+#Install openhd_sys_utils_service
+cp /opt/additionalFiles/openhd_sys_utils.service /etc/systemd/system/
+cp /opt/additionalFiles/openhd_sys_utils.sh /usr/local/bin/
+chmod +x /usr/local/bin/openhd_sys_utils.sh
+systemctl enable openhd_sys_utils.service
 
 #change hostname to openhd
 CURRENT_HOSTNAME=`sudo cat /etc/hostname | sudo tr -d " \t\n\r"`
