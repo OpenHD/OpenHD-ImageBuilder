@@ -1,5 +1,34 @@
 #!/bin/bash
 
+#This script handles initial configuation, updates and misc features which aren't included in the main OpenHD executable (yet)
+
+# print debug messages to the screen if debug is enabled
+debug_file="/boot/openhd/debug.txt"
+if [ -e "$debug_file" ]; then
+    echo "debug mode selected"
+    echo "sudo journalctl -f" >> /home/openhd/.bashrc
+fi
+
+#camera Selector helper for the imagewriter
+##rockship
+if [ -f "/boot/openhd/rock-5a.txt" ]; then
+  sudo bash /usr/local/bin/initRock.sh
+  rm /boot/openhd/rock-5a.txt
+  reboot
+fi
+
+if [ -f "/boot/openhd/rock-5b.txt" ]; then
+  sudo bash /usr/local/bin/initRock.sh
+  rm /boot/openhd/rock-5b.txt
+  reboot
+fi
+##raspberry
+if [ -f "/boot/openhd/rpi.txt" ]; then
+  sudo bash /boot/openhd/initRock.sh
+  rm /boot/openhd/rock-5b.txt
+  reboot
+fi
+
 #dirty hack to rotate steamdeck
 if grep -q "AMD Custom APU 0405" /proc/cpuinfo; then
     echo "Running on a Steam Deck."
@@ -7,21 +36,7 @@ else
     echo "Not running on a Steam Deck."
 fi
 
-if [ -f "/boot/openhd/rock-5a.txt" ]; then
-  sudo bash /boot/openhd/initRock.sh
-  rm /boot/openhd/rock-5a.txt
-  reboot
-fi
-
-if [ -f "/boot/openhd/rock-5b.txt" ]; then
-  sudo bash /boot/openhd/initRock.sh
-  rm /boot/openhd/rock-5b.txt
-  reboot
-fi
-
-
 #resize function for x86
-
 # Specify the UUID of the partition you want to resize
 PARTITION_UUID="53aa3d65-1043-49fa-8740-148cba90bbae"
 
@@ -60,6 +75,7 @@ else
     echo "Resize not requested. The file /boot/openhd/resize.txt does not exist."
 fi
 
+##Update function for .zip update Files
 
 # The folder to look for .deb files
 UPDATE_FOLDER="/boot/openhd/update"

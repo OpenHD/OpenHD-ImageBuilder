@@ -10,6 +10,7 @@ mkdir -p /boot/openhd/
 # We copy the motd to display a custom OpenHD message in the Terminal
 cd /opt/additionalFiles
 cp motd /etc/motd
+cp motd-unsupported /etc/motd
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
     rm /conf/before.txt
@@ -17,7 +18,8 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     #allow offline auto detection of image format
     cp /opt/additionalFiles/issue.txt /conf/issue.txt
     mkdir -p /conf/openhd
-    cp /opt/additionalFiles/initRock.sh /conf/openhd/initRock.sh
+    cp /opt/additionalFiles/initRock.sh /usr/local/bin/initRock.sh
+    cp /opt/additionalFiles/initPi.sh /usr/local/bin/initPi.sh
     touch /conf/config.txt
     #mounting config partition
     ls -a /conf
