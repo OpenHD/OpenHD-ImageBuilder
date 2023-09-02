@@ -25,7 +25,7 @@ fi
 ##raspberry
 if [ -f "/boot/openhd/rpi.txt" ]; then
   sudo bash /boot/openhd/initRock.sh
-  rm /boot/openhd/rock-5b.txt
+  rm /boot/openhd/rpi.txt
   reboot
 fi
 
