@@ -10,7 +10,7 @@ mkdir -p /boot/openhd/
 # We copy the motd to display a custom OpenHD message in the Terminal
 cd /opt/additionalFiles
 cp motd /etc/motd
-cp motd-unsupported /etc/motd
+cp motd-unsupported /etc/motd-unsupported
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
     rm /conf/before.txt
