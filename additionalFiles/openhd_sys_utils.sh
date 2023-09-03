@@ -6,7 +6,7 @@
 debug_file="/boot/openhd/debug.txt"
 if [ -e "$debug_file" ]; then
     echo "debug mode selected"
-    echo "sudo journalctl -f" >> /home/openhd/.bashrc
+    echo "sudo journalctl -f" >> /root/.bashrc
 fi
 
 #camera Selector helper for the imagewriter
