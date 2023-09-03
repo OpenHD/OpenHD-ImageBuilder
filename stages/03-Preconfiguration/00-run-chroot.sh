@@ -19,7 +19,6 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     cp /opt/additionalFiles/issue.txt /conf/issue.txt
     mkdir -p /conf/openhd
     cp /opt/additionalFiles/initRock.sh /usr/local/bin/initRock.sh
-    cp /opt/additionalFiles/initPi.sh /usr/local/bin/initPi.sh
     touch /conf/config.txt
     #mounting config partition
     ls -a /conf
@@ -95,6 +94,7 @@ fi
      cp /opt/additionalFiles/userconf.txt /boot/userconf.txt
      cp /opt/additionalFiles/getty@.service /usr/lib/systemd/system/getty@.service
      cp /opt/additionalFiles/default_raspi_config.txt /boot/config.txt
+     cp /opt/additionalFiles/initPi.sh /usr/local/bin/initPi.sh
      #remove serial console
      sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
      sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
