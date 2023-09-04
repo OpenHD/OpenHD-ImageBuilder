@@ -10,6 +10,7 @@ mkdir -p /boot/openhd/
 # We copy the motd to display a custom OpenHD message in the Terminal
 cd /opt/additionalFiles
 cp motd /etc/motd
+cp motd-unsupported /etc/motd-unsupported
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
     rm /conf/before.txt
@@ -17,7 +18,7 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     #allow offline auto detection of image format
     cp /opt/additionalFiles/issue.txt /conf/issue.txt
     mkdir -p /conf/openhd
-    cp /opt/additionalFiles/initRock.sh /conf/openhd/initRock.sh
+    cp /opt/additionalFiles/initRock.sh /usr/local/bin/initRock.sh
     touch /conf/config.txt
     #mounting config partition
     ls -a /conf
@@ -93,6 +94,7 @@ fi
      cp /opt/additionalFiles/userconf.txt /boot/userconf.txt
      cp /opt/additionalFiles/getty@.service /usr/lib/systemd/system/getty@.service
      cp /opt/additionalFiles/default_raspi_config.txt /boot/config.txt
+     cp /opt/additionalFiles/initPi.sh /usr/local/bin/initPi.sh
      #remove serial console
      sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
      sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
@@ -144,6 +146,8 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        gio set /home/openhd/Desktop/MissionPlanner.desktop metadata::trusted true
        gio set /home/openhd/Desktop/qgroundcontrol.desktop metadata::trusted true
        echo "openhd ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/openhd
+       sudo add-apt-repository ppa:obsproject/obs-studio
+       sudo apt install -y obs-studio
        cd /opt
        mkdir MissionPlanner
        cd MissionPlanner
@@ -178,11 +182,11 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 
 fi
 
-#Install Update-Service
-cp /opt/additionalFiles/update.service /etc/systemd/system/
-cp /opt/additionalFiles/updateOpenHD.sh /usr/local/bin/
-chmod +x /usr/local/bin/updateOpenHD.sh
-systemctl enable update.service
+#Install openhd_sys_utils_service
+cp /opt/additionalFiles/openhd_sys_utils.service /etc/systemd/system/
+cp /opt/additionalFiles/openhd_sys_utils.sh /usr/local/bin/
+chmod +x /usr/local/bin/openhd_sys_utils.sh
+systemctl enable openhd_sys_utils.service
 
 #change hostname to openhd
 CURRENT_HOSTNAME=`sudo cat /etc/hostname | sudo tr -d " \t\n\r"`
