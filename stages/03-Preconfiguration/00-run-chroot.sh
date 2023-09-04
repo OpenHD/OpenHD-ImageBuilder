@@ -146,6 +146,8 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        gio set /home/openhd/Desktop/MissionPlanner.desktop metadata::trusted true
        gio set /home/openhd/Desktop/qgroundcontrol.desktop metadata::trusted true
        echo "openhd ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/openhd
+       sudo add-apt-repository ppa:obsproject/obs-studio
+       sudo apt install -y obs-studio
        cd /opt
        mkdir MissionPlanner
        cd MissionPlanner
