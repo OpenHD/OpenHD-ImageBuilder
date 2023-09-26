@@ -1,6 +1,6 @@
 // SETTINGS \\
 
-:doctype: book
+:doctype: book 
 
 // -- Table of Contents
 
