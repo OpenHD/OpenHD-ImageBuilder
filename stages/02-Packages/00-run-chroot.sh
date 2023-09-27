@@ -59,15 +59,9 @@ function clone_github_repos {
  fi
 
  # Add OpenHD Repository platform-specific packages
-if [[ "${OS}" == "ubuntu-x86" ]] ; then
  apt install -y curl
- curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-x86-evo/setup.deb.sh'| sudo -E bash
+ curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
  apt update
- else
- apt install -y curl
- curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-3-evo/setup.deb.sh'| sudo -E bash
- apt update
- fi
 
  # Remove platform-specific packages
  echo "Removing platform-specific packages..."
