@@ -34,17 +34,20 @@ for file in $files; do
 done
 
 # Now we remove everything after the #OPENHD_DYNAMIC_CONTENT_BEGIN# from the OpenHD config file
+rm /boot/openhd/rpi.txt
 cp /boot/config.txt /boot/config.txt.bak
 sed -i '/#OPENHD_DYNAMIC_CONTENT_BEGIN#/q' /boot/config.txt
 
 # Now we build the filename for the config file
 if [[ "$output" == "" ]]; then
   echo "mmal"
+  exit 0
 elif [[ "$output" == "imx327" ]] || [[ "$output" == "cam2m" ]] || [[ "$output" == "csimx307" ]] || [[ "$output" == "mvcam" ]] || [[ "$output" == "cssc132" ]]; then
   camera_type="veye_"
 else
  camera_type="libcamera_"
 fi
+
 camera_config=$board_type$camera_type$output".txt"
 camera_link="/boot/openhd/rpi_camera_configs/"$camera_config
 
