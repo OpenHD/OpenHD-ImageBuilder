@@ -66,6 +66,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
  else
  apt install -y curl
  curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-2-3-evo/setup.deb.sh'| sudo -E bash
+ curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
  apt update
  fi
 
