@@ -2,7 +2,7 @@ name: Image build on event
 
 on:
   push:
-    branches: [ "2.5-evo","2.5-rapha" ]
+    branches: [ "2.5-evo" ]
   pull_request:
     branches: [ "2.5-evo" ]
 
