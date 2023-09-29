@@ -7,13 +7,13 @@
 set -e
 
 # Packages which are universally needed
-BASE_PACKAGES="openhd apt-transport-https apt-utils open-hd-web-ui"
+BASE_PACKAGES="apt-transport-https apt-utils open-hd-web-ui"
 
 # Raspbian-specific code
 function install_raspbian_packages {
     PLATFORM_PACKAGES_HOLD="raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc raspberrypi-bootloader"
     PLATFORM_PACKAGES_REMOVE="locales gdb librsvg2-2 guile-2.2-libs firmware-libertas gcc-10 nfs-common libcamera* raspberrypi-kernel"
-    PLATFORM_PACKAGES="firmware-atheros openhd-userland openhd-linux-pi libseek-thermal libcamera-openhd openhd-qt qopenhd openssh-server"
+    PLATFORM_PACKAGES="firmware-atheros openhd-userland openhd-linux-pi libseek-thermal libcamera-openhd openhd-qt openssh-server"
 }
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
