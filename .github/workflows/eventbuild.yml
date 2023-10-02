@@ -2,15 +2,20 @@ name: Image build on event
 
 on:
   push:
-    branches: [ "2.5-evo" ]
-  pull_request:
-    branches: [ "2.5-evo" ]
-
+   branches:
+      - "2.5-evo"
+      - "dev-release"
+      - "release"
+   paths-ignore:
+      - '**.md'
+      - '**.asciidoc'
+      - '**.adoc'
+      - '.gitignore'
+      - 'LICENSE'
 jobs:
   build:
 
     runs-on: ubuntu-22.04
-    if: "github.event_name == 'push' && !contains(github.event.head_commit.modified, 'last.releases')"      
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
@@ -92,6 +97,7 @@ jobs:
 
 
   upload:
+    if: "github.event_name == 'push' && github.ref == 'refs/heads/release'"
     needs: build
     runs-on: ubuntu-latest
     strategy:

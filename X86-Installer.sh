@@ -65,7 +65,7 @@ echo "Installed RTL8812BU"
 installOpenHDRepositories()
 {
 apt install -y git dkms curl
-curl -1sLf 'https://dl.cloudsmith.io/public/openhd/openhd-x86-evo/setup.deb.sh'	| sudo -E bash
+curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'	| sudo -E bash
 echo "Cloned Qopenhd and Openhd github repositories"
 }
 installOpenHD()
