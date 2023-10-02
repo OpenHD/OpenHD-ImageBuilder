@@ -6,6 +6,7 @@ on:
       - "2.5-evo"
       - "dev-release"
       - "release"
+      - "cm3-support"
    paths-ignore:
       - '**.md'
       - '**.asciidoc'
@@ -20,7 +21,7 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TESTING: [release]
-        TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a] # <-- Add targets here!
+        TARGET: [radxa-cm3] # <-- Add targets here!
 
 
     steps:
