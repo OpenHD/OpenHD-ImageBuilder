@@ -24,6 +24,11 @@ function install_radxa-debian_packages {
     PLATFORM_PACKAGES_REMOVE="dkms sddm plymouth plasma-desktop kde*"
     PLATFORM_PACKAGES="rockchip-iq-openhd linux-headers-5.10.110-99-rockchip-g92d4e05d9 linux-image-5.10.110-99-rockchip-g92d4e05d9 rsync qopenhd procps mpv camera-engine-rkaiq"
 }
+function install_radxa-debian_packages_cm3 {
+    PLATFORM_PACKAGES="rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-17-rk356x linux-headers-5.10.160-17-rk356x linux-libc-dev-5.10.160-17-rk356x procps camera-engine-rkaiq"
+    PLATFORM_PACKAGES_REMOVE="dkms sddm plymouth plasma-desktop kde*"
+}
+
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
         if [[ "${DISTRO}" == "jammy" ]]; then
@@ -51,6 +56,8 @@ function clone_github_repos {
     install_radxa-ubuntu_packages
  elif [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]  ; then
     install_radxa-debian_packages
+ elif [[ "${OS}" == "radxa-debian-cm3" ]] ; then
+    install_radxa-debian_packages_cm3
  elif [[ "${OS}" == "ubuntu-x86" ]] ; then
     install_ubuntu_x86_packages
  elif [[ "${OS}" == "ubuntu" ]] ; then
@@ -74,6 +81,9 @@ function clone_github_repos {
          exit 1
      fi
  done
+ #cleanup before installing packages
+ apt autoremove -y
+
 
  # Hold platform-specific packages
  echo "Holding back platform-specific packages..."

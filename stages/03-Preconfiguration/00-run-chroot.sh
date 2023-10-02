@@ -45,6 +45,43 @@ if [[ "${OS}" == "radxa-ubuntu-rock5a" ]]; then
     sed -i 's/\(overlays=\)/\1rock-5a-radxa-camera-4k/' /boot/firmware/ubuntuEnv.txt
     depmod -a
 fi
+
+if [[ "${OS}" == "radxa-debian-cm3" ]]; then
+    rm /conf/before.txt
+    cp /opt/additionalFiles/before.txt /conf/before.txt
+    #allow offline auto detection of image format
+    cp /opt/additionalFiles/issue.txt /conf/issue.txt
+    mkdir -p /conf/openhd
+    cp /opt/additionalFiles/initRock.sh /usr/local/bin/initRock.sh
+    touch /conf/config.txt
+    #mounting config partition
+    ls -a /conf
+    cp -rv /boot/openhd/* /conf/openhd/
+    rm -Rf /boot/openhd
+    ln -s /config/openhd /boot/openhd
+    #copy overlays from linux kernel into the correct folder
+    package_name=$(dpkg -l | awk '/^ii/ && $2 ~ /^linux-image-5\.10\.160-199-rockchip-/{print $2}')    version=$(echo "$package_name" | cut -d '-' -f 4-)
+    ls -a /usr/lib/$package_name/rockchip/overlay/
+    #source_dir="/usr/lib/$package_name/rockchip/overlay/rock-cm3-*"
+
+    #sudo cp -r $source_dir "/boot/dtbo/"
+fi
+
+#DO NOT TOUCH THE SYNTAX HERE
+if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
+    touch /etc/systemd/system/usb.service
+    SERVICE_CONTENT="[Unit]
+Description=Enable USB
+[Service]
+ExecStart=/bin/sh -c \"echo host > /sys/devices/platform/fe8a0000.usb2-phy/otg_mode\"
+[Install]
+WantedBy=multi-user.target"
+
+# Create the systemd service unit file
+echo "$SERVICE_CONTENT" > /etc/systemd/system/usb.service
+systemctl enable usb
+fi
+
     # #FIXING DISPLAY DETECTION to 1080/60hz
     #     # Search for lines containing "append" in the extlinux.conf file
     #     lines=$(grep -n "append" /boot/extlinux/extlinux.conf | cut -d':' -f1)
