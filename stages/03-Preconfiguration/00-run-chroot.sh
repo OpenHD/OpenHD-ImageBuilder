@@ -47,21 +47,21 @@ if [[ "${OS}" == "radxa-ubuntu-rock5a" ]]; then
 fi
 
 if [[ "${OS}" == "radxa-debian-cm3" ]]; then
-    rm /conf/before.txt
-    cp /opt/additionalFiles/before.txt /conf/before.txt
+    # rm /conf/before.txt
+    # cp /opt/additionalFiles/before.txt /conf/before.txt
     #allow offline auto detection of image format
     cp /opt/additionalFiles/issue.txt /conf/issue.txt
     mkdir -p /conf/openhd
-    cp /opt/additionalFiles/initRock.sh /usr/local/bin/initRock.sh
-    touch /conf/config.txt
+    # cp /opt/additionalFiles/initRock.sh /usr/local/bin/initRock.sh
+    # touch /conf/config.txt
     #mounting config partition
-    ls -a /conf
-    cp -rv /boot/openhd/* /conf/openhd/
-    rm -Rf /boot/openhd
-    ln -s /config/openhd /boot/openhd
+    # ls -a /conf
+    # cp -rv /boot/openhd/* /conf/openhd/
+    # rm -Rf /boot/openhd
+    # ln -s /config/openhd /boot/openhd
     #copy overlays from linux kernel into the correct folder
-    package_name=$(dpkg -l | awk '/^ii/ && $2 ~ /^linux-image-5\.10\.160-199-rockchip-/{print $2}')    version=$(echo "$package_name" | cut -d '-' -f 4-)
-    ls -a /usr/lib$package_name/rockchip/overlay/
+    # package_name=$(dpkg -l | awk '/^ii/ && $2 ~ /^linux-image-5\.10\.160-199-rockchip-/{print $2}')    version=$(echo "$package_name" | cut -d '-' -f 4-)
+    # ls -a /usr/lib$package_name/rockchip/overlay/
     #source_dir="/usr/lib/$package_name/rockchip/overlay/rock-cm3-*"
 
     #sudo cp -r $source_dir "/boot/dtbo/"
