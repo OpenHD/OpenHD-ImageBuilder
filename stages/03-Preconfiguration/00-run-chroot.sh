@@ -61,7 +61,7 @@ if [[ "${OS}" == "radxa-debian-cm3" ]]; then
     ln -s /config/openhd /boot/openhd
     #copy overlays from linux kernel into the correct folder
     package_name=$(dpkg -l | awk '/^ii/ && $2 ~ /^linux-image-5\.10\.160-199-rockchip-/{print $2}')    version=$(echo "$package_name" | cut -d '-' -f 4-)
-    ls -a /usr/lib/$package_name/rockchip/overlay/
+    ls -a /usr/lib$package_name/rockchip/overlay/
     #source_dir="/usr/lib/$package_name/rockchip/overlay/rock-cm3-*"
 
     #sudo cp -r $source_dir "/boot/dtbo/"
