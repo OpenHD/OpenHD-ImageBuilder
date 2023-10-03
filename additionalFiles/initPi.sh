@@ -17,11 +17,17 @@ else
   sudo mv /etc/motd-unsupported /etc/motd
 fi
 
+### Check if it is a groundstation and if yes, exit
+
+if [ -e /boot/openhd/ground.txt ]; then 
+rm -Rf /boot/openhd/rpi.txt
+exit 0
+fi
+
 ### Configure the camera
 
 # Look for the camera option selected by the user
 output=""
-
 # Use find to locate all .txt files in the /boot/openhd directory
 # and then use grep to exclude the unwanted filenames
 files=$(find /boot/openhd -type f -name "*.txt" | grep -Ev "rpi\.txt|air\.txt|ground\.txt|debug\.txt")
