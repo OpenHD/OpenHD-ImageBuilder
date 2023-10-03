@@ -24,9 +24,11 @@ if [ -f "/boot/openhd/rock-5b.txt" ]; then
 fi
 ##raspberry
 if [ -f "/boot/openhd/rpi.txt" ]; then
+  if [ -f "/boot/openhd/air.txt" ]; then
   sudo bash /usr/local/bin/initPi.sh
   rm /boot/openhd/rpi.txt
   reboot
+  fi
 fi
 
 #dirty hack to rotate steamdeck
