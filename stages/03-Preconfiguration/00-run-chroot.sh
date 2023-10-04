@@ -12,7 +12,7 @@ cd /opt/additionalFiles
 cp motd /etc/motd
 cp motd-unsupported /etc/motd-unsupported
 
-if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
+if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]; then
     rm /conf/before.txt
     cp /opt/additionalFiles/before.txt /conf/before.txt
     #allow offline auto detection of image format
@@ -46,26 +46,6 @@ if [[ "${OS}" == "radxa-ubuntu-rock5a" ]]; then
     depmod -a
 fi
 
-if [[ "${OS}" == "radxa-debian-cm3" ]]; then
-    # rm /conf/before.txt
-    # cp /opt/additionalFiles/before.txt /conf/before.txt
-    #allow offline auto detection of image format
-    cp /opt/additionalFiles/issue.txt /conf/issue.txt
-    mkdir -p /conf/openhd
-    # cp /opt/additionalFiles/initRock.sh /usr/local/bin/initRock.sh
-    # touch /conf/config.txt
-    #mounting config partition
-    # ls -a /conf
-    # cp -rv /boot/openhd/* /conf/openhd/
-    # rm -Rf /boot/openhd
-    # ln -s /config/openhd /boot/openhd
-    #copy overlays from linux kernel into the correct folder
-    # package_name=$(dpkg -l | awk '/^ii/ && $2 ~ /^linux-image-5\.10\.160-199-rockchip-/{print $2}')    version=$(echo "$package_name" | cut -d '-' -f 4-)
-    # ls -a /usr/lib$package_name/rockchip/overlay/
-    #source_dir="/usr/lib/$package_name/rockchip/overlay/rock-cm3-*"
-
-    #sudo cp -r $source_dir "/boot/dtbo/"
-fi
 
 #DO NOT TOUCH THE SYNTAX HERE
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
@@ -81,48 +61,6 @@ WantedBy=multi-user.target"
 echo "$SERVICE_CONTENT" > /etc/systemd/system/usb.service
 systemctl enable usb
 fi
-
-    # #FIXING DISPLAY DETECTION to 1080/60hz
-    #     # Search for lines containing "append" in the extlinux.conf file
-    #     lines=$(grep -n "append" /boot/extlinux/extlinux.conf | cut -d':' -f1)
-
-    #     # Loop through each line number and check for the presence of "video"
-    #     for line in $lines
-    #     do
-    #         if grep -n "video" /boot/extlinux/extlinux.conf | cut -d: -f1 | grep -q $line
-    #         then
-    #             echo "Line $line: video already present"
-    #         else
-    #             # Add "video" to the end of the line
-    #             sed -i "${line}s/$/ video=1920x1080@60/" /boot/extlinux/extlinux.conf
-    #             echo "Line $line: video added"
-    #         fi
-    #     done
- 
-    #Enable Radxa-4K-camera-Overlay
-#     kernel_versions=$(grep -o 'fdtdir' /boot/extlinux/extlinux.conf | wc -l)
-#     for ((i=1; i<=kernel_versions; i++)); do
-#     file="/boot/extlinux/extlinux.conf"
-#     # use grep to find lines with "fdtdir" in the file
-#     # and print the line numbers
-#     grep -n "fdtdir" "$file" | cut -d: -f1 | while read line_num; do
-#         # print the line(s) immediately following the matching line
-#         line="$(sed -n "$((line_num+1))p" "$file")"
-#         if [[ "$line" == *"rock-5b-radxa-camera-4k"* ]]; then
-#             echo "$line_num is already patched"
-#         else
-#             sed -i "$((line_num+1))i \        fdtoverlays  /boot/dtbo/overlays/rock-5b-radxa-camera-4k.dtbo" "$file"
-#             echo "Camera-Config $line_num"
-#             # Set flag to break out of while loop
-#             break_while=true
-#         fi
-#         # Check flag to break out of while loop
-#         if [[ "$break_while" == true ]]; then
-#             break_while=false
-#             break
-#         fi
-#     done
-# done
 
 
  if [[ "${OS}" == "raspbian" ]] ; then
