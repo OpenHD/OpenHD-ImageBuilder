@@ -6,6 +6,9 @@
 
 set -e
 
+sudo rm /var/cache/apt || true
+sudo mkdir -p /var/cache/apt/archives/partial
+
 # Packages which are universally needed
 BASE_PACKAGES="openhd apt-transport-https apt-utils open-hd-web-ui"
 
