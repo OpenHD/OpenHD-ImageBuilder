@@ -11,7 +11,6 @@ sudo mkdir -p /var/cache/apt/archives/partial
 sudo apt update && sudo apt upgrade -y
 sudo apt full-upgrade -y
 sudo sed -i 's/buster/bullseye/g' /etc/apt/sources.list
-sudo sed -i 's/buster/bullseye/g' /etc/apt/sources.list.d/*.list
 sudo sed -i 's#/debian-security bullseye/updates# bullseye-security#g' /etc/apt/sources.list
 sudo apt update && sudo apt upgrade -y
 sudo apt full-upgrade -y
