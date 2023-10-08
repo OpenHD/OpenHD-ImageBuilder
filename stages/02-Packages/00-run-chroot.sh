@@ -17,7 +17,7 @@ sudo apt upgrade -y
 sudo apt full-upgrade -y
 
 # Packages which are universally needed
-BASE_PACKAGES="openhd apt-transport-https apt-utils open-hd-web-ui"
+BASE_PACKAGES="apt-transport-https apt-utils open-hd-web-ui"
 
 # Raspbian-specific code
 function install_raspbian_packages {
