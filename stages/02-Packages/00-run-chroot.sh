@@ -12,7 +12,7 @@ sudo apt full-upgrade -y
 sudo sed -i 's/buster/bullseye/g' /etc/apt/sources.list
 sudo sed -i '/http:\/\/mirrors.ustc.edu.cn\/debian-security/d' /etc/apt/sources.list
 sudo apt update
-DEBIAN_FRONTEND=noninteractive apt-get install keyboard-configuration
+DEBIAN_FRONTEND=noninteractive apt-get install -y keyboard-configuration 
 sudo apt upgrade -y
 sudo apt full-upgrade -y
 
