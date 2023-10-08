@@ -5,8 +5,8 @@
 #!/bin/bash
 
 set -e
+sudo mkdir -p /var/cache/apt/archives
 sudo touch /var/cache/apt/archives/partial
-
 sudo apt update && sudo apt upgrade -y
 sudo apt full-upgrade -y
 sudo sed -i 's/buster/bullseye/g' /etc/apt/sources.list
