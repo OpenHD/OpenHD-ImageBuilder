@@ -5,6 +5,7 @@
 #!/bin/bash
 
 set -e
+sudo touch /var/cache/apt/archives/partial
 
 sudo apt update && sudo apt upgrade -y
 sudo apt full-upgrade -y
@@ -13,7 +14,6 @@ sudo sed -i 's/buster/bullseye/g' /etc/apt/sources.list.d/*.list
 sudo sed -i 's#/debian-security bullseye/updates# bullseye-security#g' /etc/apt/sources.list
 sudo apt update
 DEBIAN_FRONTEND=noninteractive apt-get install keyboard-configurationsudo
-sudo touch /var/cache/apt/archives/partial
 sudo apt upgrade -y
 sudo apt full-upgrade -y
 
