@@ -10,11 +10,12 @@ sudo apt clean
 sudo apt update && sudo apt upgrade -y
 sudo apt full-upgrade -y
 sudo sed -i 's/buster/bullseye/g' /etc/apt/sources.list
-sudo sed -i '/http:\/\/mirrors.ustc.edu.cn\/debian-security/d' /etc/apt/sources.list
+sudo sed -i '/http:\/\/deb.debian.org\/debian-security/d' /etc/apt/sources.list
 sudo apt update
 DEBIAN_FRONTEND=noninteractive apt-get install -y keyboard-configuration 
 sudo apt upgrade -y
 sudo apt full-upgrade -y
+sudo apt dist-upgrade -y
 
 # Packages which are universally needed
 BASE_PACKAGES="apt-transport-https apt-utils open-hd-web-ui"
