@@ -26,7 +26,7 @@ function install_radxa-debian_packages {
 }
 function install_radxa-debian_packages_cm3 {
     PLATFORM_PACKAGES="rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-20-rk356x linux-headers-5.10.160-20-rk356x linux-libc-dev-5.10.160-20-rk356x procps camera-engine-rkaiq"
-    PLATFORM_PACKAGES_REMOVE="dkms sddm plymouth plasma-desktop kde*"
+    PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
 }
 
 # Ubuntu-x86-specific code
@@ -73,6 +73,8 @@ function clone_github_repos {
 
  # Remove platform-specific packages
  echo "Removing platform-specific packages..."
+ echo "${PLATFORM_PACKAGES_REMOVE}"
+ echo "---------------------------------------------"
  for package in ${PLATFORM_PACKAGES_REMOVE}; do
      echo "Removing ${package}..."
      apt purge -y ${package}
