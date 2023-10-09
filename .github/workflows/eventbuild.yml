@@ -21,7 +21,7 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TESTING: [release]
-        TARGET: [core3566] # <-- Add targets here!
+        TARGET: [radxa-cm3] # <-- Add targets here!
 
 
     steps:
