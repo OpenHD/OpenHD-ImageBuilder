@@ -1,7 +1,7 @@
 BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/BaseImages"
 BASE_IMAGE="core3566.7z"
 BASE_IMAGE_SHA256="37c8182f1bda0bdb79beff9364754b700bd2d2d634ed1c40283d46f889bae108"
-OS="radxa-debian-cm3"
+OS="radxa-debian-rock-cm3"
 DISTRO="bullseye"
 HAVE_BOOT_PART=false
 HAVE_CONF_PART=false
