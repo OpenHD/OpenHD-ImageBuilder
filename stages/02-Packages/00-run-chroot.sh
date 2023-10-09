@@ -16,6 +16,11 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y keyboard-configuration
 sudo apt upgrade -y
 sudo apt full-upgrade -y
 sudo apt dist-upgrade -y
+sudo apt remove gir1.2-gst-plugins-base-1.0 *gst* *gstreamer* -y
+sudo apt remove *xorg* -y
+sudo apt remove -y dvb-tools ir-keytable libdrm-amdgpu1 libdrm-common libdrm-dev libdrm2 libdvbv5-0 libdvbv5-dev libfile-listing-perl libgl1-mesa-dri libv4l-0 libv4l-dev libv4l2rds0 libv4lconvert0 openbox qv4l2 v4l-utils xdmx xdmx-tools xnest xserver-common xserver-xephyr xvfb xwayland chromium-x11 chromium-x11-dbgsym dvb-tools-dbgsym ir-keytable-dbgsym libdrm-cursor libdrm2-dbgsym libdvbv5-0-dbgsym libkms1 libv4l-0-dbgsym libv4l-rkmpp libv4l2rds0-dbgsym libv4lconvert0-dbgsym qv4l2-dbgsym v4l-utils-dbgsym xdmx-dbgsym xdmx-tools-dbgsym xnest-dbgsym xserver-xephyr-dbgsym xvfb-dbgsym xwayland-dbgsym libdrm-cursor-dbgsym libkms1-dbgsym libv4l-rkmpp-dbgsym
+sudo apt remove *xorg* -y
+sudo apt autoremove
 
 # Packages which are universally needed
 BASE_PACKAGES="apt-transport-https apt-utils open-hd-web-ui"
