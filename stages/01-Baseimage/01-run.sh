@@ -65,4 +65,4 @@ else
 echo "the image doesn't need to be enlarged, just using it like it is"
 fi
 
-popd'
+popd
