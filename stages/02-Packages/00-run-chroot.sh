@@ -56,7 +56,7 @@ function clone_github_repos {
     install_radxa-ubuntu_packages
  elif [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]  ; then
     install_radxa-debian_packages
- elif [[ "${OS}" == "radxa-debian-cm3" ]] ; then
+ elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
     install_radxa-debian_packages_cm3
  elif [[ "${OS}" == "ubuntu-x86" ]] ; then
     install_ubuntu_x86_packages
@@ -73,8 +73,6 @@ function clone_github_repos {
 
  # Remove platform-specific packages
  echo "Removing platform-specific packages..."
- echo "${PLATFORM_PACKAGES_REMOVE}"
- echo "---------------------------------------------"
  for package in ${PLATFORM_PACKAGES_REMOVE}; do
      echo "Removing ${package}..."
      apt purge -y ${package}
