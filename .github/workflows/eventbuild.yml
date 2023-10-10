@@ -19,7 +19,6 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        TESTING: [release]
         TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a] # <-- Add targets here!
 
 
@@ -56,7 +55,7 @@ jobs:
           make
           sudo make install
     - name: configure
-      run: sudo ./build.sh ${{ matrix.TARGET }} ${{ matrix.TESTING }}
+      run: sudo ./build.sh ${{ matrix.TARGET }}
     - name: remove old image to make space
       run: |
         sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
@@ -103,7 +102,6 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        TESTING: [release]
         TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a] # <-- Add targets here!
     steps:
     - name: debug
