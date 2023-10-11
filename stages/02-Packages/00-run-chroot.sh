@@ -11,6 +11,7 @@ function prepare_x20 {
     rm -Rf /etc/apt/sources.list.d/*
     rm -Rf /etc/apt/sources.list
     touch /etc/apt/sources.list
+    apt update
 }
 function install_x20_packages {
     PLATFORM_PACKAGES_REMOVE=""
