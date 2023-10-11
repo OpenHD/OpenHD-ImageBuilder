@@ -11,7 +11,6 @@ function prepare_x20 {
     rm -Rf /etc/apt/sources.list.d/*
     rm -Rf /etc/apt/sources.list
     touch /etc/apt/sources.list
-    "removed all the life from this image"
     apt update
 }
 function install_x20_packages {
@@ -57,8 +56,7 @@ function clone_github_repos {
 }
 
 # Main function
- if [[ "${OS}" == "X20-debian" ]]; then
-    echo "------------------NOOOOOOOOOOOOOOOOOOOOOOWWWWWWWWWWWWWWWWWWW--------------------"
+ if [[ "${OS}" == "debian-X20" ]]; then
     prepare_x20
     install_x20_packages
  elif [[ "${OS}" == "raspbian" ]]; then
