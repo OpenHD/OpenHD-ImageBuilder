@@ -6,6 +6,7 @@ on:
       - "2.5-evo"
       - "dev-release"
       - "release"
+      - "experimentsV2"
    paths-ignore:
       - '**.md'
       - '**.asciidoc'
