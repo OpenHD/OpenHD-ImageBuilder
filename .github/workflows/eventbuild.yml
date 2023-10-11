@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a] # <-- Add targets here!
+        TARGET: [x20] # <-- Add targets here!
 
 
     steps:
