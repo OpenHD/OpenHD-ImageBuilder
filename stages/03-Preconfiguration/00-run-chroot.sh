@@ -101,6 +101,9 @@ fi
      # enable dualcam-csi this file is the one from the Ochin board, but should work on most carrier boards
      rm -Rf /boot/dt-blob.bin
      wget https://openhd-images.fra1.cdn.digitaloceanspaces.com/Downloader/dt-blob.bin -P /boot/
+     # remove preexisting wifi driver for 88xxxu
+     rm -Rf /lib/modules/6.1.29-v7l+/kernel/drivers/net/wireless/realtek/rtl8xxxu*
+     rm -Rf /lib/modules/6.1.29-v7l/kernel/drivers/net/wireless/realtek/rtl8xxxu*
  fi
 
  if [[ "${OS}" == "ubuntu" ]]; then
