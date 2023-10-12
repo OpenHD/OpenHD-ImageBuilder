@@ -188,7 +188,7 @@ fi
  if [[ "${OS}" == "debian-X20" ]]; then
  mkdir /emmc/
  sudo echo "/dev/mmcblk1p1  /emmc  auto  defaults  0  2" | sudo tee -a /etc/fstab
- touch /boot/openhd/hardware_vtx_v20
+ touch /boot/openhd/hardware_vtx_v20.txt
  fi
 
 #Install openhd_sys_utils_service

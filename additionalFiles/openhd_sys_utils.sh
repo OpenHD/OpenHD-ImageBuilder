@@ -10,7 +10,7 @@ if [ -e "$debug_file" ]; then
 fi
 
 #initialise x20 air-unit
-if [ -f "/boot/openhd/x20.txt" ]; then
+if [ -f "/boot/openhd/hardware_vtx_v20.txt" ]; then
 depmod -a
 modprobe 88XXau_wfb
 modprobe HdZero
