@@ -9,6 +9,13 @@ if [ -e "$debug_file" ]; then
     echo "sudo journalctl -f" >> /root/.bashrc
 fi
 
+#initialise x20 air-unit
+if [ -f "/boot/openhd/x20.txt" ]; then
+depmod -a
+modprobe 88XXau_wfb
+modprobe HdZero
+fi
+
 #camera Selector helper for the imagewriter
 ##rockship
 if [ -f "/boot/openhd/rock-5a.txt" ]; then
