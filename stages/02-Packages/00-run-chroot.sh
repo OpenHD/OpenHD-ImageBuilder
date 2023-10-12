@@ -12,6 +12,7 @@ function prepare_x20 {
     rm -Rf /etc/apt/sources.list
     touch /etc/apt/sources.list
     apt update
+    sed -i '17,35d' /etc/rc.local
 }
 function install_x20_packages {
     BASE_PACKAGES="openhd-x20"
