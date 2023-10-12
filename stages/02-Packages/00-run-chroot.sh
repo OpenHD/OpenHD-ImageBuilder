@@ -14,6 +14,7 @@ function prepare_x20 {
     apt update
 }
 function install_x20_packages {
+    BASE_PACKAGES="openhd-x20"
     PLATFORM_PACKAGES_REMOVE=""
     PLATFORM_PACKAGES=""
 }
@@ -77,10 +78,6 @@ function clone_github_repos {
  apt install -y curl
  curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
  curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
- if [[ "${OS}" == "X20-debian" ]]; then
-    sudo sed -i 's/deb \[signed-by=\/usr\/share\/keyrings\/openhd-release-archive-keyring.gpg\] https:\/\/dl.cloudsmith.io\/public\/openhd\/release\/deb\/debian bullseye main/deb \[signed-by=\/usr\/share\/keyrings\/openhd-release-archive-keyring.gpg\] https:\/\/dl.cloudsmith.io\/public\/openhd\/dev-release\/deb\/debian sunxi main/' /etc/apt/sources.list.d/openhd-release.list
-    sudo sed -i 's/deb \[signed-by=\/usr\/share\/keyrings\/openhd-dev-release-archive-keyring.gpg\] https:\/\/dl.cloudsmith.io\/public\/openhd\/dev-release\/deb\/debian bullseye main/deb \[signed-by=\/usr\/share\/keyrings\/openhd-dev-release-archive-keyring.gpg\] https:\/\/dl.cloudsmith.io\/public\/openhd\/release\/deb\/debian sunxi main/' /etc/apt/sources.list.d/openhd-release.list
- fi
  apt update
 
  # Remove platform-specific packages
