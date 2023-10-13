@@ -18,7 +18,7 @@ function prepare_x20 {
 }
 function install_x20_packages {
     BASE_PACKAGES="openhd-x20"
-    PLATFORM_PACKAGES_REMOVE=""
+    PLATFORM_PACKAGES_REMOVE="*boost* locales "
     PLATFORM_PACKAGES=""
 }
 

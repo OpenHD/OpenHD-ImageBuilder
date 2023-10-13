@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        TARGET: [ubuntu-lunar,x20] # <-- Add targets here!
+        TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a, x20] # <-- Add targets here!
 
 
     steps:
@@ -64,7 +64,7 @@ jobs:
     - name: dep
       run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
     - name: update e2fsprogs
-      if: matrix.TARGET == 'ubuntu-lunar'
+      if: matrix.TARGET == 'x86-lunar'
       run: |
         git clone https://github.com/tytso/e2fsprogs
         cd e2fsprogs
