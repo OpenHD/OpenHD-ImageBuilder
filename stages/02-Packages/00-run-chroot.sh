@@ -9,6 +9,7 @@ set -e
 # X20 specific code
 function prepare_x20 {
     apt install -y ncdu
+    echo "-------------------------------------------debug-------------------------------------------"
     rm -Rf /etc/apt/sources.list.d/*
     rm -Rf /etc/apt/sources.list
     touch /etc/apt/sources.list
