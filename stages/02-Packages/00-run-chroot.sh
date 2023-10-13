@@ -14,6 +14,7 @@ function prepare_x20 {
     touch /etc/apt/sources.list
     apt update
     sed -i '17,35d' /etc/rc.local
+    find / -type f -exec du -h {} + | sort -rh | head -n 10
 }
 function install_x20_packages {
     BASE_PACKAGES="openhd-x20"
