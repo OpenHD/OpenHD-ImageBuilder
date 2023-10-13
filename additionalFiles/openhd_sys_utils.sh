@@ -11,6 +11,7 @@ fi
 
 #initialise x20 air-unit
 if [ -f "/boot/openhd/hardware_vtx_v20.txt" ]; then
+sleep 10
 depmod -a
 modprobe 88XXau_wfb
 modprobe HdZero
