@@ -26,7 +26,7 @@ function install_radxa-debian_packages {
 }
 function install_radxa-debian_packages_cm3 {
     PLATFORM_PACKAGES="net-tools isc-dhcp-client glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-4242-rk356x linux-headers-5.10.160-4242-rk356x linux-libc-dev-5.10.160-4242-rk356x procps camera-engine-rkaiq"
-    PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
+    PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop"
 }
 
 # Ubuntu-x86-specific code
