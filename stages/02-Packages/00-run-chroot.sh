@@ -62,7 +62,7 @@ function clone_github_repos {
     install_radxa-debian_packages
  elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
     install_radxa-debian_packages_cm3
- elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
+ elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
     install_packages-core3566
  elif [[ "${OS}" == "ubuntu-x86" ]] ; then
     install_ubuntu_x86_packages
