@@ -28,6 +28,10 @@ function install_radxa-debian_packages_cm3 {
     PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-4242-rk356x linux-headers-5.10.160-4242-rk356x linux-libc-dev-5.10.160-4242-rk356x procps camera-engine-rkaiq"
     PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
 }
+function install_packages-core3566 {
+    PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-4242-rk356x linux-headers-5.10.160-4242-rk356x linux-libc-dev-5.10.160-4242-rk356x procps camera-engine-rkaiq"
+    PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
+}
 
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
@@ -58,6 +62,8 @@ function clone_github_repos {
     install_radxa-debian_packages
  elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
     install_radxa-debian_packages_cm3
+ elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
+    install_packages-core3566
  elif [[ "${OS}" == "ubuntu-x86" ]] ; then
     install_ubuntu_x86_packages
  elif [[ "${OS}" == "ubuntu" ]] ; then
