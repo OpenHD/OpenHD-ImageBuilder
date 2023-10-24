@@ -25,11 +25,11 @@ function install_radxa-debian_packages {
     PLATFORM_PACKAGES="rockchip-iq-openhd linux-headers-5.10.110-99-rockchip-g92d4e05d9 linux-image-5.10.110-99-rockchip-g92d4e05d9 rsync procps mpv camera-engine-rkaiq"
 }
 function install_radxa-debian_packages_cm3 {
-    PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-4242-rk356x linux-headers-5.10.160-4242-rk356x linux-libc-dev-5.10.160-4242-rk356x procps camera-engine-rkaiq"
+    PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-20-rk356x linux-headers-5.10.160-20-rk356x linux-libc-dev-5.10.160-20-rk356x procps camera-engine-rkaiq"
     PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
 }
 function install_packages-core3566 {
-    PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-4242-rk356x linux-headers-5.10.160-4242-rk356x linux-libc-dev-5.10.160-4242-rk356x procps camera-engine-rkaiq"
+    PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-core3566-rk356x linux-headers-5.10.160-core3566-rk356x linux-libc-dev-5.10.160-core3566-rk356x procps camera-engine-rkaiq"
     PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
 }
 
