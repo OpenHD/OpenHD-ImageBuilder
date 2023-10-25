@@ -48,7 +48,7 @@ fi
 
 
 #DO NOT TOUCH THE SYNTAX HERE
-if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
+if [[ "${OS}" == "radxa-debian-rock-cm3" ]] || [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]; then
     touch /etc/systemd/system/usb.service
     SERVICE_CONTENT="[Unit]
 Description=Enable USB
