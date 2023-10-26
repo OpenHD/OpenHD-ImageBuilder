@@ -22,7 +22,7 @@ function install_radxa-ubuntu_packages {
 function install_radxa-debian_packages {
     PLATFORM_PACKAGES_HOLD="8852be-dkms linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip"
     PLATFORM_PACKAGES_REMOVE="dkms sddm plymouth plasma-desktop kde*"
-    PLATFORM_PACKAGES="rockchip-iq-openhd linux-headers-5.10.110-99-rockchip-g92d4e05d9 linux-image-5.10.110-99-rockchip-g92d4e05d9 rsync procps mpv camera-engine-rkaiq"
+    PLATFORM_PACKAGES="rockchip-iq-openhd linux-headers-5.10.110-99-rockchip-g9c3b92612 linux-image-5.10.110-99-rockchip-g9c3b92612 rsync procps mpv camera-engine-rkaiq"
 }
 function install_radxa-debian_packages_cm3 {
     PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-20-rk356x linux-headers-5.10.160-20-rk356x linux-libc-dev-5.10.160-20-rk356x procps camera-engine-rkaiq"
