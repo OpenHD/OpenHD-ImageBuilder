@@ -22,7 +22,6 @@ jobs:
       matrix:
         TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a, radxa-cm3, core3566] # <-- Add targets here!
 
-
     steps:
     - name: Maximize build space
       uses: easimon/maximize-build-space@master
