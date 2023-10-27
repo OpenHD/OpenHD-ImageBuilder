@@ -6,7 +6,7 @@ on:
       - "2.5-evo"
       - "dev-release"
       - "release"
-      - "experimentsV2"
+      - "cm3-support"
    paths-ignore:
       - '**.md'
       - '**.asciidoc'
@@ -20,8 +20,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a, x20] # <-- Add targets here!
-
+        TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a, radxa-cm3, core3566] # <-- Add targets here!
 
     steps:
     - name: Maximize build space
@@ -66,13 +65,13 @@ jobs:
     - name: update e2fsprogs
       if: matrix.TARGET == 'x86-lunar'
       run: |
-        git clone https://github.com/tytso/e2fsprogs
-        cd e2fsprogs
-        mkdir build
-        cd build
-        ../configure
-        make
-        sudo make install
+          git clone https://github.com/tytso/e2fsprogs
+          cd e2fsprogs
+          mkdir build
+          cd build
+          ../configure
+          make
+          sudo make install
     - name: configure
       run: sudo ./build.sh ${{ matrix.TARGET }}
     - name: remove old image to make space
@@ -121,7 +120,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a] # <-- Add targets here!
+        TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a, x20] # <-- Add targets here!
     steps:
     - name: debug
       run: df -h
