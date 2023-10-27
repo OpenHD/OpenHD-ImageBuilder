@@ -76,6 +76,9 @@ fi
      # enable dualcam-csi this file is the one from the Ochin board, but should work on most carrier boards
      rm -Rf /boot/dt-blob.bin
      wget https://openhd-images.fra1.cdn.digitaloceanspaces.com/Downloader/dt-blob.bin -P /boot/
+     # remove preexisting wifi driver for 88xxxu
+     rm -Rf /lib/modules/6.1.29-v7l+/kernel/drivers/net/wireless/realtek/rtl8xxxu*
+     rm -Rf /lib/modules/6.1.29-v7l/kernel/drivers/net/wireless/realtek/rtl8xxxu*
  fi
 
  if [[ "${OS}" == "ubuntu" ]]; then
@@ -94,7 +97,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        #this script needs to be executable by every user
        chmod +777 /etc/profile.d/desktop-truster.sh
        chmod +x /etc/profile.d/steamdeck.sh
-       git clone https://github.com/OpenHD/OpenHD-ImageBuilder --branch 2.4-evo
+       git clone https://github.com/OpenHD/OpenHD-ImageBuilder --branch dev-release
        cd OpenHD-ImageBuilder
        chmod a+x  shortcuts/OpenHD.desktop
        chmod a+x  shortcuts/steamdeck.desktop

@@ -17,11 +17,17 @@ else
   sudo mv /etc/motd-unsupported /etc/motd
 fi
 
+### Check if it is a groundstation and if yes, exit
+
+if [ -e /boot/openhd/ground.txt ]; then 
+rm -Rf /boot/openhd/rpi.txt
+exit 0
+fi
+
 ### Configure the camera
 
 # Look for the camera option selected by the user
 output=""
-
 # Use find to locate all .txt files in the /boot/openhd directory
 # and then use grep to exclude the unwanted filenames
 files=$(find /boot/openhd -type f -name "*.txt" | grep -Ev "rpi\.txt|air\.txt|ground\.txt|debug\.txt")
@@ -36,7 +42,6 @@ done
 # Now we remove everything after the #OPENHD_DYNAMIC_CONTENT_BEGIN# from the OpenHD config file
 rm /boot/openhd/rpi.txt
 cp /boot/config.txt /boot/config.txt.bak
-sed -i '/#OPENHD_DYNAMIC_CONTENT_BEGIN#/q' /boot/config.txt
 
 # Now we build the filename for the config file
 if [[ "$output" == "" ]]; then
@@ -44,7 +49,9 @@ if [[ "$output" == "" ]]; then
   exit 0
 elif [[ "$output" == "imx327" ]] || [[ "$output" == "cam2m" ]] || [[ "$output" == "csimx307" ]] || [[ "$output" == "mvcam" ]] || [[ "$output" == "cssc132" ]]; then
   camera_type="veye_"
+  sed -i '/#OPENHD_DYNAMIC_CONTENT_BEGIN#/q' /boot/config.txt
 else
+ sed -i '/#OPENHD_DYNAMIC_CONTENT_BEGIN#/q' /boot/config.txt
  camera_type="libcamera_"
 fi
 
