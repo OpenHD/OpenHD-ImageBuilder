@@ -1,0 +1,10 @@
+BASE_IMAGE_URL="https://github.com/radxa-build/radxa-cm3-rpi-cm4-io/releases/download/test-build-2/"
+BASE_IMAGE="radxa-cm3-rpi-cm4-io_debian_bullseye-test_kde_test-build-2.img.xz"
+BASE_IMAGE_SHA256="018af69b6534cda2d09580c74823a4dc34d0842298fed882c6d562c8e0715e03"
+OS="radxa-debian-rock-cm3-core3566"
+DISTRO="bullseye"
+HAVE_BOOT_PART=false
+HAVE_CONF_PART=true
+CONF_PART=2
+ROOT_PART=3
+BIT="64"

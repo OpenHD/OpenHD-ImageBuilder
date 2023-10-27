@@ -12,7 +12,6 @@
 // -- Icons
 
 ifdef::env-github[]
-
 :caution-caption: :fire:
 :important-caption: :exclamation:
 :note-caption: :paperclip:

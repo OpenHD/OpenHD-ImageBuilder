@@ -31,19 +31,29 @@ function install_raspbian_packages {
     BASE_PACKAGES="openhd apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc raspberrypi-bootloader"
     PLATFORM_PACKAGES_REMOVE="locales gdb librsvg2-2 guile-2.2-libs firmware-libertas gcc-10 nfs-common libcamera* raspberrypi-kernel"
-    PLATFORM_PACKAGES="firmware-atheros openhd-userland openhd-linux-pi libseek-thermal libcamera-openhd openhd-qt qopenhd openssh-server"
+    PLATFORM_PACKAGES="firmware-atheros openhd-userland openhd-linux-pi libseek-thermal libcamera-openhd openhd-qt openssh-server"
 }
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
     BASE_PACKAGES="openhd apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES="rsync qopenhd procps gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-tools gstreamer1.0-rockchip1 gstreamer1.0-gl mali-g610-firmware malirun rockchip-multimedia-config librist4 librist-dev rist-tools libv4l-0 libv4l2rds0 libv4lconvert0 libv4l-dev libv4l-rkmpp qv4l2 v4l-utils librockchip-mpp1 librockchip-mpp-dev librockchip-vpu0 rockchip-mpp-demos librga2 librga-dev libegl-mesa0 libegl1-mesa-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev libglx-mesa0 mesa-common-dev mesa-vulkan-drivers mesa-utils libwidevinecdm"
 }
+
 function install_radxa-debian_packages {
     BASE_PACKAGES="openhd apt-transport-https apt-utils open-hd-web-ui"
-    PLATFORM_PACKAGES_HOLD="8852be-dkms linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip linux-image-rock-5a"
+    PLATFORM_PACKAGES_HOLD="8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-rock-5a linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip"
     PLATFORM_PACKAGES_REMOVE="dkms sddm plymouth plasma-desktop kde*"
-    PLATFORM_PACKAGES="rockchip-iq-openhd linux-headers-5.10.110-99-rockchip-g92d4e05d9 linux-image-5.10.110-99-rockchip-g92d4e05d9 rsync qopenhd procps mpv camera-engine-rkaiq"
+    PLATFORM_PACKAGES="rockchip-iq-openhd linux-headers-5.10.110-99-rockchip-g9c3b92612 linux-image-5.10.110-99-rockchip-g9c3b92612 rsync procps mpv camera-engine-rkaiq"
 }
+function install_radxa-debian_packages_cm3 {
+    PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-20-rk356x linux-headers-5.10.160-20-rk356x linux-libc-dev-5.10.160-20-rk356x procps camera-engine-rkaiq"
+    PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
+}
+function install_packages-core3566 {
+    PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-core3566-rk356x linux-headers-5.10.160-core3566-rk356x linux-libc-dev-5.10.160-core3566-rk356x procps camera-engine-rkaiq"
+    PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
+}
+
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
         if [[ "${DISTRO}" == "jammy" ]]; then
@@ -74,6 +84,10 @@ function clone_github_repos {
     install_radxa-ubuntu_packages
  elif [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]  ; then
     install_radxa-debian_packages
+ elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
+    install_radxa-debian_packages_cm3
+ elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
+    install_packages-core3566
  elif [[ "${OS}" == "ubuntu-x86" ]] ; then
     install_ubuntu_x86_packages
  elif [[ "${OS}" == "ubuntu" ]] ; then
@@ -85,6 +99,7 @@ function clone_github_repos {
  apt install -y curl
  curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
  curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
+ curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
  apt update
 
  # Remove platform-specific packages
@@ -97,6 +112,9 @@ function clone_github_repos {
          exit 1
      fi
  done
+ #cleanup before installing packages
+ apt autoremove -y
+
 
  # Hold platform-specific packages
  echo "Holding back platform-specific packages..."
