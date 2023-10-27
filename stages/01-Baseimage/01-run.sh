@@ -4,7 +4,7 @@ pushd ${STAGE_WORK_DIR}
 
     #Makes the images flashable with raspberry pi imager
     log "We now define the size to be ~15GB (the maximum size we have in our github builder, this doesn't affect the output image because we're resizeing it in the end before uploading the image)" 
-    WANTEDSIZE="6600000000"
+    WANTEDSIZE="6800000000"
     FILESIZE=$(stat -c%s "IMAGE.img")
     DIFFERENCE=$(expr $WANTEDSIZE - $FILESIZE)
     DIFFERENCE=$(expr $DIFFERENCE - 1)
@@ -25,7 +25,7 @@ if [[ "${OS}" != ubuntu-x86 ]]; then
     log "Enlarge the downloaded image"
     cat temp.img >> IMAGE.img
 
-    if [[ "${OS}" == radxa-debian-rock5a ]] || [[ "${OS}" == radxa-debian-rock5b ]]; then
+    if [[ "${OS}" == radxa-debian-rock5a ]] || [[ "${OS}" == radxa-debian-rock5b ]] || [[ "${OS}" == radxa-debian-rock-cm3 ]] || [[ "${OS}" == radxa-debian-rock-cm3-core3566 ]]; then
     echo "resize with parted"
     echo -e "x\ne\nd\nn\n\n\n\n\nw\ny\n" | sudo gdisk IMAGE.img
     sudo parted -s IMAGE.img resizepart 2 100%

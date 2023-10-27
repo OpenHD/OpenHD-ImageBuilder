@@ -12,7 +12,7 @@ cd /opt/additionalFiles
 cp motd /etc/motd
 cp motd-unsupported /etc/motd-unsupported
 
-if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian" ]]; then
+if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]; then
     rm /conf/before.txt
     cp /opt/additionalFiles/before.txt /conf/before.txt
     #allow offline auto detection of image format
@@ -45,47 +45,22 @@ if [[ "${OS}" == "radxa-ubuntu-rock5a" ]]; then
     sed -i 's/\(overlays=\)/\1rock-5a-radxa-camera-4k/' /boot/firmware/ubuntuEnv.txt
     depmod -a
 fi
-    # #FIXING DISPLAY DETECTION to 1080/60hz
-    #     # Search for lines containing "append" in the extlinux.conf file
-    #     lines=$(grep -n "append" /boot/extlinux/extlinux.conf | cut -d':' -f1)
 
-    #     # Loop through each line number and check for the presence of "video"
-    #     for line in $lines
-    #     do
-    #         if grep -n "video" /boot/extlinux/extlinux.conf | cut -d: -f1 | grep -q $line
-    #         then
-    #             echo "Line $line: video already present"
-    #         else
-    #             # Add "video" to the end of the line
-    #             sed -i "${line}s/$/ video=1920x1080@60/" /boot/extlinux/extlinux.conf
-    #             echo "Line $line: video added"
-    #         fi
-    #     done
- 
-    #Enable Radxa-4K-camera-Overlay
-#     kernel_versions=$(grep -o 'fdtdir' /boot/extlinux/extlinux.conf | wc -l)
-#     for ((i=1; i<=kernel_versions; i++)); do
-#     file="/boot/extlinux/extlinux.conf"
-#     # use grep to find lines with "fdtdir" in the file
-#     # and print the line numbers
-#     grep -n "fdtdir" "$file" | cut -d: -f1 | while read line_num; do
-#         # print the line(s) immediately following the matching line
-#         line="$(sed -n "$((line_num+1))p" "$file")"
-#         if [[ "$line" == *"rock-5b-radxa-camera-4k"* ]]; then
-#             echo "$line_num is already patched"
-#         else
-#             sed -i "$((line_num+1))i \        fdtoverlays  /boot/dtbo/overlays/rock-5b-radxa-camera-4k.dtbo" "$file"
-#             echo "Camera-Config $line_num"
-#             # Set flag to break out of while loop
-#             break_while=true
-#         fi
-#         # Check flag to break out of while loop
-#         if [[ "$break_while" == true ]]; then
-#             break_while=false
-#             break
-#         fi
-#     done
-# done
+
+#DO NOT TOUCH THE SYNTAX HERE
+if [[ "${OS}" == "radxa-debian-rock-cm3" ]] || [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]; then
+    touch /etc/systemd/system/usb.service
+    SERVICE_CONTENT="[Unit]
+Description=Enable USB
+[Service]
+ExecStart=/bin/sh -c \"echo host > /sys/devices/platform/fe8a0000.usb2-phy/otg_mode\"
+[Install]
+WantedBy=multi-user.target"
+
+# Create the systemd service unit file
+echo "$SERVICE_CONTENT" > /etc/systemd/system/usb.service
+systemctl enable usb
+fi
 
 
  if [[ "${OS}" == "raspbian" ]] ; then
