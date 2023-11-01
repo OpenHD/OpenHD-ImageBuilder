@@ -191,12 +191,14 @@ for STAGE_DIR in "${BASE_DIR}/stages/"*; do
     fi
 done
 
-# PiShrink
+# Shrink Image ( only rpi and armbian right now)
 log ""
 log "======================================================"
 log "Shrinking image: ${IMAGE_PATH_NAME}"
 if [[ "${OS}" == "raspbian" ]]; then
 ${SCRIPT_DIR}/pishrink.sh -v ${PREV_WORK_DIR}/*.img
+if [[ "${OS}" == "debian-X20" ]]; then
+${SCRIPT_DIR}/armbianshrink.sh -v ${PREV_WORK_DIR}/*.img
 else
 echo "Shrinking images that aren't made for the raspberry isn't integrated, yet!"
 fi
