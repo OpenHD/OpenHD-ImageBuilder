@@ -8,7 +8,8 @@ set -e
 
 # X20 specific code
 function prepare_x20 {
-    apt install -y ncdu
+    ldd /usr/lib/arm-linux-gnueabihf/libLLVM-11.so.1
+    echo "____________________________"
     rm -Rf /etc/apt/sources.list.d/*
     rm -Rf /etc/apt/sources.list
     cd /usr/lib/arm-linux-gnueabihf/dri
