@@ -10,9 +10,9 @@ set -e
 function prepare_x20 {
     ldd /usr/lib/arm-linux-gnueabihf/libLLVM-11.so.1
     sudo apt update
-    sudo apt install deborphan
-    sudo apt remove --purge $(deborphan --guess-all)
-    sudo apt remove --purge deborphan
+    sudo apt install deborphan -y
+    sudo apt remove --purge $(deborphan --guess-all) -y
+    sudo apt remove --purge deborphan -y
     sudo apt autoremove -y
     echo "____________________________"
     rm -Rf /etc/apt/sources.list.d/*
