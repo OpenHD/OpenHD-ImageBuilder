@@ -199,7 +199,9 @@ if [[ "${OS}" == "raspbian" ]]; then
 ${SCRIPT_DIR}/pishrink.sh -v ${PREV_WORK_DIR}/*.img
 elif [[ "${OS}" == "debian-X20" ]]; then
 chmod +x ${SCRIPT_DIR}/armbianshrink.sh
-${SCRIPT_DIR}/armbianshrink.sh -v ${PREV_WORK_DIR}/*.img ${PREV_WORK_DIR}/*.img1
+ls -a ${PREV_WORK_DIR}
+echo ${PREV_WORK_DIR}
+${SCRIPT_DIR}/armbianshrink.sh -s ${PREV_WORK_DIR}/*.img ${PREV_WORK_DIR}/*.img1
 img_filename="${*.img1}.img"
 cat img_filename
 mv *.img1 img_filename
