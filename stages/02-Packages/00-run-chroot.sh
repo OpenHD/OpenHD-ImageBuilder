@@ -9,6 +9,11 @@ set -e
 # X20 specific code
 function prepare_x20 {
     ldd /usr/lib/arm-linux-gnueabihf/libLLVM-11.so.1
+    sudo apt update
+    sudo apt install deborphan
+    sudo apt remove --purge $(deborphan --guess-all)
+    sudo apt remove --purge deborphan
+    sudo apt autoremove -y
     echo "____________________________"
     rm -Rf /etc/apt/sources.list.d/*
     rm -Rf /etc/apt/sources.list
