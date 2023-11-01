@@ -175,7 +175,7 @@ EOM
 	exit 1
 }
 
-should_skip_autoexpand=false
+should_skip_autoexpand=true
 debug=false
 repair=false
 parallel=false
