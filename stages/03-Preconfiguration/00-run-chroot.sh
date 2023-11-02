@@ -166,6 +166,23 @@ fi
  touch /boot/openhd/hardware_vtx_v20.txt
  touch /boot/openhd/air.txt
  rm -Rf /var/log/*
+ sudo apt update
+ sudo apt list --installed
+ sudo sed -i '13,17d' /etc/oh-my-zsh/tools/uninstall.sh
+ sudo bash ./etc/oh-my-zsh/tools/uninstall.sh
+ rm -Rf /home/openhd/vencoderDemo
+ rm -Rf /usr/lib/firmware/rkwifi
+ rm -Rf /usr/lib/firmware/ath11k
+ rm -Rf /usr/lib/firmware/brcm
+ rm -Rf /etc/oh-my-zsh
+ cd /usr/lib/arm-linux-gnueabihf/dri
+ rm -Rf kms_swrast_dri.so mediatek_dri.so armada-drm_dri.so mxsfb-drm_dri.so panfrost_dri.so st7735r_dri.so etnaviv_dri.so lima_dri.so pl111_dri.so stm_dri.so exynos_dri.so mcde_dri.so r200_dri.so hx8357d_dri.so ili9225_dri.so r300_dri.so r600_dri.so radeon_dri.so radeonsi_dri.so v3d_dri.so imx-dcss_dri.so imx-drm_dri.so msm_dri.so tegra_dri.so repaper_dri.so virtio_gpu_dri.so ingenic-drm_dri.so nouveau_dri.so nouveau_vieux_dri.so rockchip_dri.so zink_dri.so kgsl_dri.so st7586_dri.so vc4_dri.so
+ rm -Rf /usr/share/locale/*
+ rm -Rf /usr/local/share/openhd/video/sunxisrc_h264.json
+ touch /etc/apt/sources.list
+ apt update
+ sed -i '17,35d' /etc/rc.local
+ find / -type f -exec du -h {} + | sort -rh | head -n 10
  fi
 
 #Install openhd_sys_utils_service
