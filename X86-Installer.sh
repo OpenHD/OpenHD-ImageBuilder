@@ -2,12 +2,12 @@
 
 echo "Starting OpenHD installation..."
 echo ""
-n=" ██████╗ ██████╗ ███████╗███╗   ██╗   ██╗  ██╗██████╗   " && echo "${n::${COLUMNS:-$(tput cols)}}" # some magic to cut the end on smaller terminals
-n="██╔═══██╗██╔══██╗██╔════╝████╗  ██║   ██║  ██║██╔══██╗  " && echo "${n::${COLUMNS:-$(tput cols)}}"
-n="██║   ██║██████╔╝█████╗  ██╔██╗ ██║   ███████║██║  ██║  " && echo "${n::${COLUMNS:-$(tput cols)}}"
-n="██║   ██║██╔═══╝ ██╔══╝  ██║╚██╗██║   ██╔══██║██║  ██║  " && echo "${n::${COLUMNS:-$(tput cols)}}"
-n="╚██████╔╝██║     ███████╗██║ ╚████║██╗██║  ██║██████╔╝  " && echo "${n::${COLUMNS:-$(tput cols)}}"
-n=" ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═════╝   " && echo "${n::${COLUMNS:-$(tput cols)}}"
+n=" ██████╗ ██████╗ ███████╗███╗   ██╗██╗  ██╗██████╗   " && echo "${n::${COLUMNS:-$(tput cols)}}" # some magic to cut the end on smaller terminals
+n="██╔═══██╗██╔══██╗██╔════╝████╗  ██║██║  ██║██╔══██╗  " && echo "${n::${COLUMNS:-$(tput cols)}}"
+n="██║   ██║██████╔╝█████╗  ██╔██╗ ██║███████║██║  ██║  " && echo "${n::${COLUMNS:-$(tput cols)}}"
+n="██║   ██║██╔═══╝ ██╔══╝  ██║╚██╗██║██╔══██║██║  ██║  " && echo "${n::${COLUMNS:-$(tput cols)}}"
+n="╚██████╔╝██║     ███████╗██║ ╚████║██║  ██║██████╔╝  " && echo "${n::${COLUMNS:-$(tput cols)}}"
+n=" ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═════╝   " && echo "${n::${COLUMNS:-$(tput cols)}}"
 echo ""
 
 prepareOpenHD()
@@ -66,9 +66,8 @@ installRtl8812au()
 installRtl8812bu()
 {
     echo "Installing RTL8812BU..."
-    cp -r /usr/src/rtl88x2bu-git /usr/src/rtl88x2bu-5.13.1
-    cd /usr/src/rtl88x2bu-5.13.1
-    sed -i 's/PACKAGE_VERSION="@PKGVER@"/PACKAGE_VERSION="5.13.1"/g' /usr/src/rtl88x2bu-5.13.1/dkms.conf
+    cd /usr/src/rtl88x2bu-git
+    sed -i 's/PACKAGE_VERSION="@PKGVER@"/PACKAGE_VERSION="5.13.1"/g' /usr/src/rtl88x2bu-git/dkms.conf
     dkms add -m rtl88x2bu -v 5.13.1 || { echo "Failed to install RTL8812BU"; exit 1; }
     echo "RTL8812BU installed successfully."
 }
