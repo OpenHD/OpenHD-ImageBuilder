@@ -12,7 +12,7 @@ function prepare_x20 {
     uninstall_oh_my_zsh
     sudo apt install deborphan -y
     sudo apt remove --purge $(deborphan --guess-all) -y
-    sudo apt remove --purge deborphan vim -y
+    sudo apt remove --purge deborphan vim build-essential -y
     sudo apt autoremove -y
     rm -Rf /etc/apt/sources.list.d/*
     rm -Rf /etc/apt/sources.list
