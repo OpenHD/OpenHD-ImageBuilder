@@ -35,8 +35,9 @@ function install_radxa-debian_packages {
     PLATFORM_PACKAGES="rockchip-iq-openhd linux-headers-5.10.110-99-rockchip-g9c3b92612 linux-image-5.10.110-99-rockchip-g9c3b92612 rsync procps mpv camera-engine-rkaiq"
 }
 function install_radxa-debian_packages_cm3 {
+    BASE_PACKAGES="openhd qopenhd apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-radxa-rk356x linux-headers-5.10.160-radxa-rk356x linux-libc-dev-5.10.160-radxa-rk356x procps camera-engine-rkaiq"
-    PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
+    PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde* lightdm *xfce*"
 }
 function install_packages-core3566 {
     PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-core3566-rk356x linux-headers-5.10.160-core3566-rk356x linux-libc-dev-5.10.160-core3566-rk356x procps camera-engine-rkaiq"
@@ -95,7 +96,7 @@ function clone_github_repos {
  echo "Removing platform-specific packages..."
  for package in ${PLATFORM_PACKAGES_REMOVE}; do
      echo "Removing ${package}..."
-     apt purge -y ${package}
+     apt purge -y ${package}  || true
      if [ $? -ne 0 ]; then
          echo "Failed to remove ${package}!"
          exit 1
