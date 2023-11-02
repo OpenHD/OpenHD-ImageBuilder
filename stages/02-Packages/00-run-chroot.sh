@@ -104,6 +104,7 @@ function clone_github_repos {
  done
  #cleanup before installing packages
  apt autoremove -y
+ dpkg-query -W --showformat='${Installed-Size;10}\t${Package}\n' | sort -k1,1n
  echo "___________-debug-________________"
 
 
