@@ -34,10 +34,10 @@ function install_radxa-debian_packages {
     PLATFORM_PACKAGES_REMOVE="dkms sddm plymouth plasma-desktop kde*"
     PLATFORM_PACKAGES="rockchip-iq-openhd linux-headers-5.10.110-99-rockchip-g9c3b92612 linux-image-5.10.110-99-rockchip-g9c3b92612 rsync procps mpv camera-engine-rkaiq"
 }
-function install_radxa-debian_packages_cm3 {
+function install_radxa-debian_packages_rk3566 {
     BASE_PACKAGES="openhd qopenhd apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-radxa-rk356x linux-headers-5.10.160-radxa-rk356x linux-libc-dev-5.10.160-radxa-rk356x procps camera-engine-rkaiq"
-    PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde* lightdm *xfce*"
+    PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde* lightdm *xfce* chromium"
 }
 function install_packages-core3566 {
     PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-core3566-rk356x linux-headers-5.10.160-core3566-rk356x linux-libc-dev-5.10.160-core3566-rk356x procps camera-engine-rkaiq"
@@ -75,7 +75,7 @@ function clone_github_repos {
  elif [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]  ; then
     install_radxa-debian_packages
  elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
-    install_radxa-debian_packages_cm3
+    install_radxa-debian_packages_rk3566
  elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
     install_packages-core3566
  elif [[ "${OS}" == "ubuntu-x86" ]] ; then
