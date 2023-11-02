@@ -96,7 +96,7 @@ function clone_github_repos {
  echo "Removing platform-specific packages..."
  for package in ${PLATFORM_PACKAGES_REMOVE}; do
      echo "Removing ${package}..."
-     apt purge -y ${package}  || true
+     apt purge -y ${package}
      if [ $? -ne 0 ]; then
          echo "Failed to remove ${package}!"
          exit 1
@@ -104,6 +104,7 @@ function clone_github_repos {
  done
  #cleanup before installing packages
  apt autoremove -y
+ echo "___________-debug-________________"
 
 
  # Hold platform-specific packages
