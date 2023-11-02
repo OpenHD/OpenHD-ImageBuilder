@@ -65,7 +65,6 @@ function clone_github_repos {
 
 # Main function
  if [[ "${OS}" == "debian-X20" ]]; then
-    prepare_x20
     install_x20_packages
  elif [[ "${OS}" == "raspbian" ]]; then
     install_raspbian_packages
