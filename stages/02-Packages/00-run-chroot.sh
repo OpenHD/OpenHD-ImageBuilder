@@ -9,6 +9,7 @@ set -e
 # X20 specific code
 function prepare_x20 {
     sudo apt update
+    sudo sed -i '13,17d' /etc/oh-my-zsh/tools/uninstall.sh
     sudo bash ./etc/oh-my-zsh/tools/uninstall.sh
     sudo apt install deborphan -y
     sudo apt remove --purge $(deborphan --guess-all) -y
