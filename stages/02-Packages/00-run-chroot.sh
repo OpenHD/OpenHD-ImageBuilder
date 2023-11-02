@@ -9,7 +9,7 @@ set -e
 # X20 specific code
 function prepare_x20 {
     sudo apt update
-    uninstall_oh_my_zsh
+    sudo /etc/oh-my-zsh/tools/uninstall.sh
     sudo apt install deborphan -y
     sudo apt remove --purge $(deborphan --guess-all) -y
     sudo apt remove --purge deborphan vim build-essential -y
