@@ -165,6 +165,7 @@ fi
  sudo echo "/dev/mmcblk1p1  /emmc  auto  defaults  0  2" | sudo tee -a /etc/fstab
  touch /boot/openhd/hardware_vtx_v20.txt
  touch /boot/openhd/air.txt
+ rm -Rf /var/log/*
  fi
 
 #Install openhd_sys_utils_service

@@ -175,7 +175,7 @@ EOM
 	exit 1
 }
 
-should_skip_autoexpand=false
+should_skip_autoexpand=true
 debug=false
 repair=false
 parallel=false
@@ -330,17 +330,17 @@ if [[ $currentsize -eq $minsize ]]; then
   exit 11
 fi
 
-#Add some free space to the end of the filesystem
-extra_space=$(($currentsize - $minsize))
-logVariables $LINENO extra_space
-echo extra_space
-for space in 5000 1000 100; do
-  if [[ $extra_space -gt $space ]]; then
-    minsize=$(($minsize + $space))
-    break
-  fi
-done
-logVariables $LINENO minsize
+# #Add some free space to the end of the filesystem
+# extra_space=$(($currentsize - $minsize))
+# logVariables $LINENO extra_space
+# echo extra_space
+# for space in 5000 1000 100; do
+#   if [[ $extra_space -gt $space ]]; then
+#     minsize=$(($minsize + $space))
+#     break
+#   fi
+# done
+# logVariables $LINENO minsize
 
 #Shrink filesystem
 info "Shrinking filesystem"
