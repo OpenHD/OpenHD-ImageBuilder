@@ -22,7 +22,7 @@ prepareOpenHD()
     mkdir -p /boot/openhd/
     touch /boot/openhd/x86.txt
     touch /boot/openhd/ground.txt
-    git clone https://github.com/OpenHD/rtl88x2bu /usr/src/rtl88x2bu-git || { echo "Failed to clone rtl88x2bu repository"; exit 1; }
+    git clone https://github.com/OpenHD/rtl88x2bu /usr/src/rtl88x2bu-5.13.1 || { echo "Failed to clone rtl88x2bu repository"; exit 1; }
     git clone https://github.com/OpenHD/rtl8812au /usr/src/rtl8812au-git || { echo "Failed to clone rtl8812au repository"; exit 1; }
     echo "OpenHD preparation completed successfully."
 }
@@ -66,8 +66,8 @@ installRtl8812au()
 installRtl8812bu()
 {
     echo "Installing RTL8812BU..."
-    cd /usr/src/rtl88x2bu-git
-    sed -i 's/PACKAGE_VERSION="@PKGVER@"/PACKAGE_VERSION="5.13.1"/g' /usr/src/rtl88x2bu-git/dkms.conf
+    cd /usr/src/rtl88x2bu-5.13.1
+    sed -i 's/PACKAGE_VERSION="@PKGVER@"/PACKAGE_VERSION="5.13.1"/g' /usr/src/rtl88x2bu-5.13.1/dkms.conf
     dkms add -m rtl88x2bu -v 5.13.1 || { echo "Failed to install RTL8812BU"; exit 1; }
     echo "RTL8812BU installed successfully."
 }
