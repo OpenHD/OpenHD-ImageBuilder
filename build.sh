@@ -195,7 +195,7 @@ done
 log ""
 log "======================================================"
 log "Shrinking image: ${IMAGE_PATH_NAME}"
-if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "debian-X20" ]] || [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
+if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "debian-X20" ]]; then
 ${SCRIPT_DIR}/pishrink.sh -v ${PREV_WORK_DIR}/*.img
 else
 echo "This image can't be shrunken"
