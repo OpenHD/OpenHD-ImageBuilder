@@ -195,9 +195,7 @@ done
 log ""
 log "======================================================"
 log "Shrinking image: ${IMAGE_PATH_NAME}"
-if [[ "${OS}" == "raspbian" ]]; then
-${SCRIPT_DIR}/pishrink.sh -v ${PREV_WORK_DIR}/*.img
-elif [[ "${OS}" == "debian-X20" ]]; then
+if [[ "${OS}" == "raspbian" ]] || [[ "${OS}" == "debian-X20" ]] || [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
 ${SCRIPT_DIR}/pishrink.sh -v ${PREV_WORK_DIR}/*.img
 else
 echo "Shrinking images that aren't made for the raspberry isn't integrated, yet!"
