@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#This script handles initial configuation, updates and misc features which aren't included in the main OpenHD executable (yet)
+# This script handles initial configuation, updates and misc features which aren't included in the main OpenHD executable (yet)
 
 # print debug messages to the screen if debug is enabled
 debug_file="/boot/openhd/debug.txt"
@@ -11,10 +11,10 @@ fi
 
 #initialise x20 air-unit
 if [ -f "/boot/openhd/hardware_vtx_v20.txt" ]; then
-sleep 10
-depmod -a
-modprobe 88XXau_wfb
-modprobe HdZero
+  sleep 10
+  depmod -a
+  modprobe 88XXau_wfb
+  modprobe HdZero
 fi
 
 #camera Selector helper for the imagewriter

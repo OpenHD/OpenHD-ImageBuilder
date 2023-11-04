@@ -40,6 +40,7 @@ function install_radxa-debian_packages_rk3566 {
     PLATFORM_PACKAGES_REMOVE="codium firefox* dkms sddm plymouth plasma-desktop kde* lightdm *xfce* chromium"
 }
 function install_packages-core3566 {
+    BASE_PACKAGES="openhd qopenhd apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-core3566-rk356x linux-headers-5.10.160-core3566-rk356x linux-libc-dev-5.10.160-core3566-rk356x procps camera-engine-rkaiq"
     PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
 }
