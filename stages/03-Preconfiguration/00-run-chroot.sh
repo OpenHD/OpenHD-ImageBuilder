@@ -187,8 +187,8 @@ fi
 
 #Install openhd_sys_utils_service
 cp /opt/additionalFiles/openhd_sys_utils.service /etc/systemd/system/
-cp /opt/additionalFiles/openhd_sys_utils.sh /usr/local/bin/
-chmod +x /usr/local/bin/openhd_sys_utils.sh
+cp /opt/additionalFiles/*.sh /usr/local/bin/
+chmod +x /usr/local/bin/*.sh
 systemctl enable openhd_sys_utils.service
 
 #change hostname to openhd
