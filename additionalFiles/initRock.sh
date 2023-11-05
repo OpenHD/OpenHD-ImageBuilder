@@ -1,7 +1,12 @@
 #!/bin/bash
 
+#add platform identification
+mkdir -p /usr/local/share/openhd/platform/rock
+
+
 if [[ -f "/boot/openhd/rock-5a.txt" ]]; then
     echo "Running on a rock5 A"
+    mkdir -p /usr/local/share/openhd/platform/rock/rock5a
     config_file=$(find /boot/openhd/ -type f -name 'IMX*')
     
     if [[ -n "$config_file" ]]; then
@@ -22,6 +27,7 @@ fi
 
 if [[ -f "/boot/openhd/rock-5b.txt" ]]; then
     echo "Running on a rock5 B"
+    mkdir -p /usr/local/share/openhd/platform/rock/rock5b
     config_file=$(find /boot/openhd/ -type f -name 'IMX*')
     
     if [[ -n "$config_file" ]]; then
