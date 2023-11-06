@@ -82,6 +82,7 @@ function clone_github_repos {
     cd /opt
     git clone --recursive --depth 1 https://github.com/OpenHD/OpenHD
     git clone --recursive --depth 1 https://github.com/OpenHD/QOpenHD
+    git clone https://github.com/OpenHD/veye_raspberrypi.git
     chmod -R 777 /opt
 }
 
