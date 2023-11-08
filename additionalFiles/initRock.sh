@@ -46,7 +46,7 @@ if [[ -f "/boot/openhd/rock-5b.txt" ]]; then
 fi
 
 if [[ -f "/boot/openhd/rock-rk3566.txt" ]]; then
-    echo "Running on a rk3566"
+    echo "Running on a rk3566 "
     mkdir -p /usr/local/share/openhd/platform/rock/rk3566
     config_file=$(find /boot/openhd/ -type f -name 'IMX*')
     
