@@ -35,6 +35,7 @@ function install_radxa-debian_packages {
     PLATFORM_PACKAGES="rockchip-iq-openhd linux-headers-5.10.110-99-rockchip-g9c3b92612 linux-image-5.10.110-99-rockchip-g9c3b92612 rsync procps mpv camera-engine-rkaiq"
 }
 function install_radxa-debian_packages_rk3566 {
+    mkdir -p /usr/local/share/openhd_platform/rock/rk3566
     BASE_PACKAGES="openhd qopenhd apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-radxa-rk356x linux-headers-5.10.160-radxa-rk356x linux-libc-dev-5.10.160-radxa-rk356x procps camera-engine-rkaiq"
     PLATFORM_PACKAGES_REMOVE="codium firefox* dkms sddm plymouth plasma-desktop kde* lightdm *xfce* chromium"
@@ -90,7 +91,7 @@ function clone_github_repos {
  apt install -y curl
  curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
  curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
- curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
+ curl -1sLf 'https://dl.cloudsmith.io/public/openhd/2-5-evo/setup.deb.sh'| sudo -E bash
  apt update
 
  # Remove platform-specific packages
