@@ -48,19 +48,10 @@ fi
 
 
 #DO NOT TOUCH THE SYNTAX HERE
-if [[ "${OS}" == "radxa-debian-rock-cm3" ]] || [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]; then
-    touch /etc/systemd/system/usb.service
-    SERVICE_CONTENT="[Unit]
-Description=Enable USB
-[Service]
-ExecStart=/bin/sh -c \"echo host > /sys/devices/platform/fe8a0000.usb2-phy/otg_mode\"
-[Install]
-WantedBy=multi-user.target"
-
-# Create the systemd service unit file
-echo "$SERVICE_CONTENT" > /etc/systemd/system/usb.service
-systemctl enable usb
+if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
+touch /boot/openhd/ground.txt
 fi
+
 
 
  if [[ "${OS}" == "raspbian" ]] ; then
