@@ -12,7 +12,9 @@ cd /opt/additionalFiles
 cp motd /etc/motd
 cp motd-unsupported /etc/motd-unsupported
 
-if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]; then
+
+if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian-rock-cm3
+" ]]; then
     rm /conf/before.txt
     cp /opt/additionalFiles/before.txt /conf/before.txt
     #allow offline auto detection of image format
@@ -30,9 +32,14 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     version=$(echo "$package_name" | cut -d '-' -f 4-)
     source_dirA="/usr/lib/$package_name/rockchip/overlay/rock-5a-*"
     source_dirB="/usr/lib/$package_name/rockchip/overlay/rock-5b-*"
+    source_dirC="/usr/lib/$package_name/rockchip/overlay/radxa-cm3-rpi*"
+    source_dirC="/usr/lib/$package_name/rockchip/overlay/radxa-zero3*"
 
     sudo cp -r $source_dirA "/boot/dtbo/"
     sudo cp -r $source_dirB "/boot/dtbo/"
+    sudo cp -r $source_dirC "/boot/dtbo/"
+    sudo cp -r $source_dirD "/boot/dtbo/"
+
 fi
 
 if [[ "${OS}" == "radxa-ubuntu-rock5b" ]]; then
