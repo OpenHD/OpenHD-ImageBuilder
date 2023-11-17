@@ -15,7 +15,7 @@ cp motd-unsupported /etc/motd-unsupported
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian-rock-cm3
 " ]]; then
-    rm /conf/before.txt
+    #rm /conf/before.txt
     cp /opt/additionalFiles/before.txt /conf/before.txt
     #allow offline auto detection of image format
     cp /opt/additionalFiles/issue.txt /conf/issue.txt
@@ -25,7 +25,7 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     #mounting config partition
     ls -a /conf
     cp -rv /boot/openhd/* /conf/openhd/
-    rm -Rf /boot/openhd
+    #rm -Rf /boot/openhd
     ln -s /config/openhd /boot/openhd
     #copy overlays from linux kernel into the correct folder
     package_name=$(dpkg -l | awk '/^ii/ && $2 ~ /^linux-image-5\.10\.110-99-rockchip-/{print $2}')
