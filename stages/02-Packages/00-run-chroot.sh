@@ -36,7 +36,10 @@ function install_radxa-debian_packages {
 }
 function install_radxa-debian_packages_rk3566 {
     mkdir -p /usr/local/share/openhd_platform/rock/rk3566
+    echo "________________________________"
+    echo "test2"
     BASE_PACKAGES="openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
+    PLATFORM_PACKAGES_HOLD="8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-radxa-cm3-rpi-cm4-io linux-headers-radxa-cm3-rpi-cm4-io linux-image-5.10.160-12-rk356x linux-headers-5.10.160-12-rk356x"
     PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-radxa-rk356x linux-headers-5.10.160-radxa-rk356x linux-libc-dev-5.10.160-radxa-rk356x procps camera-engine-rkaiq"
     PLATFORM_PACKAGES_REMOVE="codium firefox* dkms sddm plymouth plasma-desktop kde* lightdm *xfce* chromium"
 }
@@ -78,6 +81,8 @@ function clone_github_repos {
     install_radxa-debian_packages
  elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
     install_radxa-debian_packages_rk3566
+    echo "________________________________"
+    echo "test1"
  elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
     install_packages-core3566
  elif [[ "${OS}" == "ubuntu-x86" ]] ; then
@@ -91,7 +96,6 @@ function clone_github_repos {
  apt install -y curl
  curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
  curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
- curl -1sLf 'https://dl.cloudsmith.io/public/openhd/2-5-evo/setup.deb.sh'| sudo -E bash
  apt update
 
  # Remove platform-specific packages
