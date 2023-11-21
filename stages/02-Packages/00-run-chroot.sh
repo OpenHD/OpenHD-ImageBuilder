@@ -7,31 +7,9 @@
 set -e
 
 # X20 specific code
-function prepare_x20 {
-    sudo apt update
-    sudo sed -i '13,17d' /etc/oh-my-zsh/tools/uninstall.sh
-    sudo bash ./etc/oh-my-zsh/tools/uninstall.sh
-    sudo apt install deborphan -y
-    sudo apt remove --purge $(deborphan --guess-all) -y
-    sudo apt remove --purge deborphan vim build-essential -y
-    sudo apt autoremove -y
+function install_x20_packages {
     rm -Rf /etc/apt/sources.list.d/*
     rm -Rf /etc/apt/sources.list
-    rm -Rf /home/openhd/vencoderDemo
-    rm -Rf /usr/lib/firmware/rkwifi
-    rm -Rf /usr/lib/firmware/ath11k
-    rm -Rf /usr/lib/firmware/brcm
-    rm -Rf /etc/oh-my-zsh
-    cd /usr/lib/arm-linux-gnueabihf/dri
-    rm -Rf kms_swrast_dri.so mediatek_dri.so armada-drm_dri.so mxsfb-drm_dri.so panfrost_dri.so st7735r_dri.so etnaviv_dri.so lima_dri.so pl111_dri.so stm_dri.so exynos_dri.so mcde_dri.so r200_dri.so hx8357d_dri.so ili9225_dri.so r300_dri.so r600_dri.so radeon_dri.so radeonsi_dri.so v3d_dri.so imx-dcss_dri.so imx-drm_dri.so msm_dri.so tegra_dri.so repaper_dri.so virtio_gpu_dri.so ingenic-drm_dri.so nouveau_dri.so nouveau_vieux_dri.so rockchip_dri.so zink_dri.so kgsl_dri.so st7586_dri.so vc4_dri.so
-    rm -Rf /usr/share/locale/*
-    rm -Rf /usr/local/share/openhd/video/sunxisrc_h264.json
-    touch /etc/apt/sources.list
-    apt update
-    sed -i '17,35d' /etc/rc.local
-    find / -type f -exec du -h {} + | sort -rh | head -n 10
-}
-function install_x20_packages {
     BASE_PACKAGES="openhd-x20"
     PLATFORM_PACKAGES_REMOVE="*boost* locales guile-2.2-libs "
     PLATFORM_PACKAGES=""
@@ -51,17 +29,21 @@ function install_radxa-ubuntu_packages {
 }
 
 function install_radxa-debian_packages {
-    BASE_PACKAGES="openhd apt-transport-https apt-utils open-hd-web-ui"
+    BASE_PACKAGES="openhd qopenhd-rk3588 apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-rock-5a linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip"
     PLATFORM_PACKAGES_REMOVE="dkms sddm plymouth plasma-desktop kde*"
-    PLATFORM_PACKAGES="rockchip-iq-openhd linux-headers-5.10.110-99-rockchip-g9c3b92612 linux-image-5.10.110-99-rockchip-g9c3b92612 rsync procps mpv camera-engine-rkaiq"
+    PLATFORM_PACKAGES="gst-latest rockchip-iq-openhd linux-headers-5.10.110-99-rockchip-g9c3b92612 linux-image-5.10.110-99-rockchip-g9c3b92612 rsync procps mpv camera-engine-rkaiq"
 }
-function install_radxa-debian_packages_cm3 {
-    PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-radxa-rk356x-rk356x linux-headers-5.10.160-radxa-rk356x-rk356x linux-libc-dev-5.10.160-radxa-rk356x-rk356x procps camera-engine-rkaiq"
-    PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
+function install_radxa-debian_packages_rk3566 {
+    mkdir -p /usr/local/share/openhd_platform/rock/rk3566
+    BASE_PACKAGES="linux-image-5.10.160-radxa-rk356x linux-headers-5.10.160-radxa-rk356x linux-libc-dev-5.10.160-radxa-rk356x openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
+    PLATFORM_PACKAGES_HOLD="8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-radxa-cm3-rpi-cm4-io linux-headers-radxa-cm3-rpi-cm4-io linux-image-5.10.160-12-rk356x linux-headers-5.10.160-12-rk356x"
+    PLATFORM_PACKAGES="gst-latest net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 procps camera-engine-rkaiq"
+    PLATFORM_PACKAGES_REMOVE="codium firefox* dkms sddm plymouth plasma-desktop kde* lightdm *xfce* chromium"
 }
 function install_packages-core3566 {
-    PLATFORM_PACKAGES="net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-core3566-rk356x linux-headers-5.10.160-core3566-rk356x linux-libc-dev-5.10.160-core3566-rk356x procps camera-engine-rkaiq"
+    BASE_PACKAGES="openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
+    PLATFORM_PACKAGES="gst-latest net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-core3566-rk356x linux-headers-5.10.160-core3566-rk356x linux-libc-dev-5.10.160-core3566-rk356x procps camera-engine-rkaiq"
     PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
 }
 
@@ -87,7 +69,6 @@ function clone_github_repos {
 
 # Main function
  if [[ "${OS}" == "debian-X20" ]]; then
-    prepare_x20
     install_x20_packages
  elif [[ "${OS}" == "raspbian" ]]; then
     install_raspbian_packages
@@ -97,7 +78,9 @@ function clone_github_repos {
  elif [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]  ; then
     install_radxa-debian_packages
  elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
-    install_radxa-debian_packages_cm3
+    install_radxa-debian_packages_rk3566
+    echo "________________________________"
+    echo "test1"
  elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
     install_packages-core3566
  elif [[ "${OS}" == "ubuntu-x86" ]] ; then
@@ -111,7 +94,6 @@ function clone_github_repos {
  apt install -y curl
  curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
  curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
- curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
  apt update
 
  # Remove platform-specific packages
@@ -126,7 +108,6 @@ function clone_github_repos {
  done
  #cleanup before installing packages
  apt autoremove -y
-
 
  # Hold platform-specific packages
  echo "Holding back platform-specific packages..."
