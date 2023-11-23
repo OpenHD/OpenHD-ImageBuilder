@@ -13,8 +13,7 @@ cp motd /etc/motd
 cp motd-unsupported /etc/motd-unsupported
 
 
-if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian-rock-cm3
-" ]]; then
+if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     #rm /conf/before.txt
     cp /opt/additionalFiles/before.txt /conf/before.txt
     #allow offline auto detection of image format
