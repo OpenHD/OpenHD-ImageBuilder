@@ -6,6 +6,8 @@
 # Here we do simple platform detection for OpenHD with creating a few folders
 
 #check for QOpenHD config file
+echo "___________________________________"
+echo "_______________debug_______________"
 ls /root/.config/OpenHD
 ls /root/.config/OpenHD/qopenhd
 
