@@ -20,10 +20,13 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     #allow offline auto detection of image format
     cp /opt/additionalFiles/issue.txt /conf/issue.txt
     mkdir -p /conf/openhd
+    mkdir -p /boot/openhd
     cp /opt/additionalFiles/initRock.sh /usr/local/bin/initRock.sh
     touch /conf/config.txt
     #mounting config partition
     ls -a /conf
+    echo "_________"
+    ls -a /config
     cp -rv /boot/openhd/* /conf/openhd/
     #rm -Rf /boot/openhd
     ln -s /config/openhd /boot/openhd
