@@ -28,7 +28,7 @@ if [[ "${OS}" != ubuntu-x86 ]] && [[ "${OS}" != debian-X20 ]]; then
     if [[ "${OS}" == radxa-debian-rock5a ]] || [[ "${OS}" == radxa-debian-rock5b ]] || [[ "${OS}" == radxa-debian-rock-cm3 ]] || [[ "${OS}" == radxa-debian-rock-cm3-core3566 ]]; then
     echo "resize with parted"
     echo -e "x\ne\nd\nn\n\n\n\n\nw\ny\n" | sudo gdisk IMAGE.img
-    sudo parted -s IMAGE.img resizepart 2 100%
+    sudo parted -s IMAGE.img resizepart 3 100%
     sudo gdisk -l IMAGE.img
     else
 
