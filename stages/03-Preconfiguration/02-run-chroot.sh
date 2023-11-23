@@ -5,6 +5,10 @@
 # Do not use log here, it will end up in the image
 # Here we do simple platform detection for OpenHD with creating a few folders
 
+#check for QOpenHD config file
+ls /root/.config/OpenHD
+ls /root/.config/OpenHD/qopenhd
+
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]]; then
 mkdir -p /usr/local/share/openhd_platform/rock/rock5a
