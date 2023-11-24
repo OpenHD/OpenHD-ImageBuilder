@@ -38,6 +38,15 @@ sudo systemctl mask plymouth-quit.service
 
 fi
 
+if [[ "${OS}" == "debian-X20" ]]; then
+sudo systemctl disable hostapd
+sudo systemctl disable sshd
+sudo systemctl disable networkmanager
+sudo systemctl disable networking
+sudo systemctl disable nfs-client
+sudo systemctl disable ssh
+sudo systemctl disable rsync
+fi
 
 #disable network-logging
 sudo systemctl disable syslog.service
