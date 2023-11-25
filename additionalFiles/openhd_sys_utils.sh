@@ -33,7 +33,9 @@ fi
 if [ -f "/boot/openhd/rock-rk3566.txt" ]; then
   sudo bash /usr/local/bin/initRock.sh
   echo "(pv -n /dev/mmcblk1 | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Running dd command (cloning), please wait..." 10 70 0" >> /root/.bashrc
+  systemctl enable openhd
   rm /boot/openhd/rock-rk3566.txt
+  reboot
 fi
 
 if [ -f "/boot/openhd/rpi.txt" ]; then
