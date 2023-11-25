@@ -184,6 +184,7 @@ fi
  apt update
  sed -i '17,35d' /etc/rc.local
  find / -type f -exec du -h {} + | sort -rh | head -n 10
+ echo "none /run tmpfs defaults,size=20M 0 0" >> /etc/fstab
  fi
 
 #Install openhd_sys_utils_service
