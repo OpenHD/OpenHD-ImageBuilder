@@ -50,7 +50,6 @@ sudo systemctl disable systemd-journald.service
 fi
 
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
-sudo systemctl disable rsetup
 sudo systemctl disable openhd
 sudo systemctl disable qopenhd
 fi
