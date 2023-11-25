@@ -51,6 +51,7 @@ fi
 
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
 sudo systemctl disable rsetup
+fi
 
 #disable network-logging
 sudo systemctl disable syslog.service
