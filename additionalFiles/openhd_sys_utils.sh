@@ -12,7 +12,7 @@ fi
 # initialise functions
 if [ -f "/boot/openhd/hardware_vtx_v20.txt" ]; then
  sudo bash /usr/local/bin/initX20.sh
- rm /boot/openhd/hardware_vtx_v20.txt
+ #rm /boot/openhd/hardware_vtx_v20.txt
 fi
 
 if [ -f "/boot/openhd/x86.txt" ]; then
