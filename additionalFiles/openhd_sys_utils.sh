@@ -30,9 +30,9 @@ if [ -f "/boot/openhd/rock-5b.txt" ]; then
   rm /boot/openhd/rock-5b.txt
 fi
 
-if [ -f "/boot/openhd/rk3566.txt" ]; then
+if [ -f "/boot/openhd/rock-rk3566.txt" ]; then
   sudo bash /usr/local/bin/initRock.sh
-  rm /boot/openhd/rk3566.txt
+  rm /boot/openhd/rock-rk3566.txt
 fi
 
 if [ -f "/boot/openhd/rpi.txt" ]; then
@@ -41,3 +41,4 @@ if [ -f "/boot/openhd/rpi.txt" ]; then
   rm /boot/openhd/rpi.txt
   fi
 fi
+touch /boot/openhd/IRan.txt

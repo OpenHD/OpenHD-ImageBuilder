@@ -47,8 +47,9 @@ fi
 
 if [[ -f "/boot/openhd/rock-rk3566.txt" ]]; then
     echo "Running on a rk3566 "
-    (pv -n /dev/mmcblk1 | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | dialog --gauge "Running dd command (cloning), please wait..." 10 70 0
+    (pv -n /dev/mmcblk1 | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Running dd command (cloning), please wait..." 10 70 0
     mkdir -p /usr/local/share/openhd/platform/rock/rk3566
+    touch /boot/openhd/IExecuted
     config_file=$(find /boot/openhd/ -type f -name 'IMX*')
     
     if [[ -n "$config_file" ]]; then

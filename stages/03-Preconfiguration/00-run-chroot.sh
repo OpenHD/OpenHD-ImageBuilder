@@ -17,17 +17,19 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     cat /etc/fstab
     #rm /conf/before.txt
     cp /opt/additionalFiles/before.txt /conf/before.txt
+    cp /opt/additionalFiles/before.txt /config/before.txt
     #allow offline auto detection of image format
     cp /opt/additionalFiles/issue.txt /conf/issue.txt
+    cp /opt/additionalFiles/issue.txt /config/issue.txt
     mkdir -p /conf/openhd
+    mkdir -p /config/openhd
     mkdir -p /boot/openhd
     cp /opt/additionalFiles/initRock.sh /usr/local/bin/initRock.sh
     touch /conf/config.txt
+    touch /config/config.txt
     #mounting config partition
-    ls -a /conf
-    echo "_________"
-    ls -a /config
     cp -rv /boot/openhd/* /conf/openhd/
+    cp -rv /boot/openhd/* /config/openhd/
     #rm -Rf /boot/openhd
     ln -s /config/openhd /boot/openhd
     #copy overlays from linux kernel into the correct folder
