@@ -46,6 +46,7 @@ sudo systemctl disable networking
 sudo systemctl disable nfs-client
 sudo systemctl disable ssh
 sudo systemctl disable rsync
+sudo systemctl disable systemd-journald.service
 fi
 
 #disable network-logging

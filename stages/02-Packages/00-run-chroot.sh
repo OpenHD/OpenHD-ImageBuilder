@@ -11,7 +11,7 @@ function install_x20_packages {
     rm -Rf /etc/apt/sources.list.d/*
     rm -Rf /etc/apt/sources.list
     BASE_PACKAGES="openhd-x20"
-    PLATFORM_PACKAGES_REMOVE="*boost* locales guile-2.2-libs network-manager"
+    PLATFORM_PACKAGES_REMOVE="*boost* locales guile-2.2-libs wpa_supplicant network-manager"
     PLATFORM_PACKAGES=""
 }
 
