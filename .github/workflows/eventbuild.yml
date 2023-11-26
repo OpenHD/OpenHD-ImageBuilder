@@ -132,7 +132,7 @@ jobs:
     - name: compress
       run: |
         ls -a
-        cp *.img additionalFiles
+        cp *.img additionalFiles/emmc.img
         sudo ./build.sh ${{ matrix.TARGET }}
 
   upload:
