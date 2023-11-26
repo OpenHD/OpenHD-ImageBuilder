@@ -5,6 +5,8 @@
 #!/bin/bash
 
 set -e
+df -h
+[ -e /opt/additionalFiles/emmc.img ] && du -h /opt/additionalFiles/emmc.img
 
 if [ ! -e /opt/additionalFiles/emmc.img ]; then
 
