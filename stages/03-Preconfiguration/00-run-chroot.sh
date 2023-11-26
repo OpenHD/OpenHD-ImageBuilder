@@ -63,7 +63,9 @@ fi
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
 touch /boot/openhd/ground.txt
 #autologin as root
-#sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --skip-login --login-options "-f root" %I 38400 linux/' /etc/systemd/system/getty.target.wants/getty@tty1.service
+sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /etc/systemd/system/getty.target.wants/getty@tty1.service
+#autocopy to emmc
+echo '(pv -n /dev/mmcblk1 | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Running dd command (cloning), please wait..." 10 70 0' >> /root/.bashrc
 fi
 
 
