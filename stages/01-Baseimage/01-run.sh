@@ -2,7 +2,7 @@
 if [ ! -e /opt/additionalFiles/emmc.img ]; then
 WANTEDSIZE="5632000000"
 else
-WANTEDSIZE="12000000000"
+WANTEDSIZE="12100000000"
 rm -Rf /opt/additionalFiles/emmc.img
 fi
 
