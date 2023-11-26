@@ -2,7 +2,7 @@
 if [ ! -e /opt/additionalFiles/emmc.img ]; then
 WANTEDSIZE="5632000000"
 else
-WANTEDSIZE="6800000000"
+WANTEDSIZE="8000000000"
 fi
 
 pushd ${STAGE_WORK_DIR}
