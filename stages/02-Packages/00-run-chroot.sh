@@ -8,7 +8,7 @@
 set -e
 echo "debug"
 df -h
-du -h /opt/additionalFiles/emmc.img
+ls -l --block-size=M /opt/additionalFiles/
 
 if [ ! -e /opt/additionalFiles/emmc.img ]; then
 
