@@ -122,7 +122,10 @@ jobs:
         TARGET: [radxa-zero3w] # <-- Add targets here!
     steps:
     - name: debug
-      run: df -h
+      run: |
+        mkdir -p /opt/additionalFiles/
+        touch /opt/additionalFiles/emmc.img
+        df -h
 
     - uses: actions/checkout@v3
     - uses: actions/download-artifact@v3
