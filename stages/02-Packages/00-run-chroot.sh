@@ -6,7 +6,7 @@
 
 set -e
 
-if [[ "${OS}" != radxa-zero3w-emmc ]]; then
+if [ ! -e /opt/additionalFiles/emmc.img ]; then
 
 # X20 specific code
 function install_x20_packages {

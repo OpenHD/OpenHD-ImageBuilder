@@ -1,5 +1,5 @@
 # Extend Image Size
-if [[ "${OS}" != radxa-zero3w-emmc ]]; then
+if [ ! -e /opt/additionalFiles/emmc.img ]; then
 WANTEDSIZE="5632000000"
 else
 WANTEDSIZE="6800000000"
