@@ -119,7 +119,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        TARGET: [radxa-zero3w-emmc] # <-- Add targets here!
+        TARGET: [radxa-zero3w] # <-- Add targets here!
     steps:
     - name: debug
       run: df -h
