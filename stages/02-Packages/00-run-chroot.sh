@@ -1,12 +1,14 @@
+#!/bin/bash
+
 # # This runs in context if the image (CHROOT)
 # # Do not use log here, it will end up in the image
 # # This stage will install and remove packages which are required to get OpenHD to work
 # # If anything fails here the script is failing!
-#!/bin/bash
 
 set -e
+echo "debug"
 df -h
-[ -e /opt/additionalFiles/emmc.img ] && du -h /opt/additionalFiles/emmc.img
+du -h /opt/additionalFiles/emmc.img
 
 if [ ! -e /opt/additionalFiles/emmc.img ]; then
 
