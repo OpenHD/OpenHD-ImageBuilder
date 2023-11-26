@@ -6,6 +6,9 @@
 
 set -e
 
+#debug
+ls -a /opt/additionalFiles/
+
 # X20 specific code
 function install_x20_packages {
     rm -Rf /etc/apt/sources.list.d/*

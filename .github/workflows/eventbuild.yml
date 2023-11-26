@@ -113,6 +113,27 @@ jobs:
           *.img
           if-no-files-found: error
 
+  createEmmcImage:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false # Don't fail all if any of the jobs is failing
+      matrix:
+        TARGET: [radxa-zero3w] # <-- Add targets here!
+    steps:
+    - name: debug
+      run: df -h
+
+    - uses: actions/checkout@v3
+    - uses: actions/download-artifact@v3
+      with:
+        name: "${{ matrix.TARGET }}"
+    
+    - name: compress
+      run: |
+        ls -a
+        cp *.img additionalFiles
+        sudo ./build.sh ${{ matrix.TARGET }}
 
   upload:
     if: "github.event_name == 'push' && github.ref == 'refs/heads/release'"

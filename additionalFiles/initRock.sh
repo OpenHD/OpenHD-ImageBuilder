@@ -64,4 +64,11 @@ if [[ -f "/boot/openhd/rock-rk3566.txt" ]]; then
     else
         echo "Config file not found"
     fi
+
+    if [[ -n "/boot/openhd/resize.txt" ]]; then
+    echo "resizing started"
+    rm /boot/openhd/resize.txt
+    (pv -n /dev/mmcblk1 | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Running dd command (cloning), please wait..." 10 70 0
+    fi
+
 fi
