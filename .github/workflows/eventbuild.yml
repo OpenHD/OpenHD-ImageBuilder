@@ -133,22 +133,6 @@ jobs:
         remove-docker-images: 'true'
         overprovision-lvm: 'true'
     
-    - name: remove even more
-      run: |
-        sudo apt-get purge -y \
-        '^llvm-.*' \
-        'php.*' \
-        '^mongodb-.*' \
-        '^mysql-.*' \
-        azure-cli \
-        google-chrome-stable \
-        firefox \
-        powershell \
-        microsoft-edge-stable \
-        mono-devel
-        sudo apt-get autoremove -y
-        sudo apt-get clean
-
     - name: debug
       run: |
         mkdir -p /opt/additionalFiles/
