@@ -153,5 +153,7 @@ echo ${OPENHD_VERSION} > /openhd_version.txt
 echo ${OPENHD_VERSION} > /boot/openhd_version.txt
 
 else
+df -h
 mv /opt/additionalFiles/*.img /opt/emmc.img
+df -h
 fi
