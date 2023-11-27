@@ -161,6 +161,6 @@ echo ${OPENHD_VERSION} > /boot/openhd_version.txt
 else
 echo "debug2"
 df -h
-mv /opt/additionalFiles/emmc.img.xz /opt/emmc.img.xz
+xz -d /opt/additionalFiles/emmc.img.xz && rm -Rf emmc.img.xz && mv /opt/additionalFiles/emmc.img /opt/emmc.img
 df -h
 fi
