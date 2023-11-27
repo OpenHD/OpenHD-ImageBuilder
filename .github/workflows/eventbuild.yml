@@ -73,9 +73,9 @@ jobs:
           ../configure
           make
           sudo make install
-    - name: configure
-       run: sudo ./build.sh ${{ matrix.TARGET }}
-    #- name: debug
+    # - name: configure
+    #    run: sudo ./build.sh ${{ matrix.TARGET }}
+    - name: debug
       run: |
         sudo dd if=/dev/zero of=radxa-zero3w.img bs=1M count=1000
         mkdir deploy
