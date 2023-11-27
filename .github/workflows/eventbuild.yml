@@ -154,7 +154,7 @@ jobs:
     - name: buildImage
       run: |
         ls -a
-        sudo apt install xz
+        sudo apt install -y xz-utils
         cp *.img additionalFiles/emmc.img
         xz -v -1 -e additionalFiles/emmc.img
         rm *.img
