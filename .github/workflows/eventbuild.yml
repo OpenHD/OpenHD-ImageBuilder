@@ -148,7 +148,7 @@ jobs:
       run: |
         ls -a
         touch emmc
-        toch additionalFiles/emmmc
+        touch additionalFiles/emmmc
         df -h
     
     - name: buildImage
