@@ -202,7 +202,12 @@ echo "This image can't be shrunken"
 fi
 
 # rename the image according to the build date, the builder/openhd repo versions
-OPENHD_VERSION=$(cat ${WORK_DIR}/openhd_version.txt)
+if [ -e "${WORK_DIR}/openhd_version.txt" ]; then
+    OPENHD_VERSION=$(cat "${WORK_DIR}/openhd_version.txt")
+else
+    OPENHD_VERSION="unknown"
+fi
+
 if [ -f "${PREV_WORK_DIR}/IMAGE.img" ]; then
     IMAGE_PATH_NAME="${DEPLOY_DIR}/${IMG_NAME}-${OPENHD_VERSION}-${IMAGE_TYPE}.img"
     log ""
