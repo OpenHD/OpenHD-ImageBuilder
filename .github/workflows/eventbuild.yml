@@ -160,6 +160,7 @@ jobs:
         rm *.img
         cd additionalFiles
         ls -a 
+        cd ..
         sudo ./build.sh ${{ matrix.TARGET }}
 
   upload:

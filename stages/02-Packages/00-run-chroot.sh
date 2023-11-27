@@ -159,7 +159,8 @@ echo ${OPENHD_VERSION} > /openhd_version.txt
 echo ${OPENHD_VERSION} > /boot/openhd_version.txt
 
 else
+echo "debug2"
 df -h
-mv /opt/additionalFiles/*.img /opt/emmc.img
+mv /opt/additionalFiles/emmc.img.xz /opt/emmc.img.xz
 df -h
 fi
