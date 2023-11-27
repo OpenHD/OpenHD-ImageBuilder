@@ -156,8 +156,6 @@ jobs:
         ls -a
         sudo apt install -y xz-utils
         cp *.img additionalFiles/emmc.img
-        xz -v -1 -e additionalFiles/emmc.img
-        rm *.img
         cd additionalFiles
         ls -a 
         cd ..
