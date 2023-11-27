@@ -160,6 +160,7 @@ jobs:
         ls -a 
         cd ..
         sudo ./build.sh ${{ matrix.TARGET }}
+
     
     - name: Compose release filename
       # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions
@@ -170,7 +171,7 @@ jobs:
       with:
         name: "${{ matrix.TARGET }}"
         path: |
-          *.img
+          deploy/*.img
           if-no-files-found: error
 
   upload:
