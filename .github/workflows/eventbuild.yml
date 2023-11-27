@@ -157,6 +157,8 @@ jobs:
         sudo apt install -y xz-utils
         cp *.img additionalFiles/emmc.img
         cd additionalFiles
+        pv emmc.img | xz -1 > emmc.img.xz
+
         ls -a 
         cd ..
         sudo ./build.sh ${{ matrix.TARGET }}
