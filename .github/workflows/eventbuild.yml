@@ -73,8 +73,10 @@ jobs:
           ../configure
           make
           sudo make install
-    - name: configure
-      run: sudo ./build.sh ${{ matrix.TARGET }}
+    # - name: configure
+    #   run: sudo ./build.sh ${{ matrix.TARGET }}
+    - name: debug
+      run: sudo dd if=/dev/zero of={{ matrix.TARGET }}.img bs=1M count=1000
     - name: remove old image to make space
       run: |
         sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
