@@ -2,7 +2,7 @@
 if [[ "${OS}" != radxa-zero3w-emmc ]]; then
 WANTEDSIZE="5632000000"
 else
-WANTEDSIZE="8000000000"
+WANTEDSIZE="12000000000"
 fi
 
 pushd ${STAGE_WORK_DIR}
