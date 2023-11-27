@@ -6,11 +6,13 @@
 # # If anything fails here the script is failing!
 
 set -e
+
+
 echo "debug"
 df -h
 ls -l --block-size=M /opt/additionalFiles/
 
-if [ ! -e /opt/additionalFiles/emmc.img ]; then
+if [ ! -e /opt/additionalFiles/emmc.img.xz ]; then
 
 # X20 specific code
 function install_x20_packages {
