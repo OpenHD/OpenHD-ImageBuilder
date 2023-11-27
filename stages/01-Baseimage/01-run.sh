@@ -1,4 +1,5 @@
 # Extend Image Size
+ls -a
 if [ ! -e emmc ]; then
 WANTEDSIZE="5632000000"
 else
