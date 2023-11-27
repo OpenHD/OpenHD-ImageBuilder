@@ -154,9 +154,12 @@ jobs:
     - name: buildImage
       run: |
         ls -a
+        sudo apt install xz
         cp *.img additionalFiles/emmc.img
-        xz -1 -e additionalFiles/emmc.img
+        xz -v -1 -e additionalFiles/emmc.img
         rm *.img
+        rm additionalFiles/*.img
+        ls -a additionalFiles/
         sudo ./build.sh ${{ matrix.TARGET }}
 
   upload:
