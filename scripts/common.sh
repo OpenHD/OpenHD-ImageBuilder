@@ -146,6 +146,7 @@ on_chroot() {
     fi
 
     if [ ! -e ${MNT_DIR}/opt/additionalFiles ]; then
+    df -h
     cp -r "${STAGE_DIR}/../../additionalFiles" "${MNT_DIR}/opt"
     fi
     #sudo chroot --userspec=1000:1000 "$MNT_DIR" /bin/bash "/home/pi/install.sh"
