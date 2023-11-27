@@ -158,7 +158,7 @@ jobs:
         cp *.img additionalFiles/emmc.img
         xz -v -1 -e additionalFiles/emmc.img
         rm *.img
-        cd add additionalFiles
+        cd additionalFiles
         ls -a 
         sudo ./build.sh ${{ matrix.TARGET }}
 
