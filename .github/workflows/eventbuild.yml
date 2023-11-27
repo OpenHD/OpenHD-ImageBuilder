@@ -74,7 +74,7 @@ jobs:
           make
           sudo make install
     - name: configure
-       run: sudo ./build.sh ${{ matrix.TARGET }}
+      run: sudo ./build.sh ${{ matrix.TARGET }}
     
     - name: remove old image to make space
       run: |
