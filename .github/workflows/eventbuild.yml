@@ -147,7 +147,8 @@ jobs:
     - name: debug
       run: |
         ls -a
-        touch OpenHD-ImageBuilder/emmc
+        touch emmc
+        toch additionalFiles/emmmc
         df -h
     
     - name: buildImage
