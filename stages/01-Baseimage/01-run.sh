@@ -1,10 +1,12 @@
 # Extend Image Size
 ls -a
 if [ ! -e emmc ]; then
-WANTEDSIZE="5632000000"
+WANTEDSIZE="12000000000"
 else
 WANTEDSIZE="12000000000"
+
 fi
+WANTEDSIZE="12000000000"
 
 pushd ${STAGE_WORK_DIR}
 
