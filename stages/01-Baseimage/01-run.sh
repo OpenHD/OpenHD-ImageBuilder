@@ -1,4 +1,10 @@
 # Extend Image Size
+if [[ "${OS}" != radxa-zero3w-emmc ]]; then
+WANTEDSIZE="5632000000"
+else
+WANTEDSIZE="8000000000"
+fi
+
 pushd ${STAGE_WORK_DIR}
 
     #Makes the images flashable with raspberry pi imager

@@ -73,14 +73,9 @@ jobs:
           ../configure
           make
           sudo make install
-    # - name: configure
-    #    run: sudo ./build.sh ${{ matrix.TARGET }}
-    - name: debug
-      run: |
-        sudo dd if=/dev/zero of=radxa-zero3w.img bs=1M count=1000
-        mkdir deploy
-        mv *.img deploy/
-
+    - name: configure
+       run: sudo ./build.sh ${{ matrix.TARGET }}
+    
     - name: remove old image to make space
       run: |
         sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
@@ -167,6 +162,18 @@ jobs:
         ls -a 
         cd ..
         sudo ./build.sh ${{ matrix.TARGET }}
+    
+    - name: Compose release filename
+      # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions
+      run: echo "artifact_name=OpenHD-EMMC-image-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
+        
+    - name: Pack image for ${{ matrix.TARGET }}
+      uses: 'actions/upload-artifact@v2'
+      with:
+        name: "${{ matrix.TARGET }}"
+        path: |
+          *.img
+          if-no-files-found: error
 
   upload:
     if: "github.event_name == 'push' && github.ref == 'refs/heads/release'"
