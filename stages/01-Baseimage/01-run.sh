@@ -1,17 +1,9 @@
 # Extend Image Size
-ls -a
-if [ ! -e emmc ]; then
-WANTEDSIZE="12000000000"
-else
-WANTEDSIZE="12000000000"
-
-fi
-WANTEDSIZE="12000000000"
-
 pushd ${STAGE_WORK_DIR}
 
     #Makes the images flashable with raspberry pi imager
     log "We now define the size to be ~15GB (the maximum size we have in our github builder, this doesn't affect the output image because we're resizeing it in the end before uploading the image)" 
+    WANTEDSIZE="5632000000"
     FILESIZE=$(stat -c%s "IMAGE.img")
     DIFFERENCE=$(expr $WANTEDSIZE - $FILESIZE)
     DIFFERENCE=$(expr $DIFFERENCE - 1)
