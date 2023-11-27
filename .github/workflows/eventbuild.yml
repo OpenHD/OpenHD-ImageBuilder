@@ -79,8 +79,8 @@ jobs:
       run: |
         sudo dd if=/dev/zero of=radxa-zero3w.img bs=1M count=1000
         mkdir deploy
-        mv *.img deplay/
-        
+        mv *.img deploy/
+
     - name: remove old image to make space
       run: |
         sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
