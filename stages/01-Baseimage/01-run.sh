@@ -1,5 +1,5 @@
 # Extend Image Size
-if [[ "${OS}" != radxa-zero3w-emmc ]]; then
+if [ ! -e emmc ]; then
 WANTEDSIZE="5632000000"
 else
 WANTEDSIZE="12000000000"
