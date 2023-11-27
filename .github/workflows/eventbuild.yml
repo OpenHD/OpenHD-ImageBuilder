@@ -141,6 +141,7 @@ jobs:
     
     - name: debug
       run: |
+        ls -a
         touch emmc
         df -h
 
