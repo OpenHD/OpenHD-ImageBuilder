@@ -142,7 +142,7 @@ jobs:
     - name: debug
       run: |
         ls -a
-        touch emmc
+        touch OpenHD-ImageBuilder/emmc
         df -h
 
     - uses: actions/checkout@v3
