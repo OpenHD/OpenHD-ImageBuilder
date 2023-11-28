@@ -162,6 +162,7 @@ else
 echo "debug2"
 df -h
 cd /opt/additionalFiles/
-xz -d -c emmc.img.xz | tar -xvf - && rm emmc.img.xz
+gunzip -v emmc.img.gz
+rm emmc.img.gz
 ls -l --block-size=M 
 fi
