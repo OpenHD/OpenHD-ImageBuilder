@@ -1,6 +1,6 @@
 # Extend Image Size
-ls -a
-if [ ! -e emmc ]; then
+ls -a ../../
+if [ ! -e ../../emmc ]; then
 WANTEDSIZE="5632000000"
 else
 WANTEDSIZE="15000000000"
