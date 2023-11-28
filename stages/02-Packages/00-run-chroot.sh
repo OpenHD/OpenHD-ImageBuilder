@@ -12,7 +12,15 @@ echo "debug"
 ls -l --block-size=M /opt/additionalFiles/
 cd /opt/additionalFiles/
 if [ ! -e emmc ]; then
-echo "ich glaub et haaakt"
+install_openhd
+else
+echo "debug2"
+df -h
+cd /opt/additionalFiles/
+gunzip -v emmc.img.gz
+rm emmc.img.gz
+ls -l --block-size=M 
+fi
 
 # X20 specific code
 function install_x20_packages {
@@ -75,80 +83,85 @@ function clone_github_repos {
     chmod -R 777 /opt
 }
 
-# Main function
- if [[ "${OS}" == "debian-X20" ]]; then
-    install_x20_packages
- elif [[ "${OS}" == "raspbian" ]]; then
-    install_raspbian_packages
- elif [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-ubuntu-rock5a" ]] ; then
-    sudo add-apt-repository -r "deb https://ppa.launchpadcontent.net/jjriek/rockchip/ubuntu jammy main"
-    install_radxa-ubuntu_packages
- elif [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]  ; then
-    install_radxa-debian_packages
- elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
-    install_radxa-debian_packages_rk3566
-    echo "________________________________"
-    echo "test1"
- elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
-    install_packages-core3566
- elif [[ "${OS}" == "ubuntu-x86" ]] ; then
-    install_ubuntu_x86_packages
- elif [[ "${OS}" == "ubuntu" ]] ; then
-    fix_jetson_apt
-    install_jetson_packages
- fi
+function install_openhd {
 
- # Add OpenHD Repository platform-specific packages
- apt install -y curl
- curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
- curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
- apt update
+    if [[ "${OS}" == "debian-X20" ]]; then
+        install_x20_packages
+    elif [[ "${OS}" == "raspbian" ]]; then
+        install_raspbian_packages
+    elif [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-ubuntu-rock5a" ]] ; then
+        sudo add-apt-repository -r "deb https://ppa.launchpadcontent.net/jjriek/rockchip/ubuntu jammy main"
+        install_radxa-ubuntu_packages
+    elif [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]  ; then
+        install_radxa-debian_packages
+    elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
+        install_radxa-debian_packages_rk3566
+        echo "________________________________"
+        echo "test1"
+    elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
+        install_packages-core3566
+    elif [[ "${OS}" == "ubuntu-x86" ]] ; then
+        install_ubuntu_x86_packages
+    elif [[ "${OS}" == "ubuntu" ]] ; then
+        fix_jetson_apt
+        install_jetson_packages
+    fi
 
- # Remove platform-specific packages
- echo "Removing platform-specific packages..."
- for package in ${PLATFORM_PACKAGES_REMOVE}; do
-     echo "Removing ${package}..."
-     apt purge -y ${package}
-     if [ $? -ne 0 ]; then
-         echo "Failed to remove ${package}!"
-         exit 1
-     fi
- done
- #cleanup before installing packages
- apt autoremove -y
+     # Add OpenHD Repository platform-specific packages
+        apt install -y curl
+        curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
+        curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
+        apt update
 
- # Hold platform-specific packages
- echo "Holding back platform-specific packages..."
- for package in ${PLATFORM_PACKAGES_HOLD}; do
-     echo "Holding ${package}..."
-     apt-mark hold ${package} || true
-     if [ $? -ne 0 ]; then
-         echo "Failed to hold ${package}!"
-     fi
- done
- #Cleapup
- apt autoremove -y
- apt upgrade -y --allow-downgrades
+    # Remove platform-specific packages
+        echo "Removing platform-specific packages..."
+        for package in ${PLATFORM_PACKAGES_REMOVE}; do
+        echo "Removing ${package}..."
+        apt purge -y ${package}
+        if [ $? -ne 0 ]; then
+            echo "Failed to remove ${package}!"
+            exit 1
+        fi
+        done
 
- # Install platform-specific packages
- echo "Installing platform-specific packages..."
- for package in ${BASE_PACKAGES} ${PLATFORM_PACKAGES}; do
-     echo "Installing ${package}..."
-     apt install -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends --allow-downgrades ${package}
-     if [ $? -ne 0 ]; then
-         echo "Failed to install ${package}!"
-         exit 1
-     fi
- done
+    #cleanup before installing packages
+    apt autoremove -y
 
- # Clean up packages and cache
- echo "Cleaning up packages and cache..."
- apt autoremove -y
- apt clean
- rm -rf /var/lib/apt/lists/*
- rm -rf /var/cache/apt/archives/*
- rm -rf /usr/share/doc/*
- rm -rf /usr/share/man/*
+    # Hold platform-specific packages
+    echo "Holding back platform-specific packages..."
+    for package in ${PLATFORM_PACKAGES_HOLD}; do
+        echo "Holding ${package}..."
+        apt-mark hold ${package} || true
+        if [ $? -ne 0 ]; then
+            echo "Failed to hold ${package}!"
+        fi
+    done
+    #Cleapup
+    apt autoremove -y
+    apt upgrade -y --allow-downgrades
+
+    # Install platform-specific packages
+    echo "Installing platform-specific packages..."
+    for package in ${BASE_PACKAGES} ${PLATFORM_PACKAGES}; do
+        echo "Installing ${package}..."
+        apt install -y -o Dpkg::Options::="--force-overwrite" --no-install-recommends --allow-downgrades ${package}
+        if [ $? -ne 0 ]; then
+            echo "Failed to install ${package}!"
+            exit 1
+        fi
+    done
+
+    # Clean up packages and cache
+    echo "Cleaning up packages and cache..."
+    apt autoremove -y
+    apt clean
+    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/cache/apt/archives/*
+    rm -rf /usr/share/doc/*
+    rm -rf /usr/share/man/*
+
+}
+
 
 #
 # Write the openhd package version back to the base of the image and
@@ -157,12 +170,3 @@ export OPENHD_VERSION=$(dpkg -s openhd | grep "^Version" | awk '{ print $2 }')
 
 echo ${OPENHD_VERSION} > /openhd_version.txt
 echo ${OPENHD_VERSION} > /boot/openhd_version.txt
-
-else
-echo "debug2"
-df -h
-cd /opt/additionalFiles/
-gunzip -v emmc.img.gz
-rm emmc.img.gz
-ls -l --block-size=M 
-fi
