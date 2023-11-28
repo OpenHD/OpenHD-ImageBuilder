@@ -9,10 +9,9 @@ set -e
 
 
 echo "debug"
-df -h
 ls -l --block-size=M /opt/additionalFiles/
-
-if [ ! -e /opt/additionalFiles/emmc ]; then
+cd /opt/additionalFiles/
+if [ ! -e emmc ]; then
 
 # X20 specific code
 function install_x20_packages {
