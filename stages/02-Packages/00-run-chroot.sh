@@ -12,6 +12,7 @@ echo "debug"
 ls -l --block-size=M /opt/additionalFiles/
 cd /opt/additionalFiles/
 if [ ! -e emmc ]; then
+echo "ich glaub et haaakt"
 
 # X20 specific code
 function install_x20_packages {
