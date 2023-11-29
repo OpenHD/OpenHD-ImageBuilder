@@ -158,7 +158,19 @@ if [ ! -e emmc ]; then
     install_openhd
 else
     apt update
-    apt purge -y --allow-remove-essential chromium-x11 desktop-base gnome* libcups2 libgstreamer* libopencv* libqt5* xserver* codium firefox* dkms sddm plymouth plasma-desktop kde* lightdm *xfce* chromium || true
+    PLATFORM_PACKAGES_REMOVE="chromium-x11 desktop-base gnome* libcups2 libgstreamer* libopencv* libqt5* xserver* codium firefox* dkms sddm plymouth plasma-desktop kde* lightdm *xfce* chromium"
+    
+        # Remove platform-specific packages
+        echo "Removing platform-specific packages..."
+        for package in ${PLATFORM_PACKAGES_REMOVE}; do
+        echo "Removing ${package}..."
+        apt purge -y ${package}
+        if [ $? -ne 0 ]; then
+            echo "Failed to remove ${package}!"
+            exit 1
+        fi
+        done
+    
     curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
     apt install linux-image-5.10.160-radxa-rk356x
     apt autoremove -y --allow-remove-essential
