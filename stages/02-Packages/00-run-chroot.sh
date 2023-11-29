@@ -154,7 +154,7 @@ function install_openhd {
 
 cd /opt/additionalFiles/
 ls -a
-if [ ! -e emmc ]; then
+if [ ! -e emmmc ]; then
     install_openhd
 else
     echo "debug2"
