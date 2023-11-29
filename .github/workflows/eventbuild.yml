@@ -79,6 +79,7 @@ jobs:
       run: |
         dd if=/dev/zero of=large_image.img bs=1M count=5650
         ls -a
+        mkdir deploy
         mv *.img deploy/
     - name: remove old image to make space
       run: |
