@@ -157,12 +157,13 @@ ls -a
 if [ ! -e emmc ]; then
     install_openhd
 else
+    apt update
+    apt list --installed
     apt purge -y codium firefox* dkms sddm plymouth plasma-desktop kde* lightdm *xfce* chromium || true
     curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
     apt install linux-image-5.10.160-radxa-rk356x
     apt autoremove -y
-    apt list --installed | awk -F/ '/^\/\// { pkg = $1; getline; size = $1; sub(/[^0-9]/, "", size); print size, pkg }' | sort -nr
-
+    apt list --installed
     df -h
     cd /opt/additionalFiles/
     gunzip -v emmc.img.gz
