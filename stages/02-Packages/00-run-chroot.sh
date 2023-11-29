@@ -10,17 +10,7 @@ set -e
 
 echo "debug"
 ls -l --block-size=M /opt/additionalFiles/
-cd /opt/additionalFiles/
-if [ ! -e emmc ]; then
-install_openhd
-else
-echo "debug2"
-df -h
-cd /opt/additionalFiles/
-gunzip -v emmc.img.gz
-rm emmc.img.gz
-ls -l --block-size=M 
-fi
+
 
 # X20 specific code
 function install_x20_packages {
@@ -161,6 +151,19 @@ function install_openhd {
     rm -rf /usr/share/man/*
 
 }
+
+cd /opt/additionalFiles/
+
+if [ ! -e emmc ]; then
+    install_openhd
+else
+    echo "debug2"
+    df -h
+    cd /opt/additionalFiles/
+    gunzip -v emmc.img.gz
+    rm emmc.img.gz
+    ls -l --block-size=M 
+fi
 
 
 #
