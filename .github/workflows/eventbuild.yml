@@ -76,6 +76,7 @@ jobs:
     # - name: configure
     #   run: sudo ./build.sh ${{ matrix.TARGET }}
     - name: debug
+      run: |
       dd if=/dev/zero of=large_image.img bs=1M count=5650
       mv large_image.img deploy/large_image.img
     - name: remove old image to make space
