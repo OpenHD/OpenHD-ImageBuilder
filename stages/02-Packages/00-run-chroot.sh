@@ -157,7 +157,11 @@ ls -a
 if [ ! -e emmc ]; then
     install_openhd
 else
-    echo "debug2"
+    apt remove -y codium firefox* dkms sddm plymouth plasma-desktop kde* lightdm *xfce* chromium
+    apt install linux-image-5.10.160-radxa-rk356x
+    apt autoremove -y
+    apt list --installed | awk -F/ '/^\/\// { pkg = $1; getline; size = $1; sub(/[^0-9]/, "", size); print size, pkg }' | sort -nr
+
     df -h
     cd /opt/additionalFiles/
     gunzip -v emmc.img.gz
