@@ -161,7 +161,6 @@ else
     df -h
     cd /opt/additionalFiles/
     gunzip -v emmc.img.gz
-    rm emmc.img.gz
     ls -l --block-size=M 
 fi
 
