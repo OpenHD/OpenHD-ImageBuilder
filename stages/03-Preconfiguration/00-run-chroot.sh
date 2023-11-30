@@ -61,12 +61,18 @@ fi
 
 #DO NOT TOUCH THE SYNTAX HERE
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
-touch /boot/openhd/ground.txt
-#autologin as root
-sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /etc/systemd/system/getty.target.wants/getty@tty1.service
-#autocopy to emmc
-echo "/usr/local/bin/openhd_sys_utils.sh" >> /root/.bashrc
-mv /boot/dtbo/radxa-zero3-disabled-ethernet.dtbo.disabled /boot/dtbo/radxa-zero3-disabled-ethernet.dtbo
+    systemctl disable dnsmasq
+    cd /opt/additionalFiles/
+    ls -a
+if [ ! -e emmc ]; then
+    echo "no need"
+    touch /boot/openhd/ground.txt
+    sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
+else
+    #autologin as root
+    sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
+    #autocopy to emmc
+    echo "/usr/local/bin/openhd_sys_utils.sh" >> /root/.bashrc
 fi
 
 
