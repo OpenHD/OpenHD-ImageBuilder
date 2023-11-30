@@ -64,11 +64,11 @@ if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     systemctl disable dnsmasq
     cd /opt/additionalFiles/
     ls -a
-if [ ! -e emmc ]; then
+    if [ ! -e emmc ]; then
     echo "no need"
     touch /boot/openhd/ground.txt
     sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
-else
+    else
     #autologin as root
     sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
     #autocopy to emmc
@@ -174,7 +174,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 
 fi
 
- if [[ "${OS}" == "debian-X20" ]]; then
+if [[ "${OS}" == "debian-X20" ]]; then
  mkdir /emmc/
  sudo echo "/dev/mmcblk1p1  /emmc  auto  defaults  0  2" | sudo tee -a /etc/fstab
  touch /boot/openhd/hardware_vtx_v20.txt
@@ -198,7 +198,7 @@ fi
  sed -i '17,35d' /etc/rc.local
  find / -type f -exec du -h {} + | sort -rh | head -n 10
  echo "none /run tmpfs defaults,size=20M 0 0" >> /etc/fstab
- fi
+fi
 
 #Install openhd_sys_utils_service
 cp /opt/additionalFiles/openhd_sys_utils.service /etc/systemd/system/
