@@ -156,6 +156,7 @@ cd /opt/additionalFiles/
 ls -a
 if [ ! -e emmc ]; then
     install_openhd
+    rm -Rf /opt/additionalFiles/
 else
     apt update
     #dirty hack to remove sddm without everything failing .. thanks radxa
@@ -182,6 +183,7 @@ else
     apt list --installed
     df -h
     cd /opt/additionalFiles/
+    cp /opt/additionalFiles/*.sh /usr/local/bin/
     gunzip -v emmc.img.gz
     ls -l --block-size=M 
 
