@@ -179,7 +179,7 @@ else
             exit 1
         fi
         done
-        
+
     curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
     apt install linux-image-5.10.160-radxa-rk356x pv
     apt autoremove -y --allow-remove-essential
@@ -190,7 +190,8 @@ else
     mkdir -p /boot/openhd/
     touch /boot/openhd/rock-rk3566.txt
     touch /boot/openhd/resize.txt
-    find /usr/lib/aarch64-linux-gnu/dri/ -type f ! -name rockchip_dri.so -delete
+    ls /usr/lib/aarch64-linux-gnu/dri/
+    rm -Rf /usr/lib/aarch64-linux-gnu/*
     df -h
     gunzip -v emmc.img.gz
     ls -l --block-size=M 
