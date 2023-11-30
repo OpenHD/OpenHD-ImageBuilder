@@ -168,7 +168,7 @@ jobs:
         cd ..
         sudo ./build.sh ${{ matrix.TARGET }}
         cd deploy
-        mv *.img OpenHD-EMMC-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}.img
+        sudo mv *.img OpenHD-EMMC-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}.img
 
     
     - name: Compose release filename
