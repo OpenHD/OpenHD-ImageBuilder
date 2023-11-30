@@ -184,12 +184,13 @@ else
     apt install linux-image-5.10.160-radxa-rk356x pv
     apt autoremove -y --allow-remove-essential
     dpkg-query -W -f='${Installed-Size;8}  ${Package}\n' | sort -n
-    df -h
     cd /opt/additionalFiles/
     cp /opt/additionalFiles/*.sh /usr/local/bin/
     mkdir -p /boot/openhd/
     touch /boot/openhd/rock-rk3566.txt
     touch /boot/openhd/resize.txt
+    find /usr/lib/aarch64-linux-gnu/dri/ -type f ! -name rockchip_dri.so -delete
+    df -h
     gunzip -v emmc.img.gz
     ls -l --block-size=M 
 
