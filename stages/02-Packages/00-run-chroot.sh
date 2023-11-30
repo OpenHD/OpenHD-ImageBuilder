@@ -158,7 +158,7 @@ if [ ! -e emmc ]; then
     install_openhd
 else
     apt update
-    PLATFORM_PACKAGES_REMOVE="xserver* codium firefox* dkms *sddm* plymouth plasma-desktop kde* lightdm *xfce* chromium"
+    PLATFORM_PACKAGES_REMOVE="xserver* codium firefox* dkms plymouth plasma-desktop kde* lightdm *xfce* chromium"
     
         # Remove platform-specific packages
         echo "Removing platform-specific packages..."
