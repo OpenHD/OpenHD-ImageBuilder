@@ -179,10 +179,11 @@ else
             exit 1
         fi
         done
-    
+        
     curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
     apt install linux-image-5.10.160-radxa-rk356x pv
     apt autoremove -y --allow-remove-essential
+    sudo apt-get clean -y
     dpkg-query -W -f='${Installed-Size;8}  ${Package}\n' | sort -n
     cd /opt/additionalFiles/
     cp /opt/additionalFiles/*.sh /usr/local/bin/
