@@ -167,6 +167,7 @@ jobs:
         ls -a 
         cd ..
         sudo ./build.sh ${{ matrix.TARGET }}
+        mv deploy/*.img .
 
     
     - name: Compose release filename
@@ -178,7 +179,7 @@ jobs:
       with:
         name: "${{ matrix.TARGET }}"
         path: |
-          deploy/*.img
+          *.img
           if-no-files-found: error
 
   upload:
