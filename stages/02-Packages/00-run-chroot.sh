@@ -184,6 +184,8 @@ else
     df -h
     cd /opt/additionalFiles/
     cp /opt/additionalFiles/*.sh /usr/local/bin/
+    touch /boot/openhd/rock-rk3566.txt
+    touch /boot/openhd/resize.txt
     gunzip -v emmc.img.gz
     ls -l --block-size=M 
 
