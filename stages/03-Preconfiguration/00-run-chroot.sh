@@ -73,6 +73,7 @@ if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
     #autocopy to emmc
     echo "/usr/local/bin/openhd_sys_utils.sh" >> /root/.bashrc
+    fi
 fi
 
 
