@@ -158,7 +158,7 @@ if [ ! -e emmc ]; then
     install_openhd
 else
     apt update
-    PLATFORM_PACKAGES_REMOVE="x11-common  gstreamer* libavcodec58 libavformat58 libavfilter7 libcups2 libgstreamer* libopencv* libqt5* codium firefox* dkms plymouth plasma-desktop kde* lightdm *xfce* chromium"
+    PLATFORM_PACKAGES_REMOVE="rockchip-pulseaudio-config rockchip* x11-common  gstreamer* libavcodec58 libavformat58 libavfilter7 libcups2 libgstreamer* libopencv* libqt5* codium firefox* dkms plymouth plasma-desktop kde* lightdm *xfce* chromium"
     
         # Remove platform-specific packages
         echo "Removing platform-specific packages..."
