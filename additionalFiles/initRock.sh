@@ -68,7 +68,19 @@ if [[ -f "/boot/openhd/rock-rk3566.txt" ]]; then
     if [[ -n "/boot/openhd/resize.txt" ]]; then
     echo "resizing started"
     rm /boot/openhd/resize.txt
-    (pv -n /dev/mmcblk1 | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Running dd command (cloning), please wait..." 10 70 0
+    export NEWT_COLORS='
+    root=,black
+    window=black,black
+    border=black,black
+    textbox=white,black
+    button=white,black
+    emptyscale=,black
+    fullscale=,white
+    ' \
+
+    (pv -n /opt/emmc.img | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Flashing OpenHD to EMMC, please wait..." 10 70 0
+    echo "flash complete, rebooting now"
+    sudo reboot
     fi
 
 fi
