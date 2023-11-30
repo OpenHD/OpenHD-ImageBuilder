@@ -79,8 +79,8 @@ if [[ -f "/boot/openhd/rock-rk3566.txt" ]]; then
     ' \
 
     (pv -n /opt/additionalFiles/emmc.img | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Flashing OpenHD to EMMC, please wait..." 10 70 0
-    echo "flash complete, rebooting now"
-    sudo reboot
+    parted -s /dev/mmcblkp1 mklabel msdos mkpart primary fat32 0% 100% && mkfs.fat -F 32 /dev/mmcblkp1 && whiptail --title "Partitioning Complete" --msgbox "Partitioning /dev/mmcblkp1 completed successfully." 8 50
+    echo "please reboot or powerdown the system now"
     fi
 
 fi
