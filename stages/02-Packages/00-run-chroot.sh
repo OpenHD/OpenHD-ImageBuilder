@@ -190,8 +190,7 @@ else
     mkdir -p /boot/openhd/
     touch /boot/openhd/rock-rk3566.txt
     touch /boot/openhd/resize.txt
-    ls /usr/lib/aarch64-linux-gnu/dri/
-    rm -Rf /usr/lib/aarch64-linux-gnu/*
+    ls /usr/lib/
     df -h
     gunzip -v emmc.img.gz
     ls -l --block-size=M 
