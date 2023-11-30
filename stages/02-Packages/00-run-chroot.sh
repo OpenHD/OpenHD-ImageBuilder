@@ -177,7 +177,7 @@ else
         done
     
     curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
-    apt install linux-image-5.10.160-radxa-rk356x
+    apt install linux-image-5.10.160-radxa-rk356x pv
     apt autoremove -y --allow-remove-essential
     apt list --installed
     df -h
