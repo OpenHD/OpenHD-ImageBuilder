@@ -164,7 +164,7 @@ else
     touch /usr/share/sddm/themes/breeze/Main.qml
     apt remove -y radxa-sddm-theme
     #now removing everything else
-    PLATFORM_PACKAGES_REMOVE="firmware-misc-nonfree libmali-bifrost-g52-g2p0-x11-gbm adwaita-icon-theme lfirmware-brcm80211 network-manager desktop-base libcairo2 libvulkan1 xdg-desktop-portal ibgtk-3-common firmware-iwlwifi fonts-noto-cjk linux-image-5.10.160-20-rk356x rockchip-pulseaudio-config rockchip* x11-common  gstreamer* libavcodec58 libavformat58 libavfilter7 libcups2 libgstreamer* libopencv* libqt5* codium firefox* dkms plymouth plasma-desktop kde* lightdm *xfce* chromium"
+    PLATFORM_PACKAGES_REMOVE="firmware-misc-nonfree libmali-bifrost-g52-g2p0-x11-gbm adwaita-icon-theme firmware-brcm80211 network-manager desktop-base libcairo2 libvulkan1 xdg-desktop-portal ibgtk-3-common firmware-iwlwifi fonts-noto-cjk linux-image-5.10.160-20-rk356x rockchip-pulseaudio-config rockchip* x11-common  gstreamer* libavcodec58 libavformat58 libavfilter7 libcups2 libgstreamer* libopencv* libqt5* codium firefox* dkms plymouth plasma-desktop kde* lightdm *xfce* chromium"
     
         # Remove platform-specific packages
         echo "Removing platform-specific packages..."
