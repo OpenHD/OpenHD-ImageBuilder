@@ -184,14 +184,11 @@ else
     apt install linux-image-5.10.160-radxa-rk356x pv
     apt autoremove -y --allow-remove-essential
     sudo apt-get clean -y
-    dpkg-query -W -f='${Installed-Size;8}  ${Package}\n' | sort -n
     cd /opt/additionalFiles/
     cp /opt/additionalFiles/*.sh /usr/local/bin/
     mkdir -p /boot/openhd/
     touch /boot/openhd/rock-rk3566.txt
     touch /boot/openhd/resize.txt
-    ls /usr/lib/aarch64-linux-gnu/
-    rm -Rf /usr/lib/aarch64-linux-gnu/*
     df -h
     gunzip -v emmc.img.gz
     ls -l --block-size=M 
