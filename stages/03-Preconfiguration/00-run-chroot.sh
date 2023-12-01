@@ -62,6 +62,7 @@ fi
 #DO NOT TOUCH THE SYNTAX HERE
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     systemctl disable dnsmasq
+    sed -i 's/loglevel=4/loglevel=0/g' /boot/extlinux/extlinux.conf
     cd /opt/additionalFiles/
     ls -a
     if [ ! -e emmc ]; then
