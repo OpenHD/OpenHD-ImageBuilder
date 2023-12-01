@@ -68,19 +68,6 @@ if [[ -f "/boot/openhd/rock-rk3566.txt" ]]; then
     if [[ -n "/boot/openhd/resize.txt" ]]; then
     echo "resizing started"
     rm /boot/openhd/resize.txt
-    export NEWT_COLORS='
-    root=,black
-    window=black,black
-    border=black,black
-    textbox=white,black
-    button=white,black
-    emptyscale=,black
-    fullscale=,white
-    ' \
-
-    (pv -n /opt/additionalFiles/emmc.img | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Flashing OpenHD to EMMC, please wait..." 10 70 0
-    parted -s /dev/mmcblkp1 mklabel msdos mkpart primary fat32 0% 100% && mkfs.fat -F 32 /dev/mmcblkp1 && whiptail --title "Partitioning Complete" --msgbox "Partitioning /dev/mmcblkp1 completed successfully." 8 50
-    echo "please reboot or powerdown the system now"
     fi
 
 fi
