@@ -65,6 +65,7 @@ if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     sed -i 's/loglevel=4/loglevel=0/g' /boot/extlinux/extlinux.conf
     cd /opt/additionalFiles/
     ls -a
+    echo 'echo "0" > /sys/class/leds/board-led/brightness' >> /root/.bashrc
     if [ ! -e emmc ]; then
     echo "no need"
     touch /boot/openhd/ground.txt
