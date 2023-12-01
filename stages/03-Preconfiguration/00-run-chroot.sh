@@ -75,7 +75,7 @@ if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     #autocopy to emmc
     echo "0" > /sys/class/leds/board-led/brightness
     echo "1" > /sys/class/leds/board-led/brightness
-    echo -e '\nexport NEWT_COLORS='\''\nroot=,black\nwindow=black,black\nborder=black,black\ntextbox=white,black\nbutton=white,black\nemptyscale=,black\nfullscale=,white\n'\'' \\\n\n(pv -n /opt/additionalFiles/emmc.img | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Flashing OpenHD to EMMC, please wait..." 10 70 0\nparted -s /dev/mmcblk1 mklabel msdos mkpart primary fat32 0% 100% && mkfs.fat -F 32 /dev/mmcblk1 && whiptail --title "Partitioning Complete" --msgbox "Partitioning /dev/mmcblkp1 completed successfully." 8 50\necho "please reboot or powerdown the system now"' >> /root/.bashrc
+    echo -e '\nexport NEWT_COLORS='\''\nroot=,black\nwindow=black,black\nborder=black,black\ntextbox=white,black\nbutton=white,black\nemptyscale=,black\nfullscale=,white\n'\'' \\\n\n(pv -n /opt/additionalFiles/emmc.img | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Flashing OpenHD to EMMC, please wait..." 10 70 0\necho "please reboot or powerdown the system now"' >> /root/.bashrc
     echo "0" > /sys/class/leds/board-led/brightness
     fi
 fi
