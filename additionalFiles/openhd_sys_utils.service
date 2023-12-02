@@ -6,4 +6,4 @@ Type=simple
 ExecStart=/bin/bash /usr/local/bin/openhd_sys_utils.sh
 
 [Install]
-WantedBy=simple.target
+WantedBy=multi-user.target
