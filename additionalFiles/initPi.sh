@@ -61,3 +61,4 @@ camera_link="/boot/openhd/rpi_camera_configs/"$camera_config
 #Now we copy the camera-configuation after the #OPENHD_DYNAMIC_CONTENT_BEGIN# lines:
 cat "$camera_link" >> /boot/config.txt
 echo "Config for" $camera_config "was written successfully"
+reboot
