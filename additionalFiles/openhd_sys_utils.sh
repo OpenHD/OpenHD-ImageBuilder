@@ -36,6 +36,7 @@ if [ -f "/boot/openhd/rock-rk3566.txt" ]; then
   echo "detected rk3566 device"
   if  [ -e /dev/mmcblk1p1 ]; then
     mv /home/openhd/Videos /home/openhd/Videos_emmc
+    mkdir -p /home/openhd/Videos
     sudo mount -t vfat /dev/mmcblk1p1 /home/openhd/Videos
     mv /home/openhd/Videos_emmc/* /home/openhd/Videos
   fi
