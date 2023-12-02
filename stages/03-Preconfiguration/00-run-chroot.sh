@@ -59,7 +59,6 @@ if [[ "${OS}" == "radxa-ubuntu-rock5a" ]]; then
 fi
 
 
-#DO NOT TOUCH THE SYNTAX HERE
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     systemctl disable dnsmasq
     sed -i 's/loglevel=4/loglevel=0/g' /boot/extlinux/extlinux.conf
@@ -78,7 +77,7 @@ if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     echo "1" > /sys/class/leds/board-led/brightness
     echo -e '\nexport NEWT_COLORS='\''\nroot=,black\nwindow=black,black\nborder=black,black\ntextbox=white,black\nbutton=white,black\nemptyscale=,black\nfullscale=,white\n'\'' \\\n\n(pv -n /opt/additionalFiles/emmc.img | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Flashing OpenHD to EMMC, please wait..." 10 70 0\necho "please reboot or powerdown the system now"' >> /root/.bashrc
     echo "0" > /sys/class/leds/board-led/brightness
-    echo 'whiptail --title "Reboot System" --yesno "Please reboot the system now." 10 50 && sudo reboot' >> /root/.bashrc
+    echo 'whiptail --msgbox "Please reboot your system now" 10 40' >> /root/.bashrc
     fi
 fi
 

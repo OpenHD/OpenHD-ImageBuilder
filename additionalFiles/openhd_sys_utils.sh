@@ -31,9 +31,17 @@ if [ -f "/boot/openhd/rock-5b.txt" ]; then
 fi
 
 if [ -f "/boot/openhd/rock-rk3566.txt" ]; then
+  echo "detected rk3566 device"
+  if  [ -e /dev/mmcblk1p0 ]; then
+    mv /home/openhd/Videos /home/openhd/Videos_emmc
+    sudo mount -t vfat /dev/mmcblk1p0 /home/openhd/Videos
+    mv /home/openhd/Videos_emmc/* /home/openhd/Videos
+  fi
   #sudo bash /usr/local/bin/initRock.sh
-  rm /boot/openhd/rock-rk3566.txt
-  reboot
+  if [ -f "/boot/openhd/clearEMMC.txt" ] || [ -f "/home/openhd/Videos/clearEMMC.txt" ] ; then
+    (pv -n /dev/zero | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Flashing OpenHD to EMMC, please wait... (if this fails, please manually reboot)" 10 70 0
+    whiptail --msgbox "Please reboot your system now" 10 40
+  fi
 fi
 
 if [ -f "/boot/openhd/rpi.txt" ]; then
