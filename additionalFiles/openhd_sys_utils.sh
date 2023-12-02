@@ -3,6 +3,8 @@
 # This script handles initial configuation, updates and misc features which aren't included in the main OpenHD executable (yet)
 
 # debug mode (shows journaldctl on the screen when logged in)
+echo "OpenHD-Sys-Utils executed"
+
 debug_file="/boot/openhd/debug.txt"
 if [ -e "$debug_file" ]; then
     echo "debug mode selected"
