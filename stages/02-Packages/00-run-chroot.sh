@@ -36,7 +36,7 @@ function install_radxa-ubuntu_packages {
 }
 
 function install_radxa-debian_packages {
-    BASE_PACKAGES="openhd qopenhd-rk3588 apt-transport-https apt-utils open-hd-web-ui"
+    BASE_PACKAGES="openhd apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="r8125-dkms 8852bu-dkms 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-rock-5a linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip"
     PLATFORM_PACKAGES_REMOVE="dkms sddm plymouth plasma-desktop kde*"
     PLATFORM_PACKAGES="rockchip-iq-openhd linux-headers-5.10.110-99-rockchip-g9c3b92612 linux-image-5.10.110-99-rockchip-g9c3b92612 rsync procps mpv camera-engine-rkaiq"
@@ -197,7 +197,14 @@ else
 
 fi
 
+#dirty hack for the 2.5 release to get rock5a working
+if [[ "${OS}" == "radxa-debian-rock5a" ]]; then
+    apt install -y qopenhd-rk3588a
+fi
 
+if [[ "${OS}" == "radxa-debian-rock5b" ]]; then
+    apt install -y qopenhd-rk3588
+fi
 #
 # Write the openhd package version back to the base of the image and
 # in the work dir so the builder can use it in the image name
