@@ -141,6 +141,15 @@ function install_openhd {
         fi
     done
 
+    #dirty hack for the 2.5 release to get rock5a working
+    if [[ "${OS}" == "radxa-debian-rock5a" ]]; then
+        apt install -y qopenhd-rk3588a
+    fi
+
+    if [[ "${OS}" == "radxa-debian-rock5b" ]]; then
+        apt install -y qopenhd-rk3588
+    fi
+
     # Clean up packages and cache
     echo "Cleaning up packages and cache..."
     apt autoremove -y
@@ -195,14 +204,6 @@ else
 
 fi
 
-#dirty hack for the 2.5 release to get rock5a working
-if [[ "${OS}" == "radxa-debian-rock5a" ]]; then
-    apt install -y qopenhd-rk3588a
-fi
-
-if [[ "${OS}" == "radxa-debian-rock5b" ]]; then
-    apt install -y qopenhd-rk3588
-fi
 #
 # Write the openhd package version back to the base of the image and
 # in the work dir so the builder can use it in the image name
