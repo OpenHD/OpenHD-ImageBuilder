@@ -88,8 +88,6 @@ function install_openhd {
         install_radxa-debian_packages
     elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
         install_radxa-debian_packages_rk3566
-        echo "________________________________"
-        echo "test1"
     elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
         install_packages-core3566
     elif [[ "${OS}" == "ubuntu-x86" ]] ; then
@@ -102,7 +100,7 @@ function install_openhd {
      # Add OpenHD Repository platform-specific packages
         apt install -y curl
         curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
-        curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
+        #curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
         apt update
 
     # Remove platform-specific packages
