@@ -1,7 +1,11 @@
 # Extend Image Size
 ls -a ../../
 if [ ! -e ../../emmc ]; then
-WANTEDSIZE="5632000000"
+    if [[ "${OS}" == radxa-debian-rock5a ]] || [[ "${OS}" == radxa-debian-rock5b ]];then
+    WANTEDSIZE="6800000000"
+    else
+    WANTEDSIZE="5632000000"
+    fi
 else
 WANTEDSIZE="9500000256"
 echo "_______________________________________________________________________"
