@@ -12,7 +12,7 @@ log "Running before.txt as first boot configuration"
 
 # Resize root partition at filesystem level
 #
-resize_root
+# resize_root
 
 # Disable services
 # Command:

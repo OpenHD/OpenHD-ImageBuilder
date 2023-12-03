@@ -13,18 +13,23 @@ cp motd /etc/motd
 cp motd-unsupported /etc/motd-unsupported
 
 
-if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian-rock-cm3
-" ]]; then
+if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
+    cat /etc/fstab
     #rm /conf/before.txt
     cp /opt/additionalFiles/before.txt /conf/before.txt
+    cp /opt/additionalFiles/before.txt /config/before.txt
     #allow offline auto detection of image format
     cp /opt/additionalFiles/issue.txt /conf/issue.txt
+    cp /opt/additionalFiles/issue.txt /config/issue.txt
     mkdir -p /conf/openhd
+    mkdir -p /config/openhd
+    mkdir -p /boot/openhd
     cp /opt/additionalFiles/initRock.sh /usr/local/bin/initRock.sh
     touch /conf/config.txt
+    touch /config/config.txt
     #mounting config partition
-    ls -a /conf
     cp -rv /boot/openhd/* /conf/openhd/
+    cp -rv /boot/openhd/* /config/openhd/
     #rm -Rf /boot/openhd
     ln -s /config/openhd /boot/openhd
     #copy overlays from linux kernel into the correct folder
@@ -54,9 +59,26 @@ if [[ "${OS}" == "radxa-ubuntu-rock5a" ]]; then
 fi
 
 
-#DO NOT TOUCH THE SYNTAX HERE
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
-touch /boot/openhd/ground.txt
+    systemctl disable dnsmasq
+    sed -i 's/loglevel=4/loglevel=0/g' /boot/extlinux/extlinux.conf
+    cd /opt/additionalFiles/
+    ls -a
+    echo 'echo "0" > /sys/class/leds/board-led/brightness' >> /root/.bashrc
+    if [ ! -e emmc ]; then
+    echo "no need"
+    touch /boot/openhd/ground.txt
+    sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
+    else
+    #autologin as root
+    sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
+    #autocopy to emmc
+    echo "0" > /sys/class/leds/board-led/brightness
+    echo "1" > /sys/class/leds/board-led/brightness
+    echo -e '\nexport NEWT_COLORS='\''\nroot=,black\nwindow=black,black\nborder=black,black\ntextbox=white,black\nbutton=white,black\nemptyscale=,black\nfullscale=,white\n'\'' \\\n\n(pv -n /opt/additionalFiles/emmc.img | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Flashing OpenHD to EMMC, please wait..." 10 70 0\necho "please reboot or powerdown the system now"' >> /root/.bashrc
+    echo "0" > /sys/class/leds/board-led/brightness
+    echo 'whiptail --msgbox "Please reboot your system now" 10 40' >> /root/.bashrc
+    fi
 fi
 
 
@@ -158,7 +180,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 
 fi
 
- if [[ "${OS}" == "debian-X20" ]]; then
+if [[ "${OS}" == "debian-X20" ]]; then
  mkdir /emmc/
  sudo echo "/dev/mmcblk1p1  /emmc  auto  defaults  0  2" | sudo tee -a /etc/fstab
  touch /boot/openhd/hardware_vtx_v20.txt
@@ -181,7 +203,8 @@ fi
  apt update
  sed -i '17,35d' /etc/rc.local
  find / -type f -exec du -h {} + | sort -rh | head -n 10
- fi
+ echo "none /run tmpfs defaults,size=20M 0 0" >> /etc/fstab
+fi
 
 #Install openhd_sys_utils_service
 cp /opt/additionalFiles/openhd_sys_utils.service /etc/systemd/system/

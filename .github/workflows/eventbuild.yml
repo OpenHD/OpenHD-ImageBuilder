@@ -20,8 +20,8 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        # TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a, radxa-cm3, core3566, x20, radxa-zero3w] # <-- Add targets here!
-        TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a, radxa-cm3, core3566, x20, radxa-zero3w] # <-- Add targets here!
+        TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a, radxa-cm3, x20, radxa-zero3w] # <-- Add targets here!
+        # TARGET: [radxa-zero3w, radxa-cm3, pi-bullseye] # <-- Add targets here!
 
     steps:
     - name: Maximize build space
@@ -75,6 +75,12 @@ jobs:
           sudo make install
     - name: configure
       run: sudo ./build.sh ${{ matrix.TARGET }}
+    # - name: debug
+    #   run: |
+    #     dd if=/dev/zero of=large_image.img bs=1M count=5650
+    #     ls -a
+    #     mkdir deploy
+    #     mv *.img deploy/
     - name: remove old image to make space
       run: |
         sudo rm -Rf -v ./work-jetson-nano-2gb-bionic/03-Preconfiguration/*
@@ -113,6 +119,68 @@ jobs:
           *.img
           if-no-files-found: error
 
+  createEmmcImage:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false # Don't fail all if any of the jobs is failing
+      matrix:
+        TARGET: [radxa-zero3w] # <-- Add targets here!
+        
+    steps:
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 100
+        swap-size-mb: 200
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+        remove-codeql: 'true'
+        remove-docker-images: 'true'
+        overprovision-lvm: 'true'
+        
+    - name: dep
+      run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
+
+    
+    - uses: actions/checkout@v3
+    - uses: actions/download-artifact@v3
+      with:
+        name: "radxa-zero3w"
+
+    - name: debug
+      run: |
+        ls -a
+        touch emmc
+        touch additionalFiles/emmc
+        df -h
+    
+    - name: buildImage
+      run: |
+        ls -a
+        sudo apt install -y xz-utils
+        cp *.img additionalFiles/emmc.img
+        cd additionalFiles
+        gzip -c *.img > emmc.img.gz
+        rm *.img
+        cd ..
+        sudo ./build.sh ${{ matrix.TARGET }}
+        cd deploy
+        sudo mv *.img ../OpenHD-EMMC-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}.img
+
+    
+    - name: Compose release filename
+      # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions
+      run: echo "artifact_name=OpenHD-EMMC-image-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
+        
+    - name: Pack image for ${{ matrix.TARGET }}
+      uses: 'actions/upload-artifact@v2'
+      with:
+        name: "${{ matrix.TARGET }}"
+        path: |
+          *.img
+          if-no-files-found: error
 
   upload:
     if: "github.event_name == 'push' && github.ref == 'refs/heads/release'"

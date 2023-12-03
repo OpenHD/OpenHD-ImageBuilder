@@ -1,10 +1,19 @@
 # Extend Image Size
+ls -a ../../
+if [ ! -e ../../emmc ]; then
+WANTEDSIZE="5632000000"
+else
+WANTEDSIZE="9500000256"
+echo "_______________________________________________________________________"
+echo "this is the emmc-model"
+echo "_______________________________________________________________________"
+
+fi
 
 pushd ${STAGE_WORK_DIR}
 
     #Makes the images flashable with raspberry pi imager
     log "We now define the size to be ~15GB (the maximum size we have in our github builder, this doesn't affect the output image because we're resizeing it in the end before uploading the image)" 
-    WANTEDSIZE="6800000000"
     FILESIZE=$(stat -c%s "IMAGE.img")
     DIFFERENCE=$(expr $WANTEDSIZE - $FILESIZE)
     DIFFERENCE=$(expr $DIFFERENCE - 1)
@@ -28,7 +37,7 @@ if [[ "${OS}" != ubuntu-x86 ]] && [[ "${OS}" != debian-X20 ]]; then
     if [[ "${OS}" == radxa-debian-rock5a ]] || [[ "${OS}" == radxa-debian-rock5b ]] || [[ "${OS}" == radxa-debian-rock-cm3 ]] || [[ "${OS}" == radxa-debian-rock-cm3-core3566 ]]; then
     echo "resize with parted"
     echo -e "x\ne\nd\nn\n\n\n\n\nw\ny\n" | sudo gdisk IMAGE.img
-    sudo parted -s IMAGE.img resizepart 2 100%
+    sudo parted -s IMAGE.img resizepart ${ROOT_PART} 100%
     sudo gdisk -l IMAGE.img
     else
 

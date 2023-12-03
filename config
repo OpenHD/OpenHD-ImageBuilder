@@ -6,4 +6,4 @@ OPENHD_PACKAGE="openhd"
 APT_CACHER_NG_URL=http://127.0.0.1:3142
 APT_CACHER_NG_ENABLED=false
 
-# Used to store cached apt-downloads, not really needed if you have "fast" internet
+#Used to store cached apt-downloads, not really needed if you have "fast" internet
