@@ -39,7 +39,7 @@ function install_radxa-debian_packages {
     BASE_PACKAGES="openhd qopenhd-rk3588 apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="r8125-dkms 8852bu-dkms 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-rock-5a linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip"
     PLATFORM_PACKAGES_REMOVE="dkms sddm plymouth plasma-desktop kde*"
-    PLATFORM_PACKAGES="gst-latest rockchip-iq-openhd linux-headers-5.10.110-99-rockchip-g9c3b92612 linux-image-5.10.110-99-rockchip-g9c3b92612 rsync procps mpv camera-engine-rkaiq"
+    PLATFORM_PACKAGES="rockchip-iq-openhd linux-headers-5.10.110-99-rockchip-g9c3b92612 linux-image-5.10.110-99-rockchip-g9c3b92612 rsync procps mpv camera-engine-rkaiq"
 }
 function install_radxa-debian_packages_rk3566 {
     mkdir -p /usr/local/share/openhd_platform/rock/rk3566
