@@ -53,4 +53,3 @@ if [ -f "/boot/openhd/rpi.txt" ]; then
   rm /boot/openhd/rpi.txt
   fi
 fi
-touch /boot/openhd/IRan.txt
