@@ -24,72 +24,74 @@ rm -Rf /boot/openhd/rpi.txt
 exit 0
 fi
 
-### Configure the camera
+if [ ! -e /boot/openhd-camera.txt ]; then
+  ### Configure the camera
 
-# Look for the camera option selected by the user
-output=""
-# Use find to locate all .txt files in the /boot/openhd directory
-# and then use grep to exclude the unwanted filenames
-files=$(find /boot/openhd -type f -name "*.txt" | grep -Ev "rpi\.txt|air\.txt|ground\.txt|debug\.txt")
+  # Look for the camera option selected by the user
+  output=""
+  # Use find to locate all .txt files in the /boot/openhd directory
+  # and then use grep to exclude the unwanted filenames
+  files=$(find /boot/openhd -type f -name "*.txt" | grep -Ev "rpi\.txt|air\.txt|ground\.txt|debug\.txt")
 
-# Use a loop to iterate through the filtered filenames
-for file in $files; do
-    # Append the filename to the output variable and write it in lowercase
-    filename=$(basename "$file" .txt | tr '[:upper:]' '[:lower:]')
-    output_org="$files"
-    output="$filename"
-done
+  # Use a loop to iterate through the filtered filenames
+  for file in $files; do
+      # Append the filename to the output variable and write it in lowercase
+      filename=$(basename "$file" .txt | tr '[:upper:]' '[:lower:]')
+      output_org="$files"
+      output="$filename"
+  done
 
-# Now we remove everything after the #OPENHD_DYNAMIC_CONTENT_BEGIN# from the OpenHD config file
-rm /boot/openhd/rpi.txt
-cp /boot/config.txt /boot/config.txt.bak
+  # Now we remove everything after the #OPENHD_DYNAMIC_CONTENT_BEGIN# from the OpenHD config file
+  rm /boot/openhd/rpi.txt
+  cp /boot/config.txt /boot/config.txt.bak
 
-# Now we build the filename for the config file
-if [[ "$output" == "" ]]; then
-  echo "mmal"
-  echo "0" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
-  exit 0
-elif [[ "$output" == "imx327" ]] || [[ "$output" == "cam2m" ]] || [[ "$output" == "csimx307" ]] || [[ "$output" == "mvcam" ]] || [[ "$output" == "cssc132" ]]; then
-  camera_type="veye_"
+  # Now we build the filename for the config file
+  if [[ "$output" == "" ]]; then
+    echo "mmal"
+    echo "0" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+    exit 0
+  elif [[ "$output" == "imx327" ]] || [[ "$output" == "cam2m" ]] || [[ "$output" == "csimx307" ]] || [[ "$output" == "mvcam" ]] || [[ "$output" == "cssc132" ]]; then
+    camera_type="veye_"
+    sed -i '/#OPENHD_DYNAMIC_CONTENT_BEGIN#/q' /boot/config.txt
+  else
   sed -i '/#OPENHD_DYNAMIC_CONTENT_BEGIN#/q' /boot/config.txt
-else
- sed -i '/#OPENHD_DYNAMIC_CONTENT_BEGIN#/q' /boot/config.txt
- camera_type="libcamera_"
+  camera_type="libcamera_"
+  fi
+
+  camera_config=$board_type$camera_type$output".txt"
+  camera_link="/boot/openhd/rpi_camera_configs/"$camera_config
+
+  #Now we copy the camera-configuation after the #OPENHD_DYNAMIC_CONTENT_BEGIN# lines:
+  cat "$camera_link" >> /boot/config.txt
+
+  if [[ "$output" == "mmal" ]]; then
+  echo "0" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  elif [[ "$output" == "arducam" ]]; then
+  echo "1" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  elif [[ "$output" == "imx708" ]]; then
+  echo "2" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  elif [[ "$output" == "imx519" ]]; then
+  echo "3" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  elif [[ "$output" == "imx477" ]]; then
+  echo "5" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  elif [[ "$output" == "imx462" ]]; then
+  echo "6" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  elif [[ "$output" == "imx326" ]]; then
+  echo "7" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  elif [[ "$output" == "imx290" ]]; then
+  echo "8" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  elif [[ "$output" == "veye2mp" ]]; then
+  echo "11" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  elif [[ "$output" == "csimx307" ]]; then
+  echo "12" >  /usr/local/share/openhd/video/curr_rpi_cam_config.tx
+  elif [[ "$output" == "ssc132" ]]; then
+  echo "13" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  elif [[ "$output" == "mvcam" ]]; then
+  echo "14" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  fi
+
+  rm -Rf $output_org
+
+  echo "Config for" $camera_config "was written successfully"
+  reboot
 fi
-
-camera_config=$board_type$camera_type$output".txt"
-camera_link="/boot/openhd/rpi_camera_configs/"$camera_config
-
-#Now we copy the camera-configuation after the #OPENHD_DYNAMIC_CONTENT_BEGIN# lines:
-cat "$camera_link" >> /boot/config.txt
-
-if [[ "$output" == "mmal" ]]; then
-echo "0" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
-elif [[ "$output" == "arducam" ]]; then
-echo "1" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
-elif [[ "$output" == "imx708" ]]; then
-echo "2" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
-elif [[ "$output" == "imx519" ]]; then
-echo "3" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
-elif [[ "$output" == "imx477" ]]; then
-echo "5" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
-elif [[ "$output" == "imx462" ]]; then
-echo "6" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
-elif [[ "$output" == "imx326" ]]; then
-echo "7" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
-elif [[ "$output" == "imx290" ]]; then
-echo "8" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
-elif [[ "$output" == "veye2mp" ]]; then
-echo "11" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
-elif [[ "$output" == "csimx307" ]]; then
-echo "12" >  /usr/local/share/openhd/video/curr_rpi_cam_config.tx
-elif [[ "$output" == "ssc132" ]]; then
-echo "13" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
-elif [[ "$output" == "mvcam" ]]; then
-echo "14" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
-fi
-
-rm -Rf $output_org
-
-echo "Config for" $camera_config "was written successfully"
-reboot
