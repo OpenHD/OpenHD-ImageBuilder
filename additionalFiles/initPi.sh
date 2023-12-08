@@ -93,5 +93,7 @@ if [ ! -e /boot/openhd-camera.txt ]; then
   rm -Rf $output_org
 
   echo "Config for" $camera_config "was written successfully"
+  touch /boot/openhd-camera.txt
+  echo $output > /boot/openhd-camera.txt
   reboot
 fi
