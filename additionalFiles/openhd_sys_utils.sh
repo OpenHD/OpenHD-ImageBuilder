@@ -49,7 +49,8 @@ fi
 
 if [ -f "/boot/openhd/rpi.txt" ]; then
   if [ -f "/boot/openhd/air.txt" ]; then
-  sudo bash /usr/local/bin/initPi.sh
+  echo "starting rpi camera-selector" >> /boot/debug.log
+  sudo bash /usr/local/bin/initPi.sh >> /boot/debug.log
   rm /boot/openhd/rpi.txt
   fi
 fi
