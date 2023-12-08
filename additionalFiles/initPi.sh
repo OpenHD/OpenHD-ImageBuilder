@@ -64,7 +64,7 @@ if [ ! -e /boot/openhd-camera.txt ]; then
   #Now we copy the camera-configuation after the #OPENHD_DYNAMIC_CONTENT_BEGIN# lines:
   cat "$camera_link" >> /boot/config.txt
 
-  sudo ./OpenHD/build/openhd -g --run-time-seconds 5 --continue-without-wb-card
+  sudo openhd -a --run-time-seconds 3 --continue-without-wb-card
 
   if [[ "$output" == "mmal" ]]; then
   echo "0" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
