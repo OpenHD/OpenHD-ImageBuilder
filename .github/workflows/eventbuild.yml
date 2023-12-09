@@ -256,7 +256,7 @@ jobs:
         aws s3 --endpoint-url $aws_endpoint cp ${{ matrix.TARGET }}.txt s3://$aws_s3_bucket/Downloader/temp/${{ matrix.TARGET }}.txt
 
 
- upload2:
+  upload2:
     # if: "github.event_name == 'push' && github.ref == 'refs/heads/release'"
     needs: createEmmcImage
     runs-on: ubuntu-latest
