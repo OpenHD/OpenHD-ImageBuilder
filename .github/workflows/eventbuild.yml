@@ -256,8 +256,8 @@ jobs:
         aws s3 --endpoint-url $aws_endpoint cp ${{ matrix.TARGET }}.txt s3://$aws_s3_bucket/Downloader/temp/${{ matrix.TARGET }}.txt
 
 
-  upload2:
-    # if: "github.event_name == 'push' && github.ref == 'refs/heads/release'"
+ upload2:
+    if: "github.event_name == 'push' && github.ref == 'refs/heads/release'"
     needs: createEmmcImage
     runs-on: ubuntu-latest
     strategy:
@@ -280,6 +280,7 @@ jobs:
         mkdir OpenHD
         mv *.img OpenHD
         cd OpenHD*
+        rm -Rf OpenHD-image-radxa-zero3w*
         sha256sum * | cut -f 1 -d " " > ../sha256
         echo 'NAME<<EOF' >> $GITHUB_ENV
         ls -1 | sed -e 's/.img/.img.xz/g' >> $GITHUB_ENV
