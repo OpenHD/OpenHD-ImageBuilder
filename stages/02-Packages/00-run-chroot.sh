@@ -168,6 +168,7 @@ if [ ! -e emmc ]; then
     rm -Rf /opt/additionalFiles/
 else
     apt update
+    apt-mark hold radxa-system-config-kernel-cmdline-ttyfiq0
     #dirty hack to remove sddm without everything failing .. thanks radxa
     mkdir -p /usr/share/sddm/themes/breeze/
     touch /usr/share/sddm/themes/breeze/Main.qml
