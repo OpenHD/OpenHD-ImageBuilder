@@ -128,7 +128,7 @@ function install_openhd {
     done
     #Cleapup
     apt autoremove -y
-    apt upgrade -y --allow-downgrades
+    #apt upgrade -y --allow-downgrades
 
     # Install platform-specific packages
     echo "Installing platform-specific packages..."
