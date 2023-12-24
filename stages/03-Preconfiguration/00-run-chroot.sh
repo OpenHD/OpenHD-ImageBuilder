@@ -110,6 +110,11 @@ fi
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
+       #update drivers
+       git clone https://github.com/openhd/rtl8812au /opt/
+       cd /opt/rtl8812au
+       make
+       ls
        sudo usermod -a -G dialout openhd
        sudo apt remove modemmanager
        cp /opt/additionalFiles/desktop-truster.sh /etc/profile.d/desktop-truster.sh
