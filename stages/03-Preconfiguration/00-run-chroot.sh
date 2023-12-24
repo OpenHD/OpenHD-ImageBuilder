@@ -111,6 +111,9 @@ fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
        #update drivers
+       echo "___________"
+       echo "updating drivers"
+       echo "____________"
        git clone https://github.com/openhd/rtl8812au /opt/
        cd /opt/rtl8812au
        make
