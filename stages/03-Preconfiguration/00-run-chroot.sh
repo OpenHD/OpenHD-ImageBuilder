@@ -110,14 +110,6 @@ fi
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
-       #update drivers
-       echo "___________"
-       echo "updating drivers"
-       echo "____________"
-       git clone https://github.com/openhd/rtl8812au /opt/rtl8812au
-       cd /opt/rtl8812au
-       make
-       ls
        sudo usermod -a -G dialout openhd
        sudo apt remove modemmanager
        cp /opt/additionalFiles/desktop-truster.sh /etc/profile.d/desktop-truster.sh
