@@ -176,7 +176,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
         cp -rv /boot/openhd/* /conf/openhd/
         rm -Rf /boot/openhd
         touch /conf/openhd/resize.txt
-        touch /boot/openhd/x86.txt
+        touch /conf/openhd/x86.txt
         ln -s /config/openhd /boot/openhd
 
 fi
