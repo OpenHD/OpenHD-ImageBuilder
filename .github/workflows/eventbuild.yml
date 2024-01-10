@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        TARGET: [x86-lunar] # <-- Add targets here!
+        TARGET: [radxa-zero3w,x86-lunar] # <-- Add targets here!
         # TARGET: [radxa-zero3w, radxa-cm3, pi-bullseye] # <-- Add targets here!
 
     steps:
