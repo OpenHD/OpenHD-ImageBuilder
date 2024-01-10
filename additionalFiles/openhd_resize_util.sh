@@ -3,7 +3,7 @@
 PARTITION_UUID="53aa3d65-1043-49fa-8740-148cba90bbae"
 
 # Check if the resize.txt file exists
-if [ -f "/boot/openhd/openhd/resize.txt" ]; then
+if [ -f "/boot/openhd/resize.txt" ]; then
     # Find the device path using the UUID
     DEVICE_PATH=$(blkid -l -o device -t UUID="$PARTITION_UUID")
     MOUNT_POINT=$(echo "$DEVICE_PATH" | sed 's/[0-9]*$//')
