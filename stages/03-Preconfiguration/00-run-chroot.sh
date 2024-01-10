@@ -153,9 +153,9 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        unzip MissionPlanner-latest.zip
        rm MissionPlanner-latest.zip
        cd /opt
-       wget https://github.com/iNavFlight/inav-configurator/releases/download/6.1.0/INAV-Configurator_linux64_6.1.0.tar.gz
-       tar -zxvf INAV-Configurator_linux64_6.1.0.tar.gz
-       rm INAV-Configurator_linux64_6.1.0.tar.gz
+       wget https://github.com/iNavFlight/inav-configurator/releases/download/7.0.1/INAV-Configurator_linux64_7.0.1.tar.gz
+       tar -zxvf INAV-Configurator_linux64_7.0.1.tar.gz
+       rm INAV-Configurator_linux64_7.0.1.tar.gz
        mv INAV\ Configurator/ INAV
        cd INAV
        chmod +x inav-configurator
@@ -163,7 +163,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        cd /opt
        mkdir QGC
        cd QGC
-       wget https://github.com/mavlink/qgroundcontrol/releases/download/v4.2.8/QGroundControl.AppImage
+       wget https://github.com/mavlink/qgroundcontrol/releases/download/v4.3.0/QGroundControl.AppImage
        chmod a+x QGroundControl.AppImage
        chown openhd:openhd QGroundControl.AppImage
 
@@ -176,6 +176,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
         cp -rv /boot/openhd/* /conf/openhd/
         rm -Rf /boot/openhd
         touch /conf/openhd/resize.txt
+        touch /boot/openhd/x86.txt
         ln -s /config/openhd /boot/openhd
 
 fi
