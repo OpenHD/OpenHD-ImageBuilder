@@ -19,6 +19,7 @@ fi
 
 if [ -f "/boot/openhd/x86.txt" ]; then
  sudo bash /usr/local/bin/initX86.sh
+ touch /usr/local/share/executed
  rm /boot/openhd/x86.txt
 fi
 
