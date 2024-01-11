@@ -1,7 +1,7 @@
 if [[ "${OS}" = debian-X20 ]]; then
 pushd ${STAGE_WORK_DIR}
 sudo gdisk -l IMAGE.img
-parted IMAGE.img rm 2
+gdisk IMAGE.img -d 2
 sudo gdisk -l IMAGE.img
 echo "______________SWAP REMOVED________"
 popd
