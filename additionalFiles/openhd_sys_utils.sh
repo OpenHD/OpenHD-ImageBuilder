@@ -17,6 +17,10 @@ if [ -f "/boot/openhd/hardware_vtx_v20.txt" ]; then
  #rm /boot/openhd/hardware_vtx_v20.txt
 fi
 
+if [ -f "/boot/openhd/openhd/x86.txt" ]; then
+ sudo mv /boot/openhd/openhd/* /boot/openhd
+fi
+
 if [ -f "/boot/openhd/x86.txt" ]; then
  sudo bash /usr/local/bin/initX86.sh
  touch /usr/local/share/executed
