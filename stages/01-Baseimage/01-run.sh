@@ -1,7 +1,7 @@
 if [[ "${OS}" = debian-X20 ]]; then
 pushd ${STAGE_WORK_DIR}
 sudo fdisk -l IMAGE.img
-echo -e "d 2\nw" | fdisk IMAGE.img
+echo -e "d 2\nw" | fdisk IMAGE.img && partprobe IMAGE.img
 sudo fdisk -l IMAGE.img
 echo "______________SWAP REMOVED________"
 popd
