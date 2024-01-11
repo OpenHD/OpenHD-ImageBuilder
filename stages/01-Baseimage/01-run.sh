@@ -1,12 +1,8 @@
 if [[ "${OS}" = debian-X20 ]]; then
 pushd ${STAGE_WORK_DIR}
-gdisk IMAGE.img <<EOF
-d 2
-w
-y
-EOF
-popd
+parted IMAGE.img rm 2
 echo "______________SWAP REMOVED________"
+popd
 else
 echo "not x20"
 fi
