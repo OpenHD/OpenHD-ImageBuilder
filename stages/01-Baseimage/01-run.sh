@@ -1,3 +1,5 @@
+if [[ "${OS}" != debian-X20 ]]; then
+
 # Extend Image Size
 ls -a ../../
 if [ ! -e ../../emmc ]; then
@@ -79,3 +81,4 @@ echo "the image doesn't need to be enlarged, just using it like it is"
 fi
 
 popd
+fi
