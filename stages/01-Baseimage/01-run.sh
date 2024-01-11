@@ -1,5 +1,11 @@
-if [[ "${OS}" != debian-X20 ]]; then
-
+if [[ "${OS}" = debian-X20 ]]; then
+echo "debug"
+dd if=IMAGE.img of=IMAGE_without_part2.img bs=512 count=7176192
+rm -Rf IMAGE.img
+mv IMAGE* IMAGE.img
+else
+echo "not x20"
+fi
 # Extend Image Size
 ls -a ../../
 if [ ! -e ../../emmc ]; then
