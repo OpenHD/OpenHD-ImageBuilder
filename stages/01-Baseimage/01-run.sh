@@ -1,11 +1,12 @@
 if [[ "${OS}" = debian-X20 ]]; then
 pushd ${STAGE_WORK_DIR}
-echo "debug"
-dd if=IMAGE.img of=IMAGE_without_part2.img bs=512 count=7176192
-ls -a
-rm -Rf IMAGE.img
-mv IMAGE_without_part2.img IMAGE.img
+gdisk IMAGE.img <<EOF
+d 2
+w
+y
+EOF
 popd
+echo "______________SWAP REMOVED________"
 else
 echo "not x20"
 fi
