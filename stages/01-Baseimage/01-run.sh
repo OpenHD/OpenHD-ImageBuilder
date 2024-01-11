@@ -1,8 +1,10 @@
 if [[ "${OS}" = debian-X20 ]]; then
+pushd ${STAGE_WORK_DIR}
 echo "debug"
-dd if=${STAGE_WORK_DIR}/IMAGE.img of=${STAGE_WORK_DIR}/IMAGE_without_part2.img bs=512 count=7176192
-rm -Rf ${STAGE_WORK_DIR}/IMAGE.img
-mv ${STAGE_WORK_DIR}/IMAGE* ${STAGE_WORK_DIR}/IMAGE.img
+dd if=IMAGE.img of=$IMAGE_without_part2.img bs=512 count=7176192
+rm -Rf IMAGE.img
+mv IMAGE* IMAGE.img
+popd
 else
 echo "not x20"
 fi
