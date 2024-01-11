@@ -5,5 +5,5 @@ OS="debian-X20"
 DISTRO="bullseye"
 HAVE_BOOT_PART=false
 HAVE_CONF_PART=false
-ROOT_PART=1
+ROOT_PART=2
 BIT="32"
