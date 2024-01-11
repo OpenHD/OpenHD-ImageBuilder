@@ -7,12 +7,6 @@ on:
       - "dev-release"
       - "release"
       - "experiments"
-   paths-ignore:
-      - '**.md'
-      - '**.asciidoc'
-      - '**.adoc'
-      - '.gitignore'
-      - 'LICENSE'
 jobs:
   build:
 
@@ -188,7 +182,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a] # <-- Add targets here!
+        TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a, radxa-cm3, x20, radxa-zero3w] # <-- Add targets here!
     steps:
     - name: debug
       run: df -h
@@ -205,6 +199,87 @@ jobs:
         mkdir OpenHD
         mv *.img OpenHD
         cd OpenHD*
+        sha256sum * | cut -f 1 -d " " > ../sha256
+        echo 'NAME<<EOF' >> $GITHUB_ENV
+        ls -1 | sed -e 's/.img/.img.xz/g' >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+        echo 'SIZEFULL<<EOF' >> $GITHUB_ENV
+        wc -c *.img | cut -f 1 -d " " >> $GITHUB_ENV
+        echo 'EOF' >> $GITHUB_ENV
+        xz -v7T0 *.img
+        ls -a
+        mv * ../
+        ls -a
+
+    - name: Upload to R2
+      shell: bash
+      env:
+        aws_endpoint: "https://fra1.digitaloceanspaces.com"
+        aws_key_id: ${{ secrets.DIGITALOCEAN_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.DIGITALOCEAN_SECRET_ACCESS_KEY }}
+        aws_s3_bucket: openhd-images
+        AWS_EC2_METADATA_DISABLED: true
+      run: |
+        aws configure set aws_access_key_id $aws_key_id
+        aws configure set aws_secret_access_key $aws_secret_access_key 
+        aws s3 --endpoint-url $aws_endpoint cp ${{ env.NAME }} s3://$aws_s3_bucket/Downloader/temp/${{ env.NAME }}
+
+    - name: generate variables for the ImageWriter
+      run: |
+        ls -a      
+        export NAME=$(cat last.release)
+        export FILESIZE=${{ env.SIZEFULL }}
+        export FILENAME=${{ env.NAME }}
+        export DOWNLOADSIZE=$(wc -c *.xz | cut -f 1 -d " ")
+        export SUM=$(cat sha256)
+        export RELEASEDATE=$(date +%Y-%m-%d)
+        echo "$NAME" >> ${{ matrix.TARGET }}.txt
+        echo "$FILESIZE" >> ${{ matrix.TARGET }}.txt
+        echo "$FILENAME" >> ${{ matrix.TARGET }}.txt
+        echo "$DOWNLOADSIZE" >> ${{ matrix.TARGET }}.txt
+        echo "$SUM" >> ${{ matrix.TARGET }}.txt
+        echo "$RELEASEDATE" >> ${{ matrix.TARGET }}.txt
+        wc -c *.xz | cut -f 1 -d " "
+
+    - name: Upload text-files
+      shell: bash
+      env:
+        aws_endpoint: "https://fra1.digitaloceanspaces.com"
+        aws_key_id: ${{ secrets.DIGITALOCEAN_ACCESS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.DIGITALOCEAN_SECRET_ACCESS_KEY }}
+        aws_s3_bucket: openhd-images
+        AWS_EC2_METADATA_DISABLED: true
+      run: |
+        aws configure set aws_access_key_id $aws_key_id
+        aws configure set aws_secret_access_key $aws_secret_access_key 
+        aws s3 --endpoint-url $aws_endpoint cp ${{ matrix.TARGET }}.txt s3://$aws_s3_bucket/Downloader/temp/${{ matrix.TARGET }}.txt
+
+
+  upload2:
+    if: "github.event_name == 'push' && github.ref == 'refs/heads/release'"
+    needs: createEmmcImage
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false # Don't fail all if any of the jobs is failing
+      matrix:
+        TARGET: [radxa-zero3w] # <-- Add targets here!
+    steps:
+    - name: debug
+      run: df -h
+
+    - uses: actions/checkout@v3
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: "${{ matrix.TARGET }}"
+    
+    - name: compress
+      run: |
+        ls -a
+        mkdir OpenHD
+        mv *.img OpenHD
+        cd OpenHD*
+        rm -Rf OpenHD-image-radxa-zero3w*
         sha256sum * | cut -f 1 -d " " > ../sha256
         echo 'NAME<<EOF' >> $GITHUB_ENV
         ls -1 | sed -e 's/.img/.img.xz/g' >> $GITHUB_ENV
