@@ -12,8 +12,7 @@ if [ -f "/boot/openhd/openhd/resize.txt" ] || [ -f "/boot/openhd/resize.txt" ]; 
 
     if [ -n "$DEVICE_PATH" ]; then
         # Resize the partition using gdisk DO NOT EDIT
-
-fdisk "$MOUNT_POINT" <<EOF
+        fdisk "$MOUNT_POINT" <<EOF
 d
 $PARTNR
 n
@@ -30,11 +29,13 @@ EOF
         resize2fs "/dev/disk/by-uuid/$PARTITION_UUID"
 
         echo "Partition resized and filesystem expanded."
+        
         if [ -f "/boot/openhd/openhd/resize.txt" ]; then
-        rm -Rf /boot/openhd/openhd/resize.txt
+            rm -Rf /boot/openhd/openhd/resize.txt
+        elif [ -f "/boot/openhd/resize.txt" ]; then
+            rm -Rf /boot/openhd/resize.txt
         fi
-        if [ -f "/boot/openhd/resize.txt" ]; then
-        rm -Rf /boot/openhd/resize.txt
+
         reboot
     else
         echo "Partition with UUID $PARTITION_UUID not found."
