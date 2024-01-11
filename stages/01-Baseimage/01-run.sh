@@ -1,13 +1,13 @@
 if [[ "${OS}" = debian-X20 ]]; then
 pushd ${STAGE_WORK_DIR}
 sudo fdisk -l IMAGE.img
-echo -e "d 2\nw" | fdisk IMAGE.img && partprobe IMAGE.img
+echo -e "d 2\nw" | fdisk IMAGE.img
+partprobe IMAGE.img
 sudo fdisk -l IMAGE.img
 echo "______________SWAP REMOVED________"
 popd
 else
 echo "not x20"
-fi
 # Extend Image Size
 ls -a ../../
 if [ ! -e ../../emmc ]; then
@@ -89,3 +89,4 @@ echo "the image doesn't need to be enlarged, just using it like it is"
 fi
 
 popd
+fi
