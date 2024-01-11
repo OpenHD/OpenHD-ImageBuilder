@@ -32,6 +32,7 @@ EOF
         echo "Partition resized and filesystem expanded."
         if [ -f "/boot/openhd/openhd/resize.txt" ]; then
         rm -Rf /boot/openhd/openhd/resize.txt
+        fi
         if [ -f "/boot/openhd/resize.txt" ]; then
         rm -Rf /boot/openhd/resize.txt
         reboot
