@@ -20,7 +20,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        TARGET: [x20, x20_2] # <-- Add targets here!
+        TARGET: [x20] # <-- Add targets here!
         #TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a, radxa-cm3, x20, radxa-zero3w] # <-- Add targets here!
     steps:
     - name: Maximize build space
