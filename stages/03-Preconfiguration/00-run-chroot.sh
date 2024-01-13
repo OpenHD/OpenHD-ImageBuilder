@@ -181,6 +181,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 fi
 
 if [[ "${OS}" == "debian-X20" ]]; then
+ sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
  sudo sed -i '$d' /etc/fstab
  sudo fallocate -l 250M /swapfile
  sudo chmod 600 /swapfile 
