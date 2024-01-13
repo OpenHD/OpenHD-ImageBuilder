@@ -78,10 +78,6 @@ function clone_github_repos {
 function install_openhd {
 
     if [[ "${OS}" == "debian-X20" ]]; then
-    echo "________"
-    cat /etc/fstab
-    echo "________"
-    exit 0
         install_x20_packages
     elif [[ "${OS}" == "raspbian" ]]; then
         install_raspbian_packages
