@@ -181,8 +181,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 fi
 
 if [[ "${OS}" == "debian-X20" ]]; then
- sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
- sudo sed -i '$d' /etc/fstab
+#  sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
  sudo fallocate -l 250M /swapfile
  sudo chmod 600 /swapfile 
  sudo mkswap /swapfile
@@ -190,8 +189,11 @@ if [[ "${OS}" == "debian-X20" ]]; then
  mkdir /emmc/
  sudo echo "/dev/mmcblk1p1  /emmc  auto  defaults  0  2" | sudo tee -a /etc/fstab
  sudo echo "/swapfile swap swap defaults 0 0" | sudo tee -a /etc/fstab
+ sudo sed -i '/\/dev\/mmcblk0p2.*swap/s/^/#/' /etc/fstab
  echo "________--SWAP--________"
  cat /etc/fstab
+ echo "________--getty--_______"
+ cat /lib/systemd/system/getty@.service
  touch /boot/openhd/hardware_vtx_v20.txt
  touch /boot/openhd/air.txt
  rm -Rf /var/log/*
