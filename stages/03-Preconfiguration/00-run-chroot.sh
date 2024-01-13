@@ -182,7 +182,12 @@ fi
 
 if [[ "${OS}" == "debian-X20" ]]; then
  sudo sed -i '$d' /etc/fstab
- sudo fallocate -l 250M /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile && echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+ cat /etc/fstab
+ echo "_________________________________________________________________________"
+ echo "_________________________________________________________________________"
+ echo "_________________________________________________________________________"
+ echo "_________________________________________________________________________"
+ #sudo fallocate -l 250M /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile && echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
  mkdir /emmc/
  sudo echo "/dev/mmcblk1p1  /emmc  auto  defaults  0  2" | sudo tee -a /etc/fstab
  touch /boot/openhd/hardware_vtx_v20.txt
