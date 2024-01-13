@@ -182,7 +182,10 @@ fi
 
 if [[ "${OS}" == "debian-X20" ]]; then
  sudo sed -i '$d' /etc/fstab
- sudo fallocate -l 250M /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile
+ sudo fallocate -l 250M /swapfile
+ sudo chmod 600 /swapfile 
+ sudo mkswap /swapfile
+ sudo swapon /swapfile
  mkdir /emmc/
  sudo echo "/dev/mmcblk1p1  /emmc  auto  defaults  0  2" | sudo tee -a /etc/fstab
  sudo echo "/swapfile swap swap defaults 0 0" | sudo tee -a /etc/fstab
