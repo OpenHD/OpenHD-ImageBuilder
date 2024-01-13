@@ -211,6 +211,17 @@ if [[ "${OS}" == "debian-X20" ]]; then
  sed -i '17,35d' /etc/rc.local
  find / -type f -exec du -h {} + | sort -rh | head -n 10
  echo "none /run tmpfs defaults,size=20M 0 0" >> /etc/fstab
+ rm -Rf /etc/motd
+    echo " ██████╗ ██████╗ ███████╗███╗   ██╗██╗  ██╗██████╗      " | sudo tee /etc/motd > /dev/null
+    echo "██╔═══██╗██╔══██╗██╔════╝████╗  ██║██║  ██║██╔══██╗     " | sudo tee -a /etc/motd > /dev/null
+    echo "██║   ██║██████╔╝█████╗  ██╔██╗ ██║███████║██║  ██║     " | sudo tee -a /etc/motd > /dev/null
+    echo "██║   ██║██╔═══╝ ██╔══╝  ██║╚██╗██║██╔══██║██║  ██║     " | sudo tee -a /etc/motd > /dev/null
+    echo "╚██████╔╝██║     ███████╗██║ ╚████║██║  ██║██████╔╝     " | sudo tee -a /etc/motd > /dev/null
+    echo " ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═════╝      " | sudo tee -a /etc/motd > /dev/null
+    echo "" | sudo tee -a /etc/motd > /dev/null
+    echo "OpenHD is released under LGPL-2.1 license" | sudo tee -a /etc/motd > /dev/null
+    echo "QOpenHD is released under GPL-3.0 license" | sudo tee -a /etc/motd > /dev/null
+    echo "Military usage is prohibited" | sudo tee -a /etc/motd > /dev/null
 fi
 
 #Install openhd_sys_utils_service
