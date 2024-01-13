@@ -181,7 +181,8 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 fi
 
 if [[ "${OS}" == "debian-X20" ]]; then
- sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty -o '-p -- \\u' --autologin root --keep-baud 115200,57600,38400,9600 %I $TERM' /lib/systemd/system/serial-getty@.service
+ sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty -a root -n -o '-p -- \\u' --autologin root --keep-baud 115200,57600,38400,9600 %I $TERM' /lib/systemd/system/serial-getty@.service
+ sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty -a root -n -o '-p -- \\u' --autologin root --keep-baud 115200,57600,38400,9600 %I $TERM' /etc/systemd/system/getty.target.wants/serial-getty@ttyS0.service
  sudo fallocate -l 250M /swapfile
  sudo chmod 600 /swapfile 
  sudo mkswap /swapfile
