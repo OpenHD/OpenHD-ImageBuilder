@@ -64,34 +64,48 @@ if [ ! -e /boot/openhd-camera.txt ]; then
   #Now we copy the camera-configuation after the #OPENHD_DYNAMIC_CONTENT_BEGIN# lines:
   cat "$camera_link" >> /boot/config.txt
 
+  sudo openhd -a --run-time-seconds 3 --continue-without-wb-card
+
   if [[ "$output" == "mmal" ]]; then
   echo "0" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  echo "writing binary camera identifier 0"
   elif [[ "$output" == "arducam" ]]; then
   echo "1" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  echo "writing binary camera identifier 1"
   elif [[ "$output" == "imx708" ]]; then
   echo "2" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  echo "writing binary camera identifier 2"
   elif [[ "$output" == "imx519" ]]; then
   echo "3" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  echo "writing binary camera identifier 3"
   elif [[ "$output" == "imx477" ]]; then
   echo "5" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  echo "writing binary camera identifier 5"
   elif [[ "$output" == "imx462" ]]; then
   echo "6" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  echo "writing binary camera identifier 6"
   elif [[ "$output" == "imx326" ]]; then
   echo "7" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  echo "writing binary camera identifier 7"
   elif [[ "$output" == "imx290" ]]; then
   echo "8" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  echo "writing binary camera identifier 8"
   elif [[ "$output" == "veye2mp" ]]; then
   echo "11" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  echo "writing binary camera identifier 11"
   elif [[ "$output" == "csimx307" ]]; then
   echo "12" >  /usr/local/share/openhd/video/curr_rpi_cam_config.tx
+  echo "writing binary camera identifier 12"
   elif [[ "$output" == "ssc132" ]]; then
   echo "13" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  echo "writing binary camera identifier 13"
   elif [[ "$output" == "mvcam" ]]; then
   echo "14" >  /usr/local/share/openhd/video/curr_rpi_cam_config.txt
+  echo "writing binary camera identifier 14"
   fi
 
-  rm -Rf $output_org
-
   echo "Config for" $camera_config "was written successfully"
+  touch /boot/openhd-camera.txt
+  echo $output > /boot/openhd-camera.txt
   reboot
 fi
