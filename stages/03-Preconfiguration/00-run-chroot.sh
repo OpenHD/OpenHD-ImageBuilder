@@ -65,18 +65,19 @@ if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     cd /opt/additionalFiles/
     ls -a
     echo 'echo "0" > /sys/class/leds/board-led/brightness' >> /root/.bashrc
-    sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
     if [ ! -e emmc ]; then
-        echo "no need"
-        touch /boot/openhd/ground.txt
+    echo "no need"
+    touch /boot/openhd/ground.txt
+    sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
     else
-        #autologin as root
-        #autocopy to emmc
-        echo "0" > /sys/class/leds/board-led/brightness
-        echo "1" > /sys/class/leds/board-led/brightness
-        echo -e '\nexport NEWT_COLORS='\''\nroot=,black\nwindow=black,black\nborder=black,black\ntextbox=white,black\nbutton=white,black\nemptyscale=,black\nfullscale=,white\n'\'' \\\n\n(pv -n /opt/additionalFiles/emmc.img | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Flashing OpenHD to EMMC, please wait..." 10 70 0\necho "please reboot or powerdown the system now"' >> /root/.bashrc
-        echo "0" > /sys/class/leds/board-led/brightness
-        echo 'whiptail --msgbox "Please reboot your system now" 10 40' >> /root/.bashrc
+    #autologin as root
+    sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
+    #autocopy to emmc
+    echo "0" > /sys/class/leds/board-led/brightness
+    echo "1" > /sys/class/leds/board-led/brightness
+    echo -e '\nexport NEWT_COLORS='\''\nroot=,black\nwindow=black,black\nborder=black,black\ntextbox=white,black\nbutton=white,black\nemptyscale=,black\nfullscale=,white\n'\'' \\\n\n(pv -n /opt/additionalFiles/emmc.img | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Flashing OpenHD to EMMC, please wait..." 10 70 0\necho "please reboot or powerdown the system now"' >> /root/.bashrc
+    echo "0" > /sys/class/leds/board-led/brightness
+    echo 'whiptail --msgbox "Please reboot your system now" 10 40' >> /root/.bashrc
     fi
 fi
 
@@ -143,7 +144,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        gio set /home/openhd/Desktop/MissionPlanner.desktop metadata::trusted true
        gio set /home/openhd/Desktop/qgroundcontrol.desktop metadata::trusted true
        echo "openhd ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/openhd
-       sudo add-apt-repository ppa:obsproject/obs-studio
+       sudo add-apt-repository -y ppa:obsproject/obs-studio
        sudo apt install -y obs-studio
        cd /opt
        mkdir MissionPlanner
@@ -181,16 +182,8 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 fi
 
 if [[ "${OS}" == "debian-X20" ]]; then
- sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty -a root -n -o '-p -- \\u' --autologin root --keep-baud 115200,57600,38400,9600 %I $TERM' /lib/systemd/system/serial-getty@.service
- sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty -a root -n -o '-p -- \\u' --autologin root --keep-baud 115200,57600,38400,9600 %I $TERM' /etc/systemd/system/getty.target.wants/serial-getty@ttyS0.service
- sudo fallocate -l 250M /swapfile
- sudo chmod 600 /swapfile 
- sudo mkswap /swapfile
- sudo swapon /swapfile
  mkdir /emmc/
  sudo echo "/dev/mmcblk1p1  /emmc  auto  defaults  0  2" | sudo tee -a /etc/fstab
- sudo echo "/swapfile swap swap defaults 0 0" | sudo tee -a /etc/fstab
- sudo sed -i '/\/dev\/mmcblk0p2.*swap/s/^/#/' /etc/fstab
  touch /boot/openhd/hardware_vtx_v20.txt
  touch /boot/openhd/air.txt
  rm -Rf /var/log/*
@@ -212,17 +205,6 @@ if [[ "${OS}" == "debian-X20" ]]; then
  sed -i '17,35d' /etc/rc.local
  find / -type f -exec du -h {} + | sort -rh | head -n 10
  echo "none /run tmpfs defaults,size=20M 0 0" >> /etc/fstab
- rm -Rf /etc/motd
-    echo " ██████╗ ██████╗ ███████╗███╗   ██╗██╗  ██╗██████╗      " | sudo tee /etc/motd > /dev/null
-    echo "██╔═══██╗██╔══██╗██╔════╝████╗  ██║██║  ██║██╔══██╗     " | sudo tee -a /etc/motd > /dev/null
-    echo "██║   ██║██████╔╝█████╗  ██╔██╗ ██║███████║██║  ██║     " | sudo tee -a /etc/motd > /dev/null
-    echo "██║   ██║██╔═══╝ ██╔══╝  ██║╚██╗██║██╔══██║██║  ██║     " | sudo tee -a /etc/motd > /dev/null
-    echo "╚██████╔╝██║     ███████╗██║ ╚████║██║  ██║██████╔╝     " | sudo tee -a /etc/motd > /dev/null
-    echo " ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═════╝      " | sudo tee -a /etc/motd > /dev/null
-    echo "" | sudo tee -a /etc/motd > /dev/null
-    echo "OpenHD is released under LGPL-2.1 license" | sudo tee -a /etc/motd > /dev/null
-    echo "QOpenHD is released under GPL-3.0 license" | sudo tee -a /etc/motd > /dev/null
-    echo "Military usage is prohibited" | sudo tee -a /etc/motd > /dev/null
 fi
 
 #Install openhd_sys_utils_service
