@@ -22,6 +22,12 @@ function install_x20_packages {
 }
 
 # Raspbian-specific code
+function fix_stupid_libcamera_rpi {
+    wget -O install_pivariety_pkgs.sh https://github.com/ArduCAM/Arducam-Pivariety-V4L2-Driver/releases/download/install_script/install_pivariety_pkgs.sh
+    chmod +x install_pivariety_pkgs.sh
+    ./install_pivariety_pkgs.sh -p libcamera_dev
+}
+
 function install_raspbian_packages {
     sudo apt update && apt remove -y dkms
     BASE_PACKAGES="openhd qopenhd apt-transport-https apt-utils open-hd-web-ui"
@@ -80,6 +86,7 @@ function install_openhd {
     if [[ "${OS}" == "debian-X20" ]]; then
         install_x20_packages
     elif [[ "${OS}" == "raspbian" ]]; then
+        fix_stupid_libcamera_rpi
         install_raspbian_packages
     elif [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-ubuntu-rock5a" ]] ; then
         sudo add-apt-repository -r "deb https://ppa.launchpadcontent.net/jjriek/rockchip/ubuntu jammy main"
