@@ -23,9 +23,10 @@ function install_x20_packages {
 
 # Raspbian-specific code
 function fix_stupid_libcamera_rpi {
-    wget -O install_pivariety_pkgs.sh https://github.com/ArduCAM/Arducam-Pivariety-V4L2-Driver/releases/download/install_script/install_pivariety_pkgs.sh
-    chmod +x install_pivariety_pkgs.sh
-    ./install_pivariety_pkgs.sh -p libcamera_dev
+    sudo apt remove -y libcamera0
+    wget https://github.com/ArduCAM/Arducam-Pivariety-V4L2-Driver/releases/download/libcamera-v0.0.5/libcamera0_0_git20230724+ad9428b4-1_armhf.deb
+    dpkg -i libcamera0_0_git20230724+ad9428b4-1_armhf.deb
+    sudo apt install -y python3-picamera2
     rm -Rf *.deb
 }
 
