@@ -120,6 +120,7 @@ gpu_mem=128
 
 
 [all]
+arm_64bit=0
 #WARNING ! OpenHD will modify the following lines if you select a different Cam config in QOpenHD
 #Do not edit anything here - if you want to manually edit the config.txt file, place your changes
 #before this part, aka before the [all] bracket
