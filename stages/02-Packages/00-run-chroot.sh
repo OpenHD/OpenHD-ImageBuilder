@@ -24,10 +24,10 @@ function install_x20_packages {
 # Raspbian-specific code
 function install_raspbian_packages {
     sudo apt update && apt remove -y dkms
-    BASE_PACKAGES="openhd qopenhd apt-transport-https apt-utils open-hd-web-ui"
+    BASE_PACKAGES="apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD=""
-    PLATFORM_PACKAGES_REMOVE="locales gdb librsvg2-2 guile-2.2-libs firmware-libertas gcc-10 nfs-common"
-    PLATFORM_PACKAGES="openhd-userland openhd-qt openssh-server rtl8812au-rpi 88x2bu-rpi"
+    PLATFORM_PACKAGES_REMOVE="locales gdb nfs-common"
+    PLATFORM_PACKAGES="openhd-userland openssh-server rtl8812au-rpi 88x2bu-rpi"
 }
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
