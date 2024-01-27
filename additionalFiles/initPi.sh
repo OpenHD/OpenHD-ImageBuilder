@@ -8,9 +8,11 @@ kernel_type=$(echo "$kernel_version" | awk -F '-' '{print $2}')
 if [[ "$kernel_type" == "v7l+" ]]; then
   # kms
   board_type="rpi_4_"
+  depmod -a
 elif [[ "$kernel_type" == "v7+" ]]; then
   # fkms
   board_type="rpi_3_"
+    depmod -a
 else
   # unsupported
   sudo rm /etc/motd
