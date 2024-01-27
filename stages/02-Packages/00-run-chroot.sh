@@ -22,20 +22,12 @@ function install_x20_packages {
 }
 
 # Raspbian-specific code
-function fix_stupid_libcamera_rpi {
-    sudo apt remove -y libcamera0
-    wget https://github.com/ArduCAM/Arducam-Pivariety-V4L2-Driver/releases/download/libcamera-v0.0.5/libcamera0_0_git20230724+ad9428b4-1_armhf.deb
-    dpkg -i libcamera0_0_git20230724+ad9428b4-1_armhf.deb
-    sudo apt install -y python3-picamera2
-    rm -Rf *.deb
-}
-
 function install_raspbian_packages {
     sudo apt update && apt remove -y dkms
     BASE_PACKAGES="openhd qopenhd apt-transport-https apt-utils open-hd-web-ui"
-    PLATFORM_PACKAGES_HOLD="raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc raspberrypi-bootloader"
-    PLATFORM_PACKAGES_REMOVE="locales gdb librsvg2-2 guile-2.2-libs firmware-libertas gcc-10 nfs-common libcamera* raspberrypi-kernel"
-    PLATFORM_PACKAGES="firmware-atheros openhd-userland libseek-thermal libcamera-openhd openhd-qt openssh-server"
+    PLATFORM_PACKAGES_HOLD=""
+    PLATFORM_PACKAGES_REMOVE="locales gdb librsvg2-2 guile-2.2-libs firmware-libertas gcc-10 nfs-common libcamera*"
+    PLATFORM_PACKAGES="openhd-userland libcamera-openhd openhd-qt openssh-server rtl8812au-rpi"
 }
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
@@ -88,7 +80,6 @@ function install_openhd {
     if [[ "${OS}" == "debian-X20" ]]; then
         install_x20_packages
     elif [[ "${OS}" == "raspbian" ]]; then
-        #fix_stupid_libcamera_rpi
         install_raspbian_packages
     elif [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-ubuntu-rock5a" ]] ; then
         sudo add-apt-repository -r "deb https://ppa.launchpadcontent.net/jjriek/rockchip/ubuntu jammy main"
