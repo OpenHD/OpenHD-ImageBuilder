@@ -27,7 +27,7 @@ function install_raspbian_packages {
     BASE_PACKAGES="openhd qopenhd apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD=""
     PLATFORM_PACKAGES_REMOVE="locales gdb librsvg2-2 guile-2.2-libs firmware-libertas gcc-10 nfs-common libcamera*"
-    PLATFORM_PACKAGES="openhd-userland libcamera-openhd openhd-qt openssh-server rtl8812au-rpi rtl88x2bu-rpi"
+    PLATFORM_PACKAGES="openhd-userland libcamera-openhd openhd-qt openssh-server rtl8812au-rpi 88x2bu-rpi"
 }
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
