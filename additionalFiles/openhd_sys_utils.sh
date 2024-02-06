@@ -47,7 +47,7 @@ if [ -f "/boot/openhd/rock-rk3566.txt" ]; then
   fi
   #sudo bash /usr/local/bin/initRock.sh
   if [ -f "/boot/openhd/clearEMMC.txt" ] || [ -f "/home/openhd/Videos/clearEMMC.txt" ] ; then
-    (pv -n /dev/zero | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Flashing OpenHD to EMMC, please wait... (if this fails, please manually reboot)" 10 70 0
+    (pv -n /dev/zero | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Cleaning EMMC, please wait... (if this fails, please manually reboot)" 10 70 0
     whiptail --msgbox "Please reboot your system now" 10 40
   fi
 fi
