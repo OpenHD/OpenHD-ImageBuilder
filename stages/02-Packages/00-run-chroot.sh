@@ -7,6 +7,10 @@
 
 set -e
 
+ls -a /
+ls -a /conf
+ls -a /config
+exit 1
 
 echo "debug"
 ls -l --block-size=M /opt/additionalFiles/
