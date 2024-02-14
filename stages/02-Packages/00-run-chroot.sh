@@ -7,14 +7,6 @@
 
 set -e
 
-ls -a /conf
-ls -a /config
-exit 1
-
-echo "debug"
-ls -l --block-size=M /opt/additionalFiles/
-
-
 # X20 specific code
 function install_x20_packages {
     rm -Rf /etc/apt/sources.list.d/*
