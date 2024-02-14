@@ -7,7 +7,6 @@
 
 set -e
 
-ls -a /
 ls -a /conf
 ls -a /config
 exit 1
