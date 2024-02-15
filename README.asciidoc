@@ -40,7 +40,7 @@ If you want to flash the Images manually you need to create a (air.txt) or (grou
 
 
 
-##What is this
+## What is this
 This project takes a base image and modifies it into an OpenHD compatible image.
 For the long version, read on.
 
