@@ -16,15 +16,15 @@ cp motd-unsupported /etc/motd-unsupported
 if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     cat /etc/fstab
     #rm /conf/before.txt
-    cp /opt/additionalFiles/before.txt /conf/before.txt
-    cp /opt/additionalFiles/before.txt /config/before.txt
+    cp /usr/local/share/openhd_misc/before.txt /conf/before.txt
+    cp /usr/local/share/openhd_misc/before.txt /config/before.txt
     #allow offline auto detection of image format
-    cp /opt/additionalFiles/issue.txt /conf/issue.txt
-    cp /opt/additionalFiles/issue.txt /config/issue.txt
+    cp /usr/local/share/openhd_misc/issue.txt /conf/issue.txt
+    cp /usr/local/share/openhd_misc/issue.txt /config/issue.txt
     mkdir -p /conf/openhd
     mkdir -p /config/openhd
     mkdir -p /boot/openhd
-    cp /opt/additionalFiles/initRock.sh /usr/local/bin/initRock.sh
+    cp /usr/local/share/openhd_misc/initRock.sh /usr/local/bin/initRock.sh
     touch /conf/config.txt
     touch /config/config.txt
     #mounting config partition
@@ -62,8 +62,6 @@ fi
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     systemctl disable dnsmasq
     sed -i 's/loglevel=4/loglevel=0/g' /boot/extlinux/extlinux.conf
-    cd /opt/additionalFiles/
-    ls -a
     echo 'echo "0" > /sys/class/leds/board-led/brightness' >> /root/.bashrc
     if [ ! -e emmc ]; then
     #autologin as root
@@ -90,10 +88,13 @@ fi
  if [[ "${OS}" == "raspbian" ]] ; then
      touch /boot/openhd/rpi.txt
      #allow autologin and remove the raspberryos first boot menu
-     cp /opt/additionalFiles/userconf.txt /boot/userconf.txt
-     cp /opt/additionalFiles/getty@.service /usr/lib/systemd/system/getty@.service
-     cp /opt/additionalFiles/default_raspi_config.txt /boot/config.txt
-     cp /opt/additionalFiles/initPi.sh /usr/local/bin/initPi.sh
+     cp /usr/local/share/openhd_misc/userconf.txt /boot/userconf.txt
+
+     #I want to do the following with sed-i in the future
+     ####################################################
+     #cp /usr/local/share/openhd_misc/getty@.service /usr/lib/systemd/system/getty@.service
+     cp /usr/local/share/openhd_misc/default_raspi_config.txt /boot/config.txt
+     cp /usr/local/share/openhd_misc/initPi.sh /usr/local/bin/initPi.sh
      #remove serial console
      sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
      sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
@@ -110,7 +111,7 @@ fi
        mkdir -p /etc/systemd/system/getty@tty1.service.d
        touch /boot/openhd/jetson.txt
        touch /boot/openhd/air.txt
-       cp /opt/additionalFiles/override.conf /etc/systemd/system/getty@tty1.service.d/
+       cp /usr/local/share/openhd_misc/override.conf /etc/systemd/system/getty@tty1.service.d/
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
@@ -153,7 +154,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 
         #mounting config partition
         sudo echo "UUID=4A7B-3DF7  /boot/openhd  auto  defaults  0  2" | sudo tee -a /etc/fstab
-        cp /opt/additionalFiles/issue.txt /conf/issue.txt
+        cp /usr/local/share/openhd_misc/issue.txt /conf/issue.txt
         touch /conf/config.txt
         ls -a /conf
         mkdir -p /conf/openhd

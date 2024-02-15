@@ -1,9 +1,0 @@
-[Unit]
-Description=Install updates on boot
-
-[Service]
-Type=simple
-ExecStart=/bin/bash /usr/local/bin/openhd_sys_utils.sh
-
-[Install]
-WantedBy=multi-user.target
