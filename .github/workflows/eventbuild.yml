@@ -155,7 +155,8 @@ jobs:
         echo "::set-output name=zero3w_artifacts::$zero3w_artifacts"
 
     - name: Print Zero3w Artifacts
-      run: echo "Zero3w Artifacts: ${{ steps.list_artifacts.outputs.zero3w_artifacts }}"
+      run: |
+        echo "Zero3w Artifacts: ${{ steps.list_artifacts.outputs.zero3w_artifacts }}"
 
     - name: Download Zero3w Artifact
       id: download_zero3w_artifact
