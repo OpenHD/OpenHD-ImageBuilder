@@ -66,10 +66,11 @@ if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     ls -a
     echo 'echo "0" > /sys/class/leds/board-led/brightness' >> /root/.bashrc
     if [ ! -e emmc ]; then
-    echo "no need"
-    touch /boot/openhd/ground.txt
+    #autologin as root
     sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
+    mv /usr/local/share/openhd_misc/issue.txt /conf/issue.txt
     else
+    mv /usr/local/share/openhd_misc/issue.txt /conf/issue.txt
     #autologin as root
     sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
     #autocopy to emmc
@@ -81,10 +82,6 @@ if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     echo "mount /dev/mmcblk0p1 /media/new" >> /root/.bashrc
     echo "cp -r /boot/openhd/* /media/new/openhd/" >> /root/.bashrc
     echo 'whiptail --msgbox "Please reboot your system now" 10 40' >> /root/.bashrc
-    touch /conf/issue.txt
-    touch /config/issue.txt
-    echo "1" > /conf/issue.txt
-    echo "2" > /config/issue.txt
     fi
 fi
 
@@ -119,31 +116,11 @@ fi
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
        sudo usermod -a -G dialout openhd
        sudo apt remove modemmanager
-       cp /opt/additionalFiles/desktop-truster.sh /etc/profile.d/desktop-truster.sh
-       cp /opt/additionalFiles/steamdeck.sh /usr/local/bin/steamdeck.sh
+       cp /usr/local/bin/desktop-truster.sh /etc/profile.d/desktop-truster.sh
+       cp /usr/local/bin/steamdeck.sh /usr/local/bin/steamdeck.sh
        #this script needs to be executable by every user
        chmod +777 /etc/profile.d/desktop-truster.sh
        chmod +x /etc/profile.d/steamdeck.sh
-       git clone https://github.com/OpenHD/OpenHD-ImageBuilder --branch dev-release
-       cd OpenHD-ImageBuilder
-       chmod a+x  shortcuts/OpenHD.desktop
-       chmod a+x  shortcuts/steamdeck.desktop
-       chmod a+x  shortcuts/nm-tray-autostart.desktop
-       chmod a+x  shortcuts/QOpenHD2.desktop
-       chmod a+x  shortcuts/OpenHD-Air.desktop
-       chmod a+x  shortcuts/OpenHD-Ground.desktop
-       chmod a+x  shortcuts/QOpenHD.desktop
-       chmod a+x  shortcuts/INAV.desktop
-       chmod a+x  shortcuts/MissionPlanner.desktop
-       chmod a+x  shortcuts/qgroundcontrol.desktop
-       chmod a+x  shortcuts/OpenHD-ImageWriter.desktop
-       sudo mv shortcuts/OpenHD.desktop /etc/xdg/autostart/
-       sudo mv shortcuts/QOpenHD2.desktop /etc/xdg/autostart/
-       sudo mv shortcuts/steamdeck.desktop /etc/xdg/autostart/
-       sudo mv shortcuts/nm-tray-autostart.desktop /etc/xdg/autostart/
-       sudo cp shortcuts/* /usr/share/applications/
-       sudo cp shortcuts/*.desktop /home/openhd/Desktop/
-       sudo cp shortcuts/*.ico /opt/
        gio set /home/openhd/Desktop/OpenHD-Air.desktop metadata::trusted true
        gio set /home/openhd/Desktop/OpenHD-Ground.desktop metadata::trusted true
        gio set /home/openhd/Desktop/QOpenHD.desktop metadata::trusted true
@@ -215,10 +192,6 @@ if [[ "${OS}" == "debian-X20" ]]; then
 fi
 
 #Install openhd_sys_utils_service
-cp /opt/additionalFiles/openhd_sys_utils.service /etc/systemd/system/
-cp /opt/additionalFiles/*.sh /usr/local/bin/
-chmod +x /usr/local/bin/*.sh
-systemctl enable openhd_sys_utils.service
 
 #change hostname to openhd
 CURRENT_HOSTNAME=`sudo cat /etc/hostname | sudo tr -d " \t\n\r"`
