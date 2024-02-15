@@ -170,7 +170,7 @@ jobs:
     - name: Pack image for ${{ matrix.TARGET }}
       uses: 'actions/upload-artifact@v3'
       with:
-        name: "${{ matrix.TARGET }}-${{ env.DT }}"
+        name: "${{ matrix.TARGET }}-${{ env.DT }}-EMMC"
         path: |
           *.img
           if-no-files-found: error
