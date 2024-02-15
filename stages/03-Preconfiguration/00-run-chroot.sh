@@ -7,7 +7,8 @@ adduser --shell /bin/bash --ingroup sudo --disabled-password --gecos "" "$USERNA
 chown -R $USERNAME:$PASSWORD /home/$USERNAME
 mkdir -p /boot/openhd/
 
-cat /etc/motd
+rm /etc/motd
+cp /usr/local/share/openhd_misc/motd /etc/motd
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     cat /etc/fstab
