@@ -7,11 +7,6 @@ adduser --shell /bin/bash --ingroup sudo --disabled-password --gecos "" "$USERNA
 chown -R $USERNAME:$PASSWORD /home/$USERNAME
 mkdir -p /boot/openhd/
 
-# We copy the motd to display a custom OpenHD message in the Terminal
-cd /opt/additionalFiles
-cp motd /etc/motd
-cp motd-unsupported /etc/motd-unsupported
-
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     cat /etc/fstab
