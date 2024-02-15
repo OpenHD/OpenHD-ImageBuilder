@@ -191,7 +191,7 @@ jobs:
 
     - uses: actions/download-artifact@v3
       with:
-        name: "${{ matrix.TARGET }}-${{ env.DT }}"
+        name: "${{ matrix.TARGET }}*"
     
     - name: compress
       run: |
