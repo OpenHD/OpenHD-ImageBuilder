@@ -143,11 +143,26 @@ jobs:
     - name: dep
       run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
 
-    
-    - uses: actions/checkout@v3
-    - uses: actions/download-artifact@v3
+    - name: List Artifacts
+      id: list_artifacts
+      run: |
+        artifacts=$(curl -s -X GET \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts")
+
+        zero3w_artifacts=$(echo "$artifacts" | jq -r '.artifacts[] | select(.name | startswith("zero3w")) | .name')
+
+        echo "::set-output name=zero3w_artifacts::$zero3w_artifacts"
+
+    - name: Print Zero3w Artifacts
+      run: echo "Zero3w Artifacts: ${{ steps.list_artifacts.outputs.zero3w_artifacts }}"
+
+    - name: Download Zero3w Artifact
+      id: download_zero3w_artifact
+      uses: actions/download-artifact@v3
       with:
-        name: "radxa-zero3w*"
+        name: ${{ steps.list_artifacts.outputs.zero3w_artifacts }}
+
 
     - name: debug
       run: |
