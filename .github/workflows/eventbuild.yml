@@ -107,7 +107,7 @@ jobs:
     - name: Pack image for ${{ matrix.TARGET }}
       uses: 'actions/upload-artifact@v3'
       with:
-        name: "${{ matrix.TARGET }}"
+        name: "${{ matrix.TARGET }}-${{ env.DT }}"
         path: |
           *.img
           if-no-files-found: error
@@ -170,7 +170,7 @@ jobs:
     - name: Pack image for ${{ matrix.TARGET }}
       uses: 'actions/upload-artifact@v3'
       with:
-        name: "${{ matrix.TARGET }}"
+        name: "${{ matrix.TARGET }}-${{ env.DT }}"
         path: |
           *.img
           if-no-files-found: error
@@ -191,7 +191,7 @@ jobs:
 
     - uses: actions/download-artifact@v3
       with:
-        name: "${{ matrix.TARGET }}"
+        name: "${{ matrix.TARGET }}-${{ env.DT }}"
     
     - name: compress
       run: |
