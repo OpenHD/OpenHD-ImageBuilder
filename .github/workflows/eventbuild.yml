@@ -221,8 +221,9 @@ jobs:
       run: |
         ls -a
         mkdir OpenHD
-        mv *.img OpenHD
-        cd OpenHD*
+        cp radxa-zero3w*
+        mv *.img ../OpenHD
+        cd ../OpenHD*
         sha256sum * | cut -f 1 -d " " > ../sha256
         echo 'NAME<<EOF' >> $GITHUB_ENV
         ls -1 | sed -e 's/.img/.img.xz/g' >> $GITHUB_ENV
