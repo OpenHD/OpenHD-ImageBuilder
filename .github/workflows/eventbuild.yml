@@ -167,19 +167,18 @@ jobs:
 
     - name: debug
       run: |
-        ls -a
         mkdir -p additionalFiles
         touch emmc
         touch additionalFiles/emmc
-        df -h
     
     - name: buildImage
       run: |
         ls -a
         sudo apt install -y xz-utils
-        cp *.img additionalFiles/emmc.img
+        cd radxa-zero3w-*
+        cp *.img ../additionalFiles/emmc.img
         cd additionalFiles
-        gzip -c *.img > emmc.img.gz
+        gzip -c ../*.img > emmc.img.gz
         rm *.img
         cd ..
         sudo ./build.sh ${{ matrix.TARGET }}
