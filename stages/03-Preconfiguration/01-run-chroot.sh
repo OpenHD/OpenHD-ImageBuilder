@@ -50,8 +50,7 @@ sudo systemctl disable systemd-journald.service
 fi
 
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
-sudo systemctl disable openhd
-sudo systemctl disable qopenhd
+sudo systemctl disable rknpu2.service
 fi
 
 #disable network-logging
