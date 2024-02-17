@@ -34,18 +34,18 @@ function install_radxa-debian_packages {
     BASE_PACKAGES="openhd-sys-utils openhd apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="r8125-dkms 8852bu-dkms 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-rock-5a linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip"
     PLATFORM_PACKAGES_REMOVE="dkms sddm plymouth plasma-desktop kde*"
-    PLATFORM_PACKAGES="rockchip-iq-openhd linux-headers-5.10.110-99-rockchip-g9c3b92612 linux-image-5.10.110-99-rockchip-g9c3b92612 rsync procps mpv camera-engine-rkaiq"
+    PLATFORM_PACKAGES="rockchip-iq-openhd-r5 linux-headers-5.10.110-99-rockchip-g9c3b92612 linux-image-5.10.110-99-rockchip-g9c3b92612 rsync procps mpv camera-engine-rkaiq"
 }
 function install_radxa-debian_packages_rk3566 {
     mkdir -p /usr/local/share/openhd_platform/rock/rk3566
     BASE_PACKAGES="openhd-sys-utils linux-image-5.10.160-radxa-rk356x linux-headers-5.10.160-radxa-rk356x linux-libc-dev-5.10.160-radxa-rk356x openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="u-boot-radxa-zero3 radxa-system-config-common radxa-system-config-kernel-cmdline-ttyfiq0 radxa-firmware radxa-system-config-bullseye 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-radxa-cm3-rpi-cm4-io linux-headers-radxa-cm3-rpi-cm4-io linux-image-5.10.160-12-rk356x linux-headers-5.10.160-12-rk356x"
-    PLATFORM_PACKAGES="dialog pv net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 procps camera-engine-rkaiq"
+    PLATFORM_PACKAGES="dialog pv net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd-r3 librga2=2.2.0-1 procps camera-engine-rkaiq"
     PLATFORM_PACKAGES_REMOVE="dnsmasq codium firefox* dkms sddm plymouth plasma-desktop kde* lightdm *xfce* chromium"
 }
 function install_packages-core3566 {
     BASE_PACKAGES="openhd-sys-utils openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
-    PLATFORM_PACKAGES="dialog pv gst-latest net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd librga2=2.2.0-1 linux-image-5.10.160-core3566-rk356x linux-headers-5.10.160-core3566-rk356x linux-libc-dev-5.10.160-core3566-rk356x procps camera-engine-rkaiq"
+    PLATFORM_PACKAGES="dialog pv gst-latest net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd-r3 librga2=2.2.0-1 linux-image-5.10.160-core3566-rk356x linux-headers-5.10.160-core3566-rk356x linux-libc-dev-5.10.160-core3566-rk356x procps camera-engine-rkaiq"
     PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
 }
 
