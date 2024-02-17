@@ -165,7 +165,7 @@ jobs:
         name: ${{ steps.list_artifacts.outputs.zero3w_artifacts }}
 
 
-    - name: debug
+    - name: debug_step
       run: |
         mkdir -p additionalFiles
         touch emmc
