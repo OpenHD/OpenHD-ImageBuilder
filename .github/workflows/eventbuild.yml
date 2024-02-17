@@ -179,7 +179,7 @@ jobs:
         ls -a
         cp *.img ../additionalFiles/emmc.img
         cd ../additionalFiles
-        gzip -c ../*.img > emmc.img.gz
+        gzip -c *.img > emmc.img.gz
         rm *.img
         cd ..
         sudo ./build.sh ${{ matrix.TARGET }}
