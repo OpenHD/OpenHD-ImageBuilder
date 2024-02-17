@@ -181,7 +181,8 @@ jobs:
         cd ../additionalFiles
         gzip -c *.img > emmc.img.gz
         rm *.img
-        cd ..
+        cd ../..
+        ls -a
         sudo ./build.sh ${{ matrix.TARGET }}
         cd deploy
         sudo mv *.img ../OpenHD-EMMC-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}.img
