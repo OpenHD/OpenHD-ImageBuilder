@@ -158,7 +158,10 @@ function install_openhd {
 
 cd /opt/additionalFiles/
 ls -a
+echo "debug _____________________________________________________________________"
 if [ ! -e emmc ]; then
+    echo "debug2"
+    apt update
     install_openhd
     rm -Rf /opt/additionalFiles/
 else
