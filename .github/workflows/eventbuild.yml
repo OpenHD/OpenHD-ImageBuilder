@@ -138,7 +138,8 @@ jobs:
         echo "DT=$(date -d '+1 hour' +'%m-%d-%Y--%H-%M-%S')" >> $GITHUB_ENV
         echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
     
-    
+    - name: Checkout
+      uses: actions/checkout@v3
         
     - name: dep
       run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
@@ -170,6 +171,7 @@ jobs:
         mkdir -p additionalFiles
         touch emmc
         touch additionalFiles/emmc
+        ls -a
     
     - name: buildImage
       run: |
