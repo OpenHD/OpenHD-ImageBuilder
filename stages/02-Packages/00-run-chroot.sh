@@ -187,11 +187,10 @@ else
         done
 
     curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
-    apt install linux-image-5.10.160-radxa-rk356x pv
+    apt install linux-image-5.10.160-radxa-rk356x pv openhd-sys-utils
     apt autoremove -y --allow-remove-essential
     sudo apt-get clean -y
     cd /opt/additionalFiles/
-    cp /opt/additionalFiles/*.sh /usr/local/bin/
     mkdir -p /boot/openhd/
     touch /boot/openhd/rock-rk3566.txt
     touch /boot/openhd/resize.txt
