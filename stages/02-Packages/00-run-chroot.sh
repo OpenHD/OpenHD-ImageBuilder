@@ -157,8 +157,6 @@ function install_openhd {
 }
 
 cd /opt/additionalFiles/
-ls -a
-echo "debug _____________________________________________________________________"
 if [ ! -e emmc ]; then
     echo "debug2"
     apt update
@@ -188,7 +186,7 @@ else
         fi
         done
 
-    curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
+    curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
     apt install linux-image-5.10.160-radxa-rk356x pv
     apt autoremove -y --allow-remove-essential
     sudo apt-get clean -y
