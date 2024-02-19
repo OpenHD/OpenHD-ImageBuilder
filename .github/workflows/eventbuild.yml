@@ -224,7 +224,6 @@ jobs:
       run: |
         mkdir OpenHD
         cp radxa-zero3w*
-        ls -a
         mv *.img ../OpenHD
         cd ../OpenHD*
         sha256sum * | cut -f 1 -d " " > ../sha256
@@ -235,9 +234,7 @@ jobs:
         wc -c *.img | cut -f 1 -d " " >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
         xz -v7T0 *.img
-        ls -a
         mv * ../
-        ls -a
 
     - name: Upload to R2
       shell: bash
@@ -254,7 +251,6 @@ jobs:
 
     - name: generate variables for the ImageWriter
       run: |
-        ls -a      
         export NAME=$(cat last.release)
         export FILESIZE=${{ env.SIZEFULL }}
         export FILENAME=${{ env.NAME }}
@@ -303,7 +299,6 @@ jobs:
     
     - name: compress
       run: |
-        ls -a
         mkdir OpenHD
         mv *.img OpenHD
         cd OpenHD*
@@ -316,9 +311,7 @@ jobs:
         wc -c *.img | cut -f 1 -d " " >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
         xz -v7T0 *.img
-        ls -a
         mv * ../
-        ls -a
 
     - name: Upload to R2
       shell: bash
@@ -335,7 +328,6 @@ jobs:
 
     - name: generate variables for the ImageWriter
       run: |
-        ls -a      
         export NAME=$(cat last.release)
         export FILESIZE=${{ env.SIZEFULL }}
         export FILENAME=${{ env.NAME }}
