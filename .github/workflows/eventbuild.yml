@@ -265,7 +265,7 @@ jobs:
         echo "$RELEASEDATE" >> ${{ matrix.TARGET }}.txt
         wc -c *.xz | cut -f 1 -d " "
 
-    - name: Upload text-files
+    - name: Upload text-files to aws
       shell: bash
       env:
         aws_endpoint: "https://fra1.digitaloceanspaces.com"

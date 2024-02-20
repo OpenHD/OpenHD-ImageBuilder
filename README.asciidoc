@@ -102,7 +102,7 @@ Whenever we make a OpenHD image, we basically perform several steps in order:
 
 - Step 01-00 Download a base image
 - Step 01-01 Increase the size of the root partition if necessary
-- Step 02-00 Install,Remove,Hold Packages
+- Step 02-00 Install,Remove,Hold Packages (gets documentation soon)
 - Step 03-00 Misc changes to the image, copying files, setting usernames,...
 - Step 03-01 Enable/Disable Services
 - Step 03-02 Additional changes for device detection (poc)
