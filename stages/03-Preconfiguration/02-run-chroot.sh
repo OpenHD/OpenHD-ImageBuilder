@@ -13,6 +13,7 @@ elif [[ "${OS}" == "radxa-debian-rock5b" ]]; then
 mkdir -p /usr/local/share/openhd_platform/rock/rock5b
 elif [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
 touch /boot/openhd/rock-rk3566.txt
+mkdir -p /usr/local/share/openhd/platform/rock/rk3566
 elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]]; then
 touch /boot/openhd/rock-rk3566.txt
 elif [[ "${OS}" == "raspbian" ]]; then
