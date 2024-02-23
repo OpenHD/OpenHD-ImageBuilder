@@ -42,6 +42,13 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     sudo cp -r $source_dirC "/boot/dtbo/"
     sudo cp -r $source_dirD "/boot/dtbo/"
 
+    #very dirty
+    sudo rm -Rf /etc/systemd/system/h264_decode.service
+    sudo apt install tee
+    touch /etc/systemd/system/h264_decode.service
+    echo -e "[Unit]\nDescription=rock_h264_decode\n\n[Service]\nUser=root\n\n# Video decode via mpp, started by QOpenHD if needed (and stopped if needed)\nExecStart=/bin/sh -c \"gst-launch-1.0 udpsrc port=5600 caps='application/x-rtp, payload=(int)96, clock-rate=(int)90000, media=(string)video, encoding-name=(string)H264' ! rtph264depay ! h264parse ! mppvideodec format=23 fast-mode=true ! queue ! kmssink plane-id=54 force-modesetting=false\"\nRestart=always\nRestartSec=2\n\n[Install]\nWantedBy=multi-user.target" | sudo tee -a /etc/systemd/system/h264_decode.service
+
+
 fi
 
 if [[ "${OS}" == "radxa-ubuntu-rock5b" ]]; then
