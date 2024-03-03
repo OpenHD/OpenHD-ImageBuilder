@@ -21,7 +21,7 @@ function install_raspbian_packages {
     sudo apt update && apt remove -y dkms
     BASE_PACKAGES="openhd-sys-utils openhd qopenhd apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc raspberrypi-bootloader"
-    PLATFORM_PACKAGES_REMOVE="locales gdb librsvg2-2 guile-2.2-libs firmware-libertas gcc-10 nfs-common libcamera*"
+    PLATFORM_PACKAGES_REMOVE="locales gdb librsvg2-2 guile-2.2-libs firmware-libertas gcc-10 nfs-common libcamera* raspberrypi-kernel"
     PLATFORM_PACKAGES="firmware-atheros openhd-userland libseek-thermal libcamera-openhd openhd-qt openssh-server 88x2bu-rpi"
 }
 # Ubuntu-Rockship-specific code
