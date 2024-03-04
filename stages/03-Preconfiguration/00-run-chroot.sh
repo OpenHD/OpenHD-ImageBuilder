@@ -93,10 +93,6 @@ fi
      touch /boot/openhd/rpi.txt
      #allow autologin and remove the raspberryos first boot menu
      cp /usr/local/share/openhd_misc/userconf.txt /boot/userconf.txt
-
-     #I want to do the following with sed-i in the future
-     ####################################################
-     #cp /usr/local/share/openhd_misc/getty@.service /usr/lib/systemd/system/getty@.service
      cp /usr/local/share/openhd_misc/default_raspi_config.txt /boot/config.txt
      cp /usr/local/share/openhd_misc/initPi.sh /usr/local/bin/initPi.sh
      #remove serial console
