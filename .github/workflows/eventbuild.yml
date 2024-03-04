@@ -31,8 +31,9 @@ jobs:
     - name: Setup env
       run: |
 
-        echo "DT=$(date -d '+1 hour' +'%m-%d-%Y--%H-%M-%S')" >> $GITHUB_ENV
+        echo "DT=$(date -d '+1 hour' +'%m-%d-%Y-%H-%M-%S')" >> $GITHUB_ENV
         echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+        echo "$GITHUB_ENV"
     
     
     ### ONLY THIS RELEVANT FOR BUILDING ###
