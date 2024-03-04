@@ -7,7 +7,6 @@
 
 set -e
 
-uname -a
 # X20 specific code
 function install_x20_packages {
     rm -Rf /etc/apt/sources.list.d/*
@@ -74,6 +73,7 @@ function clone_github_repos {
 function install_openhd {
 
     if [[ "${OS}" == "debian-X20" ]]; then
+        rm -Rf /etc/apt/sources.list.d/armbian.list
         install_x20_packages
     elif [[ "${OS}" == "raspbian" ]]; then
         install_raspbian_packages
