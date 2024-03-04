@@ -74,22 +74,30 @@ function install_openhd {
 
     if [[ "${OS}" == "debian-X20" ]]; then
         rm -Rf /etc/apt/sources.list.d/armbian.list
+        apt update
         install_x20_packages
     elif [[ "${OS}" == "raspbian" ]]; then
+        apt update
         install_raspbian_packages
     elif [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-ubuntu-rock5a" ]] ; then
         sudo add-apt-repository -r "deb https://ppa.launchpadcontent.net/jjriek/rockchip/ubuntu jammy main"
+        apt update
         install_radxa-ubuntu_packages
     elif [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]  ; then
+        apt update
         install_radxa-debian_packages
     elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
+        apt update
         install_radxa-debian_packages_rk3566
     elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
+        apt update
         install_packages-core3566
     elif [[ "${OS}" == "ubuntu-x86" ]] ; then
+        apt update
         install_ubuntu_x86_packages
     elif [[ "${OS}" == "ubuntu" ]] ; then
         fix_jetson_apt
+        apt update
         install_jetson_packages
     fi
 
@@ -159,8 +167,6 @@ function install_openhd {
 
 cd /opt/additionalFiles/
 if [ ! -e emmc ]; then
-    echo "debug2"
-    apt update
     install_openhd
     rm -Rf /opt/additionalFiles/
 else
