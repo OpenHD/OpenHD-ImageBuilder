@@ -90,6 +90,7 @@ function install_openhd {
         apt update
         mkdir -p /usr/share/sddm/themes/breeze/
         touch /usr/share/sddm/themes/breeze/Main.qml
+        rm -Rf /etc/modprobe.d/panfrost.conf
         install_radxa-debian_packages_rk3566
     elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
         apt update
