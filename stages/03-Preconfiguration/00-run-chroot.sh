@@ -192,8 +192,6 @@ if [[ "${OS}" == "debian-X20" ]]; then
  echo "none /run tmpfs defaults,size=20M 0 0" >> /etc/fstab
 fi
 
-#Install openhd_sys_utils_service
-
 #change hostname to openhd
 CURRENT_HOSTNAME=`sudo cat /etc/hostname | sudo tr -d " \t\n\r"`
 NEW_HOSTNAME="openhd"
