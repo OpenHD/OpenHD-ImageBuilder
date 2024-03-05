@@ -6,7 +6,6 @@ on:
       - "2.5-evo"
       - "dev-release"
       - "release"
-      - "experiments"
 jobs:
   build:
 
@@ -15,7 +14,7 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         #TARGET: [x20,radxa-zero3w,x86-lunar] # <-- Add targets here!
-        TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a, radxa-cm3, x20, radxa-zero3w] # <-- Add targets here!
+        TARGET: [pi-bullseye, x86-lunar, radxa-cm3, x20, radxa-zero3w] # <-- Add targets here!
     steps:
     - name: Maximize build space
       uses: easimon/maximize-build-space@master
@@ -31,8 +30,9 @@ jobs:
     - name: Setup env
       run: |
 
-        echo "DT=$(date +'%Y-%m-%d_%H%M')" >> $GITHUB_ENV
+        echo "DT=$(date -d '+1 hour' +'%m-%d-%Y-%H-%M-%S')" >> $GITHUB_ENV
         echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+        echo "$GITHUB_ENV"
     
     
     ### ONLY THIS RELEVANT FOR BUILDING ###
@@ -107,7 +107,7 @@ jobs:
     - name: Pack image for ${{ matrix.TARGET }}
       uses: 'actions/upload-artifact@v3'
       with:
-        name: "${{ matrix.TARGET }}"
+        name: "${{ matrix.TARGET }}-${{ env.DT }}"
         path: |
           *.img
           if-no-files-found: error
@@ -132,32 +132,59 @@ jobs:
         remove-codeql: 'true'
         remove-docker-images: 'true'
         overprovision-lvm: 'true'
+
+    - name: Setup env
+      run: |
+        echo "DT=$(date -d '+1 hour' +'%m-%d-%Y--%H-%M-%S')" >> $GITHUB_ENV
+        echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+    
+    - name: Checkout
+      uses: actions/checkout@v3
         
     - name: dep
       run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
 
-    
-    - uses: actions/checkout@v3
-    - uses: actions/download-artifact@v3
-      with:
-        name: "radxa-zero3w"
-
-    - name: debug
+    - name: List Artifacts
+      id: list_artifacts
       run: |
-        ls -a
+        artifacts=$(curl -s -X GET \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts")
+
+        zero3w_artifacts=$(echo "$artifacts" | jq -r '.artifacts[] | select(.name | startswith("zero3w")) | .name')
+
+        echo "::set-output name=zero3w_artifacts::$zero3w_artifacts"
+
+    - name: Print Zero3w Artifacts
+      run: |
+        echo "Zero3w Artifacts: ${{ steps.list_artifacts.outputs.zero3w_artifacts }}"
+
+    - name: Download Zero3w Artifact
+      id: download_zero3w_artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ steps.list_artifacts.outputs.zero3w_artifacts }}
+
+
+    - name: debug_step
+      run: |
+        mkdir -p additionalFiles
         touch emmc
         touch additionalFiles/emmc
-        df -h
+        ls -a
     
     - name: buildImage
       run: |
         ls -a
         sudo apt install -y xz-utils
-        cp *.img additionalFiles/emmc.img
-        cd additionalFiles
+        cd radxa-zero3w-*
+        ls -a
+        cp *.img ../additionalFiles/emmc.img
+        cd ../additionalFiles
         gzip -c *.img > emmc.img.gz
         rm *.img
-        cd ..
+        cd ../
+        ls -a
         sudo ./build.sh ${{ matrix.TARGET }}
         cd deploy
         sudo mv *.img ../OpenHD-EMMC-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}.img
@@ -170,7 +197,7 @@ jobs:
     - name: Pack image for ${{ matrix.TARGET }}
       uses: 'actions/upload-artifact@v3'
       with:
-        name: "${{ matrix.TARGET }}"
+        name: "${{ matrix.TARGET }}-${{ env.DT }}-EMMC"
         path: |
           *.img
           if-no-files-found: error
@@ -191,14 +218,14 @@ jobs:
 
     - uses: actions/download-artifact@v3
       with:
-        name: "${{ matrix.TARGET }}"
+        name: "${{ matrix.TARGET }}*"
     
     - name: compress
       run: |
-        ls -a
         mkdir OpenHD
-        mv *.img OpenHD
-        cd OpenHD*
+        cp radxa-zero3w*
+        mv *.img ../OpenHD
+        cd ../OpenHD*
         sha256sum * | cut -f 1 -d " " > ../sha256
         echo 'NAME<<EOF' >> $GITHUB_ENV
         ls -1 | sed -e 's/.img/.img.xz/g' >> $GITHUB_ENV
@@ -207,9 +234,7 @@ jobs:
         wc -c *.img | cut -f 1 -d " " >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
         xz -v7T0 *.img
-        ls -a
         mv * ../
-        ls -a
 
     - name: Upload to R2
       shell: bash
@@ -226,13 +251,12 @@ jobs:
 
     - name: generate variables for the ImageWriter
       run: |
-        ls -a      
         export NAME=$(cat last.release)
         export FILESIZE=${{ env.SIZEFULL }}
         export FILENAME=${{ env.NAME }}
         export DOWNLOADSIZE=$(wc -c *.xz | cut -f 1 -d " ")
         export SUM=$(cat sha256)
-        export RELEASEDATE=$(date +%Y-%m-%d)
+        export RELEASEDATE=$(date -d '+1 hour' +'%m-%d-%Y--%H-%M-%S')
         echo "$NAME" >> ${{ matrix.TARGET }}.txt
         echo "$FILESIZE" >> ${{ matrix.TARGET }}.txt
         echo "$FILENAME" >> ${{ matrix.TARGET }}.txt
@@ -241,7 +265,7 @@ jobs:
         echo "$RELEASEDATE" >> ${{ matrix.TARGET }}.txt
         wc -c *.xz | cut -f 1 -d " "
 
-    - name: Upload text-files
+    - name: Upload text-files to aws
       shell: bash
       env:
         aws_endpoint: "https://fra1.digitaloceanspaces.com"
@@ -271,11 +295,10 @@ jobs:
 
     - uses: actions/download-artifact@v3
       with:
-        name: "${{ matrix.TARGET }}"
+        name: "${{ matrix.TARGET }}-${{ env.DT }}"
     
     - name: compress
       run: |
-        ls -a
         mkdir OpenHD
         mv *.img OpenHD
         cd OpenHD*
@@ -288,9 +311,7 @@ jobs:
         wc -c *.img | cut -f 1 -d " " >> $GITHUB_ENV
         echo 'EOF' >> $GITHUB_ENV
         xz -v7T0 *.img
-        ls -a
         mv * ../
-        ls -a
 
     - name: Upload to R2
       shell: bash
@@ -307,13 +328,12 @@ jobs:
 
     - name: generate variables for the ImageWriter
       run: |
-        ls -a      
         export NAME=$(cat last.release)
         export FILESIZE=${{ env.SIZEFULL }}
         export FILENAME=${{ env.NAME }}
         export DOWNLOADSIZE=$(wc -c *.xz | cut -f 1 -d " ")
         export SUM=$(cat sha256)
-        export RELEASEDATE=$(date +%Y-%m-%d)
+        export RELEASEDATE=$(date -d '+1 hour' +'%m-%d-%Y--%H-%M-%S')
         echo "$NAME" >> ${{ matrix.TARGET }}.txt
         echo "$FILESIZE" >> ${{ matrix.TARGET }}.txt
         echo "$FILENAME" >> ${{ matrix.TARGET }}.txt

@@ -34,22 +34,25 @@ endif::[]
 // Table of Contents
 toc::[]
 
-Short version: This project takes a base image and modifies it into a Open.HD compatible image.
-For the long version, read on.
-
 ## Flashing
 When flashing please use the OpenHD-ImageWriter.
 If you want to flash the Images manually you need to create a (air.txt) or (ground.txt) file in the openhd folder, which is in the root of the FAT32 Partition on the SD-CARD.
+
+
+
+## What is this
+This project takes a base image and modifies it into an OpenHD compatible image.
+For the long version, read on.
 
 
 ## Using
 In order to be able to run this you need a Debian or Ubuntu Linux machine with 30 Gb free space on the main partition, and with the following packages:
 
 ```sh
-sudo apt-get install unzip curl git qemu qemu-user-static binfmt-support build-essential gcc-arm*
+sudo apt install unzip curl git qemu qemu-user-static binfmt-support build-essential gcc-arm*
 ```
 
-If any of the packages fails to install, run apt update prior to the apt-get install command:
+If any of the packages fails to install, run apt update prior to the apt install command:
 ```
 sudo apt update
 ```
@@ -57,8 +60,8 @@ sudo apt update
 Then git clone this repository to a suitable folder 
 
 ```sh
-git clone https://github.com/OpenHD/Open.HD_Image_Builder.git
-cd Open.HD_Image_Builder
+git clone https://github.com/OpenHD/OpenHD-ImageBuilder.git
+cd OpenHD-ImageBuilder
 ```
 
 Elevate your prompt:
@@ -66,27 +69,27 @@ Elevate your prompt:
 ```sh
 sudo -s
 ```
-**Note: IF YOU DO NOT RUN "testing" you only get the last stable release packages (which is probably old) PLEASE RUN "testing" to define that source from cloudsmith package source**
 
 And run:
 ```sh
-./build.sh jetson-nano-2gb-bionic testing
+./build.sh TARGET
 ```
 
 or
 
+valid targets are:
+
 ```sh
-./build.sh pi-bullseye testing
+pi-bullseye
+x86-lunar
+rock5b
+rock5a
+radxa-cm3
+x20
+radxa-zero3w
 ```
 
 ## More information (what's going on?)
-The earlier version of this builder did all of the work from a single script, while that is basically fine, there were some issues with the approach taken:
-
-- After every modification, the entire process needed to be re-run. (Which takes ~2 hours on a decent machine)
-- It was hard for new users to find the different steps and where to make additions
-
-The main issue offcourse being the first one.
-So, on to this, the new and improved 'staged' image builder.
 
 **Note:** if a build fails for some reason, be sure to run the cleanup script so that any temporarily mounted images are cleaned up:
 
@@ -95,24 +98,18 @@ So, on to this, the new and improved 'staged' image builder.
 ### STAGES
 The core concept (and some code) was taken from link:https://github.com/RPi-Distro/pi-gen[pi-gen], the Raspbian image generator.
 
-Whenever we make a OpenHd image, we basically perform several steps in order:
+Whenever we make a OpenHD image, we basically perform several steps in order:
 
-- Download a base image
-- Increase the size of the root partition if necessary
-- Preinstall the OpenHD Packages
-- Update the `/boot` or `/conf` partition name
-- Set the system hostname
+- Step 01-00 Download a base image
+- Step 01-01 Increase the size of the root partition if necessary
+- Step 02-00 Install,Remove,Hold Packages (gets documentation soon)
+- Step 03-00 Misc changes to the image, copying files, setting usernames,...
+- Step 03-01 Enable/Disable Services
+- Step 03-02 Additional changes for device detection (poc)
 - Cleanup
 
-*Remember, this was all done in a single script, and an error in the cleanup step basically meant running it all again.*
 
-So after thinking about the problem and looking for projects who had tackled this i looked at the actual Raspbian image generator, who's output serves as our input (the basic Raspbian lite image). The concept used in the Raspbian image generator is dividing the entire creation process in `stages`, where the output of the previous stage serves as the input of the next. Stages that have been completed can be skipped in a next build.
-
-This concept applies to the OpenHD image creation as well. So i modified the core logic into this system:
-
-image::https://github.com/OpenHD/Open.HD_Image_Builder/raw/2.3-evo/Builder%20flow.png[Flow]
-
-This allows us to run the build process once, and when we want to make a change in stage 3, we only run stage 3 and 4 again by removing the `SKIP` file from the `stages/03-Packages` and the `stages/04-Wifibroadcast` folders. The build system will copy the kernel `IMAGE.img` from stage 2 to stage 3 and re-run all the scripts in stage 3. The resulting image is copied to stage 4 and all those scripts are run. Finally, when there are no more stages, the `IMAGE.img` from the last stage is copied to the `./deploy` directory and renamed to include the target board and OpenHD version.
+The ImageBuilder allows us to run the build process once, and when we want to make a change in stage 3, we only run stage 3 and 4 again by removing the `SKIP` file from the `stages/03-Packages` and the `stages/04-Wifibroadcast` folders. The build system will copy the kernel `IMAGE.img` from stage 2 to stage 3 and re-run all the scripts in stage 3. The resulting image is copied to stage 4 and all those scripts are run. Finally, when there are no more stages, the `IMAGE.img` from the last stage is copied to the `./deploy` directory and renamed to include the target board and OpenHD version.
 
 #### Skipping
 By placing a `SKIP` file in the stage folder, the entire stage will be skipped by the build system. Please be aware there is no sanity check in place, removing the `SKIP` file from stage 3 while leaving the `SKIP` file in stage 4 will produce an image based on the previous run, ignoring the modifications done in step 3.

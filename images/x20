@@ -1,6 +1,6 @@
-BASE_IMAGE_URL="https://openhd-images.fra1.cdn.digitaloceanspaces.com/BaseImages"
-BASE_IMAGE="X20-110124.img.xz"
-BASE_IMAGE_SHA256="57ca02eed245ea4f51d65528571f713cb16d5ab6fae40e9c3e1ac3ecbd1e7d0a"
+BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/BaseImages"
+BASE_IMAGE="x20_120124.img.xz"
+BASE_IMAGE_SHA256="8df7496cde762682a0249e6ccf4061aaf20b9d23c6d4f8a7d63fd01be32b3ae8"
 OS="debian-X20"
 DISTRO="bullseye"
 HAVE_BOOT_PART=false

@@ -7,24 +7,21 @@ adduser --shell /bin/bash --ingroup sudo --disabled-password --gecos "" "$USERNA
 chown -R $USERNAME:$PASSWORD /home/$USERNAME
 mkdir -p /boot/openhd/
 
-# We copy the motd to display a custom OpenHD message in the Terminal
-cd /opt/additionalFiles
-cp motd /etc/motd
-cp motd-unsupported /etc/motd-unsupported
-
+rm /etc/motd
+cp /usr/local/share/openhd_misc/motd /etc/motd
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     cat /etc/fstab
     #rm /conf/before.txt
-    cp /opt/additionalFiles/before.txt /conf/before.txt
-    cp /opt/additionalFiles/before.txt /config/before.txt
+    cp /usr/local/share/openhd_misc/before.txt /conf/before.txt
+    cp /usr/local/share/openhd_misc/before.txt /config/before.txt
     #allow offline auto detection of image format
-    cp /opt/additionalFiles/issue.txt /conf/issue.txt
-    cp /opt/additionalFiles/issue.txt /config/issue.txt
+    cp /usr/local/share/openhd_misc/issue.txt /conf/issue.txt
+    cp /usr/local/share/openhd_misc/issue.txt /config/issue.txt
     mkdir -p /conf/openhd
     mkdir -p /config/openhd
     mkdir -p /boot/openhd
-    cp /opt/additionalFiles/initRock.sh /usr/local/bin/initRock.sh
+    cp /usr/local/share/openhd_misc/initRock.sh /usr/local/bin/initRock.sh
     touch /conf/config.txt
     touch /config/config.txt
     #mounting config partition
@@ -45,6 +42,13 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     sudo cp -r $source_dirC "/boot/dtbo/"
     sudo cp -r $source_dirD "/boot/dtbo/"
 
+    #very dirty
+    sudo rm -Rf /etc/systemd/system/h264_decode.service
+    sudo apt install tee
+    touch /etc/systemd/system/h264_decode.service
+    echo -e "[Unit]\nDescription=rock_h264_decode\n\n[Service]\nUser=root\n\n# Video decode via mpp, started by QOpenHD if needed (and stopped if needed)\nExecStart=/bin/sh -c \"gst-launch-1.0 udpsrc port=5600 caps='application/x-rtp, payload=(int)96, clock-rate=(int)90000, media=(string)video, encoding-name=(string)H264' ! rtph264depay ! h264parse ! mppvideodec format=23 fast-mode=true ! queue ! kmssink plane-id=54 force-modesetting=false\"\nRestart=always\nRestartSec=2\n\n[Install]\nWantedBy=multi-user.target" | sudo tee -a /etc/systemd/system/h264_decode.service
+
+
 fi
 
 if [[ "${OS}" == "radxa-ubuntu-rock5b" ]]; then
@@ -62,14 +66,13 @@ fi
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     systemctl disable dnsmasq
     sed -i 's/loglevel=4/loglevel=0/g' /boot/extlinux/extlinux.conf
-    cd /opt/additionalFiles/
-    ls -a
     echo 'echo "0" > /sys/class/leds/board-led/brightness' >> /root/.bashrc
     if [ ! -e emmc ]; then
-    echo "no need"
-    touch /boot/openhd/ground.txt
+    #autologin as root
     sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
+    mv /usr/local/share/openhd_misc/issue.txt /conf/issue.txt
     else
+    mv /usr/local/share/openhd_misc/issue.txt /conf/issue.txt
     #autologin as root
     sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
     #autocopy to emmc
@@ -81,10 +84,6 @@ if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     echo "mount /dev/mmcblk0p1 /media/new" >> /root/.bashrc
     echo "cp -r /boot/openhd/* /media/new/openhd/" >> /root/.bashrc
     echo 'whiptail --msgbox "Please reboot your system now" 10 40' >> /root/.bashrc
-    touch /conf/issue.txt
-    touch /config/issue.txt
-    echo "1" > /conf/issue.txt
-    echo "2" > /config/issue.txt
     fi
 fi
 
@@ -93,10 +92,9 @@ fi
  if [[ "${OS}" == "raspbian" ]] ; then
      touch /boot/openhd/rpi.txt
      #allow autologin and remove the raspberryos first boot menu
-     cp /opt/additionalFiles/userconf.txt /boot/userconf.txt
-     cp /opt/additionalFiles/getty@.service /usr/lib/systemd/system/getty@.service
-     cp /opt/additionalFiles/default_raspi_config.txt /boot/config.txt
-     cp /opt/additionalFiles/initPi.sh /usr/local/bin/initPi.sh
+     cp /usr/local/share/openhd_misc/userconf.txt /boot/userconf.txt
+     cp /usr/local/share/openhd_misc/default_raspi_config.txt /boot/config.txt
+     cp /usr/local/share/openhd_misc/initPi.sh /usr/local/bin/initPi.sh
      #remove serial console
      sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
      sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
@@ -113,37 +111,17 @@ fi
        mkdir -p /etc/systemd/system/getty@tty1.service.d
        touch /boot/openhd/jetson.txt
        touch /boot/openhd/air.txt
-       cp /opt/additionalFiles/override.conf /etc/systemd/system/getty@tty1.service.d/
+       cp /usr/local/share/openhd_misc/override.conf /etc/systemd/system/getty@tty1.service.d/
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
        sudo usermod -a -G dialout openhd
        sudo apt remove modemmanager
-       cp /opt/additionalFiles/desktop-truster.sh /etc/profile.d/desktop-truster.sh
-       cp /opt/additionalFiles/steamdeck.sh /usr/local/bin/steamdeck.sh
+       cp /usr/local/bin/desktop-truster.sh /etc/profile.d/desktop-truster.sh
+       cp /usr/local/bin/steamdeck.sh /usr/local/bin/steamdeck.sh
        #this script needs to be executable by every user
        chmod +777 /etc/profile.d/desktop-truster.sh
        chmod +x /etc/profile.d/steamdeck.sh
-       git clone https://github.com/OpenHD/OpenHD-ImageBuilder --branch dev-release
-       cd OpenHD-ImageBuilder
-       chmod a+x  shortcuts/OpenHD.desktop
-       chmod a+x  shortcuts/steamdeck.desktop
-       chmod a+x  shortcuts/nm-tray-autostart.desktop
-       chmod a+x  shortcuts/QOpenHD2.desktop
-       chmod a+x  shortcuts/OpenHD-Air.desktop
-       chmod a+x  shortcuts/OpenHD-Ground.desktop
-       chmod a+x  shortcuts/QOpenHD.desktop
-       chmod a+x  shortcuts/INAV.desktop
-       chmod a+x  shortcuts/MissionPlanner.desktop
-       chmod a+x  shortcuts/qgroundcontrol.desktop
-       chmod a+x  shortcuts/OpenHD-ImageWriter.desktop
-       sudo mv shortcuts/OpenHD.desktop /etc/xdg/autostart/
-       sudo mv shortcuts/QOpenHD2.desktop /etc/xdg/autostart/
-       sudo mv shortcuts/steamdeck.desktop /etc/xdg/autostart/
-       sudo mv shortcuts/nm-tray-autostart.desktop /etc/xdg/autostart/
-       sudo cp shortcuts/* /usr/share/applications/
-       sudo cp shortcuts/*.desktop /home/openhd/Desktop/
-       sudo cp shortcuts/*.ico /opt/
        gio set /home/openhd/Desktop/OpenHD-Air.desktop metadata::trusted true
        gio set /home/openhd/Desktop/OpenHD-Ground.desktop metadata::trusted true
        gio set /home/openhd/Desktop/QOpenHD.desktop metadata::trusted true
@@ -176,7 +154,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 
         #mounting config partition
         sudo echo "UUID=4A7B-3DF7  /boot/openhd  auto  defaults  0  2" | sudo tee -a /etc/fstab
-        cp /opt/additionalFiles/issue.txt /conf/issue.txt
+        cp /usr/local/share/openhd_misc/issue.txt /conf/issue.txt
         touch /conf/config.txt
         ls -a /conf
         mkdir -p /conf/openhd
@@ -213,12 +191,6 @@ if [[ "${OS}" == "debian-X20" ]]; then
  find / -type f -exec du -h {} + | sort -rh | head -n 10
  echo "none /run tmpfs defaults,size=20M 0 0" >> /etc/fstab
 fi
-
-#Install openhd_sys_utils_service
-cp /opt/additionalFiles/openhd_sys_utils.service /etc/systemd/system/
-cp /opt/additionalFiles/*.sh /usr/local/bin/
-chmod +x /usr/local/bin/*.sh
-systemctl enable openhd_sys_utils.service
 
 #change hostname to openhd
 CURRENT_HOSTNAME=`sudo cat /etc/hostname | sudo tr -d " \t\n\r"`
