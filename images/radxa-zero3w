@@ -1,6 +1,6 @@
-BASE_IMAGE_URL="https://github.com/radxa-build/radxa-zero3/releases/download/b6/"
-BASE_IMAGE="radxa-zero3_debian_bullseye_xfce_b6.img.xz"
-BASE_IMAGE_SHA256="54d4be56074a90487eabc3fb938aeb5ced5d876ee21fdf91efffb14be50911c9"
+BASE_IMAGE_URL="https://github.com/radxa-build/radxa-zero3/releases/download/b3/"
+BASE_IMAGE="radxa-zero3_debian_bullseye_xfce_b3.img.xz"
+BASE_IMAGE_SHA256="18a99d2dcb32bb9b16bd81d08269b0a1102bb51b21f22efcdc677d999297d76b"
 OS="radxa-debian-rock-cm3"
 DISTRO="bullseye"
 HAVE_BOOT_PART=false
