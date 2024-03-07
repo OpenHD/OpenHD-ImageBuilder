@@ -89,7 +89,6 @@ x20
 radxa-zero3w
 ```
 
-
 ## More information (what's going on?)
 
 **Note:** if a build fails for some reason, be sure to run the cleanup script so that any temporarily mounted images are cleaned up:
