@@ -7,7 +7,10 @@
 
 set -e
 
-# remove all desktop stuff from radxa ONLYDEBUG^
+# remove all desktop stuff from radxa ONLYDEBUG
+mkdir -p /usr/share/sddm/themes/breeze/
+touch /usr/share/sddm/themes/breeze/Main.qml
+rm -Rf /etc/modprobe.d/panfrost.conf
 sudo apt-get remove -y gstreamer1.0-gtk3 gstreamer1.0-libav gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-rtp gstreamer1.0-plugins-ugly gstreamer1.0-qt5 gstreamer1.0-vaapi gvfs gvfs-backends gvfs-fuse mesa-utils mesa-va-drivers plymouth plymouth-theme-breeze plymouth-themes vdpau-driver-all vulkan-tools xdg-desktop-portal xdg-desktop-portal-gtk xdg-user-dirs xdg-user-dirs-gtk xdg-utils task-xfce-desktop thunar-volman xfce4-clipman xfce4-notifyd xfce4-power-manager xfce4-screenshooter xfce4-terminal xiccd aha breeze-cursor-theme clinfo codium cups desktop-base firefox-esr fonts-noto-cjk fprintd fwupd maliit-keyboard
 
 
@@ -92,9 +95,6 @@ function install_openhd {
         install_radxa-debian_packages
     elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
         apt update
-        # mkdir -p /usr/share/sddm/themes/breeze/
-        # touch /usr/share/sddm/themes/breeze/Main.qml
-        # rm -Rf /etc/modprobe.d/panfrost.conf
         install_radxa-debian_packages_rk3566
     elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
         apt update
