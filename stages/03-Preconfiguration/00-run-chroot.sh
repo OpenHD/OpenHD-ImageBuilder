@@ -144,7 +144,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
        chmod a+x QGroundControl.AppImage
        chown openhd:openhd QGroundControl.AppImage
 
-        #mounting config partition
+        #mounting config partition and adding config files
         sudo echo "UUID=4A7B-3DF7  /boot/openhd  auto  defaults  0  2" | sudo tee -a /etc/fstab
         cp /usr/local/share/openhd_misc/issue.txt /conf/issue.txt
         touch /conf/config.txt
