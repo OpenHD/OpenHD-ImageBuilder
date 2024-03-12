@@ -46,7 +46,7 @@ function install_radxa-debian_packages {
 function install_radxa-debian_packages_rk3566 {
     echo "debug"
     mkdir -p /usr/local/share/openhd_platform/rock/rk3566
-    # BASE_PACKAGES="openhd-sys-utils openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
+    BASE_PACKAGES="openhd-sys-utils openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
     # PLATFORM_PACKAGES_HOLD="u-boot-radxa-zero3 radxa-system-config-common radxa-system-config-kernel-cmdline-ttyfiq0 radxa-firmware radxa-system-config-bullseye 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-radxa-cm3-rpi-cm4-io linux-headers-radxa-cm3-rpi-cm4-io linux-image-5.10.160-12-rk356x linux-headers-5.10.160-12-rk356x"
     # PLATFORM_PACKAGES="dialog pv net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd-r3 librga2=2.2.0-1 procps camera-engine-rkaiq mpp-rk3566"
     # PLATFORM_PACKAGES_REMOVE="dnsmasq codium firefox* dkms sddm plymouth plasma-desktop kde* lightdm *xfce* chromium"
