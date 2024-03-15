@@ -93,6 +93,7 @@ function install_openhd {
     elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
         apt update
         install_radxa-debian_packages_rk3566
+        apt install -f aic8800-dkms
     elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
         apt update
         install_packages-core3566
