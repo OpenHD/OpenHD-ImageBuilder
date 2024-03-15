@@ -159,6 +159,7 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 fi
 
 if [[ "${OS}" == "debian-X20" ]]; then
+echo "removed for now"
 #  mkdir /emmc/
 #  sudo echo "/dev/mmcblk1p1  /emmc  auto  defaults  0  2" | sudo tee -a /etc/fstab
 #  touch /boot/openhd/hardware_vtx_v20.txt

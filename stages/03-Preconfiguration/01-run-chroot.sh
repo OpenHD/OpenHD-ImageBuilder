@@ -39,6 +39,7 @@ sudo systemctl mask plymouth-quit.service
 fi
 
 if [[ "${OS}" == "debian-X20" ]]; then
+echo "removed for now"
 # sudo systemctl disable hostapd
 # sudo systemctl disable sshd
 # sudo systemctl disable networkmanager
