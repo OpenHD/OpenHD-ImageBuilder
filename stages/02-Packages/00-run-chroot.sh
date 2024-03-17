@@ -178,6 +178,7 @@ else
     #dirty hack to remove sddm without everything failing .. thanks radxa
     mkdir -p /usr/share/sddm/themes/breeze/
     touch /usr/share/sddm/themes/breeze/Main.qml
+    rm -Rf /etc/modprobe.d/panfrost.conf
     apt remove -y radxa-sddm-theme
     mkdir -p /etc/pulse/
     touch default.pa
