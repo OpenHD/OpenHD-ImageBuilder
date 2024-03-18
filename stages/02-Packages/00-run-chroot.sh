@@ -11,7 +11,7 @@ set -e
 function install_x20_packages {
     rm -Rf /etc/apt/sources.list.d/*
     rm -Rf /etc/apt/sources.list
-    BASE_PACKAGES="openhd-x20 openhd-sys-utils rtl8812au-x20"
+    BASE_PACKAGES="openhd-x20 openhd-sys-utils rtl8812au-x20 encode-sunxi"
     PLATFORM_PACKAGES_REMOVE="*boost* locales guile-2.2-libs network-manager"
     PLATFORM_PACKAGES=""
 }
