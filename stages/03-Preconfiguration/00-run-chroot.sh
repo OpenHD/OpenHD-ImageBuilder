@@ -180,6 +180,7 @@ echo "removed for now"
 #  rm -Rf /usr/local/share/openhd/video/sunxisrc_h264.json
  rm -Rf /etc/rc.local
  echo "HdZero" >> /etc/modules-load.d/modules.conf
+ cat fstab
  sed -i 's/c34bd5d7-bc89-4fa1-85b8-47954ecd28ee/9714ff09-1989-492f-a35e-29d9654c22d5/' /etc/fstab
 #  touch /etc/apt/sources.list
 #  apt update
