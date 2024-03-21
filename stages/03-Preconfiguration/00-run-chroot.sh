@@ -181,8 +181,8 @@ echo "removed for now"
  rm -Rf /etc/rc.local
  rm -Rf /lib/modules/5.8.0/kernel/drivers/net/88XXau_wfb.ko
  echo "HdZero" >> /etc/modules-load.d/modules.conf
- cat /etc/fstab
- sed -i 's/c34bd5d7-bc89-4fa1-85b8-47954ecd28ee/9714ff09-1989-492f-a35e-29d9654c22d5/' /etc/fstab
+ sudo sed -i '/^\/dev\/mmcblk0p2/d' /etc/fstab
+ sudo sed -i 's/c34bd5d7-bc89-4fa1-85b8-47954ecd28ee/9714ff09-1989-492f-a35e-29d9654c22d5/' /etc/fstab
 #  touch /etc/apt/sources.list
 #  apt update
 #  sed -i '17,35d' /etc/rc.local
