@@ -53,6 +53,7 @@ fi
 
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
 sudo systemctl disable rknpu2.service
+sudo systemctl disable h264_decode.service
 fi
 
 #disable network-logging
