@@ -107,6 +107,7 @@ fi
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
+       sudo rm -Rf /usr/lib/modules/6.3.13-060313-generic/kernel/drivers/net/wireless/88x2bu.ko && sudo rm -Rf /usr/lib/modules/6.3.13-060313-generic/kernel/drivers/net/wireless/realtek/rtw88/*
        sudo usermod -a -G dialout openhd
        sudo apt remove modemmanager
        cp /usr/local/bin/desktop-truster.sh /etc/profile.d/desktop-truster.sh
