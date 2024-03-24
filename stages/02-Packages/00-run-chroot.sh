@@ -11,7 +11,7 @@ set -e
 function install_x20_packages {
     rm -Rf /etc/apt/sources.list.d/*
     rm -Rf /etc/apt/sources.list
-    BASE_PACKAGES="openhd-x20"
+    BASE_PACKAGES="openhd-x20 openhd-sys-utils rtl8812au-x20 encode-sunxi"
     PLATFORM_PACKAGES_REMOVE="*boost* locales guile-2.2-libs network-manager"
     PLATFORM_PACKAGES=""
 }
@@ -37,11 +37,14 @@ function install_radxa-debian_packages {
     PLATFORM_PACKAGES="rockchip-iq-openhd-r5 linux-headers-5.10.110-99-rockchip-g9c3b92612 linux-image-5.10.110-99-rockchip-g9c3b92612 rsync procps mpv camera-engine-rkaiq"
 }
 function install_radxa-debian_packages_rk3566 {
+    mkdir -p /usr/share/sddm/themes/breeze/
+    touch /usr/share/sddm/themes/breeze/Main.qml
+    rm -Rf /etc/modprobe.d/panfrost.conf
     mkdir -p /usr/local/share/openhd_platform/rock/rk3566
-    BASE_PACKAGES="openhd-sys-utils linux-image-5.10.160-radxa-rk356x linux-headers-5.10.160-radxa-rk356x linux-libc-dev-5.10.160-radxa-rk356x openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
-    PLATFORM_PACKAGES_HOLD="u-boot-radxa-zero3 radxa-system-config-common radxa-system-config-kernel-cmdline-ttyfiq0 radxa-firmware radxa-system-config-bullseye 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-radxa-cm3-rpi-cm4-io linux-headers-radxa-cm3-rpi-cm4-io linux-image-5.10.160-12-rk356x linux-headers-5.10.160-12-rk356x"
-    PLATFORM_PACKAGES="dialog pv net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd-r3 librga2=2.2.0-1 procps camera-engine-rkaiq mpp-rk3566"
-    PLATFORM_PACKAGES_REMOVE="dnsmasq codium firefox* dkms sddm plymouth plasma-desktop kde* lightdm *xfce* chromium"
+    BASE_PACKAGES="gstreamer1.0-plugins-rtp gstreamer1.0-rockchip1 gstreamer1.0-vaapi libavahi-glib1 libdrm-cursor linux-headers-5.10.160-radxa-rk356x linux-image-5.10.160-radxa-rk356x openhd-sys-utils openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
+    PLATFORM_PACKAGES_REMOVE="gvfs gvfs-backends gvfs-fuse plymouth plymouth-theme-breeze plymouth-themes vulkan-tools xdg-desktop-portal xdg-desktop-portal-gtk xdg-user-dirs xdg-user-dirs-gtk xdg-utils task-xfce-desktop thunar-volman xfce4-clipman xfce4-notifyd xfce4-power-manager xfce4-screenshooter xfce4-terminal xiccd aha breeze-cursor-theme clinfo codium cups desktop-base firefox-esr fonts-noto-cjk fprintd fwupd maliit-keyboard"
+    # PLATFORM_PACKAGES_HOLD="u-boot-radxa-zero3 radxa-system-config-common radxa-system-config-kernel-cmdline-ttyfiq0 radxa-firmware radxa-system-config-bullseye 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-radxa-cm3-rpi-cm4-io linux-headers-radxa-cm3-rpi-cm4-io linux-image-5.10.160-12-rk356x linux-headers-5.10.160-12-rk356x"
+    PLATFORM_PACKAGES="dialog pv net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd-r3 librga2=2.2.0-1 procps camera-engine-rkaiq mpp-rk3566 "
 }
 function install_packages-core3566 {
     BASE_PACKAGES="openhd-sys-utils openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
@@ -88,9 +91,6 @@ function install_openhd {
         install_radxa-debian_packages
     elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
         apt update
-        # mkdir -p /usr/share/sddm/themes/breeze/
-        # touch /usr/share/sddm/themes/breeze/Main.qml
-        # rm -Rf /etc/modprobe.d/panfrost.conf
         install_radxa-debian_packages_rk3566
     elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
         apt update
@@ -178,12 +178,13 @@ else
     #dirty hack to remove sddm without everything failing .. thanks radxa
     mkdir -p /usr/share/sddm/themes/breeze/
     touch /usr/share/sddm/themes/breeze/Main.qml
+    rm -Rf /etc/modprobe.d/panfrost.conf
     apt remove -y radxa-sddm-theme
     mkdir -p /etc/pulse/
     touch default.pa
     apt remove -y rockchip-pulseaudio-config
     #now removing everything else
-    PLATFORM_PACKAGES_REMOVE="dnsmasq libllvm* firmware-misc-nonfree libmali-bifrost-g52-g2p0-x11-gbm adwaita-icon-theme firmware-brcm80211 network-manager desktop-base libcairo2 libvulkan1 xdg-desktop-portal libgtk-3-common firmware-iwlwifi fonts-noto-cjk linux-image-5.10.160-20-rk356x rockchip-pulseaudio-config rockchip* x11-common  gstreamer* libavcodec58 libavformat58 libavfilter7 libcups2 libgstreamer* libopencv* libqt5* codium firefox* dkms plymouth plasma-desktop kde* lightdm *xfce* chromium"
+    PLATFORM_PACKAGES_REMOVE="gstreamer1.0-gtk3 gstreamer1.0-libav gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-rtp gstreamer1.0-plugins-ugly gstreamer1.0-qt5 gstreamer1.0-vaapi gvfs gvfs-backends gvfs-fuse mesa-utils mesa-va-drivers plymouth plymouth-theme-breeze plymouth-themes vdpau-driver-all vulkan-tools xdg-desktop-portal xdg-desktop-portal-gtk xdg-user-dirs xdg-user-dirs-gtk xdg-utils task-xfce-desktop thunar-volman xfce4-clipman xfce4-notifyd xfce4-power-manager xfce4-screenshooter xfce4-terminal xiccd aha breeze-cursor-theme clinfo codium cups desktop-base firefox-esr fonts-noto-cjk fprintd fwupd maliit-keyboard dnsmasq libllvm* firmware-misc-nonfree libmali-bifrost-g52-g2p0-x11-gbm adwaita-icon-theme firmware-brcm80211 network-manager libcairo2 libvulkan1 libgtk-3-common libcups2 libavcodec58 libavformat58 libavfilter7 libopencv* codium dkms plasma-desktop lightdm chromium"
     
         # Remove platform-specific packages
         echo "Removing platform-specific packages..."

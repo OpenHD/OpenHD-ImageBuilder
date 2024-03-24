@@ -39,18 +39,21 @@ sudo systemctl mask plymouth-quit.service
 fi
 
 if [[ "${OS}" == "debian-X20" ]]; then
-sudo systemctl disable hostapd
-sudo systemctl disable sshd
-sudo systemctl disable networkmanager
-sudo systemctl disable networking
-sudo systemctl disable nfs-client
-sudo systemctl disable ssh
-sudo systemctl disable rsync
-sudo systemctl disable systemd-journald.service
+echo "removed for now"
+# sudo systemctl disable hostapd
+# sudo systemctl disable sshd
+# sudo systemctl disable networkmanager
+# sudo systemctl disable networking
+# sudo systemctl disable nfs-client
+# sudo systemctl disable ssh
+# sudo systemctl disable rsync
+# sudo systemctl disable systemd-journald.service
+sudo systemctl enable temperature_guardian
 fi
 
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
 sudo systemctl disable rknpu2.service
+sudo systemctl disable h264_decode.service
 fi
 
 #disable network-logging

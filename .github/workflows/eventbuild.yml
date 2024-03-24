@@ -6,6 +6,7 @@ on:
       - "2.5-evo"
       - "dev-release"
       - "release"
+      - "debug"
 jobs:
   build:
 
@@ -209,7 +210,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        TARGET: [pi-bullseye, x86-lunar, rock5b, rock5a, radxa-cm3, x20, radxa-zero3w] # <-- Add targets here!
+        TARGET: [radxa-zero3w] # <-- Add targets here!
     steps:
     - name: debug
       run: df -h
