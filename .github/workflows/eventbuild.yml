@@ -14,8 +14,8 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        #TARGET: [x20,radxa-zero3w,x86-lunar] # <-- Add targets here!
-        TARGET: [pi-bullseye, x86-lunar, radxa-cm3, x20, radxa-zero3w] # <-- Add targets here!
+        #TARGET: [pi-bullseye, x86-lunar, radxa-cm3, x20, radxa-zero3w] # <-- Add targets here!
+        TARGET: [rock5b] # <-- Add targets here!
     steps:
     - name: Maximize build space
       uses: easimon/maximize-build-space@master
