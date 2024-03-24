@@ -31,15 +31,16 @@ function install_radxa-ubuntu_packages {
 }
 
 function install_radxa-debian_packages {
-    BASE_PACKAGES="openhd-sys-utils openhd apt-transport-https apt-utils open-hd-web-ui"
+    BASE_PACKAGES="openhd-sys-utils openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="r8125-dkms 8852bu-dkms 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-rock-5a linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip"
     PLATFORM_PACKAGES_REMOVE="dkms sddm plymouth plasma-desktop kde*"
-    PLATFORM_PACKAGES="rockchip-iq-openhd-r5 linux-headers-5.10.110-99-rockchip-g9c3b92612 linux-image-5.10.110-99-rockchip-g9c3b92612 rsync procps mpv camera-engine-rkaiq"
+    PLATFORM_PACKAGES="mpp-rk3566 rockchip-iq-openhd-r5 linux-headers-5.10.110-99-rockchip-g9c3b92612 linux-image-5.10.110-99-rockchip-g9c3b92612 rsync procps mpv camera-engine-rkaiq"
 }
 function install_radxa-debian_packages_rk3566 {
     mkdir -p /usr/share/sddm/themes/breeze/
     touch /usr/share/sddm/themes/breeze/Main.qml
     rm -Rf /etc/modprobe.d/panfrost.conf
+    rm -Rf /etc/apt/preferences.d/radxa-rockchip
     mkdir -p /usr/local/share/openhd_platform/rock/rk3566
     BASE_PACKAGES="gstreamer1.0-plugins-rtp gstreamer1.0-rockchip1 gstreamer1.0-vaapi libavahi-glib1 libdrm-cursor linux-headers-5.10.160-radxa-rk356x linux-image-5.10.160-radxa-rk356x openhd-sys-utils openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_REMOVE="gvfs gvfs-backends gvfs-fuse plymouth plymouth-theme-breeze plymouth-themes vulkan-tools xdg-desktop-portal xdg-desktop-portal-gtk xdg-user-dirs xdg-user-dirs-gtk xdg-utils task-xfce-desktop thunar-volman xfce4-clipman xfce4-notifyd xfce4-power-manager xfce4-screenshooter xfce4-terminal xiccd aha breeze-cursor-theme clinfo codium cups desktop-base firefox-esr fonts-noto-cjk fprintd fwupd maliit-keyboard"
