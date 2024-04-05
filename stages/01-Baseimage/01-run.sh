@@ -4,7 +4,7 @@ if [ ! -e ../../emmc ]; then
     if [[ "${OS}" == radxa-debian-rock5a ]] || [[ "${OS}" == radxa-debian-rock5b ]];then
     WANTEDSIZE="6800000000"
     else
-    WANTEDSIZE="6800000000"
+    WANTEDSIZE="5632000000"
     fi
 else
 WANTEDSIZE="10500000256"
