@@ -11,9 +11,9 @@ set -e
 function install_x20_packages {
     rm -Rf /etc/apt/sources.list.d/*
     rm -Rf /etc/apt/sources.list
-    rm -Rf /lib/modules/5.8.0/kernel/drivers/net/*.ko
-    cp /opt/additionalFiles/88XXau_ohd.ko /lib/modules/5.8.0/kernel/drivers/net/
-    BASE_PACKAGES="openhd-x20 openhd-sys-utils rtl8812au-x20 encode-sunxi"
+    # rm -Rf /lib/modules/5.8.0/kernel/drivers/net/*.ko
+    # cp /opt/additionalFiles/88XXau_ohd.ko /lib/modules/5.8.0/kernel/drivers/net/
+    BASE_PACKAGES="openhd-x20 openhd-sys-utils rtl8812au-x20 encode-sunxi linux-image-5.8.0-gf1787c955"
     PLATFORM_PACKAGES_REMOVE="*boost* locales guile-2.2-libs network-manager"
     PLATFORM_PACKAGES=""
 }
