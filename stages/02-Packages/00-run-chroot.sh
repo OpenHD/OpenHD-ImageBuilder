@@ -11,12 +11,6 @@ set -e
 function install_x20_packages {
     rm -Rf /etc/apt/sources.list.d/*
     rm -Rf /etc/apt/sources.list
-    apt install -y git 
-    git clone https://github.com/tmiland/dpkg-zstd-patches.git
-    cd dpkg-zstd-patches
-    sudo dpkg -i ./deb-packages/dpkg_1.20.12_amd64.deb
-    apt remove -y git
-    cd ..
     rm -Rf /lib/modules/5.8.0/kernel/drivers/net/*.ko
     cp /opt/additionalFiles/88XXau_ohd.ko /lib/modules/5.8.0/kernel/drivers/net/
     depmod -a
