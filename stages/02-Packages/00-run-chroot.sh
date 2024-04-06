@@ -17,7 +17,10 @@ function install_x20_packages {
     sudo dpkg -i ./deb-packages/dpkg_1.20.12_amd64.deb
     apt remove -y git
     cd ..
-    BASE_PACKAGES="openhd-x20 openhd-sys-utils rtl8812au-x20 encode-sunxi linux-image-5.8.0-g76b16b8ee"
+    rm -Rf /lib/modules/5.8.0/kernel/drivers/net/*.ko
+    cp /opt/additionalFiles/88XXau_ohd.ko /lib/modules/5.8.0/kernel/drivers/net/
+    depmod -a
+    BASE_PACKAGES="openhd-x20 openhd-sys-utils rtl8812au-x20 encode-sunxi"
     PLATFORM_PACKAGES_REMOVE="*boost* locales guile-2.2-libs network-manager"
     PLATFORM_PACKAGES=""
 }
