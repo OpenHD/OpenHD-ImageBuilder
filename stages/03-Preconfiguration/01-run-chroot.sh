@@ -49,6 +49,7 @@ echo "removed for now"
 # sudo systemctl disable rsync
 # sudo systemctl disable systemd-journald.service
 sudo systemctl enable temperature_guardian
+ls /usr/local/bin
 fi
 
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
