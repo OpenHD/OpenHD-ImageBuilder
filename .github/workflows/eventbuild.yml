@@ -14,8 +14,8 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        TARGET: [pi-bullseye, x86-lunar, radxa-cm3, x20, radxa-zero3w] # <-- Add targets here!
-        #TARGET: [x20,radxa-zero3w] # <-- Add targets here!
+        #TARGET: [pi-bullseye, x86-lunar, radxa-cm3, x20, radxa-zero3w] # <-- Add targets here!
+        TARGET: [x20] # <-- Add targets here!
     steps:
     - name: Maximize build space
       uses: easimon/maximize-build-space@master
@@ -138,12 +138,24 @@ jobs:
       run: |
         echo "DT=$(date -d '+1 hour' +'%m-%d-%Y--%H-%M-%S')" >> $GITHUB_ENV
         echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
-    
+
+        if [ "${{ matrix.TARGET }}" == "radxa-zero3w" ]; then
+          ARTIFACT_PREFIX="zero3w"
+        elif [ "${{ matrix.TARGET }}" == "radxa-cm3" ]; then
+          ARTIFACT_PREFIX="34te"
+        elif [ "${{ matrix.TARGET }}" == "radxa-cm5" ]; then
+          ARTIFACT_PREFIX="radxa-323"
+        else
+          echo "Unsupported TARGET"
+          exit 1
+        fi
+        echo "ARTIFACT_PREFIX=${ARTIFACT_PREFIX}" >> $GITHUB_ENV
+      
     - name: Checkout
       uses: actions/checkout@v3
         
     - name: dep
-      run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
+      run: sudo apt update && sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
 
     - name: List Artifacts
       id: list_artifacts
@@ -152,13 +164,13 @@ jobs:
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts")
 
-        zero3w_artifacts=$(echo "$artifacts" | jq -r '.artifacts[] | select(.name | startswith("zero3w")) | .name')
+        artifacts_filtered=$(echo "$artifacts" | jq -r '.artifacts[] | select(.name | startswith(env.ARTIFACT_PREFIX)) | .name')
 
-        echo "::set-output name=zero3w_artifacts::$zero3w_artifacts"
+        echo "::set-output name=artifacts_filtered::$artifacts_filtered"
 
-    - name: Print Zero3w Artifacts
+    - name: Print Artifacts
       run: |
-        echo "Zero3w Artifacts: ${{ steps.list_artifacts.outputs.zero3w_artifacts }}"
+        echo "Artifacts: ${{ steps.list_artifacts.outputs.artifacts_filtered }}"
 
     - name: Download Zero3w Artifact
       id: download_zero3w_artifact
