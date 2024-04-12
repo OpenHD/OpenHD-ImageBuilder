@@ -6,6 +6,8 @@
 # Here we do simple platform detection for OpenHD with creating a few folders
 
 rm -Rf /opt/additionalFiles
+echo "alias led='led_sys.sh'" | sudo tee -a /etc/bash.bashrc >/dev/null
+
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]]; then
 mkdir -p /usr/local/share/openhd_platform/rock/rock5a
