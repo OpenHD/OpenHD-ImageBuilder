@@ -68,7 +68,10 @@ jobs:
           make
           sudo make install
     - name: configure
-      run: sudo ./build.sh ${{ matrix.TARGET }}
+      run: |
+        touch additionalFiles/issue.txt
+        echo"OpenHD-EMMC-image-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" > additionalFiles/issue.txt
+        sudo ./build.sh ${{ matrix.TARGET }}
     # - name: debug
     #   run: |
     #     dd if=/dev/zero of=large_image.img bs=1M count=5650
