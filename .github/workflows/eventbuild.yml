@@ -70,7 +70,7 @@ jobs:
     - name: configure
       run: |
         touch additionalFiles/issue.txt
-        echo"OpenHD-EMMC-image-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" > additionalFiles/issue.txt
+        echo "OpenHD-EMMC-image-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" > additionalFiles/issue.txt
         sudo ./build.sh ${{ matrix.TARGET }}
     # - name: debug
     #   run: |
