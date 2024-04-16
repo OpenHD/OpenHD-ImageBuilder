@@ -6,6 +6,7 @@
 # # If anything fails here the script is failing!
 
 set -e
+cat /opt/additionalFiles/issue.txt
 
 # X20 specific code
 function install_x20_packages {

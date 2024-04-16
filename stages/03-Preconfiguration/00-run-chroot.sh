@@ -58,13 +58,13 @@ fi
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     systemctl disable dnsmasq
     sed -i 's/loglevel=4/loglevel=0/g' /boot/extlinux/extlinux.conf
-    echo 'echo "0" > /sys/class/leds/board-led/brightness' >> /root/.bashrc
+    echo 'led_sys.sh off' >> /root/.bashrc
     if [ ! -e emmc ]; then
     #autologin as root
     sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
-    mv /usr/local/share/openhd_misc/issue.txt /conf/issue.txt
+    cp /opt/additionalFiles/issue.txt /conf/issue.txt
     else
-    mv /usr/local/share/openhd_misc/issue.txt /conf/issue.txt
+    cp /opt/additionalFiles/issue.txt /conf/issue.txt
     #autologin as root
     sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
     #autocopy to emmc EXPERIMENTAL
