@@ -68,14 +68,8 @@ if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     #autologin as root
     sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
     #autocopy to emmc EXPERIMENTAL
-    echo "0" > /sys/class/leds/board-led/brightness
-    echo "1" > /sys/class/leds/board-led/brightness
-    echo -e '\nexport NEWT_COLORS='\''\nroot=,black\nwindow=black,black\nborder=black,black\ntextbox=white,black\nbutton=white,black\nemptyscale=,black\nfullscale=,white\n'\'' \\\n\n(pv -n /opt/additionalFiles/emmc.img | dd of=/dev/mmcblk0 bs=128M conv=notrunc,noerror) 2>&1 | whiptail --gauge "Flashing OpenHD to EMMC, please wait..." 10 70 0\necho "please reboot or powerdown the system now"' >> /root/.bashrc
-    echo "0" > /sys/class/leds/board-led/brightness
-    echo "mkdir -p /media/new"
-    echo "mount /dev/mmcblk0p1 /media/new" >> /root/.bashrc
-    echo "cp -r /boot/openhd/* /media/new/openhd/" >> /root/.bashrc
-    echo 'whiptail --msgbox "Please reboot your system now" 10 40' >> /root/.bashrc
+    echo 'led_sys.sh off' >> /root/.bashrc
+    echo "flash_emmc.sh" >> /root/.bashrc
     fi
 fi
 
