@@ -193,7 +193,7 @@ jobs:
       run: |
         ls -a
         sudo apt install -y xz-utils
-        cd radxa-zero3w-*
+        cd radxa-*
         ls -a
         cp *.img ../additionalFiles/emmc.img
         cd ../additionalFiles
