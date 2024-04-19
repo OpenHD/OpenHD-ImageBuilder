@@ -14,6 +14,7 @@ jobs:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
         TARGET: [pi-bullseye, x86-lunar, radxa-cm3, x20, radxa-zero3w] # <-- Add targets here!
+< debug
         #TARGET: [radxa-cm3] # <-- Add targets here!
     steps:
     - name: Maximize build space
@@ -173,6 +174,7 @@ jobs:
   #   - name: Print Artifacts
   #     run: |
   #       echo "Artifacts: ${{ steps.list_artifacts.outputs.artifacts_filtered }}"
+
 
   #   - name: Download Zero3w Artifact
   #     id: download_zero3w_artifact
