@@ -158,9 +158,7 @@ fi
 if [[ "${OS}" == "debian-X20" ]]; then
 echo "removed for now"
 ls -a /conf
-touch /conf/testin2.txt
-echo "touch /config/testing.txt" > /root/.bashrc
-echo "journalctl > /config/testing.txt" /root/.bashrc
+touch /conf/write_logs.txt
 
 #  mkdir /emmc/
 #  sudo echo "/dev/mmcblk1p1  /emmc  auto  defaults  0  2" | sudo tee -a /etc/fstab
