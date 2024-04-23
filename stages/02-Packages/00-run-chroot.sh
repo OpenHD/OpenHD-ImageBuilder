@@ -31,7 +31,7 @@ function install_raspbian_packages {
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
     BASE_PACKAGES="openhd-sys-utils openhd apt-transport-https apt-utils open-hd-web-ui"
-    PLATFORM_PACKAGES="rsync qopenhd procps gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-tools gstreamer1.0-rockchip1 gstreamer1.0-gl mali-g610-firmware malirun rockchip-multimedia-config librist4 librist-dev rist-tools libv4l-0 libv4l2rds0 libv4lconvert0 libv4l-dev libv4l-rkmpp qv4l2 v4l-utils librockchip-mpp1 librockchip-mpp-dev librockchip-vpu0 rockchip-mpp-demos librga2 librga-dev libegl-mesa0 libegl1-mesa-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev libglx-mesa0 mesa-common-dev mesa-vulkan-drivers mesa-utils libwidevinecdm"
+    PLATFORM_PACKAGES="rsync procps gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-tools gstreamer1.0-rockchip1 gstreamer1.0-gl mali-g610-firmware malirun rockchip-multimedia-config librist4 librist-dev rist-tools libv4l-0 libv4l2rds0 libv4lconvert0 libv4l-dev libv4l-rkmpp qv4l2 v4l-utils librockchip-mpp1 librockchip-mpp-dev librockchip-vpu0 rockchip-mpp-demos librga2 librga-dev libegl-mesa0 libegl1-mesa-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev libglx-mesa0 mesa-common-dev mesa-vulkan-drivers mesa-utils libwidevinecdm"
 }
 
 function install_radxa-debian_packages {
@@ -153,15 +153,6 @@ function install_openhd {
             exit 1
         fi
     done
-
-    #dirty hack for the 2.5 release to get rock5a working
-    if [[ "${OS}" == "radxa-debian-rock5a" ]]; then
-        apt install -y qopenhd-rk3588a
-    fi
-
-    if [[ "${OS}" == "radxa-debian-rock5b" ]]; then
-        apt install -y qopenhd-rk3588
-    fi
 
     # Clean up packages and cache
     echo "Cleaning up packages and cache..."
