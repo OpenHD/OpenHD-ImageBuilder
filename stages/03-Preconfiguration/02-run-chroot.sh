@@ -11,8 +11,10 @@ echo "alias led='led_sys.sh'" | sudo tee -a /etc/bash.bashrc >/dev/null
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]]; then
 mkdir -p /usr/local/share/openhd_platform/rock/rock5a
+touch /boot/openhd/rock-5a.txt
 elif [[ "${OS}" == "radxa-debian-rock5b" ]]; then
 mkdir -p /usr/local/share/openhd_platform/rock/rock5b
+touch /boot/openhd/rock-5b.txt
 elif [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
 touch /boot/openhd/rock-rk3566.txt
 mkdir -p /usr/local/share/openhd/platform/rock/rk3566
