@@ -35,10 +35,10 @@ function install_radxa-ubuntu_packages {
 }
 
 function install_radxa-debian_packages {
-    BASE_PACKAGES="openhd-sys-utils openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
+    BASE_PACKAGES="openhd-sys-utils openhd qopenhd-rk3588 apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="r8125-dkms 8852bu-dkms 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-rock-5a linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip"
     PLATFORM_PACKAGES_REMOVE="dkms sddm plymouth plasma-desktop kde*"
-    PLATFORM_PACKAGES="rockchip-iq-openhd-r5 rsync procps mpv camera-engine-rkaiq mpp-rk3566 fpv-rk3566 "
+    PLATFORM_PACKAGES="linux-headers-5.10.110-radxa-rockchip linux-image-5.10.110-radxa-rockchip rockchip-iq-openhd-r5 rsync procps mpv camera-engine-rkaiq mpp-rk3566 fpv-rk3566 "
 }
 function install_radxa-debian_packages_rk3566 {
     mkdir -p /usr/share/sddm/themes/breeze/
