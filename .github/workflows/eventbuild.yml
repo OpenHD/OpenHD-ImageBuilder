@@ -116,107 +116,107 @@ jobs:
           *.img
           if-no-files-found: error
 
-  # createEmmcImage:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   strategy:
-  #     fail-fast: false # Don't fail all if any of the jobs is failing
-  #     matrix:
-  #       TARGET: [radxa-cm3] # <-- Add targets here!
+  createEmmcImage:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false # Don't fail all if any of the jobs is failing
+      matrix:
+        TARGET: [radxa-cm3] # <-- Add targets here!
         
-  #   steps:
-  #   - name: Maximize build space
-  #     uses: easimon/maximize-build-space@master
-  #     with:
-  #       root-reserve-mb: 100
-  #       swap-size-mb: 200
-  #       remove-dotnet: 'true'
-  #       remove-android: 'true'
-  #       remove-haskell: 'true'
-  #       remove-codeql: 'true'
-  #       remove-docker-images: 'true'
-  #       overprovision-lvm: 'true'
+    steps:
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 100
+        swap-size-mb: 200
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+        remove-codeql: 'true'
+        remove-docker-images: 'true'
+        overprovision-lvm: 'true'
 
-  #   - name: Setup env
-  #     run: |
-  #       echo "DT=$(date -d '+1 hour' +'%m-%d-%Y--%H-%M-%S')" >> $GITHUB_ENV
-  #       echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+    - name: Setup env
+      run: |
+        echo "DT=$(date -d '+1 hour' +'%m-%d-%Y--%H-%M-%S')" >> $GITHUB_ENV
+        echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
-  #       if [ "${{ matrix.TARGET }}" == "radxa-zero3w" ]; then
-  #         ARTIFACT_PREFIX="zero3w"
-  #       elif [ "${{ matrix.TARGET }}" == "radxa-cm3" ]; then
-  #         ARTIFACT_PREFIX="34te"
-  #       elif [ "${{ matrix.TARGET }}" == "radxa-cm5" ]; then
-  #         ARTIFACT_PREFIX="radxa-323"
-  #       else
-  #         echo "Unsupported TARGET"
-  #         exit 1
-  #       fi
-  #       echo "ARTIFACT_PREFIX=${ARTIFACT_PREFIX}" >> $GITHUB_ENV
+        if [ "${{ matrix.TARGET }}" == "radxa-zero3w" ]; then
+          ARTIFACT_PREFIX="zero3w"
+        elif [ "${{ matrix.TARGET }}" == "radxa-cm3" ]; then
+          ARTIFACT_PREFIX="34te"
+        elif [ "${{ matrix.TARGET }}" == "radxa-cm5" ]; then
+          ARTIFACT_PREFIX="radxa-323"
+        else
+          echo "Unsupported TARGET"
+          exit 1
+        fi
+        echo "ARTIFACT_PREFIX=${ARTIFACT_PREFIX}" >> $GITHUB_ENV
       
-  #   - name: Checkout
-  #     uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
         
-  #   - name: dep
-  #     run: sudo apt update && sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
+    - name: dep
+      run: sudo apt update && sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
 
-  #   - name: List Artifacts
-  #     id: list_artifacts
-  #     run: |
-  #       artifacts=$(curl -s -X GET \
-  #         -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-  #         "https://api.github.com/repos/${{ github.repository }}/actions/artifacts")
+    - name: List Artifacts
+      id: list_artifacts
+      run: |
+        artifacts=$(curl -s -X GET \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts")
 
-  #       artifacts_filtered=$(echo "$artifacts" | jq -r '.artifacts[] | select(.name | startswith(env.ARTIFACT_PREFIX)) | .name')
+        artifacts_filtered=$(echo "$artifacts" | jq -r '.artifacts[] | select(.name | startswith(env.ARTIFACT_PREFIX)) | .name')
 
-  #       echo "::set-output name=artifacts_filtered::$artifacts_filtered"
+        echo "::set-output name=artifacts_filtered::$artifacts_filtered"
 
-  #   - name: Print Artifacts
-  #     run: |
-  #       echo "Artifacts: ${{ steps.list_artifacts.outputs.artifacts_filtered }}"
+    - name: Print Artifacts
+      run: |
+        echo "Artifacts: ${{ steps.list_artifacts.outputs.artifacts_filtered }}"
 
-  #   - name: Download Zero3w Artifact
-  #     id: download_zero3w_artifact
-  #     uses: actions/download-artifact@v3
-  #     with:
-  #       name: ${{ steps.list_artifacts.outputs.zero3w_artifacts }}
+    - name: Download Zero3w Artifact
+      id: download_zero3w_artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: ${{ steps.list_artifacts.outputs.zero3w_artifacts }}
 
 
-  #   - name: debug_step
-  #     run: |
-  #       mkdir -p additionalFiles
-  #       touch emmc
-  #       touch additionalFiles/emmc
-  #       ls -a
+    - name: debug_step
+      run: |
+        mkdir -p additionalFiles
+        touch emmc
+        touch additionalFiles/emmc
+        ls -a
     
-  #   - name: buildImage
-  #     run: |
-  #       ls -a
-  #       sudo apt install -y xz-utils
-  #       cd radxa-*
-  #       ls -a
-  #       cp *.img ../additionalFiles/emmc.img
-  #       cd ../additionalFiles
-  #       gzip -c *.img > emmc.img.gz
-  #       rm *.img
-  #       cd ../
-  #       ls -a
-  #       sudo ./build.sh ${{ matrix.TARGET }}
-  #       cd deploy
-  #       sudo mv *.img ../OpenHD-EMMC-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}.img
+    - name: buildImage
+      run: |
+        ls -a
+        sudo apt install -y xz-utils
+        cd radxa-*
+        ls -a
+        cp *.img ../additionalFiles/emmc.img
+        cd ../additionalFiles
+        gzip -c *.img > emmc.img.gz
+        rm *.img
+        cd ../
+        ls -a
+        sudo ./build.sh ${{ matrix.TARGET }}
+        cd deploy
+        sudo mv *.img ../OpenHD-EMMC-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}.img
 
     
-  #   - name: Compose release filename
-  #     # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions
-  #     run: echo "artifact_name=OpenHD-EMMC-image-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
+    - name: Compose release filename
+      # https://stackoverflow.com/questions/58033366/how-to-get-current-branch-within-github-actions
+      run: echo "artifact_name=OpenHD-EMMC-image-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
         
-  #   - name: Pack image for ${{ matrix.TARGET }}
-  #     uses: 'actions/upload-artifact@v3'
-  #     with:
-  #       name: "${{ matrix.TARGET }}-${{ env.DT }}-EMMC"
-  #       path: |
-  #         *.img
-  #         if-no-files-found: error
+    - name: Pack image for ${{ matrix.TARGET }}
+      uses: 'actions/upload-artifact@v3'
+      with:
+        name: "${{ matrix.TARGET }}-${{ env.DT }}-EMMC"
+        path: |
+          *.img
+          if-no-files-found: error
 
   upload:
     if: "github.event_name == 'push' && github.ref == 'refs/heads/release'"
