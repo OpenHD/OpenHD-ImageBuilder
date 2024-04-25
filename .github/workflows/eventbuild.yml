@@ -160,14 +160,17 @@ jobs:
     - name: dep
       run: sudo apt update && sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
 
-    - name: List Artifacts
-      id: list_artifacts
+    - name: Get Artifacts
       run: |
         artifacts=$(curl -s -X GET \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts")
 
+        echo "Artifacts: $artifacts"  # Debugging output
+
         artifacts_filtered=$(echo "$artifacts" | jq -r '.artifacts[] | select(.name | startswith(env.ARTIFACT_PREFIX)) | .name')
+
+        echo "Filtered Artifacts: $artifacts_filtered"  # Debugging output
 
         echo "::set-output name=artifacts_filtered::$artifacts_filtered"
 
