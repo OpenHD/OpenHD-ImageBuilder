@@ -168,7 +168,11 @@ jobs:
 
         echo "Artifacts: $artifacts"  # Debugging output
 
-        artifacts_filtered=$(echo "$artifacts" | jq -r '.artifacts[] | select(.name | startswith(env.ARTIFACT_PREFIX)) | .name')
+        branch=$(echo "${{ github.ref }}" | awk -F'/' '{print $3}')
+
+        echo "Current branch: $branch"  # Debugging output
+
+        artifacts_filtered=$(echo "$artifacts" | jq -r --arg branch "$branch" '.artifacts[] | select(.name | startswith($branch)) | .name')
 
         echo "Filtered Artifacts: $artifacts_filtered"  # Debugging output
 
