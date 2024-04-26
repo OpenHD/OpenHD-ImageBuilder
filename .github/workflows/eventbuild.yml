@@ -188,7 +188,7 @@ jobs:
       run: |
         ls -a
         sudo apt install -y xz-utils
-        cd radxa-*
+        cd ${{ matrix.TARGET }}*
         ls -a
         cp *.img ../additionalFiles/emmc.img
         cd ../additionalFiles
