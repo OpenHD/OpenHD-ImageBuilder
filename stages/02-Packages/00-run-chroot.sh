@@ -11,10 +11,9 @@ set -e
 function install_x20_packages {
     rm -Rf /etc/apt/sources.list.d/*
     rm -Rf /etc/apt/sources.list
+    rm -Rf /usr/local/openhd
     rm -Rf /lib/modules/5.8.0/kernel/drivers/net/*.ko
     cp /opt/additionalFiles/88XXau_ohd.ko /lib/modules/5.8.0/kernel/drivers/net/
-    echo "copied drivers"
-    ls -a  /lib/modules/5.8.0/kernel/drivers/net/
     BASE_PACKAGES="openhd-x20 encode-sunxi openhd-sys-utils"
     PLATFORM_PACKAGES_REMOVE="*boost* locales guile-2.2-libs network-manager"
     PLATFORM_PACKAGES=""
