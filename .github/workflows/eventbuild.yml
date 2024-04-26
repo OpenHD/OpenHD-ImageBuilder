@@ -160,22 +160,11 @@ jobs:
     - name: dep
       run: sudo apt update && sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
 
-    - name: Get Artifacts
+    - name: List Artifacts
       run: |
-        artifact_name="${{ matrix.TARGET }}*"
-
-        artifacts=$(curl -s -X GET \
-          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/actions/artifacts")
-
-        echo "Artifacts: $artifacts"  # Debugging output
-
-        # Adjust the jq filter to handle the wildcard
-        artifacts_filtered=$(echo "$artifacts" | jq -r --arg name "$artifact_name" '.artifacts[] | select(.name | startswith($name)) | .name')
-
-        echo "Filtered Artifacts: $artifacts_filtered"  # Debugging output
-
-        echo "::set-output name=artifacts_filtered::$artifacts_filtered"
+        for artifact in $(find . -name "${{ matrix.TARGET }}*"); do
+          echo $artifact
+        done
 
     - name: Print Artifacts
       run: |
@@ -183,7 +172,7 @@ jobs:
 
     - name: Download Zero3w Artifact
       id: download_zero3w_artifact
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: ${{ steps.list_artifacts.outputs.zero3w_artifacts }}
 
