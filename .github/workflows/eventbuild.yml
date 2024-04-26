@@ -162,17 +162,16 @@ jobs:
 
     - name: Get Artifacts
       run: |
+        artifact_name="${{ matrix.TARGET }}*"
+
         artifacts=$(curl -s -X GET \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/actions/artifacts")
 
         echo "Artifacts: $artifacts"  # Debugging output
 
-        branch=$(echo "${{ github.ref }}" | awk -F'/' '{print $3}')
-
-        echo "Current branch: $branch"  # Debugging output
-
-        artifacts_filtered=$(echo "$artifacts" | jq -r --arg branch "$branch" '.artifacts[] | select(.name | startswith($branch)) | .name')
+        # Adjust the jq filter to handle the wildcard
+        artifacts_filtered=$(echo "$artifacts" | jq -r --arg name "$artifact_name" '.artifacts[] | select(.name | startswith($name)) | .name')
 
         echo "Filtered Artifacts: $artifacts_filtered"  # Debugging output
 
