@@ -1,6 +1,6 @@
 BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/BaseImages/"
 BASE_IMAGE="multiplex.img.xz"
-BASE_IMAGE_SHA256="018af69b6534cda2d09580c74823a4dc34d0842298fed882c6d562c8e0715e03"
+BASE_IMAGE_SHA256="bb30ee52253451f0b6dd68bf968f72f079b03108563e758a7d1cecbe414d2eea"
 OS="none"
 DISTRO="Tina"
 HAVE_BOOT_PART=false
