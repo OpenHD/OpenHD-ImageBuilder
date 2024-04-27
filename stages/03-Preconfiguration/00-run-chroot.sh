@@ -48,6 +48,7 @@ fi
 if [[ "${OS}" == "radxa-ubuntu-rock5b" ]]; then
     sed -i 's/\(overlays=\)/\1rock-5b-radxa-camera-4k/' /boot/firmware/ubuntuEnv.txt
     depmod -a
+    sudo apt install -y --force-yes r8125-dkms 
 fi
 
 if [[ "${OS}" == "radxa-ubuntu-rock5a" ]]; then
