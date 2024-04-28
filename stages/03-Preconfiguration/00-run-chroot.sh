@@ -43,12 +43,12 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     sudo cp -r $source_dirB "/boot/dtbo/"
     sudo cp -r $source_dirC "/boot/dtbo/"
     sudo cp -r $source_dirD "/boot/dtbo/"
+
 fi
 
 if [[ "${OS}" == "radxa-ubuntu-rock5b" ]]; then
     sed -i 's/\(overlays=\)/\1rock-5b-radxa-camera-4k/' /boot/firmware/ubuntuEnv.txt
-    depmod -a
-    sudo apt install -y --force-yes --allow-change-held-packages r8125-dkms  
+    depmod -a  
 fi
 
 if [[ "${OS}" == "radxa-ubuntu-rock5a" ]]; then
