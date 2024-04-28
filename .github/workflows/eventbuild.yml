@@ -7,7 +7,7 @@ on:
       - "dev-release"
       - "release"
       - "debug"
-      - "rock5b-fix"
+
 jobs:
   build:
 
