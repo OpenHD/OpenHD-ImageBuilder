@@ -1,6 +1,6 @@
 BASE_IMAGE_URL="https://github.com/YuzukiHD/TinyVision/releases/download/0.0.1/"
 BASE_IMAGE="tinyvision_debian12_sdcard.img.tar.gz"
-BASE_IMAGE_SHA256="6ec7139149a4126569f884edd5ff02709b1483a80b3147ce48c738efac94098e"
+BASE_IMAGE_SHA256="9c043abaaf401fda77a6fd7c1648adec54ab9c6902718456c273c5845f8b23ee"
 OS="none"
 DISTRO="debian"
 HAVE_BOOT_PART=false
