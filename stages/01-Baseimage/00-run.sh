@@ -9,7 +9,7 @@ echo "SHA: ${SHA}"
 
 if [[ "${SHA}" != "${BASE_IMAGE_SHA256}  ${BASE_IMAGE}" ]]; then    
     log "Checksum failed. Downloading base image."
-    rm -f *.zip *.img *.xz *.7z
+    rm -f *.zip *.img *.xz *.7z *tar.gz
 else
     log "Checksum succeeded. No need to download base image."
     popd
@@ -48,6 +48,8 @@ elif [[ "${BASE_IMAGE: -7}" == ".img.xz" ]]; then
     xz -k -d "${BASE_IMAGE}"
 elif [[ "${BASE_IMAGE: -4}" == ".bz2" ]]; then
     bunzip2 -k -d "${BASE_IMAGE}"
+elif [[ "${BASE_IMAGE: -7}" == ".tar.gz" ]]; then
+    tar -xvzf "${BASE_IMAGE}"
 elif [[ "${BASE_IMAGE: -3}" == ".gz" ]]; then
     gunzip -k "${BASE_IMAGE}"
 elif [[ "${BASE_IMAGE: -3}" == ".7z" ]]; then
