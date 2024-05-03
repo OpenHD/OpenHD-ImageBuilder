@@ -1,8 +1,8 @@
-BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/BaseImages"
-BASE_IMAGE="multiplex.img.xz"
+BASE_IMAGE_URL="https://github.com/YuzukiHD/TinyVision/releases/download/0.0.1/"
+BASE_IMAGE="tinyvision_debian12_sdcard.img.tar.gz"
 BASE_IMAGE_SHA256="6ec7139149a4126569f884edd5ff02709b1483a80b3147ce48c738efac94098e"
 OS="none"
-DISTRO="Tina"
+DISTRO="debian"
 HAVE_BOOT_PART=false
 HAVE_CONF_PART=false
 ROOT_PART=1
