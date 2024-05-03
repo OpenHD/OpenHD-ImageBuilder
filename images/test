@@ -5,5 +5,5 @@ OS="none"
 DISTRO="debian"
 HAVE_BOOT_PART=false
 HAVE_CONF_PART=false
-ROOT_PART=1
+ROOT_PART=2
 BIT="32"
