@@ -106,7 +106,7 @@ fi
 
 if [[ "${OS}" == "ubuntu-x86-minimal" ]]; then
     sudo cp /usr/local/share/openhd_misc/openhd.min /etc/systemd/system/openhd.service
-    sudo cp /usr/local/share/openhd_misc/qopenhd.min /etc/systemd/system/qopenhd.min
+    sudo cp /usr/local/share/openhd_misc/qopenhd.min /etc/systemd/system/qopenhd.service
     sudo systemctl enable openhd
     sudo systemctl enable qopenhd
 fi
