@@ -1,5 +1,5 @@
 BASE_IMAGE_URL="https://openhd-images.fra1.cdn.digitaloceanspaces.com/BaseImages"
-BASE_IMAGE="OHD_X86_minimal.img.xz"
+BASE_IMAGE="OHD_X86_minimal.7z"
 BASE_IMAGE_SHA256="26ee34a554e8171fc421d5dfd00d426f19a1c0f9d42bdd3b4f68835f90d26d97"
 OS="ubuntu-x86-minimal"
 DISTRO="noble"
