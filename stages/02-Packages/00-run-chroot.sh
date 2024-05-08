@@ -68,6 +68,13 @@ function install_ubuntu_x86_packages {
     PLATFORM_PACKAGES_REMOVE=""
 }
 
+# Ubuntu-x86-specific code
+function install_ubuntu_x86_packages {
+    BASE_PACKAGES="openhd-sys-utils openhd apt-transport-https apt-utils"
+    PLATFORM_PACKAGES="net-tools gstreamer1.0-qt5"
+    PLATFORM_PACKAGES_REMOVE=""
+}
+
 function clone_github_repos {
     cd /opt
     git clone --recursive --depth 1 https://github.com/OpenHD/OpenHD
@@ -98,6 +105,9 @@ function install_openhd {
     elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
         apt update
         install_packages-core3566
+    elif [[ "${OS}" == "ubuntu-x86-minimal" ]] ; then
+        apt update
+        install_ubuntu_x86_minimal_packages
     elif [[ "${OS}" == "ubuntu-x86" ]] ; then
         apt update
         install_ubuntu_x86_packages
