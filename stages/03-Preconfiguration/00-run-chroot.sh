@@ -104,6 +104,13 @@ fi
        cp /usr/local/share/openhd_misc/override.conf /etc/systemd/system/getty@tty1.service.d/
 fi
 
+if [[ "${OS}" == "ubuntu-x86-minimal" ]]; then
+    sudo cp /usr/local/share/openhd_misc/openhd.min /etc/systemd/system/openhd.service
+    sudo cp /usr/local/share/openhd_misc/qopenhd.min /etc/systemd/system/qopenhd.min
+    sudo systemctl enable openhd
+    sudo systemctl enable qopenhd
+fi
+
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
        sudo rm -Rf /usr/lib/modules/6.3.13-060313-generic/kernel/drivers/net/wireless/88x2bu.ko && sudo rm -Rf /usr/lib/modules/6.3.13-060313-generic/kernel/drivers/net/wireless/realtek/rtw88/*
        sudo usermod -a -G dialout openhd
