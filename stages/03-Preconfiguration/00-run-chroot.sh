@@ -113,7 +113,8 @@ if [[ "${OS}" == "ubuntu-x86-minimal" ]]; then
     ls -a /lib/modules/6.8.0-31-generic/kernel/drivers/net/wireless/
     sudo rm -Rf /lib/modules/6.8.0-31-generic/kernel/drivers/net/wireless/realtek/*
     sudo rm -Rf /lib/modules/6.8.0-31-generic/kernel/drivers/net/wireless/realtek
-    echo "______________removed_____drivers_______"
+    ls -a /lib/modules/6.8.0-31-generic/kernel/drivers/net/wireless/
+    echo "_______wifi-drivers_______"
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
