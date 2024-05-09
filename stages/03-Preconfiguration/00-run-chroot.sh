@@ -110,7 +110,7 @@ if [[ "${OS}" == "ubuntu-x86-minimal" ]]; then
     sudo systemctl enable openhd
     sudo systemctl enable qopenhd
     sudo touch /opt/setup
-    sudo rm -Rf /lib/modules/6.3.13-060313-generic/kernel/drivers/net/wireless/realtek
+    sudo rm -Rf /lib/modules/6.8.0-31-generic/kernel/drivers/net/wireless/realtek
     depmod -a
 fi
 
