@@ -7,6 +7,7 @@ on:
       - "dev-release"
       - "release"
       - "debug"
+
 jobs:
   build:
 

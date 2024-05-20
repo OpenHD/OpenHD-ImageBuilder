@@ -31,7 +31,7 @@ installShortcuts()
 {
     echo "Installing shortcuts..."
     cd /opt/X86/
-    cp additionalFiles/desktop-truster.sh /etc/profile.d/desktop-truster.sh || { echo "Failed to copy desktop-truster.sh"; exit 1; }
+    cp desktop-truster.sh /etc/profile.d/desktop-truster.sh || { echo "Failed to copy desktop-truster.sh"; exit 1; }
     chmod +777 /etc/profile.d/desktop-truster.sh
     chmod a+x /etc/profile.d/desktop-truster.sh
     chmod a+x shortcuts/OpenHD-Air.desktop
