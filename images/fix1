@@ -1,6 +1,6 @@
 BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/Downloader/release/2.6"
-BASE_IMAGE="OpenHD-image-radxa-zero3w--release-06-17-2024-10-56-30.img"
-BASE_IMAGE_SHA256="54d4be56074a90487eabc3fb938aeb5ced5d876ee21fdf91efffb14be50911c9"
+BASE_IMAGE="OpenHD-image-radxa-zero3w--release-06-17-2024-10-56-30.img.xz"
+BASE_IMAGE_SHA256="4cd9492535f90fe3c0a2b3bf50853735668f28eb11229ec8df7896ba9161bf46"
 OS="radxa-debian-rock-cm3"
 DISTRO="bullseye"
 HAVE_BOOT_PART=false
