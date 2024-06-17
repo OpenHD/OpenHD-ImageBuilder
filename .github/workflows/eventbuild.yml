@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        TARGET: [fix0,fix1] # <-- Add targets here!
+        TARGET: [fix0] # <-- Add targets here!
         #TARGET: [x86-minimal] # <-- Add targets here!
     steps:
     - name: Maximize build space
