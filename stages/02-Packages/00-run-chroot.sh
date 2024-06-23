@@ -1,28 +1,27 @@
 #!/bin/bash
 
-# Update the package list
+# Update the package list for the specified repository
 sudo apt-get update
 
-# Get all versions of the libc6 package
-versions=$(apt-cache madison libc6 | awk '{print $3}')
+# Directory to save downloaded packages
+DOWNLOAD_DIR="./radxa-rockchip-packages"
+mkdir -p "$DOWNLOAD_DIR"
 
-# Create a directory to store the downloaded packages
-mkdir -p libc6_packages
-cd libc6_packages
+# Path to the repository list file
+REPO_LIST="/etc/apt/sources.list.d/radxa-rockchip.list"
 
-# Loop through each version and download the package with dependencies
-for version in $versions; do
-    echo "Downloading libc6 version: $version"
-    apt-get download libc6=$version
+# Extract the repository URL from the list file
+REPO_URL=$(grep -Eo 'http[s]?://[^ ]+' "$REPO_LIST")
 
-    # Get the dependencies for the specific version of libc6
-    dependencies=$(apt-cache depends libc6=$version | grep "Depends:" | awk '{print $2}')
+# List all available packages in the repository
+PACKAGES=$(apt-cache dumpavail | grep -A 1 -B 10 "$REPO_URL" | grep 'Package: ' | awk '{print $2}')
 
-    # Download each dependency
-    for dependency in $dependencies; do
-        echo "Downloading dependency: $dependency"
-        apt-get download $dependency
-    done
+# Download each package compatible with the system
+for PACKAGE in $PACKAGES; do
+    echo "Downloading $PACKAGE..."
+    apt-get download "$PACKAGE" -o=dir::cache="$DOWNLOAD_DIR" || {
+        echo "Failed to download $PACKAGE"
+    }
 done
 
-echo "Download complete. All packages are stored in the libc6_packages directory."
+echo "All compatible packages have been downloaded to $DOWNLOAD_DIR"
