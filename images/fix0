@@ -1,6 +1,6 @@
 BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/Downloader/release/2.6"
 BASE_IMAGE="OpenHD-image-x20--release-06-26-2024-00-28-59.img.xz"
-BASE_IMAGE_SHA256="7fdabf2f47aef0ed889aedf843f734a4ef1dcf6cb575ee37f227ad311155b47a"
+BASE_IMAGE_SHA256="e78793d0b483bb0eb313e000f5903d321aa5b602433624f26f64006fa5ea8f2b"
 OS="debian-X20"
 DISTRO="bullseye"
 HAVE_BOOT_PART=false
