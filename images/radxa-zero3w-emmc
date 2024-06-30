@@ -1,5 +1,5 @@
-BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/Downloader/release/2.6"
-BASE_IMAGE="https://fra1.digitaloceanspaces.com/openhd-images/Downloader/Zero3w-min-emmc-base.img.xz"
+BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/Downloader"
+BASE_IMAGE="Zero3w-min-emmc-base.img.xz"
 BASE_IMAGE_SHA256="e78793d0b483bb0eb313e000f5903d321aa5b602433624f26f64006fa5ea8f2b"
 OS="radxa-debian-rock-cm3"
 DISTRO="bullseye"
