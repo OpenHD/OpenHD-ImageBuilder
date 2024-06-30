@@ -8,7 +8,7 @@ mv *.img /opt/additionalFiles/emmc.img
 curl -1sLf \
   'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh' \
   | sudo -E bash
-
+sudo apt update
 sudo apt install -y openhd-sys-utils
 #Remove firstrun scripts
 rm -Rf /usr/lib/armbian/armbian-firstrun
