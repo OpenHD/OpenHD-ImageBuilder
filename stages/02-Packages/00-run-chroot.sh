@@ -9,4 +9,5 @@ curl -1sLf \
   | sudo -E bash
 
 sudo apt install -y openhd-sys-utils
+rm -Rf /usr/lib/armbian/armbian-firstrun
 echo "______________________--DONE-______________________"
