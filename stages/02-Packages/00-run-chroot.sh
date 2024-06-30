@@ -1,6 +1,6 @@
 #!/bin/bash
 
-wget https://fra1.digitaloceanspaces.com/openhd-images/Downloader/release/2.6/OpenHD-image-radxa-zero3w--release-06-26-2024-00-28-55.img.xz
+wget -nv https://fra1.digitaloceanspaces.com/openhd-images/Downloader/release/2.6/OpenHD-image-radxa-zero3w--release-06-26-2024-00-28-55.img.xz
 ls -a
 unxz *.xz
 rm -Rf *.xz
