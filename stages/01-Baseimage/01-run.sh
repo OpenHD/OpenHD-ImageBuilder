@@ -4,8 +4,6 @@ echo "_______________________________________________________________________"
 echo "this is the emmc-model"
 echo "_______________________________________________________________________"
 
-fi
-
 pushd ${STAGE_WORK_DIR}
 
     #Makes the images flashable with raspberry pi imager
