@@ -10,11 +10,6 @@ curl -1sLf \
   | sudo -E bash
 sudo apt update
 sudo apt install -y openhd-sys-utils
-#Remove firstrun scripts
-rm -Rf /usr/lib/armbian/armbian-firstrun
-rm -Rf /root/.not_logged_in_yet
 sudo echo "openhd_emmc_util.sh flash debug" >> /etc/profile
-#Autologin
 sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
-
 echo "______________________--DONE-______________________"
