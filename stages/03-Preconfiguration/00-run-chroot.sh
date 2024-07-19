@@ -22,6 +22,7 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     touch /conf/config.txt
     #mounting config partition
     cp -rv /config/* /conf
+    rm -Rf /config/*
     #copy overlays from linux kernel into the correct folder
     package_name=$(dpkg -l | awk '/^ii/ && $2 ~ /^linux-image-5\.10\.110-99-rockchip-/{print $2}')
     version=$(echo "$package_name" | cut -d '-' -f 4-)
