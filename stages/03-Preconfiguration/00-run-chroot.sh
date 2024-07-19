@@ -57,6 +57,8 @@ if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     #autologin as root
     sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
     cp /opt/additionalFiles/issue-new.txt /conf/issue.txt
+    apt list --installed
+    sed -i '1h;1!H;$!d;x;$!d' /conf/before.txt
     else
     cp /opt/additionalFiles/issue-new.txt /conf/issue.txt
     #autologin as root
