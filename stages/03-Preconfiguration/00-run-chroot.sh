@@ -15,22 +15,13 @@ if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b"
     tree /conf
     #rm /conf/before.txt
     cp /usr/local/share/openhd_misc/before.txt /conf/before.txt
-    cp /usr/local/share/openhd_misc/before.txt /config/before.txt
     #allow offline auto detection of image format
     cp /usr/local/share/openhd_misc/issue.txt /conf/issue.txt
-    cp /usr/local/share/openhd_misc/issue.txt /config/issue.txt
-    cat /opt/additionalFiles/issue-new.txt > /config/issue.txt
     mkdir -p /conf/openhd
-    mkdir -p /config/openhd
-    mkdir -p /boot/openhd
     cp /usr/local/share/openhd_misc/initRock.sh /usr/local/bin/initRock.sh
     touch /conf/config.txt
-    touch /config/config.txt
     #mounting config partition
-    cp -rv /boot/openhd/* /conf/openhd/
-    cp -rv /boot/openhd/* /config/openhd/
-    #rm -Rf /boot/openhd
-    ln -s /config/openhd /boot/openhd
+    cp -rv /config/* /conf
     #copy overlays from linux kernel into the correct folder
     package_name=$(dpkg -l | awk '/^ii/ && $2 ~ /^linux-image-5\.10\.110-99-rockchip-/{print $2}')
     version=$(echo "$package_name" | cut -d '-' -f 4-)
@@ -61,7 +52,7 @@ fi
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     systemctl disable dnsmasq
     sed -i 's/loglevel=4/loglevel=0/g' /boot/extlinux/extlinux.conf
-    echo 'led_sys.sh off' >> /root/.bashrc
+    # echo 'led_sys.sh off' >> /root/.bashrc
     if [ ! -e emmc ]; then
     #autologin as root
     sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
