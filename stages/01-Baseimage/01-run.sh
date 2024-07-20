@@ -73,13 +73,13 @@ w
 EOF
 
     fi
+
     log "Create FAT32 Partition"
     dd if=/dev/zero of=fat.img bs=1 count=1 seek=$((300 * 1024 * 1024 - 1))
     log "Add FAT32 Partition"
     cat fat.img >> IMAGE.img
-    fdisk IMAGE.img <<EOF
     echo -e "x\ne\nd\nn\n\n\n\n\nw\ny\n" | sudo gdisk IMAGE.img
-    sudo parted IMAGE.img set 4 type fat32 && sudo mkfs.vfat -F 32 -v -n 'PART4' -I IMAGE.img
+    sudo parted IMAGE.img set 4 type fat32 && sudo mkfs.vfat -F 32 -v -n 'PART4' -I IMAGE.img4
 
 else 
 echo "the image doesn't need to be enlarged, just using it like it is"
