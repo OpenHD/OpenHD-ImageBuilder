@@ -33,13 +33,9 @@ if [[ "${OS}" != ubuntu-x86 ]] && [[ "${OS}" != debian-X20 ]]; then
     log "Create empty image" #this will be attached to the base image to increase the size of it
     dd if=/dev/zero of=temp.img bs=1 count=1 seek=$DIFFERENCE
     ls -l
-    log "Create FAT32 Partition"
-    dd if=/dev/zero of=fat.img bs=1 count=1 seek=$((300 * 1024 * 1024 - 1))
 
     log "Enlarge the downloaded image"
     cat temp.img >> IMAGE.img
-    log "Add FAT32 Partition"
-    cat fat.img >> IMAGE.img
 
 
     if [[ "${OS}" == radxa-debian-rock5a ]] || [[ "${OS}" == radxa-debian-rock5b ]] || [[ "${OS}" == radxa-debian-rock-cm3 ]] || [[ "${OS}" == radxa-debian-rock-cm3-core3566 ]]; then
@@ -77,6 +73,13 @@ w
 EOF
 
     fi
+    log "Create FAT32 Partition"
+    dd if=/dev/zero of=fat.img bs=1 count=1 seek=$((300 * 1024 * 1024 - 1))
+    log "Add FAT32 Partition"
+    cat fat.img >> IMAGE.img
+    fdisk IMAGE.img <<EOF
+    echo -e "x\ne\nd\nn\n\n\n\n\nw\ny\n" | sudo gdisk IMAGE.img
+    sudo parted IMAGE.img set 4 type fat32 && sudo mkfs.vfat -F 32 -v -n 'PART4' -I IMAGE.img
 
 else 
 echo "the image doesn't need to be enlarged, just using it like it is"
