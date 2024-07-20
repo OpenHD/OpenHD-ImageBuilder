@@ -74,6 +74,31 @@ EOF
 
     fi
 
+#Create Fat32 Partition
+# Define the disk and partition size
+DISK="IMAGE.img"
+PART_SIZE="300MB"
+
+# Get the starting point for the new partition (the end of the last partition)
+START=$(sudo parted $DISK -ms unit s print free | tail -n 2 | head -n 1 | awk -F: '{print $1}')
+
+# Calculate the end point
+END=$(sudo parted $DISK -ms unit s print free | tail -n 2 | head -n 1 | awk -F: '{print $2}')
+
+# Create the new partition
+sudo parted $DISK mkpart primary fat32 ${START} ${END} || exit 1
+
+# Find the new partition name
+NEW_PART=$(ls ${DISK}* | tail -n 1)
+
+# Format the new partition to FAT32
+sudo mkfs.fat -F 32 $NEW_PART || exit 1
+
+echo "New 300MB FAT32 partition created and formatted on ${NEW_PART}"
+
+
+
+
 else 
 echo "the image doesn't need to be enlarged, just using it like it is"
 fi
