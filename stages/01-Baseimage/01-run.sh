@@ -33,10 +33,14 @@ if [[ "${OS}" != ubuntu-x86 ]] && [[ "${OS}" != debian-X20 ]]; then
     log "Create empty image" #this will be attached to the base image to increase the size of it
     dd if=/dev/zero of=temp.img bs=1 count=1 seek=$DIFFERENCE
     ls -l
-
+    log "Create FAT32 Partition"
+    dd if=/dev/zero of=fat.img bs=1 count=1 seek=$((300 * 1024 * 1024 - 1))
 
     log "Enlarge the downloaded image"
     cat temp.img >> IMAGE.img
+    log "Add FAT32 Partition"
+    cat fat.img >> IMAGE.img
+
 
     if [[ "${OS}" == radxa-debian-rock5a ]] || [[ "${OS}" == radxa-debian-rock5b ]] || [[ "${OS}" == radxa-debian-rock-cm3 ]] || [[ "${OS}" == radxa-debian-rock-cm3-core3566 ]]; then
     echo "resize with parted"
