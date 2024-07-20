@@ -38,11 +38,6 @@ if [[ "${OS}" != ubuntu-x86 ]] && [[ "${OS}" != debian-X20 ]]; then
     log "Enlarge the downloaded image"
     cat temp.img >> IMAGE.img
 
-    log "Adding FAT32 Partition
-    dd if=/dev/zero of=fat.img bs=1 count=1 seek=$((300 * 1024 * 1024 - 1))
-    cat fat.img >> IMAGE.img
-
-
     if [[ "${OS}" == radxa-debian-rock5a ]] || [[ "${OS}" == radxa-debian-rock5b ]] || [[ "${OS}" == radxa-debian-rock-cm3 ]] || [[ "${OS}" == radxa-debian-rock-cm3-core3566 ]]; then
     echo "resize with parted"
     echo -e "x\ne\nd\nn\n\n\n\n\nw\ny\n" | sudo gdisk IMAGE.img
@@ -78,11 +73,6 @@ w
 EOF
 
     fi
-
-#Create Fat32 Partition
-
-
-
 
 else 
 echo "the image doesn't need to be enlarged, just using it like it is"
