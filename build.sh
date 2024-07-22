@@ -203,6 +203,20 @@ else
 echo "This image can't be shrunken"
 fi
 
+# Adding FAT32 Video Partition
+log ""
+log "======================================================"
+log "Adding Fat32 Video Partition to: ${IMAGE_PATH_NAME}"
+if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
+dd if=/dev/zero of=fat.img bs=1M count=300
+cat fat.img >> IMAGE.img
+rm -Rf fat.img
+sgdisk -e IMAGE.img
+echo -e "n\n4\n\n\n\n0700\nw\ny" | sudo gdisk IMAGE.img
+ls -s
+log "Video Partition Added"
+fi
+
 # rename the image according to the build date, the builder/openhd repo versions
 if [ -e "${WORK_DIR}/openhd_version.txt" ]; then
     OPENHD_VERSION=$(cat "${WORK_DIR}/openhd_version.txt")
