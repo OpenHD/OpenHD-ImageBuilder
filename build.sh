@@ -209,10 +209,10 @@ log "======================================================"
 log "Adding Fat32 Video Partition to: ${IMAGE_PATH_NAME}"
 if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
 dd if=/dev/zero of=fat.img bs=1M count=300
-cat fat.img >> IMAGE.img
+cat fat.img >> ${PREV_WORK_DIR}/*.img
 rm -Rf fat.img
-sgdisk -e IMAGE.img
-echo -e "n\n4\n\n\n\n0700\nw\ny" | sudo gdisk IMAGE.img
+sgdisk -e ${PREV_WORK_DIR}/*.img
+echo -e "n\n4\n\n\n\n0700\nw\ny" | sudo gdisk ${PREV_WORK_DIR}/*.img
 ls -s
 log "Video Partition Added"
 fi
