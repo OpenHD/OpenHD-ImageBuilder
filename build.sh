@@ -212,7 +212,7 @@ dd if=/dev/zero of=fat.img bs=1M count=300
 cat fat.img >> ${PREV_WORK_DIR}/*.img
 rm -Rf fat.img
 sgdisk -e ${PREV_WORK_DIR}/*.img
-echo -e "n\n4\n\n\n\n0700\nw\ny" | sudo gdisk ${PREV_WORK_DIR}/*.img
+echo -e "n\n4\n\n\n\n0C00\nw\ny" | sudo gdisk ${PREV_WORK_DIR}/*.img
 ls -s
 log "Video Partition Added"
 fi
