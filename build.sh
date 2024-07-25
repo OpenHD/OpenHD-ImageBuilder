@@ -221,6 +221,7 @@ cat fat.img >> ${PREV_WORK_DIR}/*.img
 rm -Rf fat.img
 FIRSTSEC=$(($(parted -s ${PREV_WORK_DIR}/*.img unit s print | awk '/^ 2 / {gsub("s", "", $3); print $3}') + 1)); FIRSTSEC=$((FIRSTSEC + (2048 - FIRSTSEC % 2048) % 2048))
 sudo parted ${PREV_WORK_DIR}/*.img --script mkpart primary fat32 ${FIRSTSEC}s 100%
+sudo parted ${PREV_WORK_DIR}/*.img set 3 lba on
 log "Video Partition Added"
 fi
 
