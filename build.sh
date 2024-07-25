@@ -219,8 +219,8 @@ else
 dd if=/dev/zero of=fat.img bs=1M count=300
 cat fat.img >> ${PREV_WORK_DIR}/*.img
 rm -Rf fat.img
-STARTSEC=$(sudo fdisk -l ${PREV_WORK_DIR}/*.img | awk '/^\/.*\*/ {print $3}' | tail -n 1 | awk '{print $1+1}')
-echo -e "n\np\n3\n${STARTSEC}\n\n\nt\n3\nc\nw" | sudo fdisk ${PREV_WORK_DIR}/*.img
+echo -e "n\ne\n3\n\n\n\nt\n3\nc\nw" | sudo fdisk ${PREV_WORK_DIR}/*.img
+echo -e "n\np\n4\n\n\n\nt\n4\nc\nw" | sudo fdisk ${PREV_WORK_DIR}/*.img
 log "Video Partition Added"
 fi
 
