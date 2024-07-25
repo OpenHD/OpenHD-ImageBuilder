@@ -20,7 +20,6 @@ function install_x20_packages {
 
 # Raspbian-specific code
 function install_raspbian_packages {
-    cat /usr/lib/raspberrypi-sys-mods/firstboot 
     sudo apt update && apt remove -y dkms
     BASE_PACKAGES="openhd-sys-utils openhd qopenhd apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc raspberrypi-bootloader"

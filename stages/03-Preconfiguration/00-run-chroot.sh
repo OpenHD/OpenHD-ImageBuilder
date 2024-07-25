@@ -90,6 +90,9 @@ fi
      # remove preexisting wifi driver for 88xxxu
      rm -Rf /lib/modules/6.1.29-v7l+/kernel/drivers/net/wireless/realtek/rtl8xxxu*
      rm -Rf /lib/modules/6.1.29-v7l/kernel/drivers/net/wireless/realtek/rtl8xxxu*
+     # comment out resize function to use our own resizing
+     sudo sed -i '141,174 s/^/#/' /usr/lib/raspberrypi-sys-mods/firstboot
+     touch /boot/openhd/resize.txt
  fi
 
  if [[ "${OS}" == "ubuntu" ]]; then
