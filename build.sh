@@ -219,8 +219,8 @@ else
 dd if=/dev/zero of=fat.img bs=1M count=300
 cat fat.img >> ${PREV_WORK_DIR}/*.img
 rm -Rf fat.img
-echo -e "n\np\n3\n\n\n\nt\n3\nc\nw" | sudo fdisk ${PREV_WORK_DIR}/*.img
-echo -e "n\np\n4\n\n\n\nt\n4\nc\nw" | sudo fdisk ${PREV_WORK_DIR}/*.img
+FIRSTSEC=$(($(parted -s IMAGE.img unit s print | awk '/^ 2 / {gsub("s", "", $3); print $3}') + 1))
+sudo parted ${PREV_WORK_DIR}/*.img --script mkpart primary fat32 ${FIRSTSEC}s 100%
 log "Video Partition Added"
 fi
 
