@@ -93,6 +93,7 @@ fi
      # comment out resize function to use our own resizing
      sudo sed -i '141,174 s/^/#/' /usr/lib/raspberrypi-sys-mods/firstboot
      touch /boot/openhd/resize.txt
+     sudo echo "/dev/mmcblk0p3  /Videos  auto  defaults  0  2" | sudo tee -a /etc/fstab
  fi
 
  if [[ "${OS}" == "ubuntu" ]]; then
