@@ -24,6 +24,7 @@ touch /conf/openhd/rock-rk3566.txt
 touch /conf/openhd/resize.txt
 elif [[ "${OS}" == "raspbian" ]]; then
 mkdir -p /usr/local/share/openhd_platform/rpi/
+
 elif [[ "${OS}" == "debian-X20" ]]; then
 mkdir -p /usr/local/share/openhd_platform/x20
 mkdir -p /boot/openhd
