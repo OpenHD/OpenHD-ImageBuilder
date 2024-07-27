@@ -223,6 +223,9 @@ FIRSTSEC=$(($(parted -s ${PREV_WORK_DIR}/*.img unit s print | awk '/^ 2 / {gsub(
 sudo parted ${PREV_WORK_DIR}/*.img --script mkpart primary fat32 ${FIRSTSEC}s 100%
 echo -e "t\n3\n0c\nw" | fdisk ${PREV_WORK_DIR}/*.img
 log "Video Partition Added"
+LOOP_DEVICE=$(sudo losetup -f --show -o $((${FIRSTSEC} * 512)) ${PREV_WORK_DIR}/*.img)
+sudo mkfs.fat -F 32 ${LOOP_DEVICE}
+sudo losetup -d ${LOOP_DEVICE}
 fi
 
 # rename the image according to the build date, the builder/openhd repo versions
