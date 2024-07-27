@@ -204,6 +204,7 @@ echo "This image can't be shrunken"
 fi
 
 # Adding FAT32 Video Partition
+sudo chmod +x ${SCRIPT_DIR}/uPart.sh
 ${SCRIPT_DIR}/uPart.sh -v ${PREV_WORK_DIR}/*.img
 
 
