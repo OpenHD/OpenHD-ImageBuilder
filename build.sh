@@ -204,32 +204,8 @@ echo "This image can't be shrunken"
 fi
 
 # Adding FAT32 Video Partition
-log ""
-log "======================================================"
-log "Adding Fat32 Video Partition to: ${IMAGE_PATH_NAME}"
-if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
-dd if=/dev/zero of=fat.img bs=1M count=300
-cat fat.img >> ${PREV_WORK_DIR}/*.img
-rm -Rf fat.img
-sgdisk -e ${PREV_WORK_DIR}/*.img
-echo -e "n\n4\n\n\n\n0C00\nw\ny" | sudo gdisk ${PREV_WORK_DIR}/*.img
-sudo parted ${PREV_WORK_DIR}/*.img set 4 msftdata on
-log "Video Partition Added"
-loop_device=$(sudo losetup -f --show -P ${PREV_WORK_DIR}/*.img)
-sudo mkfs.fat -F 32 ${loop_device}p4
-sudo losetup -d ${loop_device}
-else
-dd if=/dev/zero of=fat.img bs=1M count=300
-cat fat.img >> ${PREV_WORK_DIR}/*.img
-rm -Rf fat.img
-FIRSTSEC=$(($(parted -s ${PREV_WORK_DIR}/*.img unit s print | awk '/^ 2 / {gsub("s", "", $3); print $3}') + 1)); FIRSTSEC=$((FIRSTSEC + (2048 - FIRSTSEC % 2048) % 2048))
-sudo parted ${PREV_WORK_DIR}/*.img --script mkpart primary fat32 ${FIRSTSEC}s 100%
-echo -e "t\n3\n0c\nw" | fdisk ${PREV_WORK_DIR}/*.img
-log "Video Partition Added"
-LOOP_DEVICE=$(sudo losetup -f --show -o $((${FIRSTSEC} * 512)) ${PREV_WORK_DIR}/*.img)
-sudo mkfs.fat -F 32 ${LOOP_DEVICE}
-sudo losetup -d ${LOOP_DEVICE}
-fi
+${SCRIPT_DIR}/uPart.sh -v ${PREV_WORK_DIR}/*.img
+
 
 # rename the image according to the build date, the builder/openhd repo versions
 if [ -e "${WORK_DIR}/openhd_version.txt" ]; then
