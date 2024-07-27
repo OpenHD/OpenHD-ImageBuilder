@@ -215,6 +215,9 @@ sgdisk -e ${PREV_WORK_DIR}/*.img
 echo -e "n\n4\n\n\n\n0C00\nw\ny" | sudo gdisk ${PREV_WORK_DIR}/*.img
 sudo parted ${PREV_WORK_DIR}/*.img set 4 msftdata on
 log "Video Partition Added"
+loop_device=$(sudo losetup -f --show -P ${PREV_WORK_DIR}/*.img)
+sudo mkfs.fat -F 32 ${loop_device}p4
+sudo losetup -d ${loop_device}
 else
 dd if=/dev/zero of=fat.img bs=1M count=300
 cat fat.img >> ${PREV_WORK_DIR}/*.img
