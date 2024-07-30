@@ -7,3 +7,4 @@ sudo apt download openhd-sys-utils
 
 sudo dpkg --force-overwrite --ignore-depends=ALL -i *.deb
 rm *.deb
+echo "fml"
