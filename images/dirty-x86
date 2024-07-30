@@ -1,4 +1,4 @@
-BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/Downloader/release/2.6/"
+BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/Downloader/release/2.6"
 BASE_IMAGE="OpenHD-image-x86-minimal--release-06-30-2024-15-36-22.img.xz"
 BASE_IMAGE_SHA256="4996399f75034beb58f8076dd46f195477ac39285ca7c9439d0f1d28f965547f"
 OS="ubuntu-x86-minimal"
