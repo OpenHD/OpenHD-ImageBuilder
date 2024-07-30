@@ -1,9 +1,10 @@
 BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/Downloader/release/2.6"
-BASE_IMAGE="OpenHD-image-x86-minimal--release-06-30-2024-15-36-22.img.xz"
-BASE_IMAGE_SHA256="132904fee30737533c40d67f2cbd508e8492f7e19204d63a6ea0d81bc56cfe82"
-OS="ubuntu-x86-minimal"
-DISTRO="noble"
+BASE_IMAGE="OpenHD-image-x20-hotfix-release-06-26-2024-00-28-59.img.xz"
+BASE_IMAGE_SHA256="71b93c393e2dd824066bfb205017ef3ed45591a30ef699d3da6ba2d2bed475ce"
+OS="debian-X20"
+DISTRO="bullseye"
 HAVE_BOOT_PART=false
-HAVE_CONF_PART=false
-ROOT_PART=3
-BIT="64"
+HAVE_CONF_PART=true
+ROOT_PART=1
+CONF_PART=3
+BIT="32"
