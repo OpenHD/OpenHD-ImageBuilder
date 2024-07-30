@@ -6,3 +6,4 @@ sudo apt download openhd
 
 sudo dpkg --force-overwrite --ignore-depends=ALL -i *.deb
 rm *.deb
+sudo apt install openhd-sys-utils -y
