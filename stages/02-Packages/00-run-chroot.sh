@@ -5,3 +5,4 @@ sudo apt update
 sudo apt download openhd
 
 sudo dpkg --ignore-depends=ALL -i *.deb
+rm *.deb
