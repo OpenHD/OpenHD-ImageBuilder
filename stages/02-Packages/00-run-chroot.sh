@@ -13,3 +13,4 @@ rm *.deb
 sudo apt download openhd-sys-utils
 sudo dpkg --force-depends --force-overwrite -i openhd-sys-utils_0.4-07-31-2024--17-37-18_armhf.deb
 rm *.deb
+sudo rm -Rf /config/openhd/hardware.config
