@@ -11,9 +11,11 @@ rm /etc/motd
 cp /usr/local/share/openhd_misc/motd /etc/motd
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
-    cat /etc/fstab
-    tree /conf
-    #rm /conf/before.txt
+    #fix uart bug
+    sudo sed -i -E 's/console=[^ ]*//g' /boot/extlinux/extlinux.txt
+    sudo sed -i -E 's/\s+/ /g' /boot/extlinux/extlinux.txt
+
+
     cp /usr/local/share/openhd_misc/before.txt /conf/before.txt
     #allow offline auto detection of image format
     cp /usr/local/share/openhd_misc/issue.txt /conf/issue.txt

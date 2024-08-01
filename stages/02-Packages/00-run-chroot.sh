@@ -7,7 +7,6 @@
 
 set -e
 
-cat /boot/extlinux/extlinux*
 # X20 specific code
 function install_x20_packages {
     #sudo apt install -y firmware-realtek NEEDS FIXING
