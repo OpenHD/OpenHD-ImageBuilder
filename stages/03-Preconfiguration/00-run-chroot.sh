@@ -1,4 +1,8 @@
 #!/bin/bash
+
+echo "_____________________________________________"
+gst-inspect-1.0 mpph264enc  
+echo "_____________________________________________"
 # create a user account that should be the same on all platforms
 USERNAME="openhd"
 PASSWORD="openhd"
