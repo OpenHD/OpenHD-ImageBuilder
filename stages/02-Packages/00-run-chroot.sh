@@ -92,7 +92,7 @@ function install_openhd {
     elif [[ "${OS}" == "raspbian" ]]; then
         apt update
         wget https://dl.cloudsmith.io/public/openhd/2-5-evo/deb/raspbian/pool/bullseye/main/o/op/openhd-customcamera_0.1/openhd_customcamera_0.1_armhf.deb
-        dpkg -i openhd-customcamera_0.1/openhd_customcamera_0.1_armhf.deb
+        dpkg -i openhd_customcamera_0.1_armhf.deb
         #install_raspbian_packages
     elif [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-ubuntu-rock5a" ]] ; then
         sudo add-apt-repository -r "deb https://ppa.launchpadcontent.net/jjriek/rockchip/ubuntu jammy main"
