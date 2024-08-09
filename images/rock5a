@@ -1,5 +1,5 @@
-BASE_IMAGE_URL="https://github.com/radxa-build/rock-5a/releases/download/b16/"
-BASE_IMAGE="rock-5a_debian_bullseye_kde_b16.img.xz"
+BASE_IMAGE_URL="https://github.com/radxa-build/rock-5a/releases/download/b18/"
+BASE_IMAGE="rock-5a_debian_bullseye_kde_b18.img.xz"
 BASE_IMAGE_SHA256="d07e2dd4319f29a4e8a52838a4a6b37c4cb6a22a2ad454ceb2e56d092b28be07"
 OS="radxa-debian-rock5a"
 DISTRO="bullseye"
