@@ -16,7 +16,7 @@ add_fat32_partition() {
   dd if=/dev/zero of=fat.img bs=1M count=300
   cat fat.img >> "${PREV_WORK_DIR}"/*.img
   rm -f fat.img
-  if [[ "${OS}" == "ubuntu-x86-minimal" ]] || [[ "${OS}" == "ubuntu-x86" ]]; then
+  if [[ "${OS}" == "ubuntu-x86-minimal" ]] || [[ "${OS}" == "ubuntu-x86" ]] || [[ "${OS}" == "debian_x20" ]]; then
     echo "Video partition not supporte yet"
   elif [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     sgdisk -e "${PREV_WORK_DIR}"/*.img
