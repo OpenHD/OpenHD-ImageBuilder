@@ -20,7 +20,6 @@ function install_x20_packages {
     PLATFORM_PACKAGES_REMOVE="*boost* locales guile-2.2-libs network-manager"
     PLATFORM_PACKAGES=""
 }
-
 # Raspbian-specific code
 function install_raspbian_packages {
     sudo apt update && apt remove -y dkms
@@ -34,7 +33,6 @@ function install_radxa-ubuntu_packages {
     BASE_PACKAGES="openhd-sys-utils openhd apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES="rsync procps gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-tools gstreamer1.0-rockchip1 gstreamer1.0-gl mali-g610-firmware malirun rockchip-multimedia-config librist4 librist-dev rist-tools libv4l-0 libv4l2rds0 libv4lconvert0 libv4l-dev libv4l-rkmpp qv4l2 v4l-utils librockchip-mpp1 librockchip-mpp-dev librockchip-vpu0 rockchip-mpp-demos librga2 librga-dev libegl-mesa0 libegl1-mesa-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev libglx-mesa0 mesa-common-dev mesa-vulkan-drivers mesa-utils libwidevinecdm"
 }
-
 function install_radxa-debian_packages {
     BASE_PACKAGES="openhd-sys-utils openhd qopenhd-rk3588 apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="task-rk356x task-rockchip radxa-system-config-rockchip 8852bu-dkms 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-rock-5a linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip"
@@ -58,8 +56,6 @@ function install_packages-core3566 {
     PLATFORM_PACKAGES="dialog pv gst-latest net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd-r3 librga2=2.2.0-1 linux-image-5.10.160-core3566-rk356x linux-headers-5.10.160-core3566-rk356x linux-libc-dev-5.10.160-core3566-rk356x procps camera-engine-rkaiq"
     PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
 }
-
-
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
         CLEAN=false
@@ -78,7 +74,6 @@ function install_ubuntu_x86_minimal_packages {
     PLATFORM_PACKAGES_HOLD="grub-efi-amd64-bin grub-efi-amd64-signed linux-generic linux-headers-generic linux-image-generic linux-libc-dev"
     PLATFORM_PACKAGES_REMOVE=""
 }
-
 function clone_github_repos {
     cd /opt
     git clone --recursive --depth 1 https://github.com/OpenHD/OpenHD
@@ -86,7 +81,6 @@ function clone_github_repos {
     git clone https://github.com/OpenHD/veye_raspberrypi.git
     chmod -R 777 /opt
 }
-
 function install_openhd {
         apt update && apt install libpoco-dev -y
     if [[ "${OS}" == "debian-X20" ]]; then
