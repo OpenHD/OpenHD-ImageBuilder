@@ -207,7 +207,7 @@ jobs:
       run: echo "artifact_name=OpenHD-EMMC-image-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
         
     - name: Pack image for ${{ matrix.TARGET }}
-      uses: 'actions/upload-artifact@v3'
+      uses: 'actions/upload-artifact@v4'
       with:
         name: "${{ matrix.TARGET }}-${{ env.DT }}-EMMC"
         path: |
