@@ -38,7 +38,7 @@ jobs:
     
     
     ### ONLY THIS RELEVANT FOR BUILDING ###
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: update
       run: sudo apt-get update
     - name: remove even more
@@ -156,7 +156,7 @@ jobs:
         echo "ARTIFACT_PREFIX=${ARTIFACT_PREFIX}" >> $GITHUB_ENV
       
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
         
     - name: dep
       run: sudo apt update && sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
@@ -226,7 +226,7 @@ jobs:
     - name: debug
       run: df -h
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - uses: actions/download-artifact@v3
       with:
@@ -303,7 +303,7 @@ jobs:
   #   - name: debug
   #     run: df -h
 
-  #   - uses: actions/checkout@v3
+  #   - uses: actions/checkout@v4
 
   #   - uses: actions/download-artifact@v3
   #     with:
