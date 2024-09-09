@@ -104,8 +104,9 @@ function install_openhd {
         apt update
         install_radxa-debian_packages
     elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
-        apt update && apt upgrade -y
+        apt update
         install_radxa-debian_packages_rk3566
+        apt upgrade -y
     elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
         apt update
         install_packages-core3566
