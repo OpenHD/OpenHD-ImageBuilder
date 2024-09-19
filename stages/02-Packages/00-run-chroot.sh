@@ -49,7 +49,7 @@ function install_radxa-debian_packages_rk3566 {
     PLATFORM_PACKAGES_REMOVE="gvfs gvfs-backends gvfs-fuse plymouth plymouth-theme-breeze plymouth-themes vulkan-tools xdg-desktop-portal xdg-desktop-portal-gtk xdg-user-dirs xdg-user-dirs-gtk xdg-utils task-xfce-desktop thunar-volman xfce4-clipman xfce4-notifyd xfce4-power-manager xfce4-screenshooter xfce4-terminal xiccd aha breeze-cursor-theme clinfo codium cups desktop-base firefox-esr fonts-noto-cjk fprintd fwupd maliit-keyboard"
     PLATFORM_PACKAGES_HOLD="libdvbv5-0 libv4l2rds0 libv4lconvert0 xserver-common xserver-xorg-core xserver-xorg-legacy librga linux-headers-radxa-zero3 linux-image-radxa-zero3 task-rk356x task-rockchip radxa-system-config-rockchip task-radxa-cm3-rpi-cm4-io"
     # PLATFORM_PACKAGES_HOLD="u-boot-radxa-zero3 radxa-system-config-common radxa-system-config-kernel-cmdline-ttyfiq0 radxa-firmware radxa-system-config-bullseye 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-radxa-cm3-rpi-cm4-io linux-headers-radxa-cm3-rpi-cm4-io linux-image-5.10.160-12-rk356x linux-headers-5.10.160-12-rk356x"
-    PLATFORM_PACKAGES="dialog net-tools rockchip-iq-openhd-r3 fpv-rk3566"
+    PLATFORM_PACKAGES="rockchip-iq-openhd-r3 fpv-rk3566"
 }
 function install_packages-core3566 {
     BASE_PACKAGES="openhd-sys-utils openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
