@@ -26,7 +26,7 @@ function install_raspbian_packages {
     BASE_PACKAGES="openhd-sys-utils openhd-stock qopenhd apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc raspberrypi-bootloader"
     PLATFORM_PACKAGES_REMOVE="locales gdb librsvg2-2 guile-2.2-libs firmware-libertas gcc-10 nfs-common raspberrypi-kernel"
-    PLATFORM_PACKAGES="openhd-linux-pi firmware-atheros openhd-userland libseek-thermal libcamera0 openhd-qt openssh-server"
+    PLATFORM_PACKAGES="python3-picamera2 openhd-linux-pi firmware-atheros openhd-userland libseek-thermal libcamera0 openhd-qt openssh-server"
 }
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
