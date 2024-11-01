@@ -215,6 +215,19 @@ else
 
 fi
 
+if [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
+    # Check if librga2 is installed and display its version
+    if dpkg-query -W -f='${Status}' librga2 2>/dev/null | grep -q "install ok installed"; then
+        echo "Current installed version of librga2: $(dpkg-query -W -f='${Version}' librga2)"
+    else
+        echo "librga2 is not installed."
+    fi
+
+    # Hold the librga2 package
+    apt-mark hold librga2
+fi
+
+
 #
 # Write the openhd package version back to the base of the image and
 # in the work dir so the builder can use it in the image name
