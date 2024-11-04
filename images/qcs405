@@ -1,4 +1,4 @@
-BASE_IMAGE_URL="https://geekymind.de"
+BASE_IMAGE_URL="http://geekymind.de/"
 BASE_IMAGE="qcs405.img.xz"
 BASE_IMAGE_SHA256="6e923b213be8a945353f41ddbb6654003e31f53039a1111fd0c665bf5432847b"
 OS="ubuntu"
