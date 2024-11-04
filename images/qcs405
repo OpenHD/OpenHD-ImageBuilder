@@ -1,4 +1,4 @@
-BASE_IMAGE_URL="http://geekymind.de/"
+BASE_IMAGE_URL="http://fra1.digitaloceanspaces.com/openhd-images/BaseImages/"
 BASE_IMAGE="qcs405-ext.img.xz"
 BASE_IMAGE_SHA256="08ed8462c17a9a73fb2fe446b87ff5f7fdc21dd82ffdc828a733d0ea416a2196"
 OS="ubuntu"
