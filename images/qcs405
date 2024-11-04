@@ -1,6 +1,6 @@
 BASE_IMAGE_URL="http://fra1.digitaloceanspaces.com/openhd-images/BaseImages"
 BASE_IMAGE="qcs405-ext.img.xz"
-BASE_IMAGE_SHA256="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+BASE_IMAGE_SHA256="4593d9adba4c7641fab6a5063b5df8e93a9a58aa7b07ca4a789036bbfb512b51"
 OS="ubuntu"
 DISTRO="focal"
 HAVE_BOOT_PART=false
