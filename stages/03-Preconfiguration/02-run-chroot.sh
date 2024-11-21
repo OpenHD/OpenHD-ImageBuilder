@@ -25,6 +25,7 @@ touch /conf/openhd/resize.txt
 elif [[ "${OS}" == "raspbian" ]]; then
 mkdir -p /usr/local/share/openhd_platform/rpi/
 cd /opt
+sudo apt install git -y
 git clone https://github.com/openhd/openhd --recursive
 cd openhd
 sudo ./install_build_dep.sh rpi
