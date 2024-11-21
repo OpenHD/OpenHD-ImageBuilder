@@ -3,7 +3,7 @@ name: Image build on event
 on:
   push:
    branches:
-      - "2.6-evo"
+      - "dev-image"
 
 jobs:
   build:
