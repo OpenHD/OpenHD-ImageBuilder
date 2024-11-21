@@ -24,6 +24,12 @@ touch /conf/openhd/rock-rk3566.txt
 touch /conf/openhd/resize.txt
 elif [[ "${OS}" == "raspbian" ]]; then
 mkdir -p /usr/local/share/openhd_platform/rpi/
+cd /opt
+git clone https://github.com/openhd/openhd --recursive
+cd openhd
+sudo ./install_build_dep.sh rpi
+cd OpenHD
+./build_install_cmake.sh
 
 elif [[ "${OS}" == "debian-X20" ]]; then
 mkdir -p /usr/local/share/openhd_platform/x20
