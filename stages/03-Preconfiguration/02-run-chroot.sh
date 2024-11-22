@@ -27,12 +27,9 @@ mkdir -p /usr/local/share/openhd_platform/rpi/
 
 elif [[ "${OS}" == "debian-X20" ]]; then
 mkdir -p /usr/local/share/openhd_platform/x20
-mkdir -p /boot/openhd
-mkdir -p /conf/openhd
-mkdir -p /config/openhd
-touch /boot/openhd/hardware_vtx_v20.txt
+mkdir -p /conf/openhd/Videos
+touch /conf/openhd/Videos/external_video_part.txt
 touch /conf/openhd/hardware_vtx_v20.txt
-touch /config/openhd/hardware_vtx_v20.txt
 elif [[ "${OS}" == "ubuntu-x86" ]]; then
 mkdir -p /usr/local/share/openhd_platform/x86
 fi

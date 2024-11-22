@@ -11,9 +11,11 @@ rm /etc/motd
 cp /usr/local/share/openhd_misc/motd /etc/motd
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]] || [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
-    cat /etc/fstab
-    tree /conf
-    #rm /conf/before.txt
+    #fix uart bug
+    sudo sed -i -E 's/console=[^ ]*//g' /boot/extlinux/extlinux.txt
+    sudo sed -i -E 's/\s+/ /g' /boot/extlinux/extlinux.txt
+    sudo sed -i 's/console=ttyFIQ0,1500000n8//g' /etc/kernel/cmdline
+
     cp /usr/local/share/openhd_misc/before.txt /conf/before.txt
     #allow offline auto detection of image format
     cp /usr/local/share/openhd_misc/issue.txt /conf/issue.txt
@@ -93,7 +95,6 @@ fi
      # comment out resize function to use our own resizing
      sudo sed -i '141,174 s/^/#/' /usr/lib/raspberrypi-sys-mods/firstboot
      touch /boot/openhd/resize.txt
-     sudo echo "/dev/mmcblk0p3  /Videos  auto  defaults  0  2" | sudo tee -a /etc/fstab
  fi
 
  if [[ "${OS}" == "ubuntu" ]]; then
@@ -191,7 +192,7 @@ if [[ "${OS}" == "debian-X20" ]]; then
  echo "HdZero" >> /etc/modules-load.d/modules.conf
  sudo sed -i '/^\/dev\/mmcblk0p2/d' /etc/fstab
  sudo sed -i 's/,commit=600//g' /etc/fstab
- sudo echo "UUID=1A7D-9881  /external  auto  defaults  0  2" | sudo tee -a /etc/fstab
+ sudo echo "UUID=41ED-7F73 /external auto defaults 0 2" | sudo tee -a /etc/fstab
  sudo echo "UUID=e6c9676e-0cbc-41d4-8142-7d08a515c244  none  swap  sw  0  0" | sudo tee -a /etc/fstab
  sudo sed -i 's/c34bd5d7-bc89-4fa1-85b8-47954ecd28ee/9714ff09-1989-492f-a35e-29d9654c22d5/g' /etc/fstab
  sudo echo "while true; do journalctl > /boot/log_$(date +"\%Y-\%m-\%d_\%H-\%M-\%S").txt && sleep 120 || journalctl > /boot/log.txt && sleep 120; done" >> /root/.bashrc
