@@ -1,0 +1,9 @@
+BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/BaseImages"
+BASE_IMAGE="rb5_15G.img.xz"
+BASE_IMAGE_SHA256="6e923b213be8a945353f41ddbb6654003e31f53039a1111fd0c665bf5432847b"
+OS="ubuntu"
+DISTRO="focal"
+HAVE_BOOT_PART=false
+HAVE_CONF_PART=false
+ROOT_PART=1
+BIT="64"
