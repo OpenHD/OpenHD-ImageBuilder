@@ -1,0 +1,10 @@
+BASE_IMAGE_URL="https://github.com/radxa-build/radxa-cm5-rpi-cm4-io/releases/download/b2/"
+BASE_IMAGE="radxa-cm5-rpi-cm4-io_debian_bullseye_kde_b2.img.xz"
+BASE_IMAGE_SHA256="b11744a84ab6b1fa7e4997e0c414a54efb98791f097b4144ec57405295a5a8cb"
+OS="radxa-debian-rock5a"
+DISTRO="bullseye"
+HAVE_BOOT_PART=false
+HAVE_CONF_PART=true
+CONF_PART=2
+ROOT_PART=3
+BIT="64"

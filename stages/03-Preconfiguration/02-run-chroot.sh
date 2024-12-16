@@ -24,7 +24,7 @@ touch /conf/openhd/rock-rk3566.txt
 touch /conf/openhd/resize.txt
 elif [[ "${OS}" == "raspbian" ]]; then
 mkdir -p /usr/local/share/openhd_platform/rpi/
-echo "options 88x2eu_ohd rtw_regd_src=1 rtw_tx_pwr_by_rate=0 rtw_tx_pwr_lmt_enable=0" | sudo tee /etc/modprobe.d/realtek_88x2eu.conf > /dev/null
+echo "options rtl88x2eu_ohd rtw_regd_src=1 rtw_tx_pwr_by_rate=0 rtw_tx_pwr_lmt_enable=0" | sudo tee /etc/modprobe.d/realtek_88x2eu.conf > /dev/null
 elif [[ "${OS}" == "debian-X20" ]]; then
 mkdir -p /usr/local/share/openhd_platform/x20
 mkdir -p /conf/openhd/Videos
