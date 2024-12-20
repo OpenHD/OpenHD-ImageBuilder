@@ -1,0 +1,27 @@
+name: Image build on event
+
+on:
+  push:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 100
+        swap-size-mb: 200
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+        remove-codeql: 'true'
+        remove-docker-images: 'true'
+        overprovision-lvm: 'true'
+    - name: Download and Build SDK
+      run: |
+      ls -a
+      wget https://fra1.digitaloceanspaces.com/openhd-images/BaseImages/rk356x_linux5.10_rkr8_sdk.repo.tar
+      tar -xyz rk356x_linux5.10_rkr8_sdk.repo.tar
+      tree
