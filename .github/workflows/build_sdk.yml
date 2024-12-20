@@ -21,10 +21,10 @@ jobs:
         overprovision-lvm: 'true'
     - name: Download SDK
       run: |
+        sudo apt install -y python2 build-essentials
         wget -q https://fra1.digitaloceanspaces.com/openhd-images/BaseImages/rk356x_linux5.10_rkr8_sdk.repo.tar
         tar -xvf rk356x_linux5.10_rkr8_sdk.repo.tar
         .repo/repo/repo  sync -l -j1 --fail-fast
-        df -h
     - name: Add Radxa configuation
       run: |
         cd device/rockchip
