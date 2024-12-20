@@ -21,13 +21,22 @@ jobs:
         overprovision-lvm: 'true'
     - name: Download and Build SDK
       run: |
-        echo "Downloading SDK, this may take several minutes, please be patient!"
         wget -q https://fra1.digitaloceanspaces.com/openhd-images/BaseImages/rk356x_linux5.10_rkr8_sdk.repo.tar
         tar -xvf rk356x_linux5.10_rkr8_sdk.repo.tar
         .repo/repo/repo  sync -l -j1 --fail-fast
         df -h
-        echo "Adding Radxa Flavor"
+    - name: Add Radxa dev-config
+      run: |
         cd device/rockchip
         git remote add radxa https://github.com/radxa/device-rockchip.git
         git fetch radxa
-        git checkout -b rk3566_rk3568-linux-5.10 remotes/radxa/rk3566_rk3568-linux-5.10
+        git checkout -b rk3566_rk3568-linux-5.10 remotes/radxa/rk3566_rk3568-linux-5.10    
+    - name: Add Radxa kernel
+      run: |
+        cd kernel
+        git remote add radxa https://github.com/radxa/kernel.git
+        git fetch radxa
+        git checkout -b linux-5.10-gen-rkr8-buildroot remotes/radxa/linux-5.10-gen-rkr8-buildroot
+    - name: Add Radxa kernel
+      run: |
+        ./build.sh        
