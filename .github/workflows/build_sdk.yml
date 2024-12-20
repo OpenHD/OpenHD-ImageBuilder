@@ -21,7 +21,7 @@ jobs:
         overprovision-lvm: 'true'
     - name: Download and Build SDK
       run: |
-        apt install -y repo
+        sudo apt install -y repo
         wget -q https://fra1.digitaloceanspaces.com/openhd-images/BaseImages/rk356x_linux5.10_rkr8_sdk.repo.tar
         tar -xvf rk356x_linux5.10_rkr8_sdk.repo.tar
         repo sync
