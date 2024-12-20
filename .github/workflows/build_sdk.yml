@@ -24,6 +24,5 @@ jobs:
         ls -a
         wget -q https://fra1.digitaloceanspaces.com/openhd-images/BaseImages/rk356x_linux5.10_rkr8_sdk.repo.tar
         tar -xvf rk356x_linux5.10_rkr8_sdk.repo.tar
-        tree
         repo sync
         df -h
