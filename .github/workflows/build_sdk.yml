@@ -39,4 +39,4 @@ jobs:
         git checkout -b linux-5.10-gen-rkr8-buildroot remotes/radxa/linux-5.10-gen-rkr8-buildroot
     - name: Add Radxa kernel
       run: |
-        ./build.sh        
+        ./build.sh rockchip_rk3566_radxa_zero_3w_defconfig     
