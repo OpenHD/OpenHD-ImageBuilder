@@ -24,12 +24,10 @@ jobs:
         echo "Downloading SDK, this may take several minutes, please be patient!"
         wget -q https://fra1.digitaloceanspaces.com/openhd-images/BaseImages/rk356x_linux5.10_rkr8_sdk.repo.tar
         tar -xvf rk356x_linux5.10_rkr8_sdk.repo.tar
-        .repo/repo/repo  sync -l
+        .repo/repo/repo  sync -l -j1 --fail-fast
         df -h
         echo "Adding Radxa Flavor"
         cd device/rockchip
-        cd device/rockchip
-        git remote add radxa https://github.com/radxa/device-rockchip.git
         git remote add radxa https://github.com/radxa/device-rockchip.git
         git fetch radxa
         git checkout -b rk3566_rk3568-linux-5.10 remotes/radxa/rk3566_rk3568-linux-5.10
