@@ -19,13 +19,13 @@ jobs:
         remove-codeql: 'true'
         remove-docker-images: 'true'
         overprovision-lvm: 'true'
-    - name: Download and Build SDK
+    - name: Download SDK
       run: |
         wget -q https://fra1.digitaloceanspaces.com/openhd-images/BaseImages/rk356x_linux5.10_rkr8_sdk.repo.tar
         tar -xvf rk356x_linux5.10_rkr8_sdk.repo.tar
         .repo/repo/repo  sync -l -j1 --fail-fast
         df -h
-    - name: Add Radxa dev-config
+    - name: Add Radxa configuation
       run: |
         cd device/rockchip
         git remote add radxa https://github.com/radxa/device-rockchip.git
@@ -37,6 +37,6 @@ jobs:
         git remote add radxa https://github.com/radxa/kernel.git
         git fetch radxa
         git checkout -b linux-5.10-gen-rkr8-buildroot remotes/radxa/linux-5.10-gen-rkr8-buildroot
-    - name: Add Radxa kernel
+    - name: Compile stock image
       run: |
-        ./build.sh rockchip_rk3566_radxa_zero_3w_defconfig     
+        echo "rockchip_rk3566_radxa_zero_3w_defconfig" | ./build.sh     
