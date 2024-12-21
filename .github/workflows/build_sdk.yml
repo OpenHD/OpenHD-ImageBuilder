@@ -24,7 +24,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y python2 build-essential bc device-tree-compiler libmpc-dev bison expect expect-dev
-        sudo apt instll -y git rsync gcc g++ make device-tree-compiler bc flex bison lz4 libssl-dev libgmp-dev libmpc-dev expect expect-dev file unzip bzip2 fakeroot bsdmainutils
+        sudo apt instal -y git rsync gcc g++ make device-tree-compiler bc flex bison lz4 libssl-dev libgmp-dev libmpc-dev expect expect-dev file unzip bzip2 fakeroot bsdmainutils
         wget -q https://fra1.digitaloceanspaces.com/openhd-images/BaseImages/rk356x_linux5.10_rkr8_sdk.repo.tar
         tar -xvf rk356x_linux5.10_rkr8_sdk.repo.tar
         .repo/repo/repo sync -l -j1 --fail-fast
@@ -50,9 +50,15 @@ jobs:
     - name: Compress Output
       run: |
         tar -czvf output.tar.gz -C /home/runner/work/OpenHD-ImageBuilder/OpenHD-ImageBuilder/output .
-
+  
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
         name: compiled-image
         path: output.tar.gz
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: updateFile
+        path: update/Image/update.img
