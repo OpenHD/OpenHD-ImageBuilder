@@ -24,6 +24,7 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y python2 build-essential bc device-tree-compiler libmpc-dev bison expect expect-dev
+        sudo apt instll -y git rsync gcc g++ make device-tree-compiler bc flex bison lz4 libssl-dev libgmp-dev libmpc-dev expect expect-dev file unzip bzip2 fakeroot bsdmainutils
         wget -q https://fra1.digitaloceanspaces.com/openhd-images/BaseImages/rk356x_linux5.10_rkr8_sdk.repo.tar
         tar -xvf rk356x_linux5.10_rkr8_sdk.repo.tar
         .repo/repo/repo sync -l -j1 --fail-fast
