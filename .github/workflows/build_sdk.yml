@@ -1,42 +1,57 @@
-name: Image build on event
+name: Image Build on Event
 
 on:
   push:
 
 jobs:
   build:
-
     runs-on: ubuntu-22.04
+
     steps:
-    - name: Maximize build space
+    - name: Maximize Build Space
       uses: easimon/maximize-build-space@master
       with:
         root-reserve-mb: 100
         swap-size-mb: 200
-        remove-dotnet: 'true'
-        remove-android: 'true'
-        remove-haskell: 'true'
-        remove-codeql: 'true'
-        remove-docker-images: 'true'
-        overprovision-lvm: 'true'
-    - name: Download SDK
+        remove-dotnet: true
+        remove-android: true
+        remove-haskell: true
+        remove-codeql: true
+        remove-docker-images: true
+        overprovision-lvm: true
+
+    - name: Install Dependencies and Download SDK
       run: |
+        sudo apt update
         sudo apt install -y python2 build-essential bc device-tree-compiler libmpc-dev bison expect expect-dev
         wget -q https://fra1.digitaloceanspaces.com/openhd-images/BaseImages/rk356x_linux5.10_rkr8_sdk.repo.tar
         tar -xvf rk356x_linux5.10_rkr8_sdk.repo.tar
-        .repo/repo/repo  sync -l -j1 --fail-fast
-    - name: Add Radxa configuation
+        .repo/repo/repo sync -l -j1 --fail-fast
+
+    - name: Add Radxa Configuration
       run: |
         cd device/rockchip
         git remote add radxa https://github.com/radxa/device-rockchip.git
         git fetch radxa
-        git checkout -b rk3566_rk3568-linux-5.10 remotes/radxa/rk3566_rk3568-linux-5.10    
-    - name: Add Radxa kernel
+        git checkout -b rk3566_rk3568-linux-5.10 remotes/radxa/rk3566_rk3568-linux-5.10
+
+    - name: Add Radxa Kernel
       run: |
         cd kernel
         git remote add radxa https://github.com/radxa/kernel.git
         git fetch radxa
         git checkout -b linux-5.10-gen-rkr8-buildroot remotes/radxa/linux-5.10-gen-rkr8-buildroot
-    - name: Compile stock image
+
+    - name: Compile Stock Image
       run: |
-        echo "rockchip_rk3566_radxa_zero_3w_defconfig" | ./build.sh     
+        echo "rockchip_rk3566_radxa_zero_3w_defconfig" | ./build.sh
+
+    - name: Compress Output
+      run: |
+        tar -czvf output.tar.gz -C /home/runner/work/OpenHD-ImageBuilder/OpenHD-ImageBuilder/output .
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: compiled-image
+        path: output.tar.gz
