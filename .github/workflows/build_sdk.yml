@@ -49,6 +49,7 @@ jobs:
 
     - name: Compress Output
       run: |
+        ls -a
         tar -czvf output.tar.gz -C /home/runner/work/OpenHD-ImageBuilder/OpenHD-ImageBuilder/output .
   
     - name: Upload Artifact
