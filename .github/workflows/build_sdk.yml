@@ -39,9 +39,9 @@ jobs:
     - name: Add Radxa Kernel
       run: |
         cd kernel
-        git remote add radxa https://github.com/radxa/kernel.git
-        git fetch radxa
-        git checkout -b linux-5.10-gen-rkr8-buildroot remotes/radxa/linux-5.10-gen-rkr8-buildroot
+        git remote add openhd https://github.com/openhd/linux-rock.git
+        git fetch openhd
+        git checkout -b linux-5.10-gen-rkr8-buildroot remotes/openhd/linux-5.10-gen-rkr8-buildroot
 
     - name: Compile Stock Image
       run: |
