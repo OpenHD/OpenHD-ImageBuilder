@@ -43,7 +43,19 @@ jobs:
         git fetch openhd
         git checkout -b radxa-buildroot remotes/openhd/radxa-buildroot
 
-    - name: Compile Stock Image
+    - name: Add OpenHD Wifi Drivers
+      run: |
+        cd kernel/drivers/net/wireless/realtek
+        git clone https://github.com/openhd/rtl8812au
+        git clone https://github.com/openhd/rtl88x2bu
+        git clone https://github.com/openhd/rtl88x2eu
+    
+    - name: Apply Makefile Patch for Wifi
+      run: |
+        cd kernel
+        patch -p1 < patch/openhd_wifi.patch
+    
+    - name: Compile Image
       run: |
         echo "rockchip_rk3566_radxa_zero_3w_defconfig" | ./build.sh
 
