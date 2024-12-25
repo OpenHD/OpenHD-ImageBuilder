@@ -53,6 +53,7 @@ jobs:
     - name: Apply Makefile Patch for Wifi
       run: |
         cd kernel
+        ls -a
         patch -p1 < patch/openhd_wifi.patch
     
     - name: Compile Image
