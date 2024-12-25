@@ -54,7 +54,7 @@ jobs:
       run: |
         cd kernel
         ls -a
-        patch -p1 < patch/openhd_wifi.patch
+        patch -p1 < patches/openhd_wifi.patch
     
     - name: Compile Image
       run: |
