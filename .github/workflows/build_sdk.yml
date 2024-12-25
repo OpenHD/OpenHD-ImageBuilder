@@ -41,7 +41,7 @@ jobs:
         cd kernel
         git remote add openhd https://github.com/openhd/linux-rock.git
         git fetch openhd
-        git checkout -b linux-5.10-gen-rkr8-buildroot remotes/openhd/linux-5.10-gen-rkr8-buildroot
+        git checkout -b radxa-buildroot remotes/openhd/radxa-buildroot
 
     - name: Compile Stock Image
       run: |
