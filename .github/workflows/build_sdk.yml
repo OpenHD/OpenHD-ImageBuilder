@@ -53,7 +53,6 @@ jobs:
     - name: Apply Makefile Patch for Wifi
       run: |
         cd kernel
-        ls -a
         patch -p1 < patches/openhd_wifi.patch
     
     - name: Compile Image
@@ -62,7 +61,6 @@ jobs:
 
     - name: Compress Output
       run: |
-        ls -a
         tar -czvf output.tar.gz -C /home/runner/work/OpenHD-ImageBuilder/OpenHD-ImageBuilder/output .
   
     - name: Upload Artifact
@@ -70,6 +68,11 @@ jobs:
       with:
         name: compiled-image
         path: output.tar.gz
+
+    - name: Debug
+      run: |
+        ls -a  
+        ls update/Image/
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
