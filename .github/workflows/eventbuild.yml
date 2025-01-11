@@ -6,6 +6,7 @@ on:
       - "2.6-evo"
       - "dev-release"
       - "release"
+      - "add-ramdisk"
 
 jobs:
   build:
@@ -34,10 +35,14 @@ jobs:
         echo "DT=$(date -d '+1 hour' +'%m-%d-%Y-%H-%M-%S')" >> $GITHUB_ENV
         echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
         echo "$GITHUB_ENV"
-    
-    
+       
     ### ONLY THIS RELEVANT FOR BUILDING ###
     - uses: actions/checkout@v4
+    - name: Print dev-build if dev-release
+      if: ${{ env.BRANCH == 'dev-release' || env.BRANCH == 'add-ramdisk' }}
+      run: | 
+        ls -a
+        touch Open*/additionalFiles/dev-build
     - name: update
       run: sudo apt-get update
     - name: remove even more
@@ -70,6 +75,7 @@ jobs:
     - name: Build Image
       run: |
         touch additionalFiles/issue-new.txt
+        
         echo "OpenHD-image-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" > additionalFiles/issue-new.txt
         sudo ./build.sh ${{ matrix.TARGET }}
     # - name: debug
