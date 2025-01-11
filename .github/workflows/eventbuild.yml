@@ -42,7 +42,7 @@ jobs:
       if: ${{ env.BRANCH == 'dev-release' || env.BRANCH == 'add-ramdisk' }}
       run: | 
         ls -a
-        touch Open*/additionalFiles/dev-build
+        touch additionalFiles/dev-build
     - name: update
       run: sudo apt-get update
     - name: remove even more
