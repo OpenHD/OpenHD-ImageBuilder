@@ -38,10 +38,9 @@ jobs:
        
     ### ONLY THIS RELEVANT FOR BUILDING ###
     - uses: actions/checkout@v4
-    - name: Print dev-build if dev-release
+    - name: check for dev-release
       if: ${{ env.BRANCH == 'dev-release' || env.BRANCH == 'add-ramdisk' }}
       run: | 
-        ls -a
         touch additionalFiles/dev-build
     - name: update
       run: sudo apt-get update
