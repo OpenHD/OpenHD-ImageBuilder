@@ -110,10 +110,8 @@ function install_openhd {
         apt update
         install_packages-core3566
     elif [[ "${OS}" == "ubuntu-x86-minimal" ]] ; then
-        apt update
         install_ubuntu_x86_minimal_packages
     elif [[ "${OS}" == "ubuntu-x86" ]] ; then
-        apt update
         install_ubuntu_x86_packages
     elif [[ "${OS}" == "ubuntu" ]] ; then
         fix_jetson_apt
