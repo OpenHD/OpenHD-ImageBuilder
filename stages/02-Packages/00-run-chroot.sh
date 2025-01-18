@@ -58,6 +58,12 @@ function install_packages-core3566 {
 }
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
+
+    sudo sed -i 's|http://\(.*\)archive.ubuntu.com|http://old-releases.ubuntu.com|g; \
+s|http://security.ubuntu.com|http://old-releases.ubuntu.com|g' \
+/etc/apt/sources.list /etc/apt/sources.list.d/*.list
+sudo apt-get update
+
     # 1) Preseed answers so the installer won’t prompt about GRUB devices:
 sudo debconf-set-selections <<EOF
 grub-pc grub-pc/install_devices multiselect /dev/sda
