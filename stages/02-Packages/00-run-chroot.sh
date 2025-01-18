@@ -58,7 +58,7 @@ function install_packages-core3566 {
 }
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
-    sudo apt update && sudo apt dist-upgrade -y && \
+    sudo apt dist-upgrade -y && \
     sudo DEBIAN_FRONTEND=noninteractive do-release-upgrade -f DistUpgradeViewNonInteractive
         CLEAN=false
         if [[ "${DISTRO}" == "jammy" ]]; then
