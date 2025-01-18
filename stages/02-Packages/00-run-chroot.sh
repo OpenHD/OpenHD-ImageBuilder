@@ -61,7 +61,7 @@ function install_ubuntu_x86_packages {
     echo "Hello World"
         sudo sed -i 's|http://\(.*\)archive.ubuntu.com|http://old-releases.ubuntu.com|g; s|http://security.ubuntu.com|http://old-releases.ubuntu.com|g' \
         /etc/apt/sources.list /etc/apt/sources.list.d/*.list && \
-        sudo apt-get update && sudo apt-get dist-upgrade -y && \
+        sudo apt update && sudo apt dist-upgrade -y && \
         sudo DEBIAN_FRONTEND=noninteractive do-release-upgrade -d -f DistUpgradeViewNonInteractive
         CLEAN=false
         if [[ "${DISTRO}" == "jammy" ]]; then
@@ -87,7 +87,7 @@ function clone_github_repos {
     chmod -R 777 /opt
 }
 function install_openhd {
-        apt update && apt install libpoco-dev -y
+        # apt update && apt install libpoco-dev -y
     if [[ "${OS}" == "debian-X20" ]]; then
         rm -Rf /etc/apt/sources.list.d/armbian.list
         apt update
