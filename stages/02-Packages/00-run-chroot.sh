@@ -70,7 +70,8 @@ sudo DEBIAN_FRONTEND=noninteractive apt-get install --reinstall grub-pc -y
 
 # 3) Proceed with your normal (non-interactive) upgrade steps:
 #    e.g., using old-releases for EOL repos, then do-release-upgrade, etc.
-sudo apt-get update && sudo apt-get dist-upgrade -y
+echo "----------------- Upgrading to 22.04 -----------------"
+sudo apt update && sudo apt dist-upgrade -y
 sudo DEBIAN_FRONTEND=noninteractive do-release-upgrade -f DistUpgradeViewNonInteractive
 CLEAN=false
         if [[ "${DISTRO}" == "jammy" ]]; then
