@@ -58,8 +58,11 @@ function install_packages-core3566 {
 }
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
-    sudo apt dist-upgrade -y && \
-    sudo DEBIAN_FRONTEND=noninteractive do-release-upgrade -f DistUpgradeViewNonInteractive
+    echo "Hello World"
+        sudo sed -i 's|http://\(.*\)archive.ubuntu.com|http://old-releases.ubuntu.com|g; s|http://security.ubuntu.com|http://old-releases.ubuntu.com|g' \
+        /etc/apt/sources.list /etc/apt/sources.list.d/*.list && \
+        sudo apt-get update && sudo apt-get dist-upgrade -y && \
+        sudo DEBIAN_FRONTEND=noninteractive do-release-upgrade -d -f DistUpgradeViewNonInteractive
         CLEAN=false
         if [[ "${DISTRO}" == "jammy" ]]; then
         PLATFORM_PACKAGES_HOLD="dkms initramfs-tools grub-pc linux-image-5.15.0-57-generic grub-efi-amd64-signed linux-generic linux-headers-generic linux-image-generic linux-generic-hwe-22.04 linux-image-generic-hwe-22.04 linux-headers-generic-hwe-22.04"
