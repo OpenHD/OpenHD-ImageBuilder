@@ -135,7 +135,7 @@ function install_openhd {
     if [[ -f "additionalFiles/dev-build" ]]; then
         curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
     fi
-        apt update
+        #apt update
 
     # Remove platform-specific packages
         echo "Removing platform-specific packages..."
