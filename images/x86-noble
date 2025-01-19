@@ -1,6 +1,6 @@
 BASE_IMAGE_URL="https://openhd-images.fra1.cdn.digitaloceanspaces.com/BaseImages/x86-10102023.7z"
 BASE_IMAGE="x86-19012025.img.xz"
-BASE_IMAGE_SHA256="bb9fc6e16c757f8e408192f8498c31baf2621e905cdd2d95a41f680be39d102d"
+BASE_IMAGE_SHA256="210aa661111b4472001f71fed74f82331541cad1166af8166d6b13dfe1b5e580"
 OS="ubuntu-x86"
 DISTRO="noble"
 HAVE_BOOT_PART=false
