@@ -7,6 +7,8 @@ mount_image () {
     IMG_FILE="${STAGE_WORK_DIR}/IMAGE.img"
 
     log "Mounting image file: ${IMG_FILE}"
+    log "DEBUG__________"
+    echo -e 'v\nx\ne\nv\nw\ny\n' | gdisk IMAGE.img
 
     PARTED_OUT=$(parted -s "${IMG_FILE}" unit b print)
 
