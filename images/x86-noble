@@ -1,4 +1,4 @@
-BASE_IMAGE_URL="https://openhd-images.fra1.cdn.digitaloceanspaces.com/BaseImages/x86-10102023.7z"
+BASE_IMAGE_URL="https://openhd-images.fra1.cdn.digitaloceanspaces.com/BaseImages"
 BASE_IMAGE="x86-19012025.img.xz"
 BASE_IMAGE_SHA256="8aeb66735255d8a89a5e1ba633ade843c69a7029ed61517ad8740c99e2a1353a"
 OS="ubuntu-x86"
