@@ -5,5 +5,5 @@ OS="ubuntu-x86"
 DISTRO="noble"
 HAVE_BOOT_PART=false
 HAVE_CONF_PART=false
-ROOT_PART=1
+ROOT_PART=4
 BIT="64"
