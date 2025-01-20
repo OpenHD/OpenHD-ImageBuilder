@@ -9,9 +9,11 @@ set -e
 
 CLEANCLEAN=true
 
-ls -a
-cat additionalFiles/dev-build
+ls -a /home/runner/work/OpenHD-ImageBuilder/OpenHD-ImageBuilder/additionalFiles/
+if [ -e "/home/runner/work/OpenHD-ImageBuilder/OpenHD-ImageBuilder/additionalFiles/dev-build" ]; then
+echo "hello world"
 exit 0
+fi
 # X20 specific code
 function install_x20_packages {
     #sudo apt install -y firmware-realtek NEEDS FIXING
