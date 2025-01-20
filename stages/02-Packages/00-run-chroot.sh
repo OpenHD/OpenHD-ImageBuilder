@@ -8,11 +8,7 @@
 set -e
 
 CLEANCLEAN=true
-ls -a /opt/
-if [ -e "/opt/additionalFiles/dev-build" ]; then
-echo "hello world"
-exit 0
-fi
+
 # X20 specific code
 function install_x20_packages {
     #sudo apt install -y firmware-realtek NEEDS FIXING
@@ -120,9 +116,9 @@ function install_openhd {
      # Add OpenHD Repository platform-specific packages
         apt install -y curl
         curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
-    if [[ -f "additionalFiles/dev-build" ]]; then
-        curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
-    fi
+        if [ -e "/opt/additionalFiles/dev-build" ]; then
+            curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
+        fi
         #apt update
 
     # Remove platform-specific packages
