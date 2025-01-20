@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false # Don't fail all if any of the jobs is failing
       matrix:
-        TARGET: [pi-bullseye, x86-minimal, x86-noble, radxa-cm3, x20, radxa-zero3w, rock5b, rock5a, qcs405] # <-- Add targets here!
+        TARGET: [pi-bullseye, x86-minimal, x86-noble, radxa-cm3, x20, radxa-zero3w, rock5b, rock5a] # <-- Add targets here!
         #TARGET: [qrb5165] # <-- Add targets here!
     steps:
     - name: Maximize build space
