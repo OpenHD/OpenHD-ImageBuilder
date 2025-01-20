@@ -58,27 +58,6 @@ function install_packages-core3566 {
 }
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
-
-    sudo sed -i 's|http://\(.*\)archive.ubuntu.com|http://old-releases.ubuntu.com|g; \
-s|http://security.ubuntu.com|http://old-releases.ubuntu.com|g' \
-/etc/apt/sources.list /etc/apt/sources.list.d/*.list
-sudo apt-get update
-
-    # 1) Preseed answers so the installer won’t prompt about GRUB devices:
-sudo debconf-set-selections <<EOF
-grub-pc grub-pc/install_devices multiselect /dev/sda
-grub-pc grub-pc/install_devices_empty boolean false
-grub-pc grub-pc/install_devices_disks_changed multiselect /dev/sda
-EOF
-
-# 2) Reinstall (or install) GRUB in non-interactive mode:
-sudo DEBIAN_FRONTEND=noninteractive apt-get install --reinstall grub-pc -y
-
-# 3) Proceed with your normal (non-interactive) upgrade steps:
-#    e.g., using old-releases for EOL repos, then do-release-upgrade, etc.
-echo "----------------- Upgrading to 22.04 -----------------"
-sudo apt update && sudo apt dist-upgrade -y
-sudo DEBIAN_FRONTEND=noninteractive do-release-upgrade -f DistUpgradeViewNonInteractive
 CLEAN=false
         if [[ "${DISTRO}" == "jammy" ]]; then
         PLATFORM_PACKAGES_HOLD="dkms initramfs-tools grub-pc linux-image-5.15.0-57-generic grub-efi-amd64-signed linux-generic linux-headers-generic linux-image-generic linux-generic-hwe-22.04 linux-image-generic-hwe-22.04 linux-headers-generic-hwe-22.04"
