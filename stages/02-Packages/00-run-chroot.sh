@@ -8,10 +8,8 @@
 set -e
 
 CLEANCLEAN=true
-ls -a /home/runner/work/OpenHD-ImageBuilder/
-ls -a /home/runner/work/OpenHD-ImageBuilder/OpenHD-ImageBuilder/
-ls -a /home/runner/work/OpenHD-ImageBuilder/OpenHD-ImageBuilder/additionalFiles/
-if [ -e "/home/runner/work/OpenHD-ImageBuilder/OpenHD-ImageBuilder/additionalFiles/dev-build" ]; then
+ls -a /opt/
+if [ -e "/opt/additionalFiles/dev-build" ]; then
 echo "hello world"
 exit 0
 fi
