@@ -1,0 +1,18 @@
+name: Download File
+
+on: [push]
+
+jobs:
+  download-file:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download file from Sciebo
+        env:
+          SCIEBO_USERNAME: ${{ secrets.SCIEBO_USERNAME }}
+          SCIEBO_PASSWORD: ${{ secrets.SCIEBO_PASSWORD }}
+          SCIEBO_URL: ${{ secrets.SCIEBO_URL }}
+        run: |
+          echo "Downloading file from Sciebo..."
+          curl -u "$SCIEBO_USERNAME:$SCIEBO_PASSWORD" -O "$SCIEBO_URL/remote.php/webdav/openhd/openhd/rk3566_SDK/Chapter05SDKs/Linux/tspi_linux_sdk_20230916.tar"
+          echo "Download complete."
