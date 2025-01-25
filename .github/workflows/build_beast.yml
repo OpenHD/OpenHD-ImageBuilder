@@ -42,7 +42,7 @@ jobs:
           echo "Downloading file from Sciebo..."
           curl -u "$SCIEBO_USERNAME:$SCIEBO_PASSWORD" -O "$SCIEBO_URL/remote.php/webdav/openhd/openhd/rk3566_SDK/repo_build_test.gz"
           echo "Download complete."
-          sudo tar -xzvpf repo_build_test.gz -C /
+          sudo tar -xvpf repo_build_test.gz -C /
           ls -a
           ls -a /opt
           cd /opt
