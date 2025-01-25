@@ -47,7 +47,7 @@ jobs:
           ls -a /opt
           cd /opt
           sudo apt update
-          sudo apt install python2 git rsync gcc g++ make device-tree-compiler bc flex bison lz4 libssl-dev libgmp-dev libmpc-dev expect expect-dev file unzip bzip2 fakeroot bsdmainutils
+          sudo apt install liblz4-tool python2 git rsync gcc g++ make device-tree-compiler bc flex bison lz4 libssl-dev libgmp-dev libmpc-dev expect expect-dev file unzip bzip2 fakeroot bsdmainutils
           sudo ln -s /bin/python2 /bin/python
           rm -rf tspi_linux_sdk_repo_20240131.tar
           ./build.sh all
