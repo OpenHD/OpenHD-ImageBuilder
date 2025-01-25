@@ -20,5 +20,6 @@ jobs:
           ls -a
           ls -a /opt
           cd /opt
+          rm -rf tspi_linux_sdk_repo_20240131.tar
           ./build.sh all
 
