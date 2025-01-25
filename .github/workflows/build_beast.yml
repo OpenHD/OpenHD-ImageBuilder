@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   download-file:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-18.04
 
     steps:
       - name: Download file from Sciebo
@@ -19,4 +19,6 @@ jobs:
           sudo tar -xzvpf repo_build_test.gz -C /
           ls -a
           ls -a /opt
+          cd /opt
+          ./build.sh all
 
