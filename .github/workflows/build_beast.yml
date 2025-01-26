@@ -7,8 +7,6 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Determine Current User
-        run: whoami
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
         with:
@@ -46,6 +44,7 @@ jobs:
           echo "Download complete."
           sudo tar -xzpf prebuild_buildroot.tar.gz -C .
           echo "Extraction complete."
+          chown -R runner:runner opt
           cd opt
           sudo apt update
           sudo apt install liblz4-tool python2 git rsync gcc g++ make device-tree-compiler bc flex bison lz4 libssl-dev libgmp-dev libmpc-dev expect expect-dev file unzip bzip2 fakeroot bsdmainutils
