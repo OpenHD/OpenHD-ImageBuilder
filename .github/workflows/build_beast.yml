@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
+      - name: Determine Current User
+        run: whoami
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
         with:
