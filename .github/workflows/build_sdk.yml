@@ -58,6 +58,7 @@ jobs:
     - name: Compile Image
       run: |
         echo "rockchip_rk3566_radxa_zero_3w_defconfig" | ./build.sh
+        ./mkfirmware.sh
 
     - name: Compress Output
       run: |
@@ -68,14 +69,3 @@ jobs:
       with:
         name: compiled-image
         path: output.tar.gz
-
-    - name: Debug
-      run: |
-        ls -a  
-        ls update/Image/
-
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: updateFile
-        path: update/Image/update.img
