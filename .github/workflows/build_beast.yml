@@ -40,12 +40,11 @@ jobs:
           SCIEBO_URL: ${{ secrets.SCIEBO_URL }}
         run: |
           echo "Downloading file from Sciebo..."
-          curl -u "$SCIEBO_USERNAME:$SCIEBO_PASSWORD" -O "$SCIEBO_URL/remote.php/webdav/openhd/openhd/rk3566_SDK/repo_build_test.gz"
+          curl -u "$SCIEBO_USERNAME:$SCIEBO_PASSWORD" -O "$SCIEBO_URL/remote.php/webdav/openhd/openhd/rk3566_SDK/prebuild_buildroot.tar.gz"
           echo "Download complete."
-          sudo tar -xzpf repo_build_test.gz -C /
+          sudo tar -xzpf prebuild_buildroot.tar.gz -C /
           echo "Extraction complete."
           cd /opt
           sudo apt update
           sudo apt install liblz4-tool python2 git rsync gcc g++ make device-tree-compiler bc flex bison lz4 libssl-dev libgmp-dev libmpc-dev expect expect-dev file unzip bzip2 fakeroot bsdmainutils
-          rm -rf tspi_linux_sdk_repo_20240131.tar
           ./build.sh all
