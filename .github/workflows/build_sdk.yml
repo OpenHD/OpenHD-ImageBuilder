@@ -58,7 +58,6 @@ jobs:
     - name: Compile Image
       run: |
         echo "rockchip_rk3566_radxa_zero_3w_defconfig" | ./build.sh
-        ./mkfirmware.sh
 
     - name: Compress Output
       run: |
