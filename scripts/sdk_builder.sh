@@ -116,23 +116,14 @@ perform_build() {
     exit 1
     fi
 
-  if [[ -n "$PLATFORM_DEFCONFIG" ]]; then
-    echo "Using defconfig: $PLATFORM_DEFCONFIG"
-    # Example:
-    # make "$PLATFORM_DEFCONFIG"
-  fi
-
-  # c) Kernel checkout or patch, if needed:
-  if [[ -n "$KERNEL_REPO_URL" ]]; then
-    echo "Cloning kernel from $KERNEL_REPO_URL (branch: $KERNEL_BRANCH)..."
-    git clone --depth=1 -b "$KERNEL_BRANCH" "$KERNEL_REPO_URL" kernel
-    # cd kernel
-    # Optional: apply patches, etc.
-  fi
-
-  # d) The actual build command(s)
-  # For example, if your environment has a top-level build script:
-  # ./build.sh
+  echo "Starting confiugation steps for: $platform"
+  echo "------------------------------------------------------------"
+ 
+    ./build.sh launch <<EOF
+    $TYPE_1
+    $TYPE_2
+    $TYPE_2
+    EOF
 
   echo "Build process for $platform completed (placeholder)."
   echo
