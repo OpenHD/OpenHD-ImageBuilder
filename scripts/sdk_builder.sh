@@ -48,11 +48,10 @@ list_platforms() {
   echo "Scanning for available platform config files in: $CONFIG_DIR"
   echo "------------------------------------------------------------"
   # List all files matching br_*.conf
-  local files=("$CONFIG_DIR"/br_*.conf)
+  local files=("$CONFIG_DIR"/br/*.conf)
   
   if [ -f "${files[0]}" ]; then
     for f in "${files[@]}"; do
-      # e.g., /images/br_rpi.conf => rpi
       platform_name="$(basename "$f" .conf | cut -d'_' -f2- )"
       echo "- $platform_name"
     done
