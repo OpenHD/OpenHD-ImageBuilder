@@ -119,7 +119,7 @@ perform_build() {
   echo "Starting confiugation steps for: $platform"
   echo "------------------------------------------------------------"
  
-./build.sh launch <<EOF
+./build.sh lunch <<EOF
 $TYPE_1
 $TYPE_2
 $TYPE_2
