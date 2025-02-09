@@ -119,11 +119,11 @@ perform_build() {
   echo "Starting confiugation steps for: $platform"
   echo "------------------------------------------------------------"
  
-    ./build.sh launch <<EOF
-    $TYPE_1
-    $TYPE_2
-    $TYPE_2
-    EOF
+./build.sh launch <<EOF
+$TYPE_1
+$TYPE_2
+$TYPE_2
+EOF
 
   echo "Build process for $platform completed (placeholder)."
   echo
