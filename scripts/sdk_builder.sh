@@ -40,7 +40,6 @@
 # ---------------------------------------------------------------------------
 
 CONFIG_DIR="images"
-ls -a
 
 ###############################################################################
 # 1) Helper function: list available config files
@@ -70,7 +69,7 @@ load_config() {
   local config_file="${CONFIG_DIR}/br/${platform}"
 
   if [[ ! -f "$config_file" ]]; then
-    ls -a {CONFIG_DIR}/br/
+    ls -a ${CONFIG_DIR}/br/
     echo "Error: Config file $config_file not found!"
     exit 1
   fi
