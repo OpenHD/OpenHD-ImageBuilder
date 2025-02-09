@@ -39,7 +39,7 @@
 # Then inside the script, we source those variables and run the build steps.
 # ---------------------------------------------------------------------------
 
-CONFIG_DIR="../images"
+CONFIG_DIR="images"
 ls -a
 
 ###############################################################################
