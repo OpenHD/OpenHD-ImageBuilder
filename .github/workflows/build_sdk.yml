@@ -77,7 +77,7 @@ jobs:
         tar -czvf output.tar.gz -C /home/runner/work/OpenHD-ImageBuilder/OpenHD-ImageBuilder/output .
   
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v5
       with:
         name: compiled-image
         path: output.tar.gz
