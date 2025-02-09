@@ -80,17 +80,17 @@ load_config() {
   # shellcheck disable=SC1090
   source "$config_file"
 
-  # Optional: Display the loaded environment variables
-  echo "------------------------------------------------------------"
-  echo "  PLATFORM:           $platform"
-  echo "  DOWNLOAD_URL:       ${DOWNLOAD_URL:-<not set>}"
-  echo "  BUILDROOT_VERSION:  ${BUILDROOT_VERSION:-<not set>}"
-  echo "  PLATFORM_DEFCONFIG: ${PLATFORM_DEFCONFIG:-<not set>}"
-  echo "  KERNEL_REPO_URL:    ${KERNEL_REPO_URL:-<not set>}"
-  echo "  KERNEL_BRANCH:      ${KERNEL_BRANCH:-<not set>}"
-  echo "  ... (and so on for other variables) ..."
-  echo "------------------------------------------------------------"
-}
+#   # Optional: Display the loaded environment variables
+#   echo "------------------------------------------------------------"
+#   echo "  PLATFORM:           $platform"
+#   echo "  DOWNLOAD_URL:       ${DOWNLOAD_URL:-<not set>}"
+#   echo "  BUILDROOT_VERSION:  ${BUILDROOT_VERSION:-<not set>}"
+#   echo "  PLATFORM_DEFCONFIG: ${PLATFORM_DEFCONFIG:-<not set>}"
+#   echo "  KERNEL_REPO_URL:    ${KERNEL_REPO_URL:-<not set>}"
+#   echo "  KERNEL_BRANCH:      ${KERNEL_BRANCH:-<not set>}"
+#   echo "  ... (and so on for other variables) ..."
+#   echo "------------------------------------------------------------"
+ }
 
 ###############################################################################
 # 3) The actual build steps (you’ll adapt these to your setup)
@@ -110,6 +110,8 @@ perform_build() {
     tar -xf buildroot.tar.gz
     # E.g. rename or cd into extracted directory
     # cd buildroot-${BUILDROOT_VERSION} ...
+  else
+    git clone $GITHUB_URL
   fi
 
   # b) If you use a defconfig approach, e.g.:

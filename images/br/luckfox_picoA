@@ -1,5 +1,1 @@
-DOWNLOAD_URL="https://buildroot.org/downloads/buildroot-2022.11.tar.gz"
-BUILDROOT_VERSION="2022.11"
-PLATFORM_DEFCONFIG="rpi_defconfig"
-KERNEL_REPO_URL="https://github.com/raspberrypi/linux.git"
-KERNEL_BRANCH="rpi-5.10.y"
+GITHUB_URL="https://github.com/LuckfoxTECH/luckfox-pico.git"
