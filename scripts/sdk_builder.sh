@@ -39,7 +39,7 @@
 # Then inside the script, we source those variables and run the build steps.
 # ---------------------------------------------------------------------------
 
-CONFIG_DIR="/images"
+CONFIG_DIR="../images"
 
 ###############################################################################
 # 1) Helper function: list available config files
