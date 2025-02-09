@@ -116,6 +116,7 @@ perform_build() {
     exit 1
     fi
 
+  cd buildroot
   echo "Starting confiugation steps for: $platform"
   echo "------------------------------------------------------------"
  
