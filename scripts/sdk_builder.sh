@@ -100,21 +100,22 @@ perform_build() {
 
   echo "Starting build steps for: $platform"
   echo "------------------------------------------------------------"
-  # Example commands below. Tweak these to match your environment or script logic.
-  # You might run Buildroot, clone kernel sources, patch things, etc.
 
-  # a) Download Buildroot (example)
-  if [[ -n "$DOWNLOAD_URL" ]]; then
+    if [[ -n "${DOWNLOAD_URL}" && "${DOWNLOAD_URL}" != " " ]]; then
     echo "Downloading Buildroot from $DOWNLOAD_URL ..."
     wget -q "$DOWNLOAD_URL" -O buildroot.tar.gz
     tar -xf buildroot.tar.gz
-    # E.g. rename or cd into extracted directory
-    # cd buildroot-${BUILDROOT_VERSION} ...
-  else
-    git clone $GITHUB_URL
-  fi
 
-  # b) If you use a defconfig approach, e.g.:
+
+    elif [[ -n "${GITHUB_URL}" && "${GITHUB_URL}" != " " ]]; then
+    echo "Cloning Buildroot from GitHub: $GITHUB_URL ..."
+    git clone "$GITHUB_URL" buildroot
+
+    else
+    echo "Error: Neither DOWNLOAD_URL nor GITHUB_URL is set! Cannot proceed."
+    exit 1
+    fi
+
   if [[ -n "$PLATFORM_DEFCONFIG" ]]; then
     echo "Using defconfig: $PLATFORM_DEFCONFIG"
     # Example:
