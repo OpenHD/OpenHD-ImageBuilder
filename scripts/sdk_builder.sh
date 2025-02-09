@@ -125,6 +125,10 @@ $TYPE_1
 $TYPE_2
 $TYPE_2
 EOF
+  echo "Starting build steps for: $platform"
+  echo "------------------------------------------------------------"
+
+./build.sh
 
   echo "Build process for $platform completed (placeholder)."
   echo
