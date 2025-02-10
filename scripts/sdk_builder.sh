@@ -134,7 +134,6 @@ EOF
   cd ../../../../../../../
 
   echo "adding OpenHD and updating Poco"
-  echo "$pwd"
   cp -rfv ../additionalFiles/Buildroot/openhd sysdrv/source/buildroot/buildroot-2023.02.6/package/
   rm -Rf sysdrv/source/buildroot/buildroot-2023.02.6/package/poco
   cp -rfv ../additionalFiles/Buildroot/UpdatedDependencies/poco sysdrv/source/buildroot/buildroot-2023.02.6/package/poco
@@ -150,7 +149,7 @@ EOF
 
   echo "Starting build steps for: $platform"
   echo "------------------------------------------------------------"
-
+exit
 ./build.sh
 
   echo "Build process for $platform completed (placeholder)."
