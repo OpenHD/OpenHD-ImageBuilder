@@ -124,13 +124,12 @@ perform_build() {
   echo "adding Wifi driver (8812eu)"
   cd sysdrv/source/kernel/drivers/net/wireless/realtek
   git clone https://github.com/openhd/rtl88x2eu
-  cd ../../../../../../../../
-  ls
-  exit
+  cd ../../../../../../../
 
   echo "adding OpenHD and Poco"
   git clone https://github.com/openhd/openhd
   cp -rfv openhd/Buildroot/* sysdrv/source/buildroot/buildroot*/package/
+  ls sysdrv/source/buildroot/buildroot*/package/*
 
   exit
 
