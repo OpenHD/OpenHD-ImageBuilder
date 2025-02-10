@@ -118,6 +118,13 @@ perform_build() {
     fi
 
   cd buildroot
+
+./build.sh lunch <<EOF
+$TYPE_1
+$TYPE_2
+$TYPE_2
+EOF
+
   echo "Starting confiugation steps for: $platform"
   echo "------------------------------------------------------------"
  
@@ -135,12 +142,12 @@ perform_build() {
   sed -i '/menu "Audio and video applications"/a\        source "package/openhd/Config.in"' sysdrv/source/buildroot/buildroot-2023.02.6/package/Config.in
   echo -e "\n# Enable build OpenHD\nCONFIG_SYSDRV_ENABLE_OPENHD=y\n\$(eval \$(call MACRO_CHECK_ENABLE_PKG, RK_ENABLE_OPENHD))" >> sysdrv/cfg/package.mk
 
-exit
 ./build.sh lunch <<EOF
 $TYPE_1
 $TYPE_2
 $TYPE_2
 EOF
+
   echo "Starting build steps for: $platform"
   echo "------------------------------------------------------------"
 
