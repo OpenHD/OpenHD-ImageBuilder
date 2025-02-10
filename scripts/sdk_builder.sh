@@ -147,6 +147,9 @@ $TYPE_2
 $TYPE_2
 EOF
 
+sed -i '/BR2_PACKAGE_BUSYBOX_SHOW_OTHERS=y/a\BR2_PACKAGE_OPENHD=y' config/buildroot_defconfig
+
+
   echo "Starting build steps for: $platform"
   echo "------------------------------------------------------------"
 exit
