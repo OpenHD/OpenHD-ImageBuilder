@@ -126,13 +126,15 @@ perform_build() {
   git clone https://github.com/openhd/rtl88x2eu
   cd ../../../../../../../
 
-  echo "adding OpenHD and Poco"
-  git clone https://github.com/openhd/openhd
-  cp -rfv openhd/Buildroot/* sysdrv/source/buildroot/buildroot*/package/
-  ls sysdrv/source/buildroot/buildroot*/package/*
+  echo "adding OpenHD and updating Poco"
+  cp -rfv ../additionalFiles/Buildroot/openhd sysdrv/source/buildroot/buildroot*/package/
+  rm -Rf sysdrv/source/buildroot/buildroot*/package/poco
+  cp -rfv ../additionalFiles/Buildroot/UpdatedDependencies/poco sysdrv/source/buildroot/buildroot*/package/poco
+  echo "adding OpenHD configuation option"
+  sed -i '/menu "Audio and video applications"/a\        source "package/openhd/Config.in"' sysdrv/source/buildroot/buildroot*/package/Config.in
+  echo -e "\n# Enable build OpenHD\nCONFIG_SYSDRV_ENABLE_OPENHD=y\n\$(eval \$(call MACRO_CHECK_ENABLE_PKG, RK_ENABLE_OPENHD))" >> sysdrv/source/cfg/package.mk
 
-  exit
-
+exit
 ./build.sh lunch <<EOF
 $TYPE_1
 $TYPE_2
