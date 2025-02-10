@@ -47,8 +47,9 @@ OPENHD_DEPENDENCIES = poco libsodium gstreamer1 gst1-plugins-base libpcap host-p
 OPENHD_CONF_OPTS = \
     -DENABLE_USB_CAMERAS=OFF \
     -DCMAKE_C_COMPILER=gcc-11 \
-    -DCMAKE_CXX_COMPILER=g++-11
-
+    -DCMAKE_CXX_COMPILER=g++-11 \
+    -DPCAP_NEEDS_THREADS=ON
+	
 # Use Buildroot's CMake package infrastructure to handle the build
 $(eval $(cmake-package))
 
