@@ -49,14 +49,6 @@ OPENHD_CONF_OPTS = \
     -DCMAKE_C_COMPILER=gcc-11 \
     -DCMAKE_CXX_COMPILER=g++-11
 
-   
-# Print the staging directory
-$(info The Staging Directory is: $(STAGING_DIR))
-
-# List all files in the staging directory
-$(info Listing all files in the staging directory:)
-$(shell find $(STAGING_DIR) -type f | xargs -I {} echo {})
-
 # Use Buildroot's CMake package infrastructure to handle the build
 $(eval $(cmake-package))
 
