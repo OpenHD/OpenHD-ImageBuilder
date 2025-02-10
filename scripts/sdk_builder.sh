@@ -121,6 +121,19 @@ perform_build() {
   echo "Starting confiugation steps for: $platform"
   echo "------------------------------------------------------------"
  
+  echo "adding Wifi driver (8812eu)"
+  cd sysdrv/source/kernel/drivers/net/wireless/realtek
+  git clone https://github.com/openhd/rtl88x2eu
+  cd ../../../../../../../../
+  ls
+  exit
+
+  echo "adding OpenHD and Poco"
+  git clone https://github.com/openhd/openhd
+  cp -rfv openhd/Buildroot/* sysdrv/source/buildroot/buildroot*/package/
+
+  exit
+
 ./build.sh lunch <<EOF
 $TYPE_1
 $TYPE_2
