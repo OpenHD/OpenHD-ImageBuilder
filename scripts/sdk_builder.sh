@@ -118,7 +118,6 @@ perform_build() {
     fi
 
   cd buildroot
-  ./build.sh clean
   echo "Starting confiugation steps for: $platform"
   echo "------------------------------------------------------------"
  
