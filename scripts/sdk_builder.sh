@@ -133,7 +133,7 @@ perform_build() {
   cp -rfv ../additionalFiles/Buildroot/UpdatedDependencies/poco sysdrv/source/buildroot/buildroot-2023.02.6/package/poco
   echo "adding OpenHD configuation option"
   sed -i '/menu "Audio and video applications"/a\        source "package/openhd/Config.in"' sysdrv/source/buildroot/buildroot-2023.02.6/package/Config.in
-  echo -e "\n# Enable build OpenHD\nCONFIG_SYSDRV_ENABLE_OPENHD=y\n\$(eval \$(call MACRO_CHECK_ENABLE_PKG, RK_ENABLE_OPENHD))" >> sysdrv/source/cfg/package.mk
+  echo -e "\n# Enable build OpenHD\nCONFIG_SYSDRV_ENABLE_OPENHD=y\n\$(eval \$(call MACRO_CHECK_ENABLE_PKG, RK_ENABLE_OPENHD))" >> sysdrv/cfg/package.mk
 
 exit
 ./build.sh lunch <<EOF
