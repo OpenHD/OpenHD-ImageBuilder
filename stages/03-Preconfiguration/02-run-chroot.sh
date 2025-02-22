@@ -5,9 +5,13 @@
 # Do not use log here, it will end up in the image
 # Here we do simple platform detection for OpenHD with creating a few folders
 
+
+# Generate buffer space to allow the user to add files or programs +1000mb
+dd if=/dev/zero of=/opt/space.img bs=1M count=1024
+
+
 rm -Rf /opt/additionalFiles
-echo "alias led='led_sys.sh'" | sudo tee -a /etc/bash.bashrc >/dev/null
-#create ramdisk
+#echo "alias led='led_sys.sh'" | sudo tee -a /etc/bash.bashrc >/dev/null
 sudo mkdir -p /ramdisk && echo "tmpfs /ramdisk tmpfs defaults,size=100M 0 0" | sudo tee -a /etc/fstab && sudo mount /ramdisk
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]]; then
