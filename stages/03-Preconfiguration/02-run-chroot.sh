@@ -12,7 +12,7 @@ dd if=/dev/zero of=/opt/space.img bs=1M count=1024
 
 rm -Rf /opt/additionalFiles
 #echo "alias led='led_sys.sh'" | sudo tee -a /etc/bash.bashrc >/dev/null
-
+sudo mkdir -p /ramdisk && echo "tmpfs /ramdisk tmpfs defaults,size=100M 0 0" | sudo tee -a /etc/fstab && sudo mount /ramdisk
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]]; then
 mkdir -p /usr/local/share/openhd_platform/rock/rock5a
