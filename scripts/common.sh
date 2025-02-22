@@ -7,7 +7,6 @@ mount_image () {
     IMG_FILE="${STAGE_WORK_DIR}/IMAGE.img"
 
     log "Mounting image file: ${IMG_FILE}"
-
     PARTED_OUT=$(parted -s "${IMG_FILE}" unit b print)
 
     if [[ "${HAVE_BOOT_PART}" == "true" ]]; then

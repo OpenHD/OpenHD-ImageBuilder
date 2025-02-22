@@ -9,7 +9,6 @@ set -e
 
 CLEANCLEAN=true
 
-
 # X20 specific code
 function install_x20_packages {
     #sudo apt install -y firmware-realtek NEEDS FIXING
@@ -58,14 +57,14 @@ function install_packages-core3566 {
 }
 # Ubuntu-x86-specific code
 function install_ubuntu_x86_packages {
-        CLEAN=false
+CLEAN=false
         if [[ "${DISTRO}" == "jammy" ]]; then
         PLATFORM_PACKAGES_HOLD="dkms initramfs-tools grub-pc linux-image-5.15.0-57-generic grub-efi-amd64-signed linux-generic linux-headers-generic linux-image-generic linux-generic-hwe-22.04 linux-image-generic-hwe-22.04 linux-headers-generic-hwe-22.04"
         else
         PLATFORM_PACKAGES_HOLD="grub-efi-amd64-bin grub-efi-amd64-signed linux-generic linux-headers-generic linux-image-generic linux-libc-dev"
         fi
-    BASE_PACKAGES="openhd-sys-utils openhd apt-transport-https apt-utils open-hd-web-ui"
-    PLATFORM_PACKAGES="net-tools rtl8852bu-x86 rtl88x2bu-x86 rtl8812au-x86 rtl88x2eu-x86 gnome-disk-utility openssh-server gnome-terminal qopenhd python3-pip htop libavcodec-dev libavformat-dev libelf-dev libboost-filesystem-dev libspdlog-dev build-essential libfontconfig1-dev libdbus-1-dev libfreetype6-dev libicu-dev libinput-dev libxkbcommon-dev libsqlite3-dev libssl-dev libpng-dev libjpeg-dev libglib2.0-dev libgles2-mesa-dev libgbm-dev libdrm-dev libwayland-dev pulseaudio libpulse-dev flex bison gperf libre2-dev libnss3-dev libdrm-dev libxml2-dev libxslt1-dev libminizip-dev libjsoncpp-dev liblcms2-dev libevent-dev libprotobuf-dev protobuf-compiler libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-x11-dev libgtk2.0-dev libgtk-3-dev libfuse2 mono-complete mono-runtime libmono-system-windows-forms4.0-cil libmono-system-core4.0-cil libmono-system-management4.0-cil libmono-system-xml-linq4.0-cil libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-plugins-bad libgstreamer-plugins-bad1.0-dev gstreamer1.0-pulseaudio gstreamer1.0-tools gstreamer1.0-alsa gstreamer1.0-qt5 openhdimagewriter"
+    BASE_PACKAGES="openhd-sys-utils openhd apt-transport-https apt-utils"
+    PLATFORM_PACKAGES="net-tools gnome-disk-utility openssh-server gnome-terminal qopenhd python3-pip htop libavcodec-dev libavformat-dev libelf-dev libboost-filesystem-dev libspdlog-dev build-essential libfontconfig1-dev libdbus-1-dev libfreetype6-dev libicu-dev libinput-dev libxkbcommon-dev libsqlite3-dev libssl-dev libpng-dev libjpeg-dev libglib2.0-dev libgles2-mesa-dev libgbm-dev libdrm-dev libwayland-dev pulseaudio libpulse-dev flex bison gperf libre2-dev libnss3-dev libdrm-dev libxml2-dev libxslt1-dev libminizip-dev libjsoncpp-dev liblcms2-dev libevent-dev libprotobuf-dev protobuf-compiler libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-x11-dev libgtk2.0-dev libgtk-3-dev libfuse2 mono-complete mono-runtime libmono-system-windows-forms4.0-cil libmono-system-core4.0-cil libmono-system-management4.0-cil libmono-system-xml-linq4.0-cil libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-plugins-bad libgstreamer-plugins-bad1.0-dev gstreamer1.0-pulseaudio gstreamer1.0-tools gstreamer1.0-alsa gstreamer1.0-qt5 openhdimagewriter"
     PLATFORM_PACKAGES_REMOVE=""
 }
 function install_ubuntu_x86_minimal_packages {
@@ -82,7 +81,7 @@ function clone_github_repos {
     chmod -R 777 /opt
 }
 function install_openhd {
-        apt update && apt install libpoco-dev -y
+        # apt update && apt install libpoco-dev -y
     if [[ "${OS}" == "debian-X20" ]]; then
         rm -Rf /etc/apt/sources.list.d/armbian.list
         apt update
@@ -105,10 +104,8 @@ function install_openhd {
         apt update
         install_packages-core3566
     elif [[ "${OS}" == "ubuntu-x86-minimal" ]] ; then
-        apt update
         install_ubuntu_x86_minimal_packages
     elif [[ "${OS}" == "ubuntu-x86" ]] ; then
-        apt update
         install_ubuntu_x86_packages
     elif [[ "${OS}" == "ubuntu" ]] ; then
         fix_jetson_apt
@@ -119,8 +116,10 @@ function install_openhd {
      # Add OpenHD Repository platform-specific packages
         apt install -y curl
         curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
-        curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
-        apt update
+        if [ -e "/opt/additionalFiles/dev-build" ]; then
+            curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
+        fi
+        #apt update
 
     # Remove platform-specific packages
         echo "Removing platform-specific packages..."
