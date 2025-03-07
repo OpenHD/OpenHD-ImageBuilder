@@ -97,6 +97,20 @@ function install_openhd {
         apt update
         install_radxa-debian_packages
     elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
+        # Remove old Radxa repository from sources.list
+        sudo sed -i '/radxa-repo.github.io/d' /etc/apt/sources.list
+        # Remove any old Radxa repository list files
+        sudo rm -f /etc/apt/sources.list.d/radxa.list /etc/apt/sources.list.d/70-radxa.list
+        # Remove outdated keys
+        sudo apt-key del E572249A33EB9743 5D93177D0752732A
+        # Download and install the new Radxa keyring
+        keyring="$(mktemp)"
+        version="$(curl -Ls https://github.com/radxa-pkg/radxa-archive-keyring/releases/latest/download/VERSION)"
+        curl -L --output "$keyring" "https://github.com/radxa-pkg/radxa-archive-keyring/releases/latest/download/radxa-archive-keyring_${version}_all.deb"
+        sudo dpkg -i "$keyring"
+        rm -f "$keyring"
+        # Add the updated repository to sources.list
+        echo "deb [signed-by=/usr/share/keyrings/radxa-archive-keyring.gpg] https://radxa-repo.github.io/bullseye/ bullseye main" | sudo tee -a /etc/apt/sources.list
         apt update
         install_radxa-debian_packages_rk3566
         apt upgrade -y
