@@ -74,7 +74,13 @@ EOF
 fi
 
 else 
-echo "the image doesn't need to be enlarged, just using it like it is"
+
+    if [[ "${OS}" = ubuntu-x86 ]]; then
+    echo "apply x86 image fix"
+    printf '\x00' >> IMAGE.img
+    else
+    echo "the image doesn't need to be enlarged, just using it like it is"
+    fi
 fi
 
 popd

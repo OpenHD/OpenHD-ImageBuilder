@@ -37,5 +37,7 @@ touch /conf/openhd/Videos/external_video_part.txt
 touch /conf/openhd/hardware_vtx_v20.txt
 elif [[ "${OS}" == "ubuntu-x86" ]]; then
 mkdir -p /usr/local/share/openhd_platform/x86
+touch /conf/openhd/x86.txt
+touch /conf/config.txt
 fi
 
