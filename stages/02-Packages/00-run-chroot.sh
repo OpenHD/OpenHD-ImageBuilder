@@ -94,7 +94,7 @@ function install_openhd {
         apt update
         install_radxa-ubuntu_packages
     elif [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]  ; then
-        apt update
+        apt update && apt upgrade -y
         install_radxa-debian_packages
     elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
         # Remove old Radxa repository from sources.list
