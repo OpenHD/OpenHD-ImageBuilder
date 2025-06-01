@@ -12,7 +12,7 @@ CLEANCLEAN=true
 # X20 specific code
 function install_x20_packages {
     #sudo apt install -y firmware-realtek NEEDS FIXING
-    sudo apt install -y whiptail
+    sudo apt install -y whiptail libpoco-dev
     rm -Rf /etc/apt/sources.list.d/*
     rm -Rf /etc/apt/sources.list
     BASE_PACKAGES="openhd-x20 encode-sunxi openhd-sys-utils rtl8812au-x20"
@@ -36,7 +36,7 @@ function install_radxa-debian_packages {
     BASE_PACKAGES="openhd-sys-utils openhd qopenhd-rk3588 apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="task-rk356x task-rockchip radxa-system-config-rockchip 8852bu-dkms 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-rock-5a linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip"
     PLATFORM_PACKAGES_REMOVE="sddm plymouth plasma-desktop kde*"
-    PLATFORM_PACKAGES="net-tools linux-headers-5.10.160-radxa-rk3588-ohd  linux-image-5.10.160-radxa-rk3588-ohd  rockchip-iq-openhd-r5 rsync procps mpv camera-engine-rkaiq mpp-rk3566 fpv-rk3566"
+    PLATFORM_PACKAGES="net-tools linux-headers-5.10.160-radxa-rk3588-ohd  linux-image-5.10.160-radxa-rk3588-ohd  rockchip-iq-openhd-r5 rsync procps mpp-rk3566 fpv-rk3566"
 }
 function install_radxa-debian_packages_rk3566 {
     mkdir -p /usr/share/sddm/themes/breeze/
@@ -45,8 +45,8 @@ function install_radxa-debian_packages_rk3566 {
     rm -Rf /etc/apt/preferences.d/radxa-rockchip
     mkdir -p /usr/local/share/openhd_platform/rock/rk3566
     BASE_PACKAGES="dosfstools gstreamer1.0-plugins-rtp gstreamer1.0-rockchip1 gstreamer1.0-vaapi libavahi-glib1 libdrm-cursor linux-headers-5.10.160-radxa-rk356x linux-image-5.10.160-radxa-rk356x openhd-sys-utils openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
-    PLATFORM_PACKAGES_REMOVE="gvfs gvfs-backends gvfs-fuse plymouth plymouth-theme-breeze plymouth-themes vulkan-tools xdg-desktop-portal xdg-desktop-portal-gtk xdg-user-dirs xdg-user-dirs-gtk xdg-utils task-xfce-desktop thunar-volman xfce4-clipman xfce4-notifyd xfce4-power-manager xfce4-screenshooter xfce4-terminal xiccd aha breeze-cursor-theme clinfo codium cups desktop-base firefox-esr fonts-noto-cjk fprintd fwupd maliit-keyboard"
-    PLATFORM_PACKAGES_HOLD="libdvbv5-0 libv4l2rds0 libv4lconvert0 xserver-common xserver-xorg-core xserver-xorg-legacy linux-headers-radxa-zero3 linux-image-radxa-zero3 task-rk356x task-rockchip radxa-system-config-rockchip task-radxa-cm3-rpi-cm4-io radxa-firmware"
+    PLATFORM_PACKAGES_REMOVE="gvfs gvfs-backends gvfs-fuse plymouth plymouth-theme-breeze plymouth-themes vulkan-tools xdg-desktop-portal xdg-desktop-portal-gtk xdg-user-dirs xdg-user-dirs-gtk xdg-utils task-xfce-desktop thunar-volman xfce4-clipman xfce4-notifyd xfce4-power-manager xfce4-screenshooter xfce4-terminal xiccd aha breeze-cursor-theme clinfo cups desktop-base firefox-esr fonts-noto-cjk fprintd fwupd maliit-keyboard"
+    PLATFORM_PACKAGES_HOLD="camera-engine-rkaiq libdvbv5-0 libv4l2rds0 libv4lconvert0 xserver-common xserver-xorg-core xserver-xorg-legacy linux-headers-radxa-zero3 linux-image-radxa-zero3 task-rk356x task-rockchip radxa-system-config-rockchip task-radxa-cm3-rpi-cm4-io radxa-firmware"
     # PLATFORM_PACKAGES_HOLD="u-boot-radxa-zero3 radxa-system-config-common radxa-system-config-kernel-cmdline-ttyfiq0 radxa-firmware radxa-system-config-bullseye 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-radxa-cm3-rpi-cm4-io linux-headers-radxa-cm3-rpi-cm4-io linux-image-5.10.160-12-rk356x linux-headers-5.10.160-12-rk356x"
     PLATFORM_PACKAGES="dialog pv net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd-r3 librga2=2.2.0-1 procps camera-engine-rkaiq mpp-rk3566 fpv-rk3566"
 }
@@ -85,16 +85,42 @@ function install_openhd {
     if [[ "${OS}" == "debian-X20" ]]; then
         rm -Rf /etc/apt/sources.list.d/armbian.list
         apt update
+        apt install libpoco-dev -y
         install_x20_packages
     elif [[ "${OS}" == "raspbian" ]]; then
         apt update
+        apt install libpoco-dev -y
         install_raspbian_packages
     elif [[ "${OS}" == "radxa-ubuntu-rock5b" ]] || [[ "${OS}" == "radxa-ubuntu-rock5a" ]] ; then
         sudo add-apt-repository -r "deb https://ppa.launchpadcontent.net/jjriek/rockchip/ubuntu jammy main"
         apt update
+        apt install libpoco-dev -y
+        DEBIAN_FRONTEND=noninteractive apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" camera-engine-rkaiq
         install_radxa-ubuntu_packages
     elif [[ "${OS}" == "radxa-debian-rock5a" ]] || [[ "${OS}" == "radxa-debian-rock5b" ]]  ; then
-        apt update && apt upgrade -y
+        echo "deb http://apt.radxa.com/bullseye-stable bullseye main" | sudo tee /etc/apt/sources.list.d/apt-radxa-com.list
+        # Create a temporary file for the keyring package
+keyring="$(mktemp)"
+
+# Download the latest version number
+version="$(curl -fsSL https://github.com/radxa-pkg/radxa-archive-keyring/releases/latest/download/VERSION)"
+
+# Download the corresponding .deb package
+curl -fsSL -o "$keyring" "https://github.com/radxa-pkg/radxa-archive-keyring/releases/latest/download/radxa-archive-keyring_${version}_all.deb"
+
+# Install the keyring package
+sudo dpkg -i "$keyring"
+
+# Remove the temporary file
+rm -f "$keyring"
+
+curl -fsSL https://apt.radxa.com/bullseye-stable/public.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/radxa-new.gpg > /dev/null
+
+        echo "DEBUG_________________________________________________________________________________"
+        echo "DEBUG_________________________________________________________________________________"
+        echo "DEBUG_________________________________________________________________________________"
+        echo "DEBUG_________________________________________________________________________________"
+        apt update
         install_radxa-debian_packages
     elif [[ "${OS}" == "radxa-debian-rock-cm3" ]] ; then
         # Remove old Radxa repository from sources.list
@@ -111,9 +137,10 @@ function install_openhd {
         rm -f "$keyring"
         # Add the updated repository to sources.list
         echo "deb [signed-by=/usr/share/keyrings/radxa-archive-keyring.gpg] https://radxa-repo.github.io/bullseye/ bullseye main" | sudo tee -a /etc/apt/sources.list
-        apt update
+        #remove vscode 
+        sudo find /etc/apt/ -type f -exec grep -l 'vscodium' {} + | xargs -r sudo rm && sudo apt update
         install_radxa-debian_packages_rk3566
-        apt upgrade -y
+            apt install libpoco-dev -y
     elif [[ "${OS}" == "radxa-debian-rock-cm3-core3566" ]] ; then
         apt update
         install_packages-core3566
@@ -132,6 +159,15 @@ function install_openhd {
         curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
         if [ -e "/opt/additionalFiles/dev-build" ]; then
             curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
+            echo "BUILDING DEVELOPMENT IMAGE"
+            echo "BUILDING DEVELOPMENT IMAGE"
+            echo "BUILDING DEVELOPMENT IMAGE"
+            echo "BUILDING DEVELOPMENT IMAGE"
+            echo "BUILDING DEVELOPMENT IMAGE"
+            echo "BUILDING DEVELOPMENT IMAGE"
+            echo "BUILDING DEVELOPMENT IMAGE"
+            echo "BUILDING DEVELOPMENT IMAGE"
+
         fi
         #apt update
 
@@ -159,10 +195,7 @@ function install_openhd {
         fi
     done
     #Cleapup
-    apt autoremove -y
-    if [ "$CLEAN" = true ]; then
-    apt upgrade -y --allow-downgrades
-    fi
+    #apt autoremove -y
     # Install platform-specific packages
     echo "Installing platform-specific packages..."
     for package in ${BASE_PACKAGES} ${PLATFORM_PACKAGES}; do
@@ -201,7 +234,7 @@ else
     touch default.pa
     apt remove -y rockchip-pulseaudio-config
     #now removing everything else
-    PLATFORM_PACKAGES_REMOVE="gstreamer1.0-gtk3 gstreamer1.0-libav gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-rtp gstreamer1.0-plugins-ugly gstreamer1.0-qt5 gstreamer1.0-vaapi gvfs gvfs-backends gvfs-fuse mesa-utils mesa-va-drivers plymouth plymouth-theme-breeze plymouth-themes vdpau-driver-all vulkan-tools xdg-desktop-portal xdg-desktop-portal-gtk xdg-user-dirs xdg-user-dirs-gtk xdg-utils task-xfce-desktop thunar-volman xfce4-clipman xfce4-notifyd xfce4-power-manager xfce4-screenshooter xfce4-terminal xiccd aha breeze-cursor-theme clinfo codium cups desktop-base firefox-esr fonts-noto-cjk fprintd fwupd maliit-keyboard dnsmasq libllvm* firmware-misc-nonfree libmali-bifrost-g52-g2p0-x11-gbm adwaita-icon-theme firmware-brcm80211 network-manager libcairo2 libvulkan1 libgtk-3-common libcups2 libavcodec58 libavformat58 libavfilter7 libopencv* codium dkms plasma-desktop lightdm chromium"
+    PLATFORM_PACKAGES_REMOVE="gstreamer1.0-gtk3 gstreamer1.0-libav gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-rtp gstreamer1.0-plugins-ugly gstreamer1.0-qt5 gstreamer1.0-vaapi gvfs gvfs-backends gvfs-fuse mesa-utils mesa-va-drivers plymouth plymouth-theme-breeze plymouth-themes vdpau-driver-all vulkan-tools xdg-desktop-portal xdg-desktop-portal-gtk xdg-user-dirs xdg-user-dirs-gtk xdg-utils task-xfce-desktop thunar-volman xfce4-clipman xfce4-notifyd xfce4-power-manager xfce4-screenshooter xfce4-terminal xiccd aha breeze-cursor-theme clinfo cups desktop-base firefox-esr fonts-noto-cjk fprintd fwupd maliit-keyboard dnsmasq libllvm* firmware-misc-nonfree libmali-bifrost-g52-g2p0-x11-gbm adwaita-icon-theme firmware-brcm80211 network-manager libcairo2 libvulkan1 libgtk-3-common libcups2 libavcodec58 libavformat58 libavfilter7 libopencv* dkms plasma-desktop lightdm chromium"
     
         # Remove platform-specific packages
         echo "Removing platform-specific packages..."

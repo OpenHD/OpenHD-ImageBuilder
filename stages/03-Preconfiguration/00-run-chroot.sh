@@ -95,6 +95,8 @@ fi
      # comment out resize function to use our own resizing
      sudo sed -i '141,174 s/^/#/' /usr/lib/raspberrypi-sys-mods/firstboot
      touch /boot/openhd/resize.txt
+     sudo systemctl disable getty@tty1.service
+     sudo systemctl mask getty@tty1.service
  fi
 
  if [[ "${OS}" == "ubuntu" ]]; then

@@ -6,7 +6,6 @@ on:
       - "2.6-evo"
       - "dev-release"
       - "release"
-      - "rock5"
 
 jobs:
   build:
