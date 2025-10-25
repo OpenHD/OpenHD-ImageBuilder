@@ -97,6 +97,15 @@ fi
      touch /boot/openhd/resize.txt
      sudo systemctl disable getty@tty1.service
      sudo systemctl mask getty@tty1.service
+
+    # dirty fix libcamera updated
+    curl -s --compressed "https://arducam.github.io/arducam_ppa/KEY.gpg" | sudo apt-key add -
+    sudo curl -s --compressed -o /etc/apt/sources.list.d/arducam_list_files.list "https://arducam.github.io/arducam_ppa/arducam_list_files.list"
+    sudo apt update
+    apt-cache madison arducam-pivariety-sdk-dev
+
+    sudo apt install -y -o Dpkg::Options::="--force-overwrite" arducam-pivariety-sdk-dev=1.0.5
+    sudo cp /opt/additionalFiles/imx662.json /usr/share/libcamera/ipa/rpi/vc4/imx662.json
  fi
 
  if [[ "${OS}" == "ubuntu" ]]; then
