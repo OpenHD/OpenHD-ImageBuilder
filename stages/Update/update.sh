@@ -11,7 +11,7 @@ if [[ ${EUID:-$(id -u)} -ne 0 ]]; then
 fi
 
 export DEBIAN_FRONTEND=noninteractive
-APT="apt-get -o Dpkg::Options::=--force-confnew -y"
+APT="apt -o Dpkg::Options::=--force-confnew -y"
 
 # Add OpenHD repo
 curl -1sLf \
@@ -19,7 +19,7 @@ curl -1sLf \
   | sudo -E bash
 
 # Best-effort update
-apt-get update || true
+apt update || true
 
 # Remove conflicting packages
 $APT remove openhd 'qopenhd*' || true
