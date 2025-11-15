@@ -144,6 +144,51 @@ run_stage(){
     log "End ${STAGE_WORK_DIR}"
 }
 
+ensure_base_image_for_update(){
+    local base_stage="01-Baseimage"
+    local base_stage_dir="${BASE_DIR}/stages/${base_stage}"
+    local base_stage_work_dir="${WORK_DIR}/${base_stage}"
+    local base_stage_script="${base_stage_dir}/00-run.sh"
+    local base_stage_image="${base_stage_work_dir}/IMAGE.img"
+
+    if [[ -f "${base_stage_image}" ]]; then
+        log "Base image for update already present: ${base_stage_image}"
+        return
+    fi
+
+    if [[ ! -f "${base_stage_script}" ]]; then
+        echo "[ERROR] Missing ${base_stage_script} required for update workflow." >&2
+        exit 1
+    fi
+
+    log "Preparing base image for update using ${base_stage}/00-run.sh"
+
+    local saved_stage="${STAGE}"
+    local saved_stage_dir="${STAGE_DIR}"
+    local saved_stage_work_dir="${STAGE_WORK_DIR}"
+
+    mkdir -p "${base_stage_work_dir}"
+
+    pushd "${base_stage_dir}" > /dev/null
+    STAGE="${base_stage}"
+    STAGE_DIR="${base_stage_dir}"
+    STAGE_WORK_DIR="${base_stage_work_dir}"
+
+    chmod +x "${base_stage_script}"
+    "${base_stage_script}"
+
+    popd > /dev/null
+
+    STAGE="${saved_stage}"
+    STAGE_DIR="${saved_stage_dir}"
+    STAGE_WORK_DIR="${saved_stage_work_dir}"
+
+    if [[ ! -f "${base_stage_image}" ]]; then
+        echo "[ERROR] Unable to download base image for update workflow." >&2
+        exit 1
+    fi
+}
+
 prepare_update_image(){
     local target_image="${STAGE_WORK_DIR}/IMAGE.img"
     local source_image="${UPDATE_IMAGE:-}" # optional override from caller
@@ -154,6 +199,14 @@ prepare_update_image(){
         local stage_candidate="${WORK_DIR}/03-Preconfiguration/IMAGE.img"
         if [[ -f "${stage_candidate}" ]]; then
             source_image="${stage_candidate}"
+        fi
+    fi
+
+    if [[ -z "${source_image}" ]]; then
+        ensure_base_image_for_update
+        local base_stage_candidate="${WORK_DIR}/01-Baseimage/IMAGE.img"
+        if [[ -f "${base_stage_candidate}" ]]; then
+            source_image="${base_stage_candidate}"
         fi
     fi
 
