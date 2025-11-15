@@ -66,12 +66,21 @@ if [[ "${IMAGE_TYPE}" == "" ]]; then
     exit 1
 fi
 
-if [[ ! -f ./images/${IMAGE_TYPE} ]]; then
-    echo "Invalid image type: ${IMAGE_TYPE}"
+IMAGE_METADATA_FILE="./images/${IMAGE_TYPE}"
+if [[ "${UPDATE_MODE}" == "true" ]]; then
+    IMAGE_METADATA_FILE="./images/${IMAGE_TYPE}_base"
+fi
+
+if [[ ! -f "${IMAGE_METADATA_FILE}" ]]; then
+    if [[ "${UPDATE_MODE}" == "true" ]]; then
+        echo "Invalid image type for update workflow: ${IMAGE_TYPE}_base"
+    else
+        echo "Invalid image type: ${IMAGE_TYPE}"
+    fi
     exit 1
 fi
 
-source ./images/${IMAGE_TYPE}
+source "${IMAGE_METADATA_FILE}"
 
 echo ""
 line
