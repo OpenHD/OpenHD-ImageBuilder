@@ -1,0 +1,84 @@
+name: Example_Update_Image
+
+on:
+  push:
+    branches:
+      - debug_next
+
+jobs:
+  update-image:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false # Don't fail all if any of the jobs is failing
+      matrix:
+        TARGET: [rock5a] # <-- Add targets here!
+    steps:
+    - name: Maximize build space
+      uses: easimon/maximize-build-space@master
+      with:
+        root-reserve-mb: 101
+        swap-size-mb: 200
+        remove-dotnet: 'true'
+        remove-android: 'true'
+        remove-haskell: 'true'
+        remove-codeql: 'true'
+        remove-docker-images: 'true'
+        overprovision-lvm: 'true'
+    - name: Setup env
+      run: |
+
+        echo "DT=$(date -d '+1 hour' +'%m-%d-%Y-%H-%M-%S')" >> $GITHUB_ENV
+        echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+        echo "$GITHUB_ENV"
+       
+    ### ONLY THIS RELEVANT FOR BUILDING ###
+    - uses: actions/checkout@v4
+    - name: check for dev-release
+      if: ${{ env.BRANCH == 'dev-release' || env.BRANCH == 'add-ramdisk' }}
+      run: | 
+        touch additionalFiles/dev-build
+    - name: update
+      run: sudo apt-get update
+    - name: remove even more
+      run: |
+        sudo apt-get purge -y \
+          '^llvm-.*' \
+          'php.*' \
+          '^mongodb-.*' \
+          '^mysql-.*' \
+          azure-cli \
+          google-chrome-stable \
+          firefox \
+          powershell \
+          microsoft-edge-stable \
+          mono-devel
+        sudo apt-get autoremove -y
+        sudo apt-get clean
+    - name: dep
+      run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
+    - name: update e2fsprogs
+      if: matrix.TARGET == 'x86-noble'
+      run: |
+          git clone https://github.com/tytso/e2fsprogs
+          cd e2fsprogs
+          mkdir build
+          cd build
+          ../configure
+          make
+          sudo make install
+
+    - name: Install build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y qemu-user-static
+        sudo ./install_dep.sh
+
+    - name: Run OpenHD update workflow
+      run: |
+        sudo ./build.sh ${{ matrix.TARGET }} false false true
+
+    - name: Upload updated image artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: openhd-pi-bullseye-update
+        path: deploy/*.img
