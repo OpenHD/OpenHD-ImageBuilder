@@ -1,0 +1,29 @@
+name: Example_Update_Image
+
+on:
+  push:
+    branches:
+      - debug_next
+
+jobs:
+  update-image:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+          sudo ./install_dep.sh
+
+      - name: Run OpenHD update workflow
+        run: |
+          sudo ./build.sh pi-bullseye "" "" true
+
+      - name: Upload updated image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openhd-pi-bullseye-update
+          path: deploy/*.img
