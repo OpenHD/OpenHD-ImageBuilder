@@ -31,6 +31,7 @@ fi
 IMAGE_TYPE=$1
 TESTING=$2
 SMALL=$3
+UPDATE=$4
 
 # print a simple line across the entire width of the terminal like '------------'
 line (){
