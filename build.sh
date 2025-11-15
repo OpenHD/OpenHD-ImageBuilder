@@ -33,6 +33,11 @@ TESTING=$2
 SMALL=$3
 UPDATE=$4
 
+UPDATE_MODE="false"
+if [[ "${UPDATE,,}" == "true" ]]; then
+    UPDATE_MODE="true"
+fi
+
 # print a simple line across the entire width of the terminal like '------------'
 line (){
   printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
@@ -139,6 +144,75 @@ run_stage(){
     log "End ${STAGE_WORK_DIR}"
 }
 
+prepare_update_image(){
+    local target_image="${STAGE_WORK_DIR}/IMAGE.img"
+    local source_image="${UPDATE_IMAGE:-}" # optional override from caller
+
+    mkdir -p "${STAGE_WORK_DIR}"
+
+    if [[ -z "${source_image}" ]]; then
+        local stage_candidate="${WORK_DIR}/03-Preconfiguration/IMAGE.img"
+        if [[ -f "${stage_candidate}" ]]; then
+            source_image="${stage_candidate}"
+        fi
+    fi
+
+    if [[ -z "${source_image}" ]]; then
+        local latest_deploy_image
+        latest_deploy_image=$(ls -t "${DEPLOY_DIR}"/*"${IMAGE_TYPE}"*.img 2>/dev/null | head -n 1 || true)
+        if [[ -n "${latest_deploy_image}" ]]; then
+            source_image="${latest_deploy_image}"
+        fi
+    fi
+
+    if [[ -z "${source_image}" ]]; then
+        echo "[ERROR] Unable to find an image to update. Set UPDATE_IMAGE to an existing .img file." >&2
+        exit 1
+    fi
+
+    if [[ ! -f "${source_image}" ]]; then
+        echo "[ERROR] UPDATE_IMAGE path '${source_image}' does not exist." >&2
+        exit 1
+    fi
+
+    if [[ "${source_image}" != "${target_image}" ]]; then
+        log "Copying source image ${source_image}"
+        rm -f "${target_image}"
+        cp "${source_image}" "${target_image}"
+    fi
+}
+
+run_update_mode(){
+    STAGE="Update"
+    STAGE_DIR="${BASE_DIR}/stages/${STAGE}"
+
+    if [[ ! -d "${STAGE_DIR}" ]]; then
+        echo "[ERROR] Missing ${STAGE_DIR} directory for update workflow." >&2
+        exit 1
+    fi
+
+    STAGE_WORK_DIR="${WORK_DIR}/${STAGE}"
+    PREV_STAGE="${STAGE}"
+    PREV_STAGE_DIR="${STAGE_DIR}"
+    PREV_WORK_DIR="${STAGE_WORK_DIR}"
+
+    prepare_update_image
+    mount_image
+
+    local update_script="${STAGE_DIR}/update.sh"
+    if [[ ! -f "${update_script}" ]]; then
+        echo "[ERROR] Missing ${update_script}." >&2
+        unmount_image
+        exit 1
+    fi
+
+    log "Running update script inside chroot"
+    on_chroot < "${update_script}"
+
+    touch "${STAGE_WORK_DIR}/SKIP"
+    unmount_image
+}
+
 if [ "$(id -u)" != "0" ]; then
     echo "Please run as root" 1>&2
     exit 1
@@ -207,13 +281,17 @@ source "${SCRIPT_DIR}/common.sh"
 log "IMG ${BASE_IMAGE}"
 log "Begin ${BASE_DIR}"
 
-# Iterate trough the steps
-find ./stages -name '*.sh' -type f | xargs chmod 775
-for STAGE_DIR in "${BASE_DIR}/stages/"*; do
-    if [ -d "${STAGE_DIR}" ]; then
-        run_stage
-    fi
-done
+if [[ "${UPDATE_MODE}" == "true" ]]; then
+    run_update_mode
+else
+    # Iterate trough the steps
+    find ./stages -name '*.sh' -type f | xargs chmod 775
+    for STAGE_DIR in "${BASE_DIR}/stages/"*; do
+        if [ -d "${STAGE_DIR}" ]; then
+            run_stage
+        fi
+    done
+fi
 
 # Shrink Image ( only rpi and armbian right now)
 log ""
