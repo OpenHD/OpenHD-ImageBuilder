@@ -1,6 +1,6 @@
 BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/Downloader/release/2.6.4"
 BASE_IMAGE="OpenHD-image-pi-bullseye-2.6.4-release.img.xz"
-BASE_IMAGE_SHA256="b5e3a1d984a7eaa402a6e078d707b506b962f6804d331dcc0daa61debae3a19a"
+BASE_IMAGE_SHA256="adc276c029894c95c1b8a9a4c9995069f6e9ae3673af38dace109c872c6cdb1b"
 OS="raspbian"
 DISTRO="bullseye"
 HAVE_BOOT_PART=true

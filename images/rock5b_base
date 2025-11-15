@@ -1,6 +1,6 @@
 BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/Downloader/release/2.6"
 BASE_IMAGE="OpenHD-image-rock5b--release-06-26-2024-00-28-57.img.xz"
-BASE_IMAGE_SHA256="b4d349ca55fc1d6dcfefeb33ae106471d1ed8e9fe5ed61baa109b7d9ff8a1fe9"
+BASE_IMAGE_SHA256="0e6ce03f8e2a381873856a2d7cc4e93fc6b476c4c9414e9293fe7224ba2783ac"
 OS="radxa-debian-rock5b"
 DISTRO="bullseye"
 HAVE_BOOT_PART=false
