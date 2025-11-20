@@ -25,7 +25,7 @@ jobs:
         overprovision-lvm: true
 
     - name: Check out code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
 
     - name: Install Dependencies and Download SDK
       run: |
