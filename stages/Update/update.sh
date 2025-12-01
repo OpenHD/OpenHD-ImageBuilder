@@ -35,6 +35,12 @@ fix_apt_sources() {
 
 fix_apt_sources
 
+# Remove old OpenHD repo if exists
+  rm /etc/apt/sources.list.d/openhd-dev-release.list
+  rm /etc/apt/sources.list.d/openhd-release.list
+  apt-get clean
+  rm -rf /var/lib/apt/lists/*
+
 # Add OpenHD repo (ignore failures from gnupg checks)
 if command -v sudo >/dev/null 2>&1; then
   curl -1sLf \
