@@ -79,5 +79,5 @@ jobs:
     - name: Upload updated image artifact
       uses: actions/upload-artifact@v4
       with:
-        name: openhd-pi-bullseye-update
+        name: openhd-image-${{ matrix.TARGET }}-${{ env.DT }}
         path: deploy/*.img
