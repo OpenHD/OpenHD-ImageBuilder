@@ -36,8 +36,14 @@ fix_apt_sources() {
 fix_apt_sources
 
 # Remove old OpenHD repo if exists
-  rm /etc/apt/sources.list.d/openhd-dev-release.list
-  rm /etc/apt/sources.list.d/openhd-release.list
+  if [[ -f /etc/apt/sources.list.d/openhd-dev-release.list ]]; then
+    echo "Removing old OpenHD APT sources…"
+    rm /etc/apt/sources.list.d/openhd-dev-release.list
+  fi
+  if [[ -f /etc/apt/sources.list.d/openhd-release.list ]]; then
+    echo "Removing old OpenHD APT sources…"
+    rm /etc/apt/sources.list.d/openhd-release.list
+  fi
   apt-get clean
   rm -rf /var/lib/apt/lists/*
 
@@ -71,7 +77,7 @@ $APT install openhd libpoco-dev
 if [[ "${OS}" == "radxa-debian-cubie" ]]; then
   $APT install v4l-utils
 else
-  $APT install "qopenhd-${OS}" || true
+  $APT install "qopenhd" || true
 fi
 
 # Enable service
