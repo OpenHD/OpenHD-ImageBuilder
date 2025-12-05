@@ -71,7 +71,7 @@ if [[ -z "${OS:-}" ]]; then
 fi
 
 # Install base packages
-$APT install openhd libpoco-dev
+$APT install openhd libpoco-dev open-hd-web-ui 
 
 # Install qopenhd or fallback
 qopenhd_package="${QOPENHD_PACKAGE:-qopenhd}"
@@ -90,12 +90,6 @@ WEBUI_DEB_URL="https://dl.cloudsmith.io/public/openhd/dev-release/deb/any-distro
 
 tmpdir="$(mktemp -d)"
 deb_file="${tmpdir}/$(basename "${WEBUI_DEB_URL}")"
-
-if command -v curl >/dev/null 2>&1; then
-  curl -fL --retry 3 --retry-delay 2 -o "${deb_file}" "${WEBUI_DEB_URL}"
-else
-  wget -O "${deb_file}" "${WEBUI_DEB_URL}"
-fi
 
 dpkg -i "${deb_file}" || { echo "Fixing deps…"; $APT -f install; }
 rm -rf "${tmpdir}"
