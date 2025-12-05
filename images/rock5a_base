@@ -2,6 +2,7 @@ BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/Downloader/rel
 BASE_IMAGE="OpenHD-image-rock5a--release-06-26-2024-00-29-36.img.xz"
 BASE_IMAGE_SHA256="b4d349ca55fc1d6dcfefeb33ae106471d1ed8e9fe5ed61baa109b7d9ff8a1fe9"
 OS="radxa-debian-rock5a"
+QOPENHD_PACKAGE="qopenhd-rk3588"
 DISTRO="bullseye"
 HAVE_BOOT_PART=false
 HAVE_CONF_PART=false

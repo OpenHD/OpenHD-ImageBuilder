@@ -74,10 +74,12 @@ fi
 $APT install openhd libpoco-dev
 
 # Install qopenhd or fallback
+qopenhd_package="${QOPENHD_PACKAGE:-qopenhd}"
+
 if [[ "${OS}" == "radxa-debian-cubie" ]]; then
   $APT install v4l-utils
 else
-  $APT install "qopenhd" || true
+  $APT install "${qopenhd_package}" || true
 fi
 
 # Enable service
