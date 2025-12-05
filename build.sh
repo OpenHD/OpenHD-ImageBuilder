@@ -358,13 +358,17 @@ fi
 # Shrink Image ( only rpi and armbian right now)
 log ""
 log "======================================================"
-log "Shrinking image: ${IMAGE_PATH_NAME}"
-if [[ "${OS}" == "raspbian" ]]; then
-${SCRIPT_DIR}/pishrink.sh -v ${PREV_WORK_DIR}/*.img
-# elif [[ "${OS}" == "debian-X20" ]]; then
-# ${SCRIPT_DIR}/pishrink.sh -v -s ${PREV_WORK_DIR}/*.img
+if [[ "${UPDATE_MODE}" == "true" ]]; then
+    log "Skipping pishrink for update workflow."
 else
-echo "This image can't be shrunken"
+    log "Shrinking image: ${IMAGE_PATH_NAME}"
+    if [[ "${OS}" == "raspbian" ]]; then
+        ${SCRIPT_DIR}/pishrink.sh -v ${PREV_WORK_DIR}/*.img
+    # elif [[ "${OS}" == "debian-X20" ]]; then
+    # ${SCRIPT_DIR}/pishrink.sh -v -s ${PREV_WORK_DIR}/*.img
+    else
+        echo "This image can't be shrunken"
+    fi
 fi
 
 # Adding FAT32 Video Partition
