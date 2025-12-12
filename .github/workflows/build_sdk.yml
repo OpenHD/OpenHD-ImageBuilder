@@ -66,7 +66,7 @@ jobs:
     #     echo "rockchip_rk3566_radxa_zero_3w_defconfig" | ./build.sh
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: compiled-image
         path: buildroot/output/image/*
