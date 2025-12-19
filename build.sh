@@ -311,6 +311,7 @@ export BOOT_PART
 export HAVE_BOOT_PART
 export HAVE_CONF_PART
 export OPENHD_PACKAGE
+export QOPENHD_PACKAGE
 export KERNEL_PACKAGE
 export OS
 export IMAGE_TYPE
