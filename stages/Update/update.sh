@@ -79,7 +79,8 @@ qopenhd_package="${QOPENHD_PACKAGE:-qopenhd}"
 if [[ "${OS}" == "radxa-debian-cubie" ]]; then
   $APT install v4l-utils
 else
-  $APT install "${qopenhd_package}" || true
+  echo "Installing QOpenHD package: ${qopenhd_package}"
+  $APT install "${qopenhd_package}"
 fi
 
 # Enable service
