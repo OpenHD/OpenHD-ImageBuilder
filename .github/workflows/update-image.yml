@@ -34,7 +34,7 @@ jobs:
     ### ONLY THIS RELEVANT FOR BUILDING ###
     - uses: actions/checkout@v4
     - name: check for dev-release
-      if: ${{ env.BRANCH == 'dev-release' || env.BRANCH == 'add-ramdisk' }}
+      if: ${{ env.BRANCH == 'dev-release' || env.BRANCH == 'debug_next' }}
       run: | 
         touch additionalFiles/dev-build
     - name: update
