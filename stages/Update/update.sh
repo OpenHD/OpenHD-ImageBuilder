@@ -62,7 +62,7 @@ fi
 apt update || echo "Warning: apt update failed but continuing…"
 
 # Remove conflicting packages
-$APT remove openhd 'qopenhd*' || true
+$APT remove openhd openhd-sys-utils 'qopenhd*' || true
 
 # Determine OS (board)
 if [[ -z "${OS:-}" ]]; then
