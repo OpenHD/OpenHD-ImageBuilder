@@ -71,7 +71,7 @@ if [[ -z "${OS:-}" ]]; then
 fi
 
 # Install base packages
-$APT install openhd libpoco-dev open-hd-web-ui 
+$APT install openhd libpoco-dev open-hd-web-ui openhd-sys-utils
 
 # Install qopenhd or fallback
 qopenhd_package="${QOPENHD_PACKAGE:-qopenhd}"
