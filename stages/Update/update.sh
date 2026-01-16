@@ -96,5 +96,6 @@ dpkg -i "${deb_file}" || { echo "Fixing deps…"; $APT -f install; }
 rm -rf "${tmpdir}"
 
 systemctl restart openhd || true
+systemctl enable openhd-sys-utils
 
 echo "Done. Detected board: ${OS}"
