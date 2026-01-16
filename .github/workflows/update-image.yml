@@ -3,7 +3,7 @@ name: New_Image_Workflow
 on:
   push:
     branches:
-      - debug_next
+      - dev-release
 
 jobs:
   update-image:
