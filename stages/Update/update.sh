@@ -76,6 +76,12 @@ $APT install openhd libpoco-dev open-hd-web-ui openhd-sys-utils
 # Install qopenhd or fallback
 qopenhd_package="${QOPENHD_PACKAGE:-qopenhd}"
 
+if [[ "${OS}" == "raspbian" ]]; then
+  $APT remove openhd-linux-pi
+  echo "Installing custom Kernel package"
+  $APT install openhd-linux-pi
+fi
+
 if [[ "${OS}" == "radxa-debian-cubie" ]]; then
   $APT install v4l-utils
 else
