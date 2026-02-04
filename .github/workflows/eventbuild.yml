@@ -16,7 +16,7 @@ jobs:
         #TARGET: [qrb5165] # <-- Add targets here!
     steps:
     - name: Maximize build space
-      uses: easimon/maximize-build-space@master
+      uses: smallprogram/maximize-build-space@master
       with:
         root-reserve-mb: 101
         swap-size-mb: 200
