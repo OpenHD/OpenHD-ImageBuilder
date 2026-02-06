@@ -76,6 +76,23 @@ jobs:
       run: |
         sudo ./build.sh ${{ matrix.TARGET }} false false true
 
+    - name: Normalize image name for artifact
+      run: |
+        set -euo pipefail
+        count=$(ls -1 deploy/*.img 2>/dev/null | wc -l)
+        if [ "$count" -eq 0 ]; then
+          echo "No .img files found in deploy/"
+          exit 1
+        fi
+        if [ "$count" -gt 1 ]; then
+          echo "Multiple .img files found in deploy/:"
+          ls -1 deploy/*.img
+          exit 1
+        fi
+        img_path=$(ls -1 deploy/*.img)
+        target_name="openhd-image-${{ matrix.TARGET }}-${{ env.DT }}.img"
+        mv "$img_path" "deploy/$target_name"
+
     - name: Upload updated image artifact
       uses: actions/upload-artifact@v4
       with:

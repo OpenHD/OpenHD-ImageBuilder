@@ -364,7 +364,7 @@ if [[ "${UPDATE_MODE}" == "true" ]]; then
 else
     log "Shrinking image: ${IMAGE_PATH_NAME}"
     if [[ "${OS}" == "raspbian" ]]; then
-        ${SCRIPT_DIR}/pishrink.sh -v ${PREV_WORK_DIR}/*.img
+        ${SCRIPT_DIR}/pishrink.sh -v -f 500 ${PREV_WORK_DIR}/*.img
     # elif [[ "${OS}" == "debian-X20" ]]; then
     # ${SCRIPT_DIR}/pishrink.sh -v -s ${PREV_WORK_DIR}/*.img
     else

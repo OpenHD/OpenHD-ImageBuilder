@@ -161,7 +161,7 @@ EOF1
 help() {
 	local help
 	read -r -d '' help << EOM
-Usage: $0 [-adhrsvzZ] imagefile.img [newimagefile.img]
+Usage: $0 [-adhrsvzZ] [-f free_mb] imagefile.img [newimagefile.img]
 
   -s         Don't expand filesystem when image is booted the first time
   -v         Be verbose
@@ -170,6 +170,7 @@ Usage: $0 [-adhrsvzZ] imagefile.img [newimagefile.img]
   -Z         Compress image after shrinking with xz
   -a         Compress image in parallel using multiple cores
   -d         Write debug messages in a debug log file
+  -f         Leave extra free space (in MB) in the filesystem after shrinking
 EOM
 	echo "$help"
 	exit 1
@@ -181,12 +182,14 @@ repair=false
 parallel=false
 verbose=false
 ziptool=""
+extra_free_mb="0"
 
-while getopts ":adhrsvzZ" opt; do
+while getopts ":adhrsvzZf:" opt; do
   case "${opt}" in
     a) parallel=true;;
     d) debug=true;;
     h) help;;
+    f) extra_free_mb="${OPTARG}";;
     r) repair=true;;
     s) should_skip_autoexpand=true ;;
     v) verbose=true;;
@@ -330,17 +333,25 @@ if [[ $currentsize -eq $minsize ]]; then
   exit 11
 fi
 
-# #Add some free space to the end of the filesystem
-# extra_space=$(($currentsize - $minsize))
-# logVariables $LINENO extra_space
-# echo extra_space
-# for space in 5000 1000 100; do
-#   if [[ $extra_space -gt $space ]]; then
-#     minsize=$(($minsize + $space))
-#     break
-#   fi
-# done
-# logVariables $LINENO minsize
+# Add extra free space to the end of the filesystem if requested
+if [[ -n "$extra_free_mb" && "$extra_free_mb" != "0" ]]; then
+  if ! [[ "$extra_free_mb" =~ ^[0-9]+$ ]]; then
+    error $LINENO "Invalid -f value: $extra_free_mb (must be an integer MB value)"
+    exit 11
+  fi
+  extra_bytes=$((extra_free_mb * 1024 * 1024))
+  extra_blocks=$(((extra_bytes + blocksize - 1) / blocksize))
+  target_minsize=$((minsize + extra_blocks))
+  if [[ $target_minsize -ge $currentsize ]]; then
+    echo "WARNING: Requested extra space is too large for this image. Capping extra space."
+    target_minsize=$((currentsize - 1))
+    if [[ $target_minsize -le $minsize ]]; then
+      target_minsize=$minsize
+    fi
+  fi
+  minsize=$target_minsize
+  logVariables $LINENO extra_free_mb extra_blocks minsize
+fi
 
 #Shrink filesystem
 info "Shrinking filesystem"
