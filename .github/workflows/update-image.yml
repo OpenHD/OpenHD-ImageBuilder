@@ -91,7 +91,7 @@ jobs:
         fi
         img_path=$(ls -1 deploy/*.img)
         target_name="openhd-image-${{ matrix.TARGET }}-${{ env.DT }}.img"
-        mv "$img_path" "deploy/$target_name"
+        sudo mv "$img_path" "deploy/$target_name"
 
     - name: Upload updated image artifact
       uses: actions/upload-artifact@v4
