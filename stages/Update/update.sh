@@ -88,6 +88,10 @@ if [[ "${OS}" == "raspbian" ]]; then
   sudo apt install -y \
   -o Dpkg::Options::=--force-overwrite \
   arducam-pivariety-sdk-dev=1.0.5
+  wget https://dl.cloudsmith.io/public/openhd/release/deb/raspbian/pool/bullseye/main/l/li/libcamera-openhd_1.2.7/libcamera-openhd_1.2.7_armhf.deb
+  dpkg -i --force-overwrite libcamera-openhd_1.2.7_armhf.deb 
+  wget https://raw.githubusercontent.com/OpenHD/libcamera/refs/heads/openhd/src/ipa/rpi/vc4/data/imx662.json
+  mv imx662.json /usr/share/libcamera/ipa/rpi/vc4/imx662.json
 fi
 
 if [[ "${OS}" == "radxa-debian-cubie" ]]; then
