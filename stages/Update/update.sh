@@ -80,6 +80,7 @@ if [[ "${OS}" == "raspbian" ]]; then
   $APT remove openhd-linux-pi
   echo "Installing custom Kernel package"
   $APT install openhd-linux-pi
+  $APT install openhd-linux-pi-headers
   # Fix Arducam Pivariety driver + imx662
   curl -s --compressed "https://arducam.github.io/arducam_ppa/KEY.gpg" | sudo apt-key add -
             sudo curl -s --compressed -o /etc/apt/sources.list.d/arducam_list_files.list "https://arducam.github.io/arducam_ppa/arducam_list_files.list"
