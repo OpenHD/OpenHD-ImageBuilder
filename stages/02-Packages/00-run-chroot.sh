@@ -7,6 +7,8 @@
 
 set -e
 
+#test
+
 CLEANCLEAN=true
 
 # X20 specific code
