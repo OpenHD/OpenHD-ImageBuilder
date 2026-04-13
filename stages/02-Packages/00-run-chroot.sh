@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # # This runs in context if the image (CHROOT)
-# # Do not use log here, it will end up in the image
 # # This stage will install and remove packages which are required to get OpenHD to work
 # # If anything fails here the script is failing!
 
