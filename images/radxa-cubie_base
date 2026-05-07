@@ -1,0 +1,10 @@
+BASE_IMAGE_URL="https://github.com/radxa-build/radxa-a733/releases/download/rsdk-r6"
+BASE_IMAGE="radxa-a733_bullseye_kde_r6.output_512.img.xz"
+BASE_IMAGE_SHA256="6f1d7bd221c6b542b6f094b91f193c4aca0d229b071a60e51f08a8c5fffb3bf1"
+OS="radxa-debian-cubie"
+DISTRO="bullseye"
+HAVE_BOOT_PART=false
+HAVE_CONF_PART=true
+CONF_PART=1
+ROOT_PART=3
+BIT="64"

@@ -76,6 +76,74 @@ $APT install openhd libpoco-dev open-hd-web-ui openhd-sys-utils
 # Install qopenhd or fallback
 qopenhd_package="${QOPENHD_PACKAGE:-qopenhd}"
 
+ensure_openhd_user() {
+  if ! id openhd >/dev/null 2>&1; then
+    adduser --shell /bin/bash --disabled-password --gecos "" openhd
+  fi
+
+  echo "openhd:openhd" | chpasswd
+  usermod -s /bin/bash openhd || true
+  if getent group sudo >/dev/null 2>&1; then
+    usermod -aG sudo openhd || true
+  fi
+}
+
+install_cubie_ssh_boot_fix() {
+  cat >/usr/local/sbin/openhd-cubie-ssh-boot.sh <<'EOF'
+#!/bin/sh
+set -eu
+
+if ! id openhd >/dev/null 2>&1; then
+  adduser --shell /bin/bash --disabled-password --gecos "" openhd
+fi
+
+echo "openhd:openhd" | chpasswd
+usermod -s /bin/bash openhd || true
+if getent group sudo >/dev/null 2>&1; then
+  usermod -aG sudo openhd || true
+fi
+
+mkdir -p /etc/ssh/sshd_config.d
+cat >/etc/ssh/sshd_config.d/99-openhd-enable-password-login.conf <<'SSHEOF'
+PasswordAuthentication yes
+KbdInteractiveAuthentication yes
+UsePAM yes
+SSHEOF
+
+systemctl unmask ssh.service ssh.socket sshd.service sshd.socket >/dev/null 2>&1 || true
+systemctl enable ssh.service >/dev/null 2>&1 || true
+systemctl restart ssh.service >/dev/null 2>&1 || systemctl start ssh.service >/dev/null 2>&1 || true
+EOF
+
+  chmod 0755 /usr/local/sbin/openhd-cubie-ssh-boot.sh
+
+  cat >/etc/systemd/system/openhd-cubie-ssh-boot.service <<'EOF'
+[Unit]
+Description=Keep SSH enabled for OpenHD on Radxa Cubie
+After=local-fs.target network.target rsetup-config-first-boot.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/openhd-cubie-ssh-boot.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  systemctl enable openhd-cubie-ssh-boot.service || true
+  /usr/local/sbin/openhd-cubie-ssh-boot.sh || true
+
+  if [[ -d /conf ]]; then
+    mkdir -p /conf/openhd
+    touch /conf/openhd/resize.txt
+    touch /conf/config.txt
+    cat >/conf/before.txt <<'EOF'
+remove_packages rsetup-config-first-boot
+EOF
+  fi
+}
+
 if [[ "${OS}" == "raspbian" ]]; then
   $APT remove openhd-linux-pi
   echo "Installing custom Kernel package"
@@ -96,10 +164,16 @@ if [[ "${OS}" == "raspbian" ]]; then
 fi
 
 if [[ "${OS}" == "radxa-debian-cubie" ]]; then
-  $APT install v4l-utils
+  echo "Removing KDE desktop packages for Radxa Cubie shell image"
+  $APT purge 'kde*' 'plasma*' 'sddm*' task-kde-desktop konsole yakuake || true
+  $APT autoremove --purge || true
+  $APT install openssh-server sudo v4l-utils
+  ensure_openhd_user
+  install_cubie_ssh_boot_fix
 else
   echo "Installing QOpenHD package: ${qopenhd_package}"
   $APT install "${qopenhd_package}"
+  ensure_openhd_user
 fi
 
 # Enable service
@@ -111,6 +185,7 @@ WEBUI_DEB_URL="https://dl.cloudsmith.io/public/openhd/dev-release/deb/any-distro
 tmpdir="$(mktemp -d)"
 deb_file="${tmpdir}/$(basename "${WEBUI_DEB_URL}")"
 
+curl -L -f -o "${deb_file}" "${WEBUI_DEB_URL}"
 dpkg -i "${deb_file}" || { echo "Fixing deps…"; $APT -f install; }
 rm -rf "${tmpdir}"
 

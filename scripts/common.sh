@@ -107,6 +107,10 @@ unmount_image(){
         umount -l "$MNT_DIR/boot/openhd"
     fi
 
+    if mount | grep -q "$MNT_DIR/conf"; then
+        umount -l "$MNT_DIR/conf" || true
+    fi
+
     if mount | grep -q "$MNT_DIR"; then
         umount -l "$MNT_DIR/"
     fi

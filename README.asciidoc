@@ -87,6 +87,7 @@ rock5a
 radxa-cm3
 x20
 radxa-zero3w
+radxa-cubie
 ```
 
 ## More information (what's going on?)
