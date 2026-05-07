@@ -179,16 +179,6 @@ fi
 # Enable service
 systemctl enable openhd || true
 
-# Install Web UI
-WEBUI_DEB_URL="https://dl.cloudsmith.io/public/openhd/dev-release/deb/any-distro/pool/any-version/main/o/op/open-hd-web-ui_2.6.1-alpha.0.32/open-hd-web-ui_2.6.1-alpha.0.32_arm64.deb"
-
-tmpdir="$(mktemp -d)"
-deb_file="${tmpdir}/$(basename "${WEBUI_DEB_URL}")"
-
-curl -L -f -o "${deb_file}" "${WEBUI_DEB_URL}"
-dpkg -i "${deb_file}" || { echo "Fixing deps…"; $APT -f install; }
-rm -rf "${tmpdir}"
-
 systemctl restart openhd || true
 systemctl enable openhd-sys-utils
 
