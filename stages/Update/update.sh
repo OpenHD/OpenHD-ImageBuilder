@@ -167,7 +167,7 @@ if [[ "${OS}" == "radxa-debian-cubie" ]]; then
   echo "Removing KDE desktop packages for Radxa Cubie shell image"
   $APT purge 'kde*' 'plasma*' 'sddm*' task-kde-desktop konsole yakuake || true
   $APT autoremove --purge || true
-  $APT install openssh-server sudo v4l-utils
+  $APT install openssh-server sudo v4l-utils linux-libc-dev linux-image-5.15.147-21-a733 linux-headers-5.15.147-21-a733 
   ensure_openhd_user
   install_cubie_ssh_boot_fix
 else
