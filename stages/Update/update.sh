@@ -144,6 +144,40 @@ EOF
   fi
 }
 
+rebuild_dkms_for_kernel() {
+  local kernel_version="$1"
+
+  if ! command -v dkms >/dev/null 2>&1; then
+    echo "DKMS is not installed; skipping DKMS rebuild for ${kernel_version}"
+    return 0
+  fi
+
+  echo "Re-registering DKMS sources from /usr/src"
+  for dkms_conf in /usr/src/*/dkms.conf; do
+    [[ -f "${dkms_conf}" ]] || continue
+
+    (
+      unset PACKAGE_NAME PACKAGE_VERSION
+      # shellcheck disable=SC1090
+      . "${dkms_conf}"
+
+      if [[ -z "${PACKAGE_NAME:-}" || -z "${PACKAGE_VERSION:-}" ]]; then
+        echo "Skipping ${dkms_conf}: missing PACKAGE_NAME or PACKAGE_VERSION"
+        exit 0
+      fi
+
+      if dkms status -m "${PACKAGE_NAME}" -v "${PACKAGE_VERSION}" >/dev/null 2>&1; then
+        exit 0
+      fi
+
+      dkms add -m "${PACKAGE_NAME}" -v "${PACKAGE_VERSION}" || true
+    )
+  done
+
+  echo "Rebuilding DKMS modules for ${kernel_version}"
+  dkms autoinstall -k "${kernel_version}"
+}
+
 if [[ "${OS}" == "raspbian" ]]; then
   $APT remove openhd-linux-pi
   echo "Installing custom Kernel package"
@@ -167,7 +201,10 @@ if [[ "${OS}" == "radxa-debian-cubie" ]]; then
   echo "Removing KDE desktop packages for Radxa Cubie shell image"
   $APT purge 'kde*' 'plasma*' 'sddm*' task-kde-desktop konsole yakuake || true
   $APT autoremove --purge || true
-  $APT install openssh-server sudo v4l-utils linux-libc-dev linux-image-5.15.147-21-a733 linux-headers-5.15.147-21-a733 
+  $APT install openssh-server sudo v4l-utils linux-libc-dev
+  $APT install linux-headers-5.15.147-21-a733
+  $APT install linux-image-5.15.147-21-a733
+  rebuild_dkms_for_kernel "5.15.147-21-a733"
   ensure_openhd_user
   install_cubie_ssh_boot_fix
 else
