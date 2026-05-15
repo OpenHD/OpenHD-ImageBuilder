@@ -144,38 +144,27 @@ EOF
   fi
 }
 
-rebuild_dkms_for_kernel() {
-  local kernel_version="$1"
+install_cubie_kernel_image_without_dkms_prerm() {
+  local dkms_prerm="/etc/kernel/prerm.d/dkms"
+  local disabled_dkms_prerm="${dkms_prerm}.openhd-disabled"
+  local rc
 
-  if ! command -v dkms >/dev/null 2>&1; then
-    echo "DKMS is not installed; skipping DKMS rebuild for ${kernel_version}"
-    return 0
+  if [[ -e "${dkms_prerm}" ]]; then
+    echo "Temporarily disabling DKMS kernel pre-remove hook for Cubie kernel replacement"
+    mv "${dkms_prerm}" "${disabled_dkms_prerm}"
   fi
 
-  echo "Re-registering DKMS sources from /usr/src"
-  for dkms_conf in /usr/src/*/dkms.conf; do
-    [[ -f "${dkms_conf}" ]] || continue
+  set +e
+  apt -o Dpkg::Options::=--force-confnew -y install linux-image-5.15.147-21-a733
+  rc=$?
+  set -e
 
-    (
-      unset PACKAGE_NAME PACKAGE_VERSION
-      # shellcheck disable=SC1090
-      . "${dkms_conf}"
+  if [[ -e "${disabled_dkms_prerm}" ]]; then
+    mv "${disabled_dkms_prerm}" "${dkms_prerm}"
+    echo "Restored DKMS kernel pre-remove hook"
+  fi
 
-      if [[ -z "${PACKAGE_NAME:-}" || -z "${PACKAGE_VERSION:-}" ]]; then
-        echo "Skipping ${dkms_conf}: missing PACKAGE_NAME or PACKAGE_VERSION"
-        exit 0
-      fi
-
-      if dkms status -m "${PACKAGE_NAME}" -v "${PACKAGE_VERSION}" >/dev/null 2>&1; then
-        exit 0
-      fi
-
-      dkms add -m "${PACKAGE_NAME}" -v "${PACKAGE_VERSION}" || true
-    )
-  done
-
-  echo "Rebuilding DKMS modules for ${kernel_version}"
-  dkms autoinstall -k "${kernel_version}"
+  return "${rc}"
 }
 
 if [[ "${OS}" == "raspbian" ]]; then
@@ -203,8 +192,7 @@ if [[ "${OS}" == "radxa-debian-cubie" ]]; then
   $APT autoremove --purge || true
   $APT install openssh-server sudo v4l-utils linux-libc-dev
   $APT install linux-headers-5.15.147-21-a733
-  $APT install linux-image-5.15.147-21-a733
-  rebuild_dkms_for_kernel "5.15.147-21-a733"
+  install_cubie_kernel_image_without_dkms_prerm
   ensure_openhd_user
   install_cubie_ssh_boot_fix
 else
