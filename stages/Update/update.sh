@@ -61,17 +61,21 @@ fi
 # Best-effort update
 apt update || echo "Warning: apt update failed but continuing…"
 
-# Remove conflicting packages
-$APT remove openhd openhd-sys-utils 'qopenhd*' || true
-
 # Determine OS (board)
 if [[ -z "${OS:-}" ]]; then
   os_id="$(. /etc/os-release; echo "${ID}-${VERSION_CODENAME}")"
   export OS="${os_id}"
 fi
 
-# Install base packages
-$APT install openhd libpoco-dev open-hd-web-ui openhd-sys-utils
+if [[ "${OS}" != "radxa-debian-rock3a" ]]; then
+  # Remove conflicting packages
+  $APT remove openhd openhd-sys-utils 'qopenhd*' || true
+
+  # Install base packages
+  $APT install openhd libpoco-dev open-hd-web-ui openhd-sys-utils
+else
+  echo "Skipping OpenHD package install for Radxa Rock 3A"
+fi
 
 # Install qopenhd or fallback
 qopenhd_package="${QOPENHD_PACKAGE:-qopenhd}"
@@ -197,8 +201,6 @@ if [[ "${OS}" == "radxa-debian-cubie" ]]; then
   install_radxa_ssh_boot_fix
 elif [[ "${OS}" == "radxa-debian-rock3a" ]]; then
   $APT install openssh-server sudo v4l-utils
-  echo "Installing QOpenHD package: ${qopenhd_package}"
-  $APT install "${qopenhd_package}"
   ensure_openhd_user
   install_radxa_ssh_boot_fix
 else
@@ -207,10 +209,12 @@ else
   ensure_openhd_user
 fi
 
-# Enable service
-systemctl enable openhd || true
+if [[ "${OS}" != "radxa-debian-rock3a" ]]; then
+  # Enable service
+  systemctl enable openhd || true
 
-systemctl restart openhd || true
-systemctl enable openhd-sys-utils
+  systemctl restart openhd || true
+  systemctl enable openhd-sys-utils
+fi
 
 echo "Done. Detected board: ${OS}"
