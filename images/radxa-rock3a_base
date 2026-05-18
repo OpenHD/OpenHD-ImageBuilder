@@ -1,0 +1,11 @@
+BASE_IMAGE_URL="https://github.com/radxa-build/rock-3a/releases/download/rsdk-r2"
+BASE_IMAGE="rock-3a_bookworm_kde_r2.output_512.img.xz"
+BASE_IMAGE_SHA512="112fa64c6b053c9b69603acc2edc84be7d25fa28932eca0b9d2ec0f0c8b65ee09b98e85188bd6668ab107f03d76f67fa82c53aed85b718a91a2b51592ada3a29"
+OS="radxa-debian-rock3a"
+QOPENHD_PACKAGE="qopenhd-rk3566"
+DISTRO="bookworm"
+HAVE_BOOT_PART=false
+HAVE_CONF_PART=true
+CONF_PART=1
+ROOT_PART=3
+BIT="64"

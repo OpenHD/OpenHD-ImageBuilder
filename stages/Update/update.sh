@@ -88,8 +88,8 @@ ensure_openhd_user() {
   fi
 }
 
-install_cubie_ssh_boot_fix() {
-  cat >/usr/local/sbin/openhd-cubie-ssh-boot.sh <<'EOF'
+install_radxa_ssh_boot_fix() {
+  cat >/usr/local/sbin/openhd-radxa-ssh-boot.sh <<'EOF'
 #!/bin/sh
 set -eu
 
@@ -115,24 +115,24 @@ systemctl enable ssh.service >/dev/null 2>&1 || true
 systemctl restart ssh.service >/dev/null 2>&1 || systemctl start ssh.service >/dev/null 2>&1 || true
 EOF
 
-  chmod 0755 /usr/local/sbin/openhd-cubie-ssh-boot.sh
+  chmod 0755 /usr/local/sbin/openhd-radxa-ssh-boot.sh
 
-  cat >/etc/systemd/system/openhd-cubie-ssh-boot.service <<'EOF'
+  cat >/etc/systemd/system/openhd-radxa-ssh-boot.service <<'EOF'
 [Unit]
-Description=Keep SSH enabled for OpenHD on Radxa Cubie
+Description=Keep SSH enabled for OpenHD on Radxa images
 After=local-fs.target network.target rsetup-config-first-boot.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/sbin/openhd-cubie-ssh-boot.sh
+ExecStart=/usr/local/sbin/openhd-radxa-ssh-boot.sh
 RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-  systemctl enable openhd-cubie-ssh-boot.service || true
-  /usr/local/sbin/openhd-cubie-ssh-boot.sh || true
+  systemctl enable openhd-radxa-ssh-boot.service || true
+  /usr/local/sbin/openhd-radxa-ssh-boot.sh || true
 
   if [[ -d /conf ]]; then
     mkdir -p /conf/openhd
@@ -194,7 +194,13 @@ if [[ "${OS}" == "radxa-debian-cubie" ]]; then
   $APT install linux-headers-5.15.147-21-a733
   install_cubie_kernel_image_without_dkms_prerm
   ensure_openhd_user
-  install_cubie_ssh_boot_fix
+  install_radxa_ssh_boot_fix
+elif [[ "${OS}" == "radxa-debian-rock3a" ]]; then
+  $APT install openssh-server sudo v4l-utils
+  echo "Installing QOpenHD package: ${qopenhd_package}"
+  $APT install "${qopenhd_package}"
+  ensure_openhd_user
+  install_radxa_ssh_boot_fix
 else
   echo "Installing QOpenHD package: ${qopenhd_package}"
   $APT install "${qopenhd_package}"

@@ -301,6 +301,7 @@ mkdir -p "${WORK_DIR}"
 export BASE_DIR
 
 export BASE_IMAGE_SHA256
+export BASE_IMAGE_SHA512
 
 export LEGACY
 export BASE_IMAGE_Mirror

@@ -2,12 +2,22 @@
 
 pushd "${STAGE_WORK_DIR}"
 
+check_base_image_checksum() {
+    if [[ -n "${BASE_IMAGE_SHA512:-}" ]]; then
+        SHA=$(sha512sum "${BASE_IMAGE}" 2>/dev/null || true)
+        EXPECTED_SHA="${BASE_IMAGE_SHA512}  ${BASE_IMAGE}"
+    else
+        SHA=$(sha256sum "${BASE_IMAGE}" 2>/dev/null || true)
+        EXPECTED_SHA="${BASE_IMAGE_SHA256}  ${BASE_IMAGE}"
+    fi
+}
+
 log "Checking for previous images"
 
-SHA=$(sha256sum "${BASE_IMAGE}")
+check_base_image_checksum
 echo "SHA: ${SHA}"
 
-if [[ "${SHA}" != "${BASE_IMAGE_SHA256}  ${BASE_IMAGE}" ]]; then    
+if [[ "${SHA}" != "${EXPECTED_SHA}" ]]; then
     log "Checksum failed. Downloading base image."
     rm -f *.zip *.img *.xz *.7z
 else
@@ -32,10 +42,10 @@ fi
 
 log "Verifying checksum of downloaded image"
 
-SHA=$(sha256sum "${BASE_IMAGE}")
+check_base_image_checksum
 echo "Calculated checksum: ${SHA}"
 
-if [[ "${SHA}" != "${BASE_IMAGE_SHA256}  ${BASE_IMAGE}" ]]; then    
+if [[ "${SHA}" != "${EXPECTED_SHA}" ]]; then
     log "Checksum failed. Aborting."
     exit 1
 fi
