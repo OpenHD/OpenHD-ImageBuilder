@@ -1,0 +1,10 @@
+BASE_IMAGE_URL="https://github.com/radxa-build/radxa-cm5-rpi-cm4-io/releases/download/rsdk-b3"
+BASE_IMAGE="radxa-cm5-rpi-cm4-io_bookworm_cli_b3.output.img.xz"
+BASE_IMAGE_SHA512="7a69bff7aaa283ed6c31090dddd6b30456069547a5c8fb9f3c22673d9944065c806b448be79beb90a94046cdb8756d74195a708d4db55d8d2b3ae08d5c6808c7"
+OS="radxa-debian-rock5b"
+QOPENHD_PACKAGE="qopenhd-rk3588"
+DISTRO="bookworm"
+HAVE_BOOT_PART=false
+HAVE_CONF_PART=false
+ROOT_PART=2
+BIT="64"

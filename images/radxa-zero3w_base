@@ -1,9 +1,9 @@
-BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/Downloader/release/2.6"
-BASE_IMAGE="OpenHD-image-radxa-zero3w--release-06-26-2024-00-28-55.img.xz"
-BASE_IMAGE_SHA256="36e5c95544de75236a92e7947364f29fd58e7fdcf1acb26deac12c3b9fa9954b"
+BASE_IMAGE_URL="https://github.com/radxa-build/radxa-zero3/releases/download/rsdk-b1"
+BASE_IMAGE="radxa-zero3_bookworm_kde_b1.output_512.img.xz"
+BASE_IMAGE_SHA512="6f9f67df6f997bef41aac2cc568ebb4b7820216be1256a49ce472cb877684c08ad793ff726da3155a02f0eab60b2b2c9318168b3cf8fab81849ae91e8724f10d"
 OS="radxa-debian-rock-cm3"
 QOPENHD_PACKAGE="qopenhd-rk3566"
-DISTRO="bullseye"
+DISTRO="bookworm"
 HAVE_BOOT_PART=false
 HAVE_CONF_PART=true
 CONF_PART=1
