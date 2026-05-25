@@ -12,6 +12,22 @@ fi
 export DEBIAN_FRONTEND=noninteractive
 APT="apt -o Dpkg::Options::=--force-confnew -y"
 
+print_installed_linux_packages() {
+  echo "#######################################################"
+  echo "#######################################################"
+  echo "#######################################################"
+  echo "#######################################################"
+  echo "#######################################################"
+  echo "Installed Linux kernel packages:"
+  dpkg -l | grep linux || true
+}
+
+if [[ "${UPDATE_LINUX_PACKAGES_ONLY:-false}" == "true" ]]; then
+  print_installed_linux_packages
+  echo "Done. UPDATE_LINUX_PACKAGES_ONLY is set, skipping OpenHD/QOpenHD package changes."
+  exit 0
+fi
+
 fix_apt_sources() {
   echo "Sanitizing APT sources for CI…"
 
@@ -67,15 +83,7 @@ if [[ -z "${OS:-}" ]]; then
   export OS="${os_id}"
 fi
 
-if [[ "${OS}" != "radxa-debian-rock-cm3" ]]; then
-echo "#######################################################"
-echo "#######################################################"
-echo "#######################################################"
-echo "#######################################################"
-echo "#######################################################"
-echo "Installed Linux kernel packages:"
-dpkg -l | grep linux
-fi
+print_installed_linux_packages
 
 if [[ "${OS}" != "radxa-debian-rock3a" ]]; then
   # Remove conflicting packages
