@@ -66,7 +66,7 @@ print_linux_package_metadata() {
   )
 }
 
-if [[ "${UPDATE_LINUX_PACKAGES_ONLY:-false}" == "true" ]]; then
+if [[ "${UPDATE_LINUX_PACKAGES_ONLY:-false}" == "true" && "${OPENHD_LITE_IMAGE:-false}" != "true" ]]; then
   print_linux_package_metadata
   echo "Done. UPDATE_LINUX_PACKAGES_ONLY is set, skipping OpenHD/QOpenHD package changes."
   exit 0
@@ -142,6 +142,192 @@ fi
 # Install qopenhd or fallback
 qopenhd_package="${QOPENHD_PACKAGE:-qopenhd}"
 
+install_packages_from_list() {
+  local label="$1"
+  local package_string="${2:-}"
+  local -a packages=()
+
+  if [[ -z "${package_string//[[:space:]]/}" ]]; then
+    echo "No ${label} configured, skipping."
+    return 0
+  fi
+
+  read -r -a packages <<< "${package_string}"
+  echo "Installing ${label}: ${packages[*]}"
+  $APT install "${packages[@]}"
+}
+
+install_packages_with_disabled_dkms_prerm() {
+  local label="$1"
+  local package_string="${2:-}"
+  local dkms_prerm="/etc/kernel/prerm.d/dkms"
+  local disabled_dkms_prerm="${dkms_prerm}.openhd-disabled"
+  local rc
+
+  if [[ -z "${package_string//[[:space:]]/}" ]]; then
+    echo "No ${label} configured, skipping."
+    return 0
+  fi
+
+  if [[ -e "${dkms_prerm}" ]]; then
+    echo "Temporarily disabling DKMS kernel pre-remove hook for kernel replacement"
+    mv "${dkms_prerm}" "${disabled_dkms_prerm}"
+  fi
+
+  set +e
+  install_packages_from_list "${label}" "${package_string}"
+  rc=$?
+  set -e
+
+  if [[ -e "${disabled_dkms_prerm}" ]]; then
+    mv "${disabled_dkms_prerm}" "${dkms_prerm}"
+    echo "Restored DKMS kernel pre-remove hook"
+  fi
+
+  return "${rc}"
+}
+
+install_local_lite_debs() {
+  local deb_root="${OPENHD_LITE_LOCAL_DEB_DIR:-/opt/additionalFiles/openhd-lite-debs}"
+  local image_type="${IMAGE_TYPE:-}"
+  local deb_dir="${deb_root}"
+  local board_deb_dir="${deb_root}/${image_type}"
+  local -a debs=()
+
+  if [[ -n "${image_type}" && -d "${board_deb_dir}" ]]; then
+    deb_dir="${board_deb_dir}"
+  fi
+
+  if [[ ! -d "${deb_dir}" ]]; then
+    echo "No local OpenHD Lite deb directory found at ${deb_dir}, skipping."
+    return 0
+  fi
+
+  mapfile -t debs < <(find "${deb_dir}" -maxdepth 1 -type f -name '*.deb' | sort)
+  if [[ "${#debs[@]}" -eq 0 ]]; then
+    echo "No local OpenHD Lite debs found in ${deb_dir}, skipping."
+    return 0
+  fi
+
+  echo "Installing local OpenHD Lite debs from ${deb_dir}"
+  dpkg -i "${debs[@]}" || apt -o Dpkg::Options::=--force-confnew -y -f install
+}
+
+install_lite_kernel_packages() {
+  local kernel_packages="${KERNEL_PACKAGES:-}"
+
+  install_local_lite_debs
+
+  if [[ "${OS}" == "radxa-debian-cubie" ]]; then
+    install_packages_with_disabled_dkms_prerm "custom kernel packages" "${kernel_packages}"
+  else
+    install_packages_from_list "custom kernel packages" "${kernel_packages}"
+  fi
+}
+
+ensure_kernel_headers() {
+  local kver="$1"
+  local header_dir
+
+  if [[ -e "/lib/modules/${kver}/build/Makefile" ]]; then
+    return 0
+  fi
+
+  apt -o Dpkg::Options::=--force-confnew -y install "linux-headers-${kver}" || true
+  if [[ ! -e "/lib/modules/${kver}/build/Makefile" ]]; then
+    header_dir="$(find /usr/src -maxdepth 1 -type d \( -name "linux-headers-${kver}" -o -name "*${kver}*" \) | head -n1 || true)"
+    if [[ -n "${header_dir}" ]]; then
+      ln -sfn "${header_dir}" "/lib/modules/${kver}/build"
+    fi
+  fi
+
+  [[ -e "/lib/modules/${kver}/build/Makefile" ]]
+}
+
+build_one_rtl_driver() {
+  local repo_url="$1"
+  local module_name="$2"
+  local user_module_name="$3"
+  local kver="$4"
+  local work_root="$5"
+  local source_dir="${work_root}/$(basename "${repo_url%.git}")"
+  local -a make_args
+  local ko
+
+  if [[ ! -d "${source_dir}" ]]; then
+    git clone --recursive --depth 1 "${repo_url}" "${source_dir}"
+  fi
+
+  make -C "${source_dir}" clean || true
+  make_args=(-C "${source_dir}" -j"$(nproc)" ARCH=arm64 KVER="${kver}" KSRC="/lib/modules/${kver}/build")
+  if [[ -n "${user_module_name}" ]]; then
+    make_args+=(USER_MODULE_NAME="${user_module_name}")
+  fi
+
+  make "${make_args[@]}" modules
+  ko="${source_dir}/${module_name}.ko"
+  if [[ ! -f "${ko}" ]]; then
+    ko="$(find "${source_dir}" -maxdepth 1 -name '*.ko' | head -n1)"
+  fi
+  if [[ -z "${ko}" || ! -f "${ko}" ]]; then
+    echo "Failed to find built module for ${repo_url}" >&2
+    return 1
+  fi
+
+  install -D -m 0644 "${ko}" "/lib/modules/${kver}/kernel/drivers/net/wireless/${module_name}.ko"
+}
+
+build_openhd_rtl_drivers_from_source() {
+  local kernel_regex="${RTL_DRIVER_KERNEL_REGEX:-}"
+  local work_root="/opt/openhd-rtl-driver-build"
+  local -a kernels=()
+  local -a filtered_kernels=()
+  local kver
+
+  if [[ "${BUILD_RTL_DRIVERS_FROM_SOURCE:-false}" != "true" ]]; then
+    return 0
+  fi
+
+  echo "Building OpenHD RTL drivers from source"
+  $APT install --no-install-recommends build-essential git make gcc bc bison flex kmod ca-certificates
+
+  mapfile -t kernels < <(find /lib/modules -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort)
+  for kver in "${kernels[@]}"; do
+    if [[ -z "${kernel_regex}" || "${kver}" =~ ${kernel_regex} ]]; then
+      filtered_kernels+=("${kver}")
+    fi
+  done
+
+  if [[ "${#filtered_kernels[@]}" -eq 0 ]]; then
+    echo "No kernel modules matched RTL_DRIVER_KERNEL_REGEX='${kernel_regex}'" >&2
+    return 1
+  fi
+
+  rm -rf "${work_root}"
+  mkdir -p "${work_root}"
+
+  for kver in "${filtered_kernels[@]}"; do
+    echo "Building RTL drivers for kernel ${kver}"
+    ensure_kernel_headers "${kver}"
+    build_one_rtl_driver "https://github.com/OpenHD/rtl8812au.git" "88XXau_ohd" "88XXau" "${kver}" "${work_root}"
+    build_one_rtl_driver "https://github.com/OpenHD/rtl88x2eu.git" "rtl88x2eu_ohd" "rtl88x2eu_ohd" "${kver}" "${work_root}"
+    build_one_rtl_driver "https://github.com/OpenHD/rtl88x2bu.git" "88x2bu_ohd" "88x2bu" "${kver}" "${work_root}"
+    build_one_rtl_driver "https://github.com/OpenHD/rtl88x2cu.git" "88x2cu_ohd" "" "${kver}" "${work_root}"
+    depmod -a "${kver}" || true
+  done
+}
+
+install_openhd_lite_packages() {
+  local glide_package="${GLIDE_PACKAGE:-openhd-glide}"
+
+  echo "Installing OpenHD Lite package set"
+  $APT purge 'qopenhd*' || true
+  install_lite_kernel_packages
+  install_packages_from_list "OpenHD Glide package" "${glide_package}"
+  install_packages_from_list "RTL driver packages" "${RTL_DRIVER_PACKAGES:-}"
+  build_openhd_rtl_drivers_from_source
+}
+
 ensure_openhd_user() {
   if ! id openhd >/dev/null 2>&1; then
     adduser --shell /bin/bash --disabled-password --gecos "" openhd
@@ -211,8 +397,10 @@ EOF
 }
 
 install_cubie_kernel_image_without_dkms_prerm() {
+  local package_string="${1:-linux-image-5.15.147-21-a733}"
   local dkms_prerm="/etc/kernel/prerm.d/dkms"
   local disabled_dkms_prerm="${dkms_prerm}.openhd-disabled"
+  local -a packages=()
   local rc
 
   if [[ -e "${dkms_prerm}" ]]; then
@@ -221,7 +409,8 @@ install_cubie_kernel_image_without_dkms_prerm() {
   fi
 
   set +e
-  apt -o Dpkg::Options::=--force-confnew -y install linux-image-5.15.147-21-a733
+  read -r -a packages <<< "${package_string}"
+  apt -o Dpkg::Options::=--force-confnew -y install "${packages[@]}"
   rc=$?
   set -e
 
@@ -256,15 +445,23 @@ if [[ "${OS}" == "radxa-debian-cubie" ]]; then
   echo "Removing KDE desktop packages for Radxa Cubie shell image"
   $APT purge 'kde*' 'plasma*' 'sddm*' task-kde-desktop konsole yakuake || true
   $APT autoremove --purge || true
-  $APT install openssh-server sudo v4l-utils linux-libc-dev
-  $APT install linux-headers-5.15.147-21-a733
-  install_cubie_kernel_image_without_dkms_prerm
+  $APT install openssh-server sudo v4l-utils
+  if [[ "${OPENHD_LITE_IMAGE:-false}" == "true" ]]; then
+    install_openhd_lite_packages
+  else
+    $APT install linux-libc-dev
+    $APT install linux-headers-5.15.147-21-a733
+    install_cubie_kernel_image_without_dkms_prerm
+  fi
   ensure_openhd_user
   install_radxa_ssh_boot_fix
 elif [[ "${OS}" == "radxa-debian-rock3a" ]]; then
   $APT install openssh-server sudo v4l-utils
   ensure_openhd_user
   install_radxa_ssh_boot_fix
+elif [[ "${OPENHD_LITE_IMAGE:-false}" == "true" ]]; then
+  install_openhd_lite_packages
+  ensure_openhd_user
 else
   echo "Installing QOpenHD package: ${qopenhd_package}"
   $APT install "${qopenhd_package}"

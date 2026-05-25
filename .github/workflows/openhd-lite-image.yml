@@ -1,0 +1,128 @@
+name: OpenHD Lite Image Workflow
+
+on:
+  push:
+    branches:
+      - dev-release
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  openhd-lite-image:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - TARGET: radxa-cubie-lite
+            DOWNLOAD_ZERO3W_KERNEL: "false"
+          - TARGET: radxa-zero3w-lite
+            DOWNLOAD_ZERO3W_KERNEL: "true"
+
+    steps:
+      - name: Setup env
+        run: |
+          echo "DT=$(date -d '+1 hour' +'%m-%d-%Y-%H-%M-%S')" >> "$GITHUB_ENV"
+          echo "BRANCH=${GITHUB_REF##*/}" >> "$GITHUB_ENV"
+
+      - uses: actions/checkout@v4
+
+      - name: Update apt metadata
+        run: sudo apt-get update
+
+      - name: Free runner disk space
+        run: |
+          sudo apt-get purge -y \
+            '^llvm-.*' \
+            'php.*' \
+            '^mongodb-.*' \
+            '^mysql-.*' \
+            azure-cli \
+            google-chrome-stable \
+            firefox \
+            powershell \
+            microsoft-edge-stable \
+            mono-devel
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+
+      - name: Install host dependencies
+        run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support gh
+
+      - name: Mark dev-release package source
+        if: ${{ env.BRANCH == 'dev-release' || env.BRANCH == 'debug_next' }}
+        run: |
+          touch additionalFiles/dev-build
+
+      - name: Download Zero 3W custom kernel debs
+        if: ${{ matrix.DOWNLOAD_ZERO3W_KERNEL == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          out_dir="additionalFiles/openhd-lite-debs/${{ matrix.TARGET }}"
+          mkdir -p "$out_dir"
+          run_id="$(
+            gh api \
+              --method GET \
+              "repos/OpenHD/linux-rk2410-nocsf/actions/workflows/build-zero3w-debs.yml/runs" \
+              -f branch=openhd-hdmi-120hz \
+              -f status=success \
+              -f per_page=1 \
+              --jq '.workflow_runs[0].id'
+          )"
+          if [ -z "$run_id" ] || [ "$run_id" = "null" ]; then
+            echo "No successful Zero 3W kernel build found on OpenHD/linux-rk2410-nocsf openhd-hdmi-120hz"
+            exit 1
+          fi
+          gh run download "$run_id" \
+            -R OpenHD/linux-rk2410-nocsf \
+            -n zero3w-debs \
+            -D "$out_dir"
+          find "$out_dir" -maxdepth 1 -type f -name '*.deb' -print
+
+      - name: Update e2fsprogs
+        run: |
+          git clone https://github.com/tytso/e2fsprogs
+          cd e2fsprogs
+          mkdir build
+          cd build
+          ../configure
+          make
+          sudo make install
+
+      - name: Install image builder dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+          sudo ./install_dep.sh
+
+      - name: Build OpenHD Lite image
+        run: |
+          sudo ./build.sh ${{ matrix.TARGET }} false false true
+
+      - name: Normalize image name for artifact
+        run: |
+          set -euo pipefail
+          count=$(ls -1 deploy/*.img 2>/dev/null | wc -l)
+          if [ "$count" -eq 0 ]; then
+            echo "No .img files found in deploy/"
+            exit 1
+          fi
+          if [ "$count" -gt 1 ]; then
+            echo "Multiple .img files found in deploy/:"
+            ls -1 deploy/*.img
+            exit 1
+          fi
+          img_path=$(ls -1 deploy/*.img)
+          target_name="openhd-lite-image-${{ matrix.TARGET }}-${{ env.DT }}.img"
+          sudo mv "$img_path" "deploy/$target_name"
+
+      - name: Upload OpenHD Lite image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openhd-lite-image-${{ matrix.TARGET }}-${{ env.DT }}
+          path: deploy/*.img

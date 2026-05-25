@@ -1,0 +1,16 @@
+BASE_IMAGE_URL="https://github.com/radxa-build/radxa-zero3/releases/download/rsdk-b1"
+BASE_IMAGE="radxa-zero3_bookworm_kde_b1.output_512.img.xz"
+BASE_IMAGE_SHA512="6f9f67df6f997bef41aac2cc568ebb4b7820216be1256a49ce472cb877684c08ad793ff726da3155a02f0eab60b2b2c9318168b3cf8fab81849ae91e8724f10d"
+OS="radxa-debian-rock-cm3"
+DISTRO="bookworm"
+HAVE_BOOT_PART=false
+HAVE_CONF_PART=true
+CONF_PART=1
+ROOT_PART=3
+BIT="64"
+
+OPENHD_LITE_IMAGE=true
+GLIDE_PACKAGE="openhd-glide-radxa-zero3w"
+KERNEL_PACKAGES="linux-image-radxa-zero3 linux-headers-radxa-zero3 linux-libc-dev-radxa-zero3"
+BUILD_RTL_DRIVERS_FROM_SOURCE=true
+RTL_DRIVER_KERNEL_REGEX="rk2410-nocsf$"
