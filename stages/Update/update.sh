@@ -67,6 +67,16 @@ if [[ -z "${OS:-}" ]]; then
   export OS="${os_id}"
 fi
 
+if [[ "${OS}" != "radxa-debian-rock-cm3" ]]; then
+echo "#######################################################"
+echo "#######################################################"
+echo "#######################################################"
+echo "#######################################################"
+echo "#######################################################"
+echo "Installed Linux kernel packages:"
+dpkg -l | grep linux
+fi
+
 if [[ "${OS}" != "radxa-debian-rock3a" ]]; then
   # Remove conflicting packages
   $APT remove openhd openhd-sys-utils 'qopenhd*' || true
@@ -208,17 +218,6 @@ else
   $APT install "${qopenhd_package}"
   ensure_openhd_user
 fi
-
-if [[ "${OS}" != "radxa-debian-rock-cm3" ]]; then
-echo "#######################################################"
-echo "#######################################################"
-echo "#######################################################"
-echo "#######################################################"
-echo "#######################################################"
-echo "Installed Linux kernel packages:"
-dpkg -l | grep linux
-fi
-
 
 if [[ "${OS}" != "radxa-debian-rock3a" ]]; then
   # Enable service
