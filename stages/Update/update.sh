@@ -209,6 +209,17 @@ else
   ensure_openhd_user
 fi
 
+if [[ "${OS}" != "radxa-debian-rock-cm3" ]]; then
+echo "#######################################################"
+echo "#######################################################"
+echo "#######################################################"
+echo "#######################################################"
+echo "#######################################################"
+echo "Installed Linux kernel packages:"
+dpkg -l | grep linux
+fi
+
+
 if [[ "${OS}" != "radxa-debian-rock3a" ]]; then
   # Enable service
   systemctl enable openhd || true
