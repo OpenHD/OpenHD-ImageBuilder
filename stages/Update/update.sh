@@ -12,18 +12,62 @@ fi
 export DEBIAN_FRONTEND=noninteractive
 APT="apt -o Dpkg::Options::=--force-confnew -y"
 
-print_installed_linux_packages() {
+print_linux_package_metadata() {
+  local package_regex="${LINUX_METADATA_PACKAGE_REGEX:-^linux-(headers|image|libc-dev)}"
+
   echo "#######################################################"
   echo "#######################################################"
   echo "#######################################################"
   echo "#######################################################"
   echo "#######################################################"
-  echo "Installed Linux kernel packages:"
-  dpkg -l | grep linux || true
+  echo "Metadata for installed Linux kernel-related packages:"
+  echo "Package regex: ${package_regex}"
+
+  while read -r package; do
+    echo
+    echo "#######################################################"
+    echo "### ${package}"
+    echo "#######################################################"
+
+    echo
+    echo "### dpkg status"
+    dpkg-query -s "${package}" || true
+
+    echo
+    echo "### apt policy"
+    apt-cache policy "${package}" || true
+
+    echo
+    echo "### apt show"
+    apt-cache show --no-all-versions "${package}" || true
+
+    echo
+    echo "### apt source metadata"
+    apt-cache showsrc "${package}" || true
+
+    echo
+    echo "### apt madison"
+    apt-cache madison "${package}" || true
+
+    echo
+    echo "### dpkg info files"
+    find /var/lib/dpkg/info -maxdepth 1 -type f -name "${package}.*" -print || true
+
+    if [[ -d "/usr/share/doc/${package}" ]]; then
+      echo
+      echo "### doc metadata files"
+      find "/usr/share/doc/${package}" -maxdepth 1 -type f \
+        \( -name 'copyright' -o -name 'changelog*' -o -name 'NEWS*' -o -name 'README*' \) \
+        -print || true
+    fi
+  done < <(
+    dpkg-query -W -f='${db:Status-Abbrev}\t${binary:Package}\n' \
+      | awk -v regex="${package_regex}" '$1 ~ /^ii/ && $2 ~ regex { print $2 }'
+  )
 }
 
 if [[ "${UPDATE_LINUX_PACKAGES_ONLY:-false}" == "true" ]]; then
-  print_installed_linux_packages
+  print_linux_package_metadata
   echo "Done. UPDATE_LINUX_PACKAGES_ONLY is set, skipping OpenHD/QOpenHD package changes."
   exit 0
 fi
@@ -83,7 +127,7 @@ if [[ -z "${OS:-}" ]]; then
   export OS="${os_id}"
 fi
 
-print_installed_linux_packages
+print_linux_package_metadata
 
 if [[ "${OS}" != "radxa-debian-rock3a" ]]; then
   # Remove conflicting packages
