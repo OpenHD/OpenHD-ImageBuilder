@@ -86,14 +86,45 @@ fix_apt_sources() {
     # Disable bullseye-backports (no Release file anymore)
     sed -i '/bullseye-backports/s/^/#/' "$f" || true
 
-    # Disable Radxa repos (broken GPG in CI chroot)
-    sed -i '/radxa-repo.github.io/s/^/#/' "$f" || true
+    # Disable Radxa repos for full images (broken GPG in some CI chroots).
+    # Lite images need Radxa kernel packages, so they repair the keyring below.
+    if [[ "${OPENHD_LITE_IMAGE:-false}" != "true" ]]; then
+      sed -i '/radxa-repo.github.io/s/^/#/' "$f" || true
+    fi
   done
 
   echo "APT source cleanup done."
 }
 
 fix_apt_sources
+
+refresh_radxa_apt_for_lite() {
+  if [[ "${OPENHD_LITE_IMAGE:-false}" != "true" ]]; then
+    return 0
+  fi
+
+  if [[ "${OS:-}" != radxa-* ]]; then
+    return 0
+  fi
+
+  echo "Refreshing Radxa APT keyring for OpenHD Lite image"
+  if compgen -G "/etc/apt/sources.list.d/*.list" > /dev/null; then
+    sed -i '/radxa-repo.github.io/s/^#//' /etc/apt/sources.list.d/*.list || true
+  fi
+  if [[ -f /etc/apt/sources.list ]]; then
+    sed -i '/radxa-repo.github.io/s/^#//' /etc/apt/sources.list || true
+  fi
+
+  local keyring
+  local version
+  keyring="$(mktemp)"
+  version="$(curl -Ls https://github.com/radxa-pkg/radxa-archive-keyring/releases/latest/download/VERSION || true)"
+  if [[ -n "${version}" ]]; then
+    curl -L --output "${keyring}" "https://github.com/radxa-pkg/radxa-archive-keyring/releases/latest/download/radxa-archive-keyring_${version}_all.deb" \
+      && dpkg -i "${keyring}" || true
+  fi
+  rm -f "${keyring}"
+}
 
 # Remove old OpenHD repo if exists
   if [[ -f /etc/apt/sources.list.d/openhd-dev-release.list ]]; then
@@ -118,18 +149,21 @@ else
     | bash || true
 fi
 
-# Best-effort update
-apt update || echo "Warning: apt update failed but continuing…"
-
 # Determine OS (board)
 if [[ -z "${OS:-}" ]]; then
   os_id="$(. /etc/os-release; echo "${ID}-${VERSION_CODENAME}")"
   export OS="${os_id}"
 fi
 
+# Best-effort update
+refresh_radxa_apt_for_lite
+apt update || echo "Warning: apt update failed but continuing…"
+
 print_linux_package_metadata
 
-if [[ "${OS}" != "radxa-debian-rock3a" ]]; then
+if [[ "${OPENHD_LITE_IMAGE:-false}" == "true" ]]; then
+  echo "OpenHD Lite image detected, skipping full OpenHD/QOpenHD package set."
+elif [[ "${OS}" != "radxa-debian-rock3a" ]]; then
   # Remove conflicting packages
   $APT remove openhd openhd-sys-utils 'qopenhd*' || true
 
@@ -319,10 +353,12 @@ build_openhd_rtl_drivers_from_source() {
 
 install_openhd_lite_packages() {
   local glide_package="${GLIDE_PACKAGE:-openhd-glide}"
+  local core_packages="${OPENHD_LITE_PACKAGES:-openhd openhd-sys-utils}"
 
   echo "Installing OpenHD Lite package set"
   $APT purge 'qopenhd*' || true
   install_lite_kernel_packages
+  install_packages_from_list "OpenHD Lite core packages" "${core_packages}"
   install_packages_from_list "OpenHD Glide package" "${glide_package}"
   install_packages_from_list "RTL driver packages" "${RTL_DRIVER_PACKAGES:-}"
   build_openhd_rtl_drivers_from_source
@@ -473,7 +509,7 @@ if [[ "${OS}" != "radxa-debian-rock3a" ]]; then
   systemctl enable openhd || true
 
   systemctl restart openhd || true
-  systemctl enable openhd-sys-utils
+  systemctl enable openhd-sys-utils || true
 fi
 
 echo "Done. Detected board: ${OS}"
