@@ -228,6 +228,8 @@ install_local_lite_debs() {
   local board_deb_dir="${deb_root}/${image_type}"
   local -a debs=()
 
+  OPENHD_LITE_LOCAL_DEBS_INSTALLED=false
+
   if [[ -n "${image_type}" && -d "${board_deb_dir}" ]]; then
     deb_dir="${board_deb_dir}"
   fi
@@ -244,6 +246,7 @@ install_local_lite_debs() {
   fi
 
   echo "Installing local OpenHD Lite debs from ${deb_dir}"
+  OPENHD_LITE_LOCAL_DEBS_INSTALLED=true
   dpkg -i "${debs[@]}" || apt -o Dpkg::Options::=--force-confnew -y -f install
 }
 
@@ -251,6 +254,10 @@ install_lite_kernel_packages() {
   local kernel_packages="${KERNEL_PACKAGES:-}"
 
   install_local_lite_debs
+  if [[ "${OPENHD_LITE_LOCAL_DEBS_INSTALLED:-false}" == "true" ]]; then
+    echo "Local OpenHD Lite kernel debs installed; skipping repository kernel package install."
+    return 0
+  fi
 
   if [[ "${OS}" == "radxa-debian-cubie" ]]; then
     install_packages_with_disabled_dkms_prerm "custom kernel packages" "${kernel_packages}"
