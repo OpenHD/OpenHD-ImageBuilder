@@ -13,6 +13,6 @@ OPENHD_LITE_IMAGE=true
 GLIDE_PACKAGE="openhd-glide-radxa-zero3w"
 KERNEL_PACKAGE_VERSION="6.1.84-16"
 KERNEL_PACKAGES="linux-image-radxa-zero3=${KERNEL_PACKAGE_VERSION} linux-headers-radxa-zero3=${KERNEL_PACKAGE_VERSION} linux-libc-dev=${KERNEL_PACKAGE_VERSION} linux-libc-dev-radxa-zero3=${KERNEL_PACKAGE_VERSION}"
-RTL_DRIVER_PACKAGES="rtl88x2eu-ohd-zero3w"
+RTL_DRIVER_PACKAGES="rtl88x2eu-ohd-rk2410-nocsf"
 BUILD_RTL_DRIVERS_FROM_SOURCE=false
 RTL_DRIVER_KERNEL_REGEX="rk2410-nocsf$"
