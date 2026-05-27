@@ -125,7 +125,6 @@ export -f unmount_image
 
 on_chroot() {
     MNT_DIR="${STAGE_WORK_DIR}/mnt"
-    CHROOT_TMP_DIR="${STAGE_WORK_DIR}/host-tmp"
 
     echo "Binding host partitions on ${MNT_DIR}"
 
@@ -151,29 +150,18 @@ on_chroot() {
         mount --bind /etc/resolv.conf "${MNT_DIR}/etc/resolv.conf"
     fi
 
-    if [[ "${OPENHD_LITE_IMAGE:-false}" == "true" ]]; then
-        mkdir -p "${CHROOT_TMP_DIR}" "${MNT_DIR}/tmp"
-        chmod 1777 "${CHROOT_TMP_DIR}" "${MNT_DIR}/tmp"
-        mountpoint -q "${MNT_DIR}/tmp" || mount --bind "${CHROOT_TMP_DIR}" "${MNT_DIR}/tmp"
-    fi
-
     if [ ! -e ${MNT_DIR}/opt/additionalFiles ]; then
     df -h
     cp -r "${STAGE_DIR}/../../additionalFiles" "${MNT_DIR}/opt"
     fi
     #sudo chroot --userspec=1000:1000 "$MNT_DIR" /bin/bash "/home/pi/install.sh"
-    local chroot_status=0
-    capsh --drop=cap_setfcap "--chroot=${MNT_DIR}/" -- "$@" || chroot_status=$?
+    capsh --drop=cap_setfcap "--chroot=${MNT_DIR}/" -- "$@"
 
-    if mountpoint -q "${MNT_DIR}/tmp"; then
-        umount -l "${MNT_DIR}/tmp"
-    fi
     umount -l "${MNT_DIR}/etc/resolv.conf"
     umount -l "${MNT_DIR}/sys"
     umount -l "${MNT_DIR}/dev/pts"
     umount -l "${MNT_DIR}/dev"
     umount -l "${MNT_DIR}/proc"
-    return "${chroot_status}"
 }
 export -f on_chroot
 
