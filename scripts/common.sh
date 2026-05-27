@@ -151,9 +151,11 @@ on_chroot() {
         mount --bind /etc/resolv.conf "${MNT_DIR}/etc/resolv.conf"
     fi
 
-    mkdir -p "${CHROOT_TMP_DIR}" "${MNT_DIR}/tmp"
-    chmod 1777 "${CHROOT_TMP_DIR}" "${MNT_DIR}/tmp"
-    mountpoint -q "${MNT_DIR}/tmp" || mount --bind "${CHROOT_TMP_DIR}" "${MNT_DIR}/tmp"
+    if [[ "${OPENHD_LITE_IMAGE:-false}" == "true" ]]; then
+        mkdir -p "${CHROOT_TMP_DIR}" "${MNT_DIR}/tmp"
+        chmod 1777 "${CHROOT_TMP_DIR}" "${MNT_DIR}/tmp"
+        mountpoint -q "${MNT_DIR}/tmp" || mount --bind "${CHROOT_TMP_DIR}" "${MNT_DIR}/tmp"
+    fi
 
     if [ ! -e ${MNT_DIR}/opt/additionalFiles ]; then
     df -h
