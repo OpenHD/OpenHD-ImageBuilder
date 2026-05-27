@@ -1,10 +1,11 @@
 BASE_IMAGE_URL="https://github.com/radxa-build/radxa-zero3/releases/download/rsdk-b1"
 BASE_IMAGE="radxa-zero3_bookworm_kde_b1.output_512.img.xz"
-BASE_IMAGE_SHA256="47b70ec81377f618505951fc9b4c40784e983c7fdff9706fdf79c13b6cd20730"
+BASE_IMAGE_SHA512="6f9f67df6f997bef41aac2cc568ebb4b7820216be1256a49ce472cb877684c08ad793ff726da3155a02f0eab60b2b2c9318168b3cf8fab81849ae91e8724f10d"
 OS="radxa-debian-rock-cm3"
 DISTRO="bookworm"
 HAVE_BOOT_PART=false
-HAVE_CONF_PART=false
+HAVE_CONF_PART=true
+CONF_PART=1
 ROOT_PART=3
 BIT="64"
 

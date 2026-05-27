@@ -58,9 +58,7 @@ mount_image () {
     # Resize to full size
     LOOP_DEV="$(findmnt -nr -o source $MNT_DIR)"
     log "loop_dev: ${LOOP_DEV}"
-    if ! resize2fs -f "$LOOP_DEV"; then
-        log "Root filesystem resize failed for ${LOOP_DEV}; continuing with current filesystem size"
-    fi
+    resize2fs -f "$LOOP_DEV"
 
     # disable dir_index due to a weird bug when running qemu in a 32-bit chroot on 64-bit x86 hardware, readdir() fails in strange ways
     if [[ "${BIT}" == "32" ]]; then
