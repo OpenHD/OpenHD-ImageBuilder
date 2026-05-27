@@ -10,7 +10,7 @@ if [[ ${EUID:-$(id -u)} -ne 0 ]]; then
 fi
 
 export DEBIAN_FRONTEND=noninteractive
-APT="apt -o Dpkg::Options::=--force-confnew -y"
+APT="apt -o Dpkg::Options::=--force-confnew -y --allow-downgrades"
 
 print_linux_package_metadata() {
   local package_regex="${LINUX_METADATA_PACKAGE_REGEX:-^linux-(headers|image|libc-dev)}"
