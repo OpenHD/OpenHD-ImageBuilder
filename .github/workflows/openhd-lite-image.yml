@@ -18,9 +18,7 @@ jobs:
       matrix:
         include:
           - TARGET: radxa-cubie-lite
-            DOWNLOAD_ZERO3W_KERNEL: "false"
           - TARGET: radxa-zero3w-lite
-            DOWNLOAD_ZERO3W_KERNEL: "true"
 
     steps:
       - name: Setup env
@@ -50,39 +48,12 @@ jobs:
           sudo apt-get clean
 
       - name: Install host dependencies
-        run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support gh
+        run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
 
       - name: Mark dev-release package source
         if: ${{ env.BRANCH == 'dev-release' || env.BRANCH == 'debug_next' }}
         run: |
           touch additionalFiles/dev-build
-
-      - name: Download Zero 3W custom kernel debs
-        if: ${{ matrix.DOWNLOAD_ZERO3W_KERNEL == 'true' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          out_dir="additionalFiles/openhd-lite-debs/${{ matrix.TARGET }}"
-          mkdir -p "$out_dir"
-          run_id="$(
-            gh api \
-              --method GET \
-              "repos/OpenHD/linux-rk2410-nocsf/actions/workflows/build-zero3w-debs.yml/runs" \
-              -f branch=openhd-hdmi-120hz \
-              -f status=success \
-              -f per_page=1 \
-              --jq '.workflow_runs[0].id'
-          )"
-          if [ -z "$run_id" ] || [ "$run_id" = "null" ]; then
-            echo "No successful Zero 3W kernel build found on OpenHD/linux-rk2410-nocsf openhd-hdmi-120hz"
-            exit 1
-          fi
-          gh run download "$run_id" \
-            -R OpenHD/linux-rk2410-nocsf \
-            -n zero3w-debs \
-            -D "$out_dir"
-          find "$out_dir" -maxdepth 1 -type f -name '*.deb' -print
 
       - name: Update e2fsprogs
         run: |
