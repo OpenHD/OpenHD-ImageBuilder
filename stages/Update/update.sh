@@ -381,6 +381,96 @@ ensure_openhd_user() {
   if getent group sudo >/dev/null 2>&1; then
     usermod -aG sudo openhd || true
   fi
+  for group in video render input dialout plugdev netdev; do
+    if getent group "${group}" >/dev/null 2>&1; then
+      usermod -aG "${group}" openhd || true
+    fi
+  done
+}
+
+remove_radxa_desktop_stack() {
+  echo "Removing desktop/display-manager packages for headless Radxa image"
+  $APT purge \
+    'kde*' 'plasma*' 'sddm*' 'lightdm*' task-kde-desktop task-xfce-desktop \
+    konsole yakuake xfce4-terminal thunar-volman xfce4-clipman \
+    xfce4-notifyd xfce4-power-manager xfce4-screenshooter \
+    xdg-desktop-portal xdg-desktop-portal-gtk xdg-user-dirs xdg-user-dirs-gtk \
+    gvfs gvfs-backends gvfs-fuse firefox-esr chromium || true
+  $APT autoremove --purge || true
+}
+
+install_headless_openhd_login() {
+  mkdir -p /etc/systemd/system/getty@tty1.service.d
+  cat >/etc/systemd/system/getty@tty1.service.d/openhd-autologin.conf <<'EOF'
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty --autologin openhd --noclear %I $TERM
+EOF
+
+  systemctl unmask getty@tty1.service >/dev/null 2>&1 || true
+  systemctl enable getty@tty1.service >/dev/null 2>&1 || true
+}
+
+install_openhd_glide_autostart() {
+  local service
+  local glide_service_found=false
+
+  cat >/usr/local/sbin/openhd-start-glide.sh <<'EOF'
+#!/bin/sh
+set -eu
+
+for binary in /usr/bin/openhd-glide-radxa-zero3w /usr/local/bin/openhd-glide-radxa-zero3w /usr/bin/openhd-glide /usr/local/bin/openhd-glide /usr/bin/OpenHDGlide /usr/local/bin/OpenHDGlide /usr/bin/glide /usr/local/bin/glide /usr/bin/FPVue /usr/local/bin/FPVue /usr/bin/fpvue /usr/local/bin/fpvue; do
+  if [ -x "${binary}" ]; then
+    exec "${binary}"
+  fi
+done
+
+echo "No OpenHD Glide executable or service found" >&2
+exit 0
+EOF
+  chmod 0755 /usr/local/sbin/openhd-start-glide.sh
+
+  cat >/etc/systemd/system/openhd-glide-autostart.service <<'EOF'
+[Unit]
+Description=OpenHD Glide autostart
+Wants=openhd.service openhd-sys-utils.service network-online.target
+After=openhd.service openhd-sys-utils.service network-online.target
+
+[Service]
+Type=simple
+User=openhd
+Group=openhd
+Environment=HOME=/home/openhd
+WorkingDirectory=/home/openhd
+ExecStart=/usr/local/sbin/openhd-start-glide.sh
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  for service in openhd-glide.service openhd-glide-radxa-zero3w.service glide.service fpvue.service; do
+    if systemctl list-unit-files --no-legend "${service}" 2>/dev/null | grep -q "^${service}[[:space:]]"; then
+      systemctl enable "${service}" || true
+      glide_service_found=true
+    fi
+  done
+
+  if [[ "${glide_service_found}" != "true" ]]; then
+    systemctl enable openhd-glide-autostart.service || true
+  fi
+}
+
+configure_headless_runtime() {
+  echo "Configuring headless OpenHD runtime"
+
+  systemctl set-default multi-user.target || true
+  systemctl disable display-manager.service sddm.service lightdm.service gdm.service gdm3.service >/dev/null 2>&1 || true
+  systemctl mask display-manager.service sddm.service lightdm.service gdm.service gdm3.service >/dev/null 2>&1 || true
+
+  install_headless_openhd_login
+  install_openhd_glide_autostart
 }
 
 install_radxa_ssh_boot_fix() {
@@ -397,6 +487,11 @@ usermod -s /bin/bash openhd || true
 if getent group sudo >/dev/null 2>&1; then
   usermod -aG sudo openhd || true
 fi
+for group in video render input dialout plugdev netdev; do
+  if getent group "${group}" >/dev/null 2>&1; then
+    usermod -aG "${group}" openhd || true
+  fi
+done
 
 mkdir -p /etc/ssh/sshd_config.d
 cat >/etc/ssh/sshd_config.d/99-openhd-enable-password-login.conf <<'SSHEOF'
@@ -408,6 +503,9 @@ SSHEOF
 systemctl unmask ssh.service ssh.socket sshd.service sshd.socket >/dev/null 2>&1 || true
 systemctl enable ssh.service >/dev/null 2>&1 || true
 systemctl restart ssh.service >/dev/null 2>&1 || systemctl start ssh.service >/dev/null 2>&1 || true
+systemctl set-default multi-user.target >/dev/null 2>&1 || true
+systemctl disable display-manager.service sddm.service lightdm.service gdm.service gdm3.service >/dev/null 2>&1 || true
+systemctl mask display-manager.service sddm.service lightdm.service gdm.service gdm3.service >/dev/null 2>&1 || true
 EOF
 
   chmod 0755 /usr/local/sbin/openhd-radxa-ssh-boot.sh
@@ -486,8 +584,7 @@ fi
 
 if [[ "${OS}" == "radxa-debian-cubie" ]]; then
   echo "Removing KDE desktop packages for Radxa Cubie shell image"
-  $APT purge 'kde*' 'plasma*' 'sddm*' task-kde-desktop konsole yakuake || true
-  $APT autoremove --purge || true
+  remove_radxa_desktop_stack
   $APT install openssh-server sudo v4l-utils
   if [[ "${OPENHD_LITE_IMAGE:-false}" == "true" ]]; then
     install_openhd_lite_packages
@@ -498,13 +595,22 @@ if [[ "${OS}" == "radxa-debian-cubie" ]]; then
   fi
   ensure_openhd_user
   install_radxa_ssh_boot_fix
+  configure_headless_runtime
 elif [[ "${OS}" == "radxa-debian-rock3a" ]]; then
   $APT install openssh-server sudo v4l-utils
   ensure_openhd_user
   install_radxa_ssh_boot_fix
 elif [[ "${OPENHD_LITE_IMAGE:-false}" == "true" ]]; then
+  if [[ "${OS:-}" == radxa-* ]]; then
+    remove_radxa_desktop_stack
+    $APT install openssh-server sudo v4l-utils
+  fi
   install_openhd_lite_packages
   ensure_openhd_user
+  if [[ "${OS:-}" == radxa-* ]]; then
+    install_radxa_ssh_boot_fix
+    configure_headless_runtime
+  fi
 else
   echo "Installing QOpenHD package: ${qopenhd_package}"
   $APT install "${qopenhd_package}"
