@@ -414,6 +414,20 @@ EOF
 install_openhd_glide_autostart() {
   local service
   local glide_service_found=false
+  local glide_service_run="/usr/lib/openhd-glide/openhd-glide-service-run"
+  local legacy_glide_service_run="/usr/local/lib/openhd-glide/openhd-glide-service-run"
+  local glide_override="/etc/systemd/system/openhd-glide.service"
+
+  if [[ -x "${glide_service_run}" ]]; then
+    mkdir -p "$(dirname "${legacy_glide_service_run}")"
+    ln -sfn "${glide_service_run}" "${legacy_glide_service_run}"
+  fi
+
+  if [[ -f "${glide_override}" && -x "${glide_service_run}" ]]; then
+    sed -i \
+      "s#^ExecStart=${legacy_glide_service_run}\$#ExecStart=${glide_service_run}#" \
+      "${glide_override}"
+  fi
 
   cat >/usr/local/sbin/openhd-start-glide.sh <<'EOF'
 #!/bin/sh
@@ -459,7 +473,11 @@ EOF
 
   if [[ "${glide_service_found}" != "true" ]]; then
     systemctl enable openhd-glide-autostart.service || true
+  else
+    systemctl disable openhd-glide-autostart.service >/dev/null 2>&1 || true
   fi
+
+  systemctl daemon-reload || true
 }
 
 configure_headless_runtime() {
