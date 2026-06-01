@@ -69,6 +69,9 @@ print_linux_package_metadata() {
 if [[ "${UPDATE_LINUX_PACKAGES_ONLY:-false}" == "true" && "${OPENHD_LITE_IMAGE:-false}" != "true" ]]; then
   curl -1sLf "https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh" | bash || true
   apt update || echo "Warning: apt update failed but continuing..."
+  if [[ -n "${OPENHD_RUNTIME_PACKAGES:-}" ]]; then
+    $APT install ${OPENHD_RUNTIME_PACKAGES}
+  fi
   if [[ -n "${KERNEL_PACKAGES:-}" ]]; then
     $APT install ${KERNEL_PACKAGES}
   fi
@@ -392,11 +395,13 @@ build_openhd_rtl_drivers_from_source() {
 install_openhd_lite_packages() {
   local glide_package="${GLIDE_PACKAGE:-openhd-glide}"
   local core_packages="${OPENHD_LITE_PACKAGES:-openhd openhd-sys-utils}"
+  local runtime_packages="${OPENHD_RUNTIME_PACKAGES:-}"
 
   echo "Installing OpenHD Lite package set"
   $APT purge 'qopenhd*' || true
   install_lite_kernel_packages
   install_packages_from_list "OpenHD Lite core packages" "${core_packages}"
+  install_packages_from_list "OpenHD runtime packages" "${runtime_packages}"
   install_packages_from_list "OpenHD Glide package" "${glide_package}"
   install_packages_from_list "RTL driver packages" "${RTL_DRIVER_PACKAGES:-}"
   build_openhd_rtl_drivers_from_source
