@@ -188,6 +188,9 @@ install_packages_from_list() {
   local label="$1"
   local package_string="${2:-}"
   local -a packages=()
+  local -a resolved_packages=()
+  local package
+  local match
 
   if [[ -z "${package_string//[[:space:]]/}" ]]; then
     echo "No ${label} configured, skipping."
@@ -195,8 +198,28 @@ install_packages_from_list() {
   fi
 
   read -r -a packages <<< "${package_string}"
-  echo "Installing ${label}: ${packages[*]}"
-  $APT install "${packages[@]}"
+  for package in "${packages[@]}"; do
+    if [[ "${package}" == *"*"* || "${package}" == *"?"* ]]; then
+      mapfile -t matches < <(apt-cache pkgnames "${package}" | sort)
+      if [[ "${#matches[@]}" -eq 0 ]]; then
+        echo "No package matched optional ${label} pattern '${package}', skipping."
+        continue
+      fi
+      for match in "${matches[@]}"; do
+        resolved_packages+=("${match}")
+      done
+    else
+      resolved_packages+=("${package}")
+    fi
+  done
+
+  if [[ "${#resolved_packages[@]}" -eq 0 ]]; then
+    echo "No ${label} packages resolved, skipping."
+    return 0
+  fi
+
+  echo "Installing ${label}: ${resolved_packages[*]}"
+  $APT install "${resolved_packages[@]}"
 }
 
 install_packages_with_disabled_dkms_prerm() {
