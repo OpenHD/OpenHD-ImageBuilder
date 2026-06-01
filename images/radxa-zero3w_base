@@ -12,5 +12,5 @@ ROOT_PART=3
 BIT="64"
 KERNEL_PACKAGE_VERSION="6.1.84-16"
 KERNEL_PACKAGES="linux-image-6.1.84-16-rk2410-nocsf=${KERNEL_PACKAGE_VERSION} linux-headers-6.1.84-16-rk2410-nocsf=${KERNEL_PACKAGE_VERSION} linux-libc-dev=${KERNEL_PACKAGE_VERSION} linux-libc-dev-radxa-zero3=${KERNEL_PACKAGE_VERSION}"
-RTL_DRIVER_PACKAGES="rtl8812au-radxa-zero3w-base-6.1.84-16-rk2410-nocsf rtl88x2bu-radxa-zero3w-base-6.1.84-16-rk2410-nocsf rtl88x2cu-radxa-zero3w-base-6.1.84-16-rk2410-nocsf rtl88x2eu-radxa-zero3w-base-6.1.84-16-rk2410-nocsf"
+RTL_DRIVER_PACKAGES="rtl8812au-radxa-zero3w-base-6.1.84-16* rtl88x2bu-radxa-zero3w-base-6.1.84-16* rtl88x2cu-radxa-zero3w-base-6.1.84-16* rtl88x2eu-radxa-zero3w-base-6.1.84-16*"
 BUILD_RTL_DRIVERS_FROM_SOURCE=false
