@@ -67,6 +67,14 @@ print_linux_package_metadata() {
 }
 
 if [[ "${UPDATE_LINUX_PACKAGES_ONLY:-false}" == "true" && "${OPENHD_LITE_IMAGE:-false}" != "true" ]]; then
+  curl -1sLf "https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh" | bash || true
+  apt update || echo "Warning: apt update failed but continuing..."
+  if [[ -n "${KERNEL_PACKAGES:-}" ]]; then
+    $APT install ${KERNEL_PACKAGES}
+  fi
+  if [[ -n "${RTL_DRIVER_PACKAGES:-}" ]]; then
+    $APT install ${RTL_DRIVER_PACKAGES}
+  fi
   print_linux_package_metadata
   echo "Done. UPDATE_LINUX_PACKAGES_ONLY is set, skipping OpenHD/QOpenHD package changes."
   exit 0
@@ -414,20 +422,6 @@ EOF
 install_openhd_glide_autostart() {
   local service
   local glide_service_found=false
-  local glide_service_run="/usr/lib/openhd-glide/openhd-glide-service-run"
-  local legacy_glide_service_run="/usr/local/lib/openhd-glide/openhd-glide-service-run"
-  local glide_override="/etc/systemd/system/openhd-glide.service"
-
-  if [[ -x "${glide_service_run}" ]]; then
-    mkdir -p "$(dirname "${legacy_glide_service_run}")"
-    ln -sfn "${glide_service_run}" "${legacy_glide_service_run}"
-  fi
-
-  if [[ -f "${glide_override}" && -x "${glide_service_run}" ]]; then
-    sed -i \
-      "s#^ExecStart=${legacy_glide_service_run}\$#ExecStart=${glide_service_run}#" \
-      "${glide_override}"
-  fi
 
   cat >/usr/local/sbin/openhd-start-glide.sh <<'EOF'
 #!/bin/sh
@@ -478,6 +472,50 @@ EOF
   fi
 
   systemctl daemon-reload || true
+}
+
+finalize_openhd_glide_service() {
+  local glide_service_run="/usr/lib/openhd-glide/openhd-glide-service-run"
+  local legacy_glide_service_run="/usr/local/lib/openhd-glide/openhd-glide-service-run"
+  local glide_override="/etc/systemd/system/openhd-glide.service"
+
+  if [[ ! -x "${glide_service_run}" ]]; then
+    return 0
+  fi
+
+  mkdir -p "$(dirname "${legacy_glide_service_run}")"
+  ln -sfn "${glide_service_run}" "${legacy_glide_service_run}"
+
+  cat >"${glide_override}" <<EOF
+[Unit]
+Description=OpenHD Glide KMS rendering stack
+Documentation=https://github.com/OpenHD
+DefaultDependencies=no
+# Glide must show the UI while the rest of OpenHD is still booting.
+# Do not wait for network-online/openhd/udev-settle; those can take
+# minutes on RK3566 and are not needed for the KMS connecting screen.
+After=systemd-udev-trigger.service
+Wants=systemd-udev-trigger.service
+Before=basic.target multi-user.target
+StartLimitIntervalSec=30
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStart=${glide_service_run}
+Restart=on-failure
+RestartSec=1
+KillMode=control-group
+RuntimeDirectory=openhd-glide
+RuntimeDirectoryMode=0755
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  systemctl daemon-reload || true
+  systemctl enable openhd-glide.service || true
 }
 
 configure_headless_runtime() {
@@ -642,5 +680,7 @@ if [[ "${OS}" != "radxa-debian-rock3a" ]]; then
   systemctl restart openhd || true
   systemctl enable openhd-sys-utils || true
 fi
+
+finalize_openhd_glide_service
 
 echo "Done. Detected board: ${OS}"
