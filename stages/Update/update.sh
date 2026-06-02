@@ -203,7 +203,13 @@ install_packages_from_list() {
   read -r -a packages <<< "${package_string}"
   for package in "${packages[@]}"; do
     if [[ "${package}" == *"*"* || "${package}" == *"?"* ]]; then
-      mapfile -t matches < <(apt-cache pkgnames "${package}" | sort)
+      mapfile -t matches < <(
+        apt-cache pkgnames \
+          | while read -r match; do
+              [[ "${match}" == ${package} ]] && printf '%s\n' "${match}"
+            done \
+          | sort
+      )
       if [[ "${#matches[@]}" -eq 0 ]]; then
         echo "No package matched optional ${label} pattern '${package}', skipping."
         continue
