@@ -75,12 +75,12 @@ download_with_rclone() {
   echo "Using rclone config file: ${rclone_config}"
   echo "Found rclone config sections:"
   grep -E '^\[[^]]+\]$' "${rclone_config}" || true
-  if rclone --config "${rclone_config}" copyto "gdrive:${rclone_path}" "${out_file}" --progress; then
+  if rclone --config "${rclone_config}" backend copyid "gdrive:" "${ggID}" "${out_file}" --progress; then
     rm -f "${rclone_config}"
     return 0
   fi
 
-  echo "Authenticated rclone download from My Drive failed, trying Shared with me." >&2
+  echo "Authenticated rclone download by file ID failed, trying Shared with me path lookup." >&2
   if rclone --config "${rclone_config}" copyto --drive-shared-with-me "gdrive:${rclone_path}" "${out_file}" --progress; then
     rm -f "${rclone_config}"
     return 0
