@@ -60,6 +60,17 @@ download_with_rclone() {
     return 1
   fi
 
+  if ! awk '
+    /^\[gdrive\]$/ { in_section = 1; next }
+    /^\[[^]]+\]$/ { in_section = 0 }
+    in_section && $1 == "type" && $2 == "=" && $3 == "drive" { found = 1 }
+    END { exit found ? 0 : 1 }
+  ' "${rclone_config}"; then
+    echo "OPENHD_RCLONE_CONFIG_GDRIVE [gdrive] section is missing required line: type = drive" >&2
+    rm -f "${rclone_config}"
+    return 1
+  fi
+
   echo "Downloading from Google Drive with authenticated rclone remote path: ${rclone_path}"
   echo "Using rclone config file: ${rclone_config}"
   echo "Found rclone config sections:"
