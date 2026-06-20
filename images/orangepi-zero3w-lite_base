@@ -4,9 +4,8 @@ BASE_IMAGE="Orangepizero3w_1.0.0_debian_bookworm_server_linux6.6.98.7z"
 OS="radxa-debian-cubie"
 DISTRO="bookworm"
 HAVE_BOOT_PART=false
-HAVE_CONF_PART=true
-CONF_PART=1
-ROOT_PART=3
+HAVE_CONF_PART=false
+ROOT_PART=1
 BIT="64"
 
 OPENHD_LITE_IMAGE=true
