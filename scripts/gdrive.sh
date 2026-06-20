@@ -71,10 +71,34 @@ download_with_rclone() {
     return 1
   fi
 
+  echo "Refreshing rclone Google Drive token metadata"
+  rclone --config "${rclone_config}" about "gdrive:" >/dev/null || true
+
   echo "Downloading from Google Drive with authenticated rclone remote path: ${rclone_path}"
   echo "Using rclone config file: ${rclone_config}"
   echo "Found rclone config sections:"
   grep -E '^\[[^]]+\]$' "${rclone_config}" || true
+
+  access_token="$(sed -n 's/.*"access_token":"\([^"]*\)".*/\1/p' "${rclone_config}" | tail -n 1 || true)"
+  if [[ -n "${access_token}" ]]; then
+    echo "Downloading from Google Drive API by file ID: ${ggID}"
+    if curl "${curl_common[@]}" \
+      -H "Authorization: Bearer ${access_token}" \
+      -o "${out_file}" \
+      "https://www.googleapis.com/drive/v3/files/${ggID}?alt=media&acknowledgeAbuse=true&supportsAllDrives=true"; then
+      if grep -qiE '<!doctype html|<html|^[[:space:]]*\{' "${out_file}"; then
+        echo "Google Drive API returned a non-archive response." >&2
+        rm -f "${out_file}"
+        return 1
+      fi
+      rm -f "${rclone_config}"
+      return 0
+    fi
+    echo "Authenticated Google Drive API download failed, trying rclone fallbacks." >&2
+  else
+    echo "Unable to find access_token in rclone config, trying rclone fallbacks." >&2
+  fi
+
   if rclone --config "${rclone_config}" backend copyid "gdrive:" "${ggID}" "${out_file}" --progress; then
     rm -f "${rclone_config}"
     return 0
