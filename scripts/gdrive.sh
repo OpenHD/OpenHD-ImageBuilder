@@ -61,13 +61,16 @@ download_with_rclone() {
   fi
 
   echo "Downloading from Google Drive with authenticated rclone remote path: ${rclone_path}"
-  if RCLONE_CONFIG="${rclone_config}" rclone copyto "gdrive:${rclone_path}" "${out_file}" --progress; then
+  echo "Using rclone config file: ${rclone_config}"
+  echo "Found rclone config sections:"
+  grep -E '^\[[^]]+\]$' "${rclone_config}" || true
+  if rclone --config "${rclone_config}" copyto "gdrive:${rclone_path}" "${out_file}" --progress; then
     rm -f "${rclone_config}"
     return 0
   fi
 
   echo "Authenticated rclone download from My Drive failed, trying Shared with me." >&2
-  if RCLONE_CONFIG="${rclone_config}" rclone copyto --drive-shared-with-me "gdrive:${rclone_path}" "${out_file}" --progress; then
+  if rclone --config "${rclone_config}" copyto --drive-shared-with-me "gdrive:${rclone_path}" "${out_file}" --progress; then
     rm -f "${rclone_config}"
     return 0
   fi
