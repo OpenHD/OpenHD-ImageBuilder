@@ -21,6 +21,48 @@ cookie="$(mktemp)"
 response="$(mktemp)"
 trap 'rm -f "${cookie}" "${response}"' EXIT
 
+validate_downloaded_file() {
+  local file="$1"
+  local magic
+
+  if [[ ! -s "${file}" ]]; then
+    echo "Downloaded file is missing or empty: ${file}" >&2
+    return 1
+  fi
+
+  magic="$(head -c 8 "${file}" | od -An -tx1 | tr -d ' \n')"
+
+  case "${file}" in
+    *.7z)
+      [[ "${magic}" == 377abcaf271c* ]] && return 0
+      ;;
+    *.img.xz|*.xz)
+      [[ "${magic}" == fd377a585a00* ]] && return 0
+      ;;
+    *.zip)
+      [[ "${magic}" == 504b0304* || "${magic}" == 504b0506* || "${magic}" == 504b0708* ]] && return 0
+      ;;
+    *.gz)
+      [[ "${magic}" == 1f8b* ]] && return 0
+      ;;
+    *.bz2)
+      [[ "${magic}" == 425a68* ]] && return 0
+      ;;
+    *)
+      return 0
+      ;;
+  esac
+
+  if grep -qiE '<!doctype html|<html|^[[:space:]]*\{' "${file}"; then
+    echo "Google Drive returned HTML/JSON instead of the requested archive." >&2
+    sed -n 's/.*<title>\(.*\)<\/title>.*/Google Drive response title: \1/p' "${file}" >&2 || true
+  else
+    echo "Downloaded file does not match expected archive magic for ${file}. Magic: ${magic}" >&2
+  fi
+
+  return 1
+}
+
 curl "${curl_common[@]}" -c "${cookie}" -o "${response}" "${ggURL}&id=${ggID}"
 getcode="$(awk '/_warning_/ {print $NF}' "${cookie}" | tail -n 1)"
 confirm="$(sed -n 's/.*name="confirm"[[:space:]][^>]*value="\([^"]*\)".*/\1/p' "${response}" | tail -n 1 || true)"
@@ -86,8 +128,7 @@ download_with_rclone() {
       -H "Authorization: Bearer ${access_token}" \
       -o "${out_file}" \
       "https://www.googleapis.com/drive/v3/files/${ggID}?alt=media&acknowledgeAbuse=true&supportsAllDrives=true"; then
-      if grep -qiE '<!doctype html|<html|^[[:space:]]*\{' "${out_file}"; then
-        echo "Google Drive API returned a non-archive response." >&2
+      if ! validate_downloaded_file "${out_file}"; then
         rm -f "${out_file}"
         return 1
       fi
@@ -128,9 +169,10 @@ else
   curl "${curl_common[@]}" "${output_args[@]}" -b "${cookie}" -e "${ggURL}&id=${ggID}" "${ggURL}&id=${ggID}"
 fi
 
-if [[ -n "${out_file}" ]] && grep -qiE '<!doctype html|<html' "${out_file}"; then
-  echo "Google Drive returned HTML instead of the requested file. Check sharing/access for ${gURL}." >&2
-  sed -n 's/.*<title>\(.*\)<\/title>.*/Google Drive response title: \1/p' "${out_file}" >&2 || true
-  rm -f "${out_file}"
-  exit 1
+if [[ -n "${out_file}" ]]; then
+  if ! validate_downloaded_file "${out_file}"; then
+    echo "Google Drive did not return the requested file. Check sharing/access for ${gURL}." >&2
+    rm -f "${out_file}"
+    exit 1
+  fi
 fi
