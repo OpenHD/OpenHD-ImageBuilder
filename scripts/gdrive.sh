@@ -38,17 +38,27 @@ fi
 download_with_rclone() {
   local rclone_config
 
-  if [[ -z "${RCLONE_CONFIG_GDRIVE_CONTENT:-}" || -z "${rclone_path}" || -z "${out_file}" ]]; then
+  if [[ -z "${OPENHD_RCLONE_CONFIG_GDRIVE:-}" || -z "${rclone_path}" || -z "${out_file}" ]]; then
     return 1
   fi
 
   if ! command -v rclone >/dev/null 2>&1; then
-    echo "RCLONE_CONFIG_GDRIVE_CONTENT is set but rclone is not installed; falling back to anonymous Google Drive download." >&2
+    echo "OPENHD_RCLONE_CONFIG_GDRIVE is set but rclone is not installed; falling back to anonymous Google Drive download." >&2
     return 1
   fi
 
   rclone_config="$(mktemp)"
-  printf '%s\n' "${RCLONE_CONFIG_GDRIVE_CONTENT}" > "${rclone_config}"
+  printf '%s' "${OPENHD_RCLONE_CONFIG_GDRIVE}" \
+    | awk '{ gsub(/\\n/, "\n"); print }' \
+    | tr -d '\r' > "${rclone_config}"
+
+  if ! grep -q '^\[gdrive\]$' "${rclone_config}"; then
+    echo "OPENHD_RCLONE_CONFIG_GDRIVE does not contain a readable [gdrive] section." >&2
+    echo "Found rclone config sections:" >&2
+    grep -E '^\[[^]]+\]$' "${rclone_config}" >&2 || true
+    rm -f "${rclone_config}"
+    return 1
+  fi
 
   echo "Downloading from Google Drive with authenticated rclone remote path: ${rclone_path}"
   if RCLONE_CONFIG="${rclone_config}" rclone copyto "gdrive:${rclone_path}" "${out_file}" --progress; then

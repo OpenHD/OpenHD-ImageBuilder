@@ -74,7 +74,7 @@ jobs:
 
       - name: Build OpenHD Lite image
         env:
-          RCLONE_CONFIG_GDRIVE_CONTENT: ${{ secrets.RCLONE_CONFIG_GDRIVE }}
+          OPENHD_RCLONE_CONFIG_GDRIVE: ${{ secrets.RCLONE_CONFIG_GDRIVE }}
         run: |
           sudo -E ./build.sh ${{ matrix.TARGET }} false false true
 
