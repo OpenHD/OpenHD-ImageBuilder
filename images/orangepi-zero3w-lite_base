@@ -1,4 +1,5 @@
 BASE_IMAGE_GDRIVE_URL="https://drive.google.com/file/d/1Jus1waP_eeJgTddgWsh2CwE8eqPQ-G97/view?usp=drive_link"
+BASE_IMAGE_GDRIVE_RCLONE_PATH="Orangepizero3w_1.0.0_debian_bookworm_server_linux6.6.98.7z"
 BASE_IMAGE="Orangepizero3w_1.0.0_debian_bookworm_server_linux6.6.98.7z"
 OS="radxa-debian-cubie"
 DISTRO="bookworm"

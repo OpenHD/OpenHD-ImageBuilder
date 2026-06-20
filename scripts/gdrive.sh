@@ -10,6 +10,7 @@ set -euo pipefail
 
 gURL=$1
 out_file="${2:-}"
+rclone_path="${3:-}"
 # match more than 26 word characters  
 ggID=$(echo "$gURL" | egrep -o '(\w|-){26,}')
 
@@ -32,6 +33,41 @@ if [[ -n "${out_file}" ]]; then
   output_args=(-o "${out_file}")
 else
   output_args=(-OJ)
+fi
+
+download_with_rclone() {
+  local rclone_config
+
+  if [[ -z "${RCLONE_CONFIG_GDRIVE_CONTENT:-}" || -z "${rclone_path}" || -z "${out_file}" ]]; then
+    return 1
+  fi
+
+  if ! command -v rclone >/dev/null 2>&1; then
+    echo "RCLONE_CONFIG_GDRIVE_CONTENT is set but rclone is not installed; falling back to anonymous Google Drive download." >&2
+    return 1
+  fi
+
+  rclone_config="$(mktemp)"
+  printf '%s\n' "${RCLONE_CONFIG_GDRIVE_CONTENT}" > "${rclone_config}"
+
+  echo "Downloading from Google Drive with authenticated rclone remote path: ${rclone_path}"
+  if RCLONE_CONFIG="${rclone_config}" rclone copyto "gdrive:${rclone_path}" "${out_file}" --progress; then
+    rm -f "${rclone_config}"
+    return 0
+  fi
+
+  echo "Authenticated rclone download from My Drive failed, trying Shared with me." >&2
+  if RCLONE_CONFIG="${rclone_config}" rclone copyto --drive-shared-with-me "gdrive:${rclone_path}" "${out_file}" --progress; then
+    rm -f "${rclone_config}"
+    return 0
+  fi
+
+  rm -f "${rclone_config}"
+  return 1
+}
+
+if download_with_rclone; then
+  exit 0
 fi
 
 if [[ -n "${confirm}" && -n "${uuid}" ]]; then

@@ -20,7 +20,7 @@ check_base_image_checksum() {
 
 download_base_image() {
     if [[ -n "${BASE_IMAGE_GDRIVE_URL:-}" ]]; then
-        bash "${SCRIPT_DIR}/gdrive.sh" "${BASE_IMAGE_GDRIVE_URL}" "${BASE_IMAGE}"
+        bash "${SCRIPT_DIR}/gdrive.sh" "${BASE_IMAGE_GDRIVE_URL}" "${BASE_IMAGE}" "${BASE_IMAGE_GDRIVE_RCLONE_PATH:-}"
         if [[ ! -f "${BASE_IMAGE}" ]]; then
             log "Google Drive download did not create ${BASE_IMAGE}"
             exit 1

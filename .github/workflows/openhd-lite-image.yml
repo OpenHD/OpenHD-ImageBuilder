@@ -49,7 +49,7 @@ jobs:
           sudo apt-get clean
 
       - name: Install host dependencies
-        run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
+        run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support rclone
 
       - name: Mark dev-release package source
         if: ${{ env.BRANCH == 'dev-release' || env.BRANCH == 'debug_next' }}
@@ -73,8 +73,10 @@ jobs:
           sudo ./install_dep.sh
 
       - name: Build OpenHD Lite image
+        env:
+          RCLONE_CONFIG_GDRIVE_CONTENT: ${{ secrets.RCLONE_CONFIG_GDRIVE }}
         run: |
-          sudo ./build.sh ${{ matrix.TARGET }} false false true
+          sudo -E ./build.sh ${{ matrix.TARGET }} false false true
 
       - name: Normalize image name for artifact
         run: |
