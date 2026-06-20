@@ -14,15 +14,17 @@ out_file="${2:-}"
 ggID=$(echo "$gURL" | egrep -o '(\w|-){26,}')
 
 ggURL='https://drive.google.com/uc?export=download'
+curl_common=(--fail --location --insecure -A "Mozilla/5.0")
 
 cookie="$(mktemp)"
 response="$(mktemp)"
 trap 'rm -f "${cookie}" "${response}"' EXIT
 
-curl -L -sc "${cookie}" -o "${response}" "${ggURL}&id=${ggID}"
+curl "${curl_common[@]}" -c "${cookie}" -o "${response}" "${ggURL}&id=${ggID}"
 getcode="$(awk '/_warning_/ {print $NF}' "${cookie}" | tail -n 1)"
-confirm="$(grep -o 'name="confirm" value="[^"]*"' "${response}" | sed 's/.*value="\([^"]*\)".*/\1/' | tail -n 1 || true)"
-uuid="$(grep -o 'name="uuid" value="[^"]*"' "${response}" | sed 's/.*value="\([^"]*\)".*/\1/' | tail -n 1 || true)"
+confirm="$(sed -n 's/.*name="confirm"[[:space:]][^>]*value="\([^"]*\)".*/\1/p' "${response}" | tail -n 1 || true)"
+uuid="$(sed -n 's/.*name="uuid"[[:space:]][^>]*value="\([^"]*\)".*/\1/p' "${response}" | tail -n 1 || true)"
+form_action="$(sed -n 's/.*<form[^>]*id="download-form"[^>]*action="\([^"]*\)".*/\1/p' "${response}" | tail -n 1 || true)"
 
 echo -e "Downloading from ${gURL}...\n"
 
@@ -33,16 +35,18 @@ else
 fi
 
 if [[ -n "${confirm}" && -n "${uuid}" ]]; then
-  curl --fail --location --insecure "${output_args[@]}" -b "${cookie}" \
-    "https://drive.usercontent.google.com/download?id=${ggID}&export=download&confirm=${confirm}&uuid=${uuid}"
+  action_url="${form_action:-https://drive.usercontent.google.com/download}"
+  curl "${curl_common[@]}" "${output_args[@]}" -b "${cookie}" -e "${ggURL}&id=${ggID}" \
+    "${action_url}?id=${ggID}&export=download&confirm=${confirm}&uuid=${uuid}"
 elif [[ -n "${getcode}" ]]; then
-  curl --fail --location --insecure "${output_args[@]}" -b "${cookie}" "${ggURL}&confirm=${getcode}&id=${ggID}"
+  curl "${curl_common[@]}" "${output_args[@]}" -b "${cookie}" -e "${ggURL}&id=${ggID}" "${ggURL}&confirm=${getcode}&id=${ggID}"
 else
-  curl --fail --location --insecure "${output_args[@]}" -b "${cookie}" "${ggURL}&id=${ggID}"
+  curl "${curl_common[@]}" "${output_args[@]}" -b "${cookie}" -e "${ggURL}&id=${ggID}" "${ggURL}&id=${ggID}"
 fi
 
 if [[ -n "${out_file}" ]] && grep -qiE '<!doctype html|<html' "${out_file}"; then
   echo "Google Drive returned HTML instead of the requested file. Check sharing/access for ${gURL}." >&2
+  sed -n 's/.*<title>\(.*\)<\/title>.*/Google Drive response title: \1/p' "${out_file}" >&2 || true
   rm -f "${out_file}"
   exit 1
 fi
