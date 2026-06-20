@@ -404,7 +404,7 @@ install_openhd_lite_packages() {
   local runtime_packages="${OPENHD_RUNTIME_PACKAGES:-}"
 
   echo "Installing OpenHD Lite package set"
-  $APT purge 'qopenhd*' || true
+  apt purge -y 'qopenhd*' || true
   install_lite_kernel_packages
   install_packages_from_list "OpenHD Lite core packages" "${core_packages}"
   install_packages_from_list "OpenHD runtime packages" "${runtime_packages}"
