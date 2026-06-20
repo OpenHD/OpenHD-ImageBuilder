@@ -19,6 +19,7 @@ jobs:
         include:
           - TARGET: radxa-cubie-lite
           - TARGET: radxa-zero3w-lite
+          - TARGET: orangepi-zero3w-lite
 
     steps:
       - name: Setup env

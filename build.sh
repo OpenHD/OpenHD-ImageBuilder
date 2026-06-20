@@ -326,6 +326,7 @@ export OPENHD_LITE_LOCAL_DEB_DIR
 export OS
 export IMAGE_TYPE
 export DISTRO
+export BASE_IMAGE_GDRIVE_URL
 export BASE_IMAGE_URL
 export BASE_IMAGE
 export TESTING
