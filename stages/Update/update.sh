@@ -311,18 +311,30 @@ ensure_kernel_headers() {
   local header_dir
 
   if [[ -e "/lib/modules/${kver}/build/Makefile" ]]; then
-    return 0
-  fi
-
-  apt -o Dpkg::Options::=--force-confnew -y install "linux-headers-${kver}" || true
-  if [[ ! -e "/lib/modules/${kver}/build/Makefile" ]]; then
-    header_dir="$(find /usr/src -maxdepth 1 -type d \( -name "linux-headers-${kver}" -o -name "*${kver}*" \) | head -n1 || true)"
-    if [[ -n "${header_dir}" ]]; then
-      ln -sfn "${header_dir}" "/lib/modules/${kver}/build"
+    header_dir="/lib/modules/${kver}/build"
+  else
+    apt -o Dpkg::Options::=--force-confnew -y install "linux-headers-${kver}" || true
+    if [[ ! -e "/lib/modules/${kver}/build/Makefile" ]]; then
+      header_dir="$(find /usr/src -maxdepth 1 -type d \( -name "linux-headers-${kver}" -o -name "*${kver}*" \) | head -n1 || true)"
+      if [[ -n "${header_dir}" ]]; then
+        ln -sfn "${header_dir}" "/lib/modules/${kver}/build"
+      fi
+    else
+      header_dir="/lib/modules/${kver}/build"
     fi
   fi
 
-  [[ -e "/lib/modules/${kver}/build/Makefile" ]]
+  if [[ ! -e "/lib/modules/${kver}/build/Makefile" ]]; then
+    return 1
+  fi
+
+  header_dir="/lib/modules/${kver}/build"
+  if [[ ! -x "${header_dir}/scripts/basic/fixdep" ]]; then
+    echo "Preparing kernel header host tools for ${kver}"
+    make -C "${header_dir}" ARCH=arm64 scripts/basic/fixdep || make -C "${header_dir}" ARCH=arm64 scripts || true
+  fi
+
+  [[ -x "${header_dir}/scripts/basic/fixdep" ]]
 }
 
 build_one_rtl_driver() {
