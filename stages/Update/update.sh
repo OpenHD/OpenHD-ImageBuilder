@@ -337,11 +337,16 @@ ensure_kernel_headers() {
   if [[ ! -x "${header_dir}/scripts/basic/fixdep" ]]; then
     make -C "${header_dir}" ARCH=arm64 scripts/basic/fixdep || make -C "${header_dir}" ARCH=arm64 scripts || true
   fi
+  if [[ ! -x "${header_dir}/scripts/mod/modpost" ]]; then
+    make -C "${header_dir}" ARCH=arm64 scripts/mod/modpost || make -C "${header_dir}" ARCH=arm64 scripts || true
+  fi
 
   ls -l "${header_dir}/scripts/basic/fixdep" || true
   file "${header_dir}/scripts/basic/fixdep" || true
+  ls -l "${header_dir}/scripts/mod/modpost" || true
+  file "${header_dir}/scripts/mod/modpost" || true
 
-  [[ -x "${header_dir}/scripts/basic/fixdep" ]]
+  [[ -x "${header_dir}/scripts/basic/fixdep" && -x "${header_dir}/scripts/mod/modpost" ]]
 }
 
 build_one_rtl_driver() {
