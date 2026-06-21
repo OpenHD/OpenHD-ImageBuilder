@@ -329,13 +329,17 @@ ensure_kernel_headers() {
   fi
 
   header_dir="/lib/modules/${kver}/build"
-  if [[ ! -x "${header_dir}/scripts/basic/fixdep" ]]; then
-    echo "Preparing kernel header host tools for ${kver}"
-    make -C "${header_dir}" ARCH=arm64 scripts/basic/fixdep || make -C "${header_dir}" ARCH=arm64 scripts || true
-    if [[ ! -x "${header_dir}/scripts/basic/fixdep" && -f "${header_dir}/scripts/basic/fixdep.c" ]]; then
-      gcc -o "${header_dir}/scripts/basic/fixdep" "${header_dir}/scripts/basic/fixdep.c"
-    fi
+  echo "Preparing kernel header host tools for ${kver} in ${header_dir}"
+  if [[ -f "${header_dir}/scripts/basic/fixdep.c" ]]; then
+    rm -f "${header_dir}/scripts/basic/fixdep"
+    gcc -o "${header_dir}/scripts/basic/fixdep" "${header_dir}/scripts/basic/fixdep.c"
   fi
+  if [[ ! -x "${header_dir}/scripts/basic/fixdep" ]]; then
+    make -C "${header_dir}" ARCH=arm64 scripts/basic/fixdep || make -C "${header_dir}" ARCH=arm64 scripts || true
+  fi
+
+  ls -l "${header_dir}/scripts/basic/fixdep" || true
+  file "${header_dir}/scripts/basic/fixdep" || true
 
   [[ -x "${header_dir}/scripts/basic/fixdep" ]]
 }
@@ -385,7 +389,7 @@ build_openhd_rtl_drivers_from_source() {
   fi
 
   echo "Building OpenHD RTL drivers from source"
-  $APT install --no-install-recommends build-essential git make gcc bc bison flex kmod ca-certificates
+  $APT install --no-install-recommends build-essential git make gcc bc bison flex kmod ca-certificates file
 
   mapfile -t kernels < <(find /lib/modules -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort)
   for kver in "${kernels[@]}"; do
