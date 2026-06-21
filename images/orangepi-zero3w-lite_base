@@ -9,5 +9,5 @@ ROOT_PART=1
 BIT="64"
 
 OPENHD_LITE_IMAGE=true
-GLIDE_PACKAGE="openhd-glide-radxa-cubie"
+GLIDE_PACKAGE="openhd-glide-orangepi-zero3w=0.1.0.66"
 BUILD_RTL_DRIVERS_FROM_SOURCE=false
