@@ -332,6 +332,9 @@ ensure_kernel_headers() {
   if [[ ! -x "${header_dir}/scripts/basic/fixdep" ]]; then
     echo "Preparing kernel header host tools for ${kver}"
     make -C "${header_dir}" ARCH=arm64 scripts/basic/fixdep || make -C "${header_dir}" ARCH=arm64 scripts || true
+    if [[ ! -x "${header_dir}/scripts/basic/fixdep" && -f "${header_dir}/scripts/basic/fixdep.c" ]]; then
+      gcc -o "${header_dir}/scripts/basic/fixdep" "${header_dir}/scripts/basic/fixdep.c"
+    fi
   fi
 
   [[ -x "${header_dir}/scripts/basic/fixdep" ]]
