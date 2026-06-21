@@ -339,6 +339,21 @@ ensure_kernel_headers() {
   fi
   if [[ ! -x "${header_dir}/scripts/mod/modpost" ]]; then
     make -C "${header_dir}" ARCH=arm64 scripts/mod/modpost || make -C "${header_dir}" ARCH=arm64 scripts || true
+    if [[ ! -x "${header_dir}/scripts/mod/modpost" && -f "${header_dir}/scripts/mod/modpost.c" ]]; then
+      local -a modpost_sources=(
+        "${header_dir}/scripts/mod/modpost.c"
+        "${header_dir}/scripts/mod/file2alias.c"
+        "${header_dir}/scripts/mod/sumversion.c"
+      )
+      if [[ -f "${header_dir}/scripts/mod/symsearch.c" ]]; then
+        modpost_sources+=("${header_dir}/scripts/mod/symsearch.c")
+      fi
+      gcc \
+        -I"${header_dir}/scripts/mod" \
+        -I"${header_dir}/include" \
+        -o "${header_dir}/scripts/mod/modpost" \
+        "${modpost_sources[@]}"
+    fi
   fi
 
   ls -l "${header_dir}/scripts/basic/fixdep" || true
