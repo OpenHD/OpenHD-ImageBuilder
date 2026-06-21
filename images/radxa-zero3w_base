@@ -1,18 +1,11 @@
-BASE_IMAGE_URL="https://github.com/radxa-build/radxa-zero3/releases/download/rsdk-b1"
-BASE_IMAGE="radxa-zero3_bookworm_kde_b1.output_512.img.xz"
-BASE_IMAGE_SHA512="6f9f67df6f997bef41aac2cc568ebb4b7820216be1256a49ce472cb877684c08ad793ff726da3155a02f0eab60b2b2c9318168b3cf8fab81849ae91e8724f10d"
+BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/Downloader/release/2.6"
+BASE_IMAGE="OpenHD-image-radxa-zero3w--release-06-26-2024-00-28-55.img.xz"
+BASE_IMAGE_SHA256="36e5c95544de75236a92e7947364f29fd58e7fdcf1acb26deac12c3b9fa9954b"
 OS="radxa-debian-rock-cm3"
 QOPENHD_PACKAGE="qopenhd-rk3566"
-UPDATE_LINUX_PACKAGES_ONLY=true
-DISTRO="bookworm"
+DISTRO="bullseye"
 HAVE_BOOT_PART=false
 HAVE_CONF_PART=true
 CONF_PART=1
 ROOT_PART=3
-ROOT_IMAGE_SIZE_BYTES="6156288000"
 BIT="64"
-KERNEL_PACKAGE_VERSION="6.1.84-16"
-KERNEL_PACKAGES="linux-image-6.1.84-16-rk2410-nocsf=${KERNEL_PACKAGE_VERSION} linux-headers-6.1.84-16-rk2410-nocsf=${KERNEL_PACKAGE_VERSION} linux-libc-dev=${KERNEL_PACKAGE_VERSION} linux-libc-dev-radxa-zero3=${KERNEL_PACKAGE_VERSION}"
-OPENHD_RUNTIME_PACKAGES="libpoconet80 open-hd-web-ui net-tools wireless-tools"
-RTL_DRIVER_PACKAGES="rtl8812au-radxa-zero3w-base-6.1.84-16* rtl88x2bu-radxa-zero3w-base-6.1.84-16* rtl88x2cu-radxa-zero3w-base-6.1.84-16* rtl88x2eu-radxa-zero3w-base-6.1.84-16*"
-BUILD_RTL_DRIVERS_FROM_SOURCE=false

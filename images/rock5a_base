@@ -1,11 +1,10 @@
-BASE_IMAGE_URL="https://github.com/radxa-build/rock-5a/releases/download/rsdk-t3"
-BASE_IMAGE="rock-5a_bookworm_kde_t3.output_512.img.xz"
-BASE_IMAGE_SHA512="f6e8585a8cad037bd6bf1b1ae041971b466ec015146e26efc6964a8e5c3ee4229e58d465dcc38c69b4391d6d11e177cba747ec9cf3d3b87c7da34c8277fc6078"
+BASE_IMAGE_URL="https://fra1.digitaloceanspaces.com/openhd-images/Downloader/release/2.6"
+BASE_IMAGE="OpenHD-image-rock5a--release-06-26-2024-00-29-36.img.xz"
+BASE_IMAGE_SHA256="b4d349ca55fc1d6dcfefeb33ae106471d1ed8e9fe5ed61baa109b7d9ff8a1fe9"
 OS="radxa-debian-rock5a"
 QOPENHD_PACKAGE="qopenhd-rk3588"
-DISTRO="bookworm"
-HAVE_BOOT_PART=true
-BOOT_PART=2
+DISTRO="bullseye"
+HAVE_BOOT_PART=false
 HAVE_CONF_PART=false
-ROOT_PART=3
+ROOT_PART=2
 BIT="64"
