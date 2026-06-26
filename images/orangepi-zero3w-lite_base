@@ -9,4 +9,4 @@ BIT="64"
 
 OPENHD_LITE_IMAGE=true
 GLIDE_PACKAGE="openhd-glide-orangepi-zero3w=0.1.0.66"
-BUILD_RTL_DRIVERS_FROM_SOURCE=false
+RTL_DRIVER_PACKAGES="rtl8812au-orangepi-zero3w-lite-base-6.6.98-sun60iw2* rtl88x2bu-orangepi-zero3w-lite-base-6.6.98-sun60iw2* rtl88x2cu-orangepi-zero3w-lite-base-6.6.98-sun60iw2* rtl88x2eu-orangepi-zero3w-lite-base-6.6.98-sun60iw2*"

@@ -12,5 +12,4 @@ BIT="64"
 OPENHD_LITE_IMAGE=true
 GLIDE_PACKAGE="openhd-glide-radxa-cubie"
 KERNEL_PACKAGES="linux-image-5.15.147-21-a733-120hz linux-headers-5.15.147-21-a733-120hz linux-libc-dev"
-BUILD_RTL_DRIVERS_FROM_SOURCE=true
-RTL_DRIVER_KERNEL_REGEX="5\.15\.147-21-a733-120hz$"
+RTL_DRIVER_PACKAGES="rtl8812au-radxa-cubie-lite-base-5.15.147-21-a733-120hz* rtl88x2bu-radxa-cubie-lite-base-5.15.147-21-a733-120hz* rtl88x2cu-radxa-cubie-lite-base-5.15.147-21-a733-120hz* rtl88x2eu-radxa-cubie-lite-base-5.15.147-21-a733-120hz*"
