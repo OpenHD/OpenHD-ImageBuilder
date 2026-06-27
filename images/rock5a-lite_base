@@ -1,0 +1,15 @@
+BASE_IMAGE_URL="https://github.com/radxa-build/rock-5a/releases/download/rsdk-b3"
+BASE_IMAGE="rock-5a_bookworm_kde_b3.output.img.xz"
+BASE_IMAGE_SHA512="0cd59e5d830f543a6fc23606e4905ed3de6975f609cff558004809be331ee3f1499d2319a88fbf71716d91ebe1458a974f44a5b2b1d52e1fdbd875cea3bae0b4"
+OS="radxa-debian-rock5a"
+DISTRO="bookworm"
+HAVE_BOOT_PART=true
+BOOT_PART=2
+HAVE_CONF_PART=true
+CONF_PART=1
+ROOT_PART=3
+BIT="64"
+
+OPENHD_LITE_IMAGE=true
+GLIDE_PACKAGE="openhd-glide-rock5a"
+OPENHD_RUNTIME_PACKAGES="libpoconet80 open-hd-web-ui net-tools wireless-tools"

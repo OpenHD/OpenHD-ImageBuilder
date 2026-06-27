@@ -368,7 +368,7 @@ install_openhd_glide_autostart() {
 #!/bin/sh
 set -eu
 
-for binary in /usr/bin/openhd-glide-radxa-zero3w /usr/local/bin/openhd-glide-radxa-zero3w /usr/bin/openhd-glide /usr/local/bin/openhd-glide /usr/bin/OpenHDGlide /usr/local/bin/OpenHDGlide /usr/bin/glide /usr/local/bin/glide /usr/bin/FPVue /usr/local/bin/FPVue /usr/bin/fpvue /usr/local/bin/fpvue; do
+for binary in /usr/bin/openhd-glide-rock5a /usr/local/bin/openhd-glide-rock5a /usr/bin/openhd-glide-rock5b /usr/local/bin/openhd-glide-rock5b /usr/bin/openhd-glide-radxa-zero3w /usr/local/bin/openhd-glide-radxa-zero3w /usr/bin/openhd-glide /usr/local/bin/openhd-glide /usr/bin/OpenHDGlide /usr/local/bin/OpenHDGlide /usr/bin/glide /usr/local/bin/glide /usr/bin/FPVue /usr/local/bin/FPVue /usr/bin/fpvue /usr/local/bin/fpvue; do
   if [ -x "${binary}" ]; then
     exec "${binary}"
   fi

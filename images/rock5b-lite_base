@@ -1,0 +1,16 @@
+BASE_IMAGE_URL="https://github.com/radxa-build/rock-5b/releases/download/rsdk-b5"
+BASE_IMAGE="rock-5b_bookworm_kde_b5.output.img.xz"
+BASE_IMAGE_SHA512="8ae3973c417e2eaa2082b20e2332e21907269ccedd36ae6ed081f8472b35e0290fd4b55e7cb44bb5b3ce46e4f254b4cfaade53d9a30b5801785a223e9f2be80b"
+OS="radxa-debian-rock5b"
+DISTRO="bookworm"
+HAVE_BOOT_PART=true
+BOOT_PART=2
+HAVE_CONF_PART=true
+CONF_PART=1
+ROOT_PART=3
+BIT="64"
+
+OPENHD_LITE_IMAGE=true
+GLIDE_PACKAGE="openhd-glide-rock5b"
+OPENHD_RUNTIME_PACKAGES="libpoconet80 open-hd-web-ui net-tools wireless-tools"
+RTL_DRIVER_PACKAGES="rtl8812au-radxa-cm5-base-6.1.43-15-rk2312* rtl88x2bu-radxa-cm5-base-6.1.43-15-rk2312* rtl88x2cu-radxa-cm5-base-6.1.43-15-rk2312* rtl88x2eu-radxa-cm5-base-6.1.43-15-rk2312*"
