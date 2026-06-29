@@ -122,22 +122,20 @@ if [[ "${OS}" == "ubuntu-x86-minimal" ]]; then
     sudo systemctl enable openhd
     sudo systemctl enable qopenhd
     sudo touch /opt/setup
-    ls -a /lib/modules/6.8.0-31-generic/kernel/drivers/net/wireless/
-    sudo rm -Rf /lib/modules/6.8.0-31-generic/kernel/drivers/net/wireless/realtek/*
-    sudo rm -Rf /lib/modules/6.8.0-31-generic/kernel/drivers/net/wireless/realtek
-    ls -a /lib/modules/6.8.0-31-generic/kernel/drivers/net/wireless/
+    find /lib/modules /usr/lib/modules -path '*/kernel/drivers/net/wireless/realtek' -type d -prune -exec rm -Rf {} + || true
     echo "_______wifi-drivers_______"
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
-       sudo rm -Rf /usr/lib/modules/6.3.13-060313-generic/kernel/drivers/net/wireless/88x2bu.ko && sudo rm -Rf /usr/lib/modules/6.3.13-060313-generic/kernel/drivers/net/wireless/realtek/rtw88/*
+       sudo find /lib/modules /usr/lib/modules \( -name '88x2bu.ko' -o -path '*/kernel/drivers/net/wireless/realtek/rtw88' \) -exec rm -Rf {} + || true
        sudo usermod -a -G dialout openhd
-       sudo apt remove modemmanager
+       sudo apt remove -y modemmanager
        cp /usr/local/bin/desktop-truster.sh /etc/profile.d/desktop-truster.sh
-       cp /usr/local/bin/steamdeck.sh /usr/local/bin/steamdeck.sh
        #this script needs to be executable by every user
        chmod +777 /etc/profile.d/desktop-truster.sh
-       chmod +x /etc/profile.d/steamdeck.sh
+       if [ -f /usr/local/bin/steamdeck.sh ]; then
+           chmod +x /usr/local/bin/steamdeck.sh
+       fi
        gio set /home/openhd/Desktop/OpenHD-Air.desktop metadata::trusted true
        gio set /home/openhd/Desktop/OpenHD-Ground.desktop metadata::trusted true
        gio set /home/openhd/Desktop/QOpenHD.desktop metadata::trusted true
@@ -170,15 +168,15 @@ if [[ "${OS}" == "ubuntu-x86" ]] ; then
 
         #mounting config partition and adding config files
         sudo echo "UUID=4A7B-3DF7  /boot/openhd  auto  defaults  0  2" | sudo tee -a /etc/fstab
-        cp /opt/addtionalFiles/issue-new.txt /conf/issue.txt
+        cp /opt/additionalFiles/issue-new.txt /conf/issue.txt
         touch /conf/config.txt
         ls -a /conf
         mkdir -p /conf/openhd
-        cp -rv /boot/openhd/* /conf/openhd/
+        touch /boot/openhd/resize.txt
+        touch /boot/openhd/x86.txt
+        cp -rv /boot/openhd/. /conf/openhd/
         rm -Rf /boot/openhd
-        touch /conf/openhd/resize.txt
-        touch /conf/openhd/x86.txt
-        ln -s /config/openhd /boot/openhd
+        ln -s /conf/openhd /boot/openhd
 
 fi
 
