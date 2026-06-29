@@ -12,6 +12,26 @@ fi
 export DEBIAN_FRONTEND=noninteractive
 APT="apt -o Dpkg::Options::=--force-confnew -y --allow-downgrades"
 
+run_depmod_for_installed_kernels() {
+  local modules_root
+  local kernel_version
+  local ran_depmod=false
+
+  for modules_root in /lib/modules /usr/lib/modules; do
+    [[ -d "${modules_root}" ]] || continue
+
+    while IFS= read -r kernel_version; do
+      echo "Running depmod for target kernel ${kernel_version}"
+      depmod -a "${kernel_version}"
+      ran_depmod=true
+    done < <(find "${modules_root}" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort -u)
+  done
+
+  if [[ "${ran_depmod}" != "true" ]]; then
+    echo "No target kernel module directories found for depmod."
+  fi
+}
+
 print_linux_package_metadata() {
   local package_regex="${LINUX_METADATA_PACKAGE_REGEX:-^linux-(headers|image|libc-dev)}"
 
@@ -77,6 +97,7 @@ if [[ "${UPDATE_LINUX_PACKAGES_ONLY:-false}" == "true" && "${OPENHD_LITE_IMAGE:-
   fi
   if [[ -n "${RTL_DRIVER_PACKAGES:-}" ]]; then
     $APT install ${RTL_DRIVER_PACKAGES}
+    run_depmod_for_installed_kernels
   fi
   print_linux_package_metadata
   echo "Done. UPDATE_LINUX_PACKAGES_ONLY is set, skipping OpenHD/QOpenHD package changes."
@@ -288,6 +309,7 @@ install_local_lite_debs() {
   echo "Installing local OpenHD Lite debs from ${deb_dir}"
   OPENHD_LITE_LOCAL_DEBS_INSTALLED=true
   dpkg -i "${debs[@]}" || apt -o Dpkg::Options::=--force-confnew -y -f install
+  run_depmod_for_installed_kernels
 }
 
 install_lite_kernel_packages() {
@@ -318,6 +340,7 @@ install_openhd_lite_packages() {
   install_packages_from_list "OpenHD runtime packages" "${runtime_packages}"
   install_packages_from_list "OpenHD Glide package" "${glide_package}"
   install_packages_from_list "RTL driver packages" "${RTL_DRIVER_PACKAGES:-}"
+  run_depmod_for_installed_kernels
 }
 
 ensure_openhd_user() {

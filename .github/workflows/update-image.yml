@@ -98,3 +98,70 @@ jobs:
       with:
         name: openhd-image-${{ matrix.TARGET }}-${{ env.DT }}
         path: deploy/*.img
+
+  x20-image:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Setup env
+      run: |
+        echo "DT=$(date -d '+1 hour' +'%m-%d-%Y-%H-%M-%S')" >> $GITHUB_ENV
+        echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
+    - uses: actions/checkout@v4
+
+    - name: Mark dev-release package source
+      if: ${{ env.BRANCH == 'dev-release' || env.BRANCH == 'debug_next' }}
+      run: |
+        touch additionalFiles/dev-build
+
+    - name: Update apt metadata
+      run: sudo apt-get update
+
+    - name: Free runner disk space
+      run: |
+        sudo apt-get purge -y \
+          '^llvm-.*' \
+          'php.*' \
+          '^mongodb-.*' \
+          '^mysql-.*' \
+          azure-cli \
+          google-chrome-stable \
+          firefox \
+          powershell \
+          microsoft-edge-stable \
+          mono-devel
+        sudo apt-get autoremove -y
+        sudo apt-get clean
+
+    - name: Install build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y qemu-user-static
+        sudo ./install_dep.sh
+
+    - name: Build X20 image
+      run: |
+        sudo ./build.sh x20 false false false
+
+    - name: Normalize X20 image name for artifact
+      run: |
+        set -euo pipefail
+        count=$(ls -1 deploy/*.img 2>/dev/null | wc -l)
+        if [ "$count" -eq 0 ]; then
+          echo "No .img files found in deploy/"
+          exit 1
+        fi
+        if [ "$count" -gt 1 ]; then
+          echo "Multiple .img files found in deploy/:"
+          ls -1 deploy/*.img
+          exit 1
+        fi
+        img_path=$(ls -1 deploy/*.img)
+        target_name="openhd-image-x20-${{ env.DT }}.img"
+        sudo mv "$img_path" "deploy/$target_name"
+
+    - name: Upload X20 image artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: openhd-image-x20-${{ env.DT }}
+        path: deploy/*.img

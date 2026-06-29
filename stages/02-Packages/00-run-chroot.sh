@@ -8,6 +8,26 @@ set -e
 
 CLEANCLEAN=true
 
+function run_depmod_for_installed_kernels {
+    local modules_root
+    local kernel_version
+    local ran_depmod=false
+
+    for modules_root in /lib/modules /usr/lib/modules; do
+        [[ -d "${modules_root}" ]] || continue
+
+        while IFS= read -r kernel_version; do
+            echo "Running depmod for target kernel ${kernel_version}"
+            depmod -a "${kernel_version}"
+            ran_depmod=true
+        done < <(find "${modules_root}" -mindepth 1 -maxdepth 1 -type d -printf '%f\n' | sort -u)
+    done
+
+    if [[ "${ran_depmod}" != "true" ]]; then
+        echo "No target kernel module directories found for depmod."
+    fi
+}
+
 # X20 specific code
 function install_x20_packages {
     #sudo apt install -y firmware-realtek NEEDS FIXING
@@ -205,6 +225,7 @@ curl -fsSL https://apt.radxa.com/bullseye-stable/public.key | gpg --dearmor | su
             exit 1
         fi
     done
+    run_depmod_for_installed_kernels
 
     # Clean up packages and cache
     echo "Cleaning up packages and cache..."
