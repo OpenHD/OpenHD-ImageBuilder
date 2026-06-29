@@ -28,6 +28,12 @@ function run_depmod_for_installed_kernels {
     fi
 }
 
+function remove_dead_bullseye_backports {
+    echo "Removing dead bullseye-backports APT sources..."
+    find /etc/apt -type f \( -name 'sources.list' -o -name '*.list' \) \
+        -exec sed -i '/bullseye-backports/d' {} + || true
+}
+
 # X20 specific code
 function install_x20_packages {
     #sudo apt install -y firmware-realtek NEEDS FIXING
@@ -101,6 +107,8 @@ function clone_github_repos {
 }
 function install_openhd {
         # apt update && apt install libpoco-dev -y
+    remove_dead_bullseye_backports
+
     if [[ "${OS}" == "debian-X20" ]]; then
         rm -Rf /etc/apt/sources.list.d/armbian.list
         apt update

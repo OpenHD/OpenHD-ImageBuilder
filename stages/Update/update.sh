@@ -86,7 +86,22 @@ print_linux_package_metadata() {
   )
 }
 
+remove_dead_bullseye_backports() {
+  echo "Removing dead bullseye-backports APT sources..."
+
+  local files=(/etc/apt/sources.list)
+  if compgen -G "/etc/apt/sources.list.d/*.list" > /dev/null; then
+    files+=(/etc/apt/sources.list.d/*.list)
+  fi
+
+  for f in "${files[@]}"; do
+    [[ -f "$f" ]] || continue
+    sed -i '/bullseye-backports/d' "$f" || true
+  done
+}
+
 if [[ "${UPDATE_LINUX_PACKAGES_ONLY:-false}" == "true" && "${OPENHD_LITE_IMAGE:-false}" != "true" ]]; then
+  remove_dead_bullseye_backports
   curl -1sLf "https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh" | bash || true
   apt update || echo "Warning: apt update failed but continuing..."
   if [[ -n "${OPENHD_RUNTIME_PACKAGES:-}" ]]; then
