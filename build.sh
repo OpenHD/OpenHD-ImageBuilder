@@ -39,17 +39,29 @@ if [[ "${UPDATE,,}" == "true" ]]; then
 fi
 
 # print a simple line across the entire width of the terminal like '------------'
+terminal_width () {
+    if [[ -n "${COLUMNS:-}" ]]; then
+        echo "${COLUMNS}"
+    elif command -v tput >/dev/null 2>&1 && tput cols >/dev/null 2>&1; then
+        tput cols
+    else
+        echo 80
+    fi
+}
+
+TERM_WIDTH="$(terminal_width)"
+
 line (){
-  printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+  printf '%*s\n' "${TERM_WIDTH}" '' | tr ' ' -
 }
 
 echo ""
-n=" ██████╗ ██████╗ ███████╗███╗   ██╗   ██╗  ██╗██████╗     ██╗███╗   ███╗ █████╗  ██████╗ ███████╗    ██████╗ ██╗   ██╗██╗██╗     ██████╗ ███████╗██████╗ " && echo "${n::${COLUMNS:-$(tput cols)}}" # some magic to cut the end on smaller terminals
-n="██╔═══██╗██╔══██╗██╔════╝████╗  ██║   ██║  ██║██╔══██╗    ██║████╗ ████║██╔══██╗██╔════╝ ██╔════╝    ██╔══██╗██║   ██║██║██║     ██╔══██╗██╔════╝██╔══██╗" && echo "${n::${COLUMNS:-$(tput cols)}}"
-n="██║   ██║██████╔╝█████╗  ██╔██╗ ██║   ███████║██║  ██║    ██║██╔████╔██║███████║██║  ███╗█████╗      ██████╔╝██║   ██║██║██║     ██║  ██║█████╗  ██████╔╝" && echo "${n::${COLUMNS:-$(tput cols)}}"
-n="██║   ██║██╔═══╝ ██╔══╝  ██║╚██╗██║   ██╔══██║██║  ██║    ██║██║╚██╔╝██║██╔══██║██║   ██║██╔══╝      ██╔══██╗██║   ██║██║██║     ██║  ██║██╔══╝  ██╔══██╗" && echo "${n::${COLUMNS:-$(tput cols)}}"
-n="╚██████╔╝██║     ███████╗██║ ╚████║██╗██║  ██║██████╔╝    ██║██║ ╚═╝ ██║██║  ██║╚██████╔╝███████╗    ██████╔╝╚██████╔╝██║███████╗██████╔╝███████╗██║  ██║" && echo "${n::${COLUMNS:-$(tput cols)}}"
-n=" ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═════╝     ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝    ╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═════╝ ╚══════╝╚═╝  ╚═╝" && echo "${n::${COLUMNS:-$(tput cols)}}"
+n=" ██████╗ ██████╗ ███████╗███╗   ██╗   ██╗  ██╗██████╗     ██╗███╗   ███╗ █████╗  ██████╗ ███████╗    ██████╗ ██╗   ██╗██╗██╗     ██████╗ ███████╗██████╗ " && echo "${n::${TERM_WIDTH}}" # some magic to cut the end on smaller terminals
+n="██╔═══██╗██╔══██╗██╔════╝████╗  ██║   ██║  ██║██╔══██╗    ██║████╗ ████║██╔══██╗██╔════╝ ██╔════╝    ██╔══██╗██║   ██║██║██║     ██╔══██╗██╔════╝██╔══██╗" && echo "${n::${TERM_WIDTH}}"
+n="██║   ██║██████╔╝█████╗  ██╔██╗ ██║   ███████║██║  ██║    ██║██╔████╔██║███████║██║  ███╗█████╗      ██████╔╝██║   ██║██║██║     ██║  ██║█████╗  ██████╔╝" && echo "${n::${TERM_WIDTH}}"
+n="██║   ██║██╔═══╝ ██╔══╝  ██║╚██╗██║   ██╔══██║██║  ██║    ██║██║╚██╔╝██║██╔══██║██║   ██║██╔══╝      ██╔══██╗██║   ██║██║██║     ██║  ██║██╔══╝  ██╔══██╗" && echo "${n::${TERM_WIDTH}}"
+n="╚██████╔╝██║     ███████╗██║ ╚████║██╗██║  ██║██████╔╝    ██║██║ ╚═╝ ██║██║  ██║╚██████╔╝███████╗    ██████╔╝╚██████╔╝██║███████╗██████╔╝███████╗██║  ██║" && echo "${n::${TERM_WIDTH}}"
+n=" ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝╚═════╝     ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝ ╚═════╝ ╚══════╝    ╚═════╝  ╚═════╝ ╚═╝╚══════╝╚═════╝ ╚══════╝╚═╝  ╚═╝" && echo "${n::${TERM_WIDTH}}"
 echo ""
 line
 echo ""
@@ -68,15 +80,14 @@ fi
 
 IMAGE_METADATA_FILE="./images/${IMAGE_TYPE}"
 if [[ "${UPDATE_MODE}" == "true" ]]; then
-    IMAGE_METADATA_FILE="./images/${IMAGE_TYPE}_base"
+    UPDATE_METADATA_FILE="./images/${IMAGE_TYPE}_base"
+    if [[ -f "${UPDATE_METADATA_FILE}" ]]; then
+        IMAGE_METADATA_FILE="${UPDATE_METADATA_FILE}"
+    fi
 fi
 
 if [[ ! -f "${IMAGE_METADATA_FILE}" ]]; then
-    if [[ "${UPDATE_MODE}" == "true" ]]; then
-        echo "Invalid image type for update workflow: ${IMAGE_TYPE}_base"
-    else
-        echo "Invalid image type: ${IMAGE_TYPE}"
-    fi
+    echo "Invalid image type: ${IMAGE_TYPE}"
     exit 1
 fi
 

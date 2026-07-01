@@ -13,12 +13,15 @@ add_fat32_partition() {
   log "======================================================"
   log "Adding Fat32 Video Partition to: ${IMAGE_PATH_NAME}"
 
+  if [[ "${OS}" == "ubuntu-x86-minimal" ]] || [[ "${OS}" == "ubuntu-x86" ]] || [[ "${OS}" == "debian-X20" ]]; then
+    echo "Video partition not supported yet"
+    return 0
+  fi
+
   dd if=/dev/zero of=fat.img bs=1M count=300
   cat fat.img >> "${PREV_WORK_DIR}"/*.img
   rm -f fat.img
-  if [[ "${OS}" == "ubuntu-x86-minimal" ]] || [[ "${OS}" == "ubuntu-x86" ]] || [[ "${OS}" == "debian_x20" ]]; then
-    echo "Video partition not supporte yet"
-  elif [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
+  if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     sgdisk -e "${PREV_WORK_DIR}"/*.img
     echo -e "n\n4\n\n\n\n0C00\nw\ny" | sudo gdisk "${PREV_WORK_DIR}"/*.img
     sudo parted "${PREV_WORK_DIR}"/*.img set 4 msftdata on
