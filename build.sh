@@ -168,20 +168,27 @@ ensure_base_image_for_update(){
     local base_stage="01-Baseimage"
     local base_stage_dir="${BASE_DIR}/stages/${base_stage}"
     local base_stage_work_dir="${WORK_DIR}/${base_stage}"
-    local base_stage_script="${base_stage_dir}/00-run.sh"
+    local base_stage_download_script="${base_stage_dir}/00-run.sh"
+    local base_stage_prepare_script="${base_stage_dir}/01-run.sh"
     local base_stage_image="${base_stage_work_dir}/IMAGE.img"
+    local base_stage_ready_marker="${base_stage_work_dir}/UPDATE_BASE_READY"
 
-    if [[ -f "${base_stage_image}" ]]; then
+    if [[ -f "${base_stage_image}" && -f "${base_stage_ready_marker}" ]]; then
         log "Base image for update already present: ${base_stage_image}"
         return
     fi
 
-    if [[ ! -f "${base_stage_script}" ]]; then
-        echo "[ERROR] Missing ${base_stage_script} required for update workflow." >&2
+    if [[ ! -f "${base_stage_download_script}" ]]; then
+        echo "[ERROR] Missing ${base_stage_download_script} required for update workflow." >&2
         exit 1
     fi
 
-    log "Preparing base image for update using ${base_stage}/00-run.sh"
+    if [[ ! -f "${base_stage_prepare_script}" ]]; then
+        echo "[ERROR] Missing ${base_stage_prepare_script} required for update workflow." >&2
+        exit 1
+    fi
+
+    log "Preparing base image for update using ${base_stage}"
 
     local saved_stage="${STAGE}"
     local saved_stage_dir="${STAGE_DIR}"
@@ -194,8 +201,14 @@ ensure_base_image_for_update(){
     STAGE_DIR="${base_stage_dir}"
     STAGE_WORK_DIR="${base_stage_work_dir}"
 
-    chmod +x "${base_stage_script}"
-    "${base_stage_script}"
+    if [[ ! -f "${base_stage_image}" ]]; then
+        chmod +x "${base_stage_download_script}"
+        "${base_stage_download_script}"
+    fi
+
+    chmod +x "${base_stage_prepare_script}"
+    "${base_stage_prepare_script}"
+    touch "${base_stage_ready_marker}"
 
     popd > /dev/null
 
