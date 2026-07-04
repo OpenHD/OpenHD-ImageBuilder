@@ -47,6 +47,35 @@ append_zeroes() {
   rm -f "${temp_file}"
 }
 
+image_size_sectors() {
+  local img="$1"
+  local bytes
+  bytes="$(stat -c%s "${img}")"
+  echo $(((bytes + SECTOR_SIZE - 1) / SECTOR_SIZE))
+}
+
+allocate_partition_space() {
+  local img="$1"
+  local size_mb="$2"
+  local min_start
+  local file_end
+  local start_sector
+  local end_sector
+
+  min_start="$(( $(last_partition_end_sector "${img}") + 1 ))"
+  file_end="$(image_size_sectors "${img}")"
+  if [[ "${file_end}" -gt "${min_start}" ]]; then
+    min_start="${file_end}"
+  fi
+
+  start_sector="$(align_sector "${min_start}")"
+  end_sector="$((start_sector + (size_mb * 1024 * 1024 / SECTOR_SIZE) - 1))"
+  truncate -s "$(((end_sector + 1) * SECTOR_SIZE))" "${img}"
+  sgdisk -e "${img}" >/dev/null 2>&1 || true
+
+  echo "${start_sector} ${end_sector}"
+}
+
 next_partition_number() {
   local img="$1"
   parted -sm "${img}" unit s print |
@@ -66,7 +95,7 @@ create_partition() {
   if has_partition_table_type "${img}" "gpt"; then
     parted -s "${img}" set "${part_num}" msftdata on
   else
-    printf 't\n%s\n0c\nw\n' "${part_num}" | fdisk "${img}"
+    printf 't\n%s\n0c\nw\n' "${part_num}" | fdisk "${img}" >/dev/null
   fi
 
   echo "${part_num}"
@@ -172,6 +201,7 @@ add_fat32_partition() {
   local end_sector
   local config_part_num
   local recordings_part_num
+  local allocated
 
   img="$(image_file)"
 
@@ -196,9 +226,8 @@ add_fat32_partition() {
     prepare_existing_openhd_partition "${img}" "${BOOT_PART}" "OPENHD"
     log "Existing boot partition prepared as OPENHD config storage"
   else
-    append_zeroes "${img}" "${CONFIG_PARTITION_SIZE_MB}"
-    start_sector="$(align_sector "$(( $(last_partition_end_sector "${img}") + 1 ))")"
-    end_sector="$((start_sector + (CONFIG_PARTITION_SIZE_MB * 1024 * 1024 / SECTOR_SIZE) - 1))"
+    allocated="$(allocate_partition_space "${img}" "${CONFIG_PARTITION_SIZE_MB}")"
+    read -r start_sector end_sector <<< "${allocated}"
     config_part_num="$(create_partition "${img}" "${start_sector}" "${end_sector}")"
     format_partition "${img}" "${config_part_num}" "OPENHD"
     seed_openhd_config_partition "${img}" "${config_part_num}"
@@ -215,9 +244,8 @@ add_fat32_partition() {
     return 0
   fi
 
-  append_zeroes "${img}" "${RECORDINGS_PARTITION_SIZE_MB}"
-  start_sector="$(align_sector "$(( $(last_partition_end_sector "${img}") + 1 ))")"
-  end_sector="$((start_sector + (RECORDINGS_PARTITION_SIZE_MB * 1024 * 1024 / SECTOR_SIZE) - 1))"
+  allocated="$(allocate_partition_space "${img}" "${RECORDINGS_PARTITION_SIZE_MB}")"
+  read -r start_sector end_sector <<< "${allocated}"
   recordings_part_num="$(create_partition "${img}" "${start_sector}" "${end_sector}")"
   format_partition "${img}" "${recordings_part_num}" "RECORDINGS"
   log "RECORDINGS partition added as partition ${recordings_part_num}"
