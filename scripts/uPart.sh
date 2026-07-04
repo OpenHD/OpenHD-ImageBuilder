@@ -182,9 +182,17 @@ add_fat32_partition() {
   sgdisk -e "${img}" >/dev/null 2>&1 || true
 
   if [[ "${HAVE_CONF_PART:-false}" == "true" ]]; then
+    if [[ -z "${CONF_PART:-}" ]]; then
+      echo "HAVE_CONF_PART=true but CONF_PART is not set" >&2
+      exit 1
+    fi
     prepare_existing_openhd_partition "${img}" "${CONF_PART}" "OPENHD"
     log "Existing config partition prepared as OPENHD"
   elif [[ "${HAVE_BOOT_PART:-false}" == "true" ]]; then
+    if [[ -z "${BOOT_PART:-}" ]]; then
+      echo "HAVE_BOOT_PART=true but BOOT_PART is not set" >&2
+      exit 1
+    fi
     prepare_existing_openhd_partition "${img}" "${BOOT_PART}" "OPENHD"
     log "Existing boot partition prepared as OPENHD config storage"
   else
