@@ -70,10 +70,29 @@ allocate_partition_space() {
 
   start_sector="$(align_sector "${min_start}")"
   end_sector="$((start_sector + (size_mb * 1024 * 1024 / SECTOR_SIZE) - 1))"
-  truncate -s "$(((end_sector + 1) * SECTOR_SIZE))" "${img}"
+  truncate -s "$(((end_sector + 2049) * SECTOR_SIZE))" "${img}"
   sgdisk -e "${img}" >/dev/null 2>&1 || true
 
   echo "${start_sector} ${end_sector}"
+}
+
+partition_loop_device() {
+  local img="$1"
+  local part_num="$2"
+  local part_info
+  local offset
+  local length
+
+  part_info="$(parted -sm "${img}" unit B print |
+    awk -F: -v part_num="${part_num}" '$1 == part_num {gsub("B", "", $2); gsub("B", "", $4); print $2 " " $4}')"
+  read -r offset length <<< "${part_info}"
+
+  if [[ -z "${offset:-}" ]] || [[ -z "${length:-}" ]]; then
+    echo "Unable to read partition ${part_num} offset/length from ${img}" >&2
+    return 1
+  fi
+
+  losetup -f --show -o "${offset}" --sizelimit "${length}" "${img}"
 }
 
 next_partition_number() {
@@ -105,35 +124,29 @@ format_partition() {
   local img="$1"
   local part_num="$2"
   local label="$3"
-  local loop_device
   local part_device
 
-  loop_device="$(losetup -f --show -P "${img}")"
-  part_device="$(partition_device_for_loop "${loop_device}" "${part_num}" || true)"
+  part_device="$(partition_loop_device "${img}" "${part_num}" || true)"
   if [[ -z "${part_device}" ]]; then
-    losetup -d "${loop_device}"
-    echo "Unable to find partition ${part_num} on ${loop_device}" >&2
+    echo "Unable to map partition ${part_num} from ${img}" >&2
     exit 1
   fi
 
   mkfs.vfat -F 32 -n "${label}" "${part_device}"
-  losetup -d "${loop_device}"
+  losetup -d "${part_device}"
 }
 
 seed_openhd_config_partition() {
   local img="$1"
   local part_num="$2"
   local mount_dir
-  local loop_device
   local part_device
 
   mount_dir="$(mktemp -d)"
-  loop_device="$(losetup -f --show -P "${img}")"
-  part_device="$(partition_device_for_loop "${loop_device}" "${part_num}" || true)"
+  part_device="$(partition_loop_device "${img}" "${part_num}" || true)"
   if [[ -z "${part_device}" ]]; then
-    losetup -d "${loop_device}"
     rmdir "${mount_dir}"
-    echo "Unable to find partition ${part_num} on ${loop_device}" >&2
+    echo "Unable to map partition ${part_num} from ${img}" >&2
     exit 1
   fi
 
@@ -142,7 +155,7 @@ seed_openhd_config_partition() {
   touch "${mount_dir}/config.txt"
   sync
   umount "${mount_dir}"
-  losetup -d "${loop_device}"
+  losetup -d "${part_device}"
   rmdir "${mount_dir}"
 }
 
@@ -166,17 +179,14 @@ prepare_existing_openhd_partition() {
   local part_num="$2"
   local label="${3:-OPENHD}"
   local mount_dir
-  local loop_device
   local part_device
   local mounted_loop_dev
 
   mount_dir="$(mktemp -d)"
-  loop_device="$(losetup -f --show -P "${img}")"
-  part_device="$(partition_device_for_loop "${loop_device}" "${part_num}" || true)"
+  part_device="$(partition_loop_device "${img}" "${part_num}" || true)"
   if [[ -z "${part_device}" ]]; then
-    losetup -d "${loop_device}"
     rmdir "${mount_dir}"
-    echo "Unable to find configured OpenHD partition ${part_num} on ${loop_device}" >&2
+    echo "Unable to map configured OpenHD partition ${part_num} from ${img}" >&2
     exit 1
   fi
 
@@ -191,7 +201,7 @@ prepare_existing_openhd_partition() {
   fi
 
   umount "${mount_dir}"
-  losetup -d "${loop_device}"
+  losetup -d "${part_device}"
   rmdir "${mount_dir}"
 }
 
