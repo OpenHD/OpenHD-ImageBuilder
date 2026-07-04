@@ -406,7 +406,7 @@ else
     fi
 fi
 
-# Adding FAT32 Video Partition
+# Prepare Windows-readable OpenHD config partition and recordings partition
 sudo chmod +x ${SCRIPT_DIR}/uPart.sh
 ${SCRIPT_DIR}/uPart.sh -v ${PREV_WORK_DIR}/*.img
 

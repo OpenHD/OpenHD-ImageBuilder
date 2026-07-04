@@ -1,48 +1,218 @@
 #!/bin/bash
+set -euo pipefail
 
-version="v0.0.1"
+CONFIG_PARTITION_SIZE_MB="${CONFIG_PARTITION_SIZE_MB:-64}"
+RECORDINGS_PARTITION_SIZE_MB="${RECORDINGS_PARTITION_SIZE_MB:-300}"
+SECTOR_SIZE=512
 
-# Log function
 log() {
   echo "$1"
 }
 
-# Create and append a FAT32 partition to the image
+image_file() {
+  local img
+  img=$(find "${PREV_WORK_DIR}" -maxdepth 1 -type f -name '*.img' | head -n 1)
+  if [[ -z "${img}" ]]; then
+    echo "No image found in ${PREV_WORK_DIR}" >&2
+    exit 1
+  fi
+  echo "${img}"
+}
+
+has_partition_table_type() {
+  local img="$1"
+  local expected="$2"
+  parted -s "${img}" print | awk -F: '/^Partition Table:/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}' | grep -qi "^${expected}$"
+}
+
+last_partition_end_sector() {
+  local img="$1"
+  parted -sm "${img}" unit s print |
+    awk -F: '$1 ~ /^[0-9]+$/ {gsub("s", "", $3); if ($3 > max) max = $3} END {print max + 0}'
+}
+
+align_sector() {
+  local sector="$1"
+  local alignment="${2:-2048}"
+  echo $((sector + (alignment - sector % alignment) % alignment))
+}
+
+append_zeroes() {
+  local img="$1"
+  local size_mb="$2"
+  local temp_file
+  temp_file="$(mktemp)"
+  dd if=/dev/zero of="${temp_file}" bs=1M count="${size_mb}"
+  cat "${temp_file}" >> "${img}"
+  rm -f "${temp_file}"
+}
+
+next_partition_number() {
+  local img="$1"
+  parted -sm "${img}" unit s print |
+    awk -F: '$1 ~ /^[0-9]+$/ {if ($1 > max) max = $1} END {print max + 1}'
+}
+
+create_partition() {
+  local img="$1"
+  local start_sector="$2"
+  local end_sector="$3"
+  local part_num
+
+  sgdisk -e "${img}" >/dev/null 2>&1 || true
+  part_num="$(next_partition_number "${img}")"
+  parted -s "${img}" --script mkpart primary fat32 "${start_sector}s" "${end_sector}s"
+
+  if has_partition_table_type "${img}" "gpt"; then
+    parted -s "${img}" set "${part_num}" msftdata on
+  else
+    printf 't\n%s\n0c\nw\n' "${part_num}" | fdisk "${img}"
+  fi
+
+  echo "${part_num}"
+}
+
+format_partition() {
+  local img="$1"
+  local part_num="$2"
+  local label="$3"
+  local loop_device
+  local part_device
+
+  loop_device="$(losetup -f --show -P "${img}")"
+  part_device="$(partition_device_for_loop "${loop_device}" "${part_num}" || true)"
+  if [[ -z "${part_device}" ]]; then
+    losetup -d "${loop_device}"
+    echo "Unable to find partition ${part_num} on ${loop_device}" >&2
+    exit 1
+  fi
+
+  mkfs.vfat -F 32 -n "${label}" "${part_device}"
+  losetup -d "${loop_device}"
+}
+
+seed_openhd_config_partition() {
+  local img="$1"
+  local part_num="$2"
+  local mount_dir
+  local loop_device
+  local part_device
+
+  mount_dir="$(mktemp -d)"
+  loop_device="$(losetup -f --show -P "${img}")"
+  part_device="$(partition_device_for_loop "${loop_device}" "${part_num}" || true)"
+  if [[ -z "${part_device}" ]]; then
+    losetup -d "${loop_device}"
+    rmdir "${mount_dir}"
+    echo "Unable to find partition ${part_num} on ${loop_device}" >&2
+    exit 1
+  fi
+
+  mount "${part_device}" "${mount_dir}"
+  mkdir -p "${mount_dir}/openhd"
+  touch "${mount_dir}/config.txt"
+  sync
+  umount "${mount_dir}"
+  losetup -d "${loop_device}"
+  rmdir "${mount_dir}"
+}
+
+partition_device_for_loop() {
+  local loop_device="$1"
+  local part_num="$2"
+  local part_device="${loop_device}p${part_num}"
+
+  if [[ ! -e "${part_device}" ]]; then
+    part_device="${loop_device}${part_num}"
+  fi
+  if [[ ! -e "${part_device}" ]]; then
+    echo ""
+    return 1
+  fi
+  echo "${part_device}"
+}
+
+prepare_existing_openhd_partition() {
+  local img="$1"
+  local part_num="$2"
+  local label="${3:-OPENHD}"
+  local mount_dir
+  local loop_device
+  local part_device
+  local mounted_loop_dev
+
+  mount_dir="$(mktemp -d)"
+  loop_device="$(losetup -f --show -P "${img}")"
+  part_device="$(partition_device_for_loop "${loop_device}" "${part_num}" || true)"
+  if [[ -z "${part_device}" ]]; then
+    losetup -d "${loop_device}"
+    rmdir "${mount_dir}"
+    echo "Unable to find configured OpenHD partition ${part_num} on ${loop_device}" >&2
+    exit 1
+  fi
+
+  mount "${part_device}" "${mount_dir}"
+  mkdir -p "${mount_dir}/openhd"
+  touch "${mount_dir}/config.txt"
+  sync
+
+  mounted_loop_dev="$(findmnt -nr -o source "${mount_dir}")"
+  if [[ -n "${mounted_loop_dev}" ]]; then
+    fatlabel "${mounted_loop_dev}" "${label}" || true
+  fi
+
+  umount "${mount_dir}"
+  losetup -d "${loop_device}"
+  rmdir "${mount_dir}"
+}
+
 add_fat32_partition() {
+  local img
+  local start_sector
+  local end_sector
+  local config_part_num
+  local recordings_part_num
+
+  img="$(image_file)"
+
   log ""
   log "======================================================"
-  log "Adding Fat32 Video Partition to: ${IMAGE_PATH_NAME}"
+  log "Preparing OpenHD FAT32 partitions in: ${img}"
 
-  if [[ "${OS}" == "ubuntu-x86-minimal" ]] || [[ "${OS}" == "ubuntu-x86" ]] || [[ "${OS}" == "debian-X20" ]]; then
-    echo "Video partition not supported yet"
+  sgdisk -e "${img}" >/dev/null 2>&1 || true
+
+  if [[ "${HAVE_CONF_PART:-false}" == "true" ]]; then
+    prepare_existing_openhd_partition "${img}" "${CONF_PART}" "OPENHD"
+    log "Existing config partition prepared as OPENHD"
+  elif [[ "${HAVE_BOOT_PART:-false}" == "true" ]]; then
+    prepare_existing_openhd_partition "${img}" "${BOOT_PART}" "OPENHD"
+    log "Existing boot partition prepared as OPENHD config storage"
+  else
+    append_zeroes "${img}" "${CONFIG_PARTITION_SIZE_MB}"
+    start_sector="$(align_sector "$(( $(last_partition_end_sector "${img}") + 1 ))")"
+    end_sector="$((start_sector + (CONFIG_PARTITION_SIZE_MB * 1024 * 1024 / SECTOR_SIZE) - 1))"
+    config_part_num="$(create_partition "${img}" "${start_sector}" "${end_sector}")"
+    format_partition "${img}" "${config_part_num}" "OPENHD"
+    seed_openhd_config_partition "${img}" "${config_part_num}"
+    log "OPENHD config partition added as partition ${config_part_num}"
+  fi
+
+  if [[ "${OS:-}" == "ubuntu-x86-minimal" ]] || [[ "${OS:-}" == "ubuntu-x86" ]] || [[ "${OS:-}" == "debian-X20" ]]; then
+    log "Skipping appended recordings partition for ${OS}"
     return 0
   fi
 
-  dd if=/dev/zero of=fat.img bs=1M count=300
-  cat fat.img >> "${PREV_WORK_DIR}"/*.img
-  rm -f fat.img
-  if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
-    sgdisk -e "${PREV_WORK_DIR}"/*.img
-    echo -e "n\n4\n\n\n\n0C00\nw\ny" | sudo gdisk "${PREV_WORK_DIR}"/*.img
-    sudo parted "${PREV_WORK_DIR}"/*.img set 4 msftdata on
-    log "Video partition added"
-    local loop_device
-    loop_device=$(sudo losetup -f --show -P "${PREV_WORK_DIR}"/*.img)
-    sudo mkfs.fat -F 32 "${loop_device}p4"
-    sudo losetup -d "${loop_device}"
-  else
-    local first_sec
-    first_sec=$(($(parted -s "${PREV_WORK_DIR}"/*.img unit s print | awk '/^ 2 / {gsub("s", "", $3); print $3}') + 1))
-    first_sec=$((first_sec + (2048 - first_sec % 2048) % 2048))
-    sudo parted "${PREV_WORK_DIR}"/*.img --script mkpart primary fat32 "${first_sec}s" 100%
-    echo -e "t\n3\n0c\nw" | fdisk "${PREV_WORK_DIR}"/*.img
-    log "Video partition added"
-    # local loop_device
-    # loop_device=$(sudo losetup -f --show -o $((first_sec * 512)) "${PREV_WORK_DIR}"/*.img)
-    # sudo mkfs.fat -F 32 "${loop_device}"
-    # sudo losetup -d "${loop_device}"
+  if has_partition_table_type "${img}" "msdos" && [[ "$(next_partition_number "${img}")" -gt 4 ]]; then
+    log "Skipping appended recordings partition because the MBR partition table is full"
+    return 0
   fi
+
+  append_zeroes "${img}" "${RECORDINGS_PARTITION_SIZE_MB}"
+  start_sector="$(align_sector "$(( $(last_partition_end_sector "${img}") + 1 ))")"
+  end_sector="$((start_sector + (RECORDINGS_PARTITION_SIZE_MB * 1024 * 1024 / SECTOR_SIZE) - 1))"
+  recordings_part_num="$(create_partition "${img}" "${start_sector}" "${end_sector}")"
+  format_partition "${img}" "${recordings_part_num}" "RECORDINGS"
+  log "RECORDINGS partition added as partition ${recordings_part_num}"
 }
 
-# Call the function to add FAT32 partition
 add_fat32_partition
