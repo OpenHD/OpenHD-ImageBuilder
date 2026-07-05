@@ -2,7 +2,6 @@
 set -euo pipefail
 
 CONFIG_PARTITION_SIZE_MB="${CONFIG_PARTITION_SIZE_MB:-64}"
-RECORDINGS_PARTITION_SIZE_MB="${RECORDINGS_PARTITION_SIZE_MB:-300}"
 SECTOR_SIZE=512
 
 log() {
@@ -25,6 +24,14 @@ has_partition_table_type() {
   parted -s "${img}" print | awk -F: '/^Partition Table:/ {gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}' | grep -qi "^${expected}$"
 }
 
+relocate_gpt_backup_table() {
+  local img="$1"
+
+  if has_partition_table_type "${img}" "gpt"; then
+    sgdisk -e "${img}" >/dev/null 2>&1 || true
+  fi
+}
+
 last_partition_end_sector() {
   local img="$1"
   parted -sm "${img}" unit s print |
@@ -35,16 +42,6 @@ align_sector() {
   local sector="$1"
   local alignment="${2:-2048}"
   echo $((sector + (alignment - sector % alignment) % alignment))
-}
-
-append_zeroes() {
-  local img="$1"
-  local size_mb="$2"
-  local temp_file
-  temp_file="$(mktemp)"
-  dd if=/dev/zero of="${temp_file}" bs=1M count="${size_mb}"
-  cat "${temp_file}" >> "${img}"
-  rm -f "${temp_file}"
 }
 
 image_size_sectors() {
@@ -71,7 +68,7 @@ allocate_partition_space() {
   start_sector="$(align_sector "${min_start}")"
   end_sector="$((start_sector + (size_mb * 1024 * 1024 / SECTOR_SIZE) - 1))"
   truncate -s "$(((end_sector + 2049) * SECTOR_SIZE))" "${img}"
-  sgdisk -e "${img}" >/dev/null 2>&1 || true
+  relocate_gpt_backup_table "${img}"
 
   echo "${start_sector} ${end_sector}"
 }
@@ -107,7 +104,7 @@ create_partition() {
   local end_sector="$3"
   local part_num
 
-  sgdisk -e "${img}" >/dev/null 2>&1 || true
+  relocate_gpt_backup_table "${img}"
   part_num="$(next_partition_number "${img}")"
   parted -s "${img}" --script mkpart primary fat32 "${start_sector}s" "${end_sector}s"
 
@@ -210,7 +207,6 @@ add_fat32_partition() {
   local start_sector
   local end_sector
   local config_part_num
-  local recordings_part_num
   local allocated
 
   img="$(image_file)"
@@ -218,8 +214,6 @@ add_fat32_partition() {
   log ""
   log "======================================================"
   log "Preparing OpenHD FAT32 partitions in: ${img}"
-
-  sgdisk -e "${img}" >/dev/null 2>&1 || true
 
   if [[ "${HAVE_CONF_PART:-false}" == "true" ]]; then
     if [[ -z "${CONF_PART:-}" ]]; then
@@ -243,22 +237,6 @@ add_fat32_partition() {
     seed_openhd_config_partition "${img}" "${config_part_num}"
     log "OPENHD config partition added as partition ${config_part_num}"
   fi
-
-  if [[ "${OS:-}" == "ubuntu-x86-minimal" ]] || [[ "${OS:-}" == "ubuntu-x86" ]] || [[ "${OS:-}" == "debian-X20" ]]; then
-    log "Skipping appended recordings partition for ${OS}"
-    return 0
-  fi
-
-  if has_partition_table_type "${img}" "msdos" && [[ "$(next_partition_number "${img}")" -gt 4 ]]; then
-    log "Skipping appended recordings partition because the MBR partition table is full"
-    return 0
-  fi
-
-  allocated="$(allocate_partition_space "${img}" "${RECORDINGS_PARTITION_SIZE_MB}")"
-  read -r start_sector end_sector <<< "${allocated}"
-  recordings_part_num="$(create_partition "${img}" "${start_sector}" "${end_sector}")"
-  format_partition "${img}" "${recordings_part_num}" "RECORDINGS"
-  log "RECORDINGS partition added as partition ${recordings_part_num}"
 }
 
 add_fat32_partition
