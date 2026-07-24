@@ -7,6 +7,7 @@
 set -e
 
 CLEANCLEAN=true
+X20_RTL8812AU_VERSION="2.6-evo-07071732"
 
 function run_depmod_for_installed_kernels {
     local modules_root
@@ -40,9 +41,21 @@ function install_x20_packages {
     sudo apt install -y whiptail libpoco-dev
     rm -Rf /etc/apt/sources.list.d/*
     rm -Rf /etc/apt/sources.list
-    BASE_PACKAGES="openhd-x20 encode-sunxi openhd-sys-utils rtl8812au-x20"
+    BASE_PACKAGES="openhd-x20 encode-sunxi openhd-sys-utils rtl8812au-x20=${X20_RTL8812AU_VERSION}"
     PLATFORM_PACKAGES_REMOVE="*boost* locales guile-2.2-libs network-manager"
     PLATFORM_PACKAGES=""
+}
+
+function verify_x20_rtl8812au_version {
+    local installed_version
+
+    installed_version="$(dpkg-query -W -f='${Version}' rtl8812au-x20)"
+    if [[ "${installed_version}" != "${X20_RTL8812AU_VERSION}" ]]; then
+        echo "rtl8812au-x20 version mismatch: expected ${X20_RTL8812AU_VERSION}, installed ${installed_version}"
+        exit 1
+    fi
+
+    echo "Verified rtl8812au-x20 version ${installed_version}"
 }
 # Raspbian-specific code
 function install_raspbian_packages {
@@ -233,6 +246,9 @@ curl -fsSL https://apt.radxa.com/bullseye-stable/public.key | gpg --dearmor | su
             exit 1
         fi
     done
+    if [[ "${OS}" == "debian-X20" ]]; then
+        verify_x20_rtl8812au_version
+    fi
     run_depmod_for_installed_kernels
 
     # Clean up packages and cache
