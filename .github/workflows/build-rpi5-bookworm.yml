@@ -1,6 +1,7 @@
 name: Raspberry Pi 5 Bookworm Image
 
 on:
+  workflow_dispatch:
   push:
    branches:
       -disabled-release
