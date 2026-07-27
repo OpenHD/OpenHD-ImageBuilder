@@ -33,7 +33,7 @@ function run_depmod_for_installed_kernels {
 function validate_openhd_runtime {
     local openhd_binary
     local ldd_output
-    local elements=(h264parse rtph264pay)
+    local elements=(h264parse rtph264pay perf)
     local element
 
     openhd_binary="$(command -v openhd || true)"

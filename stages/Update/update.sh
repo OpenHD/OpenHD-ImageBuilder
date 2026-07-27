@@ -385,7 +385,7 @@ validate_openhd_runtime() {
 
   rm -f /root/.cache/gstreamer-1.0/registry.* \
         /home/openhd/.cache/gstreamer-1.0/registry.* 2>/dev/null || true
-  local elements=(h264parse rtph264pay)
+  local elements=(h264parse rtph264pay perf)
   if [[ "${RPI5:-false}" == "true" ]]; then
     elements+=(libcamerasrc x264enc)
   fi
