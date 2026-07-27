@@ -57,7 +57,7 @@ function validate_openhd_runtime {
     fi
     if [[ "${OS}" == "radxa-debian-rock5a" ||
           "${OS}" == "radxa-debian-rock5b" ]]; then
-        if [[ "$(uname -m)" == "aarch64" ]]; then
+        if ! systemd-detect-virt --chroot >/dev/null 2>&1; then
             elements+=(mpph264enc)
         else
             local rockchip_plugin
