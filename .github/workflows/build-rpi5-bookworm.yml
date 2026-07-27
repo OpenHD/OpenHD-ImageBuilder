@@ -2,18 +2,8 @@ name: Raspberry Pi 5 Bookworm Image
 
 on:
   push:
-    branches:
-      - dev-release
-    paths:
-      - ".github/workflows/build-rpi5-bookworm.yml"
-      - "images/pi5-bookworm"
-      - "additionalFiles/**"
-      - "scripts/**"
-      - "stages/**"
-      - "build.sh"
-      - "config"
-      - "install_dep.sh"
-  workflow_dispatch:
+   branches:
+      -disabled-release
 
 permissions:
   contents: read
