@@ -1,0 +1,63 @@
+name: Raspberry Pi 5 Bookworm Image
+
+on:
+  push:
+    branches:
+      - dev-release
+    paths:
+      - ".github/workflows/build-rpi5-bookworm.yml"
+      - "images/pi5-bookworm"
+      - "additionalFiles/**"
+      - "scripts/**"
+      - "stages/**"
+      - "build.sh"
+      - "config"
+      - "install_dep.sh"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-rpi5-image:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free runner disk space
+        run: |
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo apt-get clean
+
+      - name: Install image builder dependencies
+        run: sudo ./install_dep.sh
+
+      - name: Select development packages
+        run: |
+          touch additionalFiles/dev-build
+          printf '%s\n' "OpenHD Raspberry Pi 5 Bookworm image" > additionalFiles/issue-new.txt
+
+      - name: Build Raspberry Pi 5 image
+        run: sudo ./build.sh pi5-bookworm false small false
+
+      - name: Normalize image name
+        run: |
+          set -euo pipefail
+          count=$(find deploy -maxdepth 1 -type f -name '*.img' | wc -l)
+          if [ "$count" -ne 1 ]; then
+            echo "Expected exactly one image in deploy/, found $count"
+            find deploy -maxdepth 1 -type f -name '*.img' -print
+            exit 1
+          fi
+          image=$(find deploy -maxdepth 1 -type f -name '*.img')
+          sudo mv "$image" deploy/OpenHD-RPi5-Bookworm-arm64.img
+
+      - name: Upload Raspberry Pi 5 image
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenHD-RPi5-Bookworm-arm64
+          path: deploy/OpenHD-RPi5-Bookworm-arm64.img
+          if-no-files-found: error

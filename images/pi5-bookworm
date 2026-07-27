@@ -1,0 +1,11 @@
+BASE_IMAGE_URL="https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2025-05-13"
+BASE_IMAGE="2025-05-13-raspios-bookworm-arm64-lite.img.xz"
+BASE_IMAGE_SHA256="62d025b9bc7ca0e1facfec74ae56ac13978b6745c58177f081d39fbb8041ed45"
+OS="raspbian"
+DISTRO="bookworm"
+HAVE_BOOT_PART=true
+HAVE_CONF_PART=false
+BOOT_PART=1
+ROOT_PART=2
+BIT="64"
+RPI5=true

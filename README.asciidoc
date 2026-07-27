@@ -81,6 +81,7 @@ valid targets are:
 
 ```sh
 pi-bullseye
+pi5-bookworm
 x86-noble
 rock5b
 rock5a

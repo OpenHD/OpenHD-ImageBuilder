@@ -3,8 +3,12 @@
 USERNAME="openhd"
 PASSWORD="openhd"
 
-adduser --shell /bin/bash --ingroup sudo --disabled-password --gecos "" "$USERNAME" && echo "$USERNAME:$PASSWORD" | chpasswd
-chown -R $USERNAME:$PASSWORD /home/$USERNAME
+if ! id "$USERNAME" >/dev/null 2>&1; then
+    adduser --shell /bin/bash --disabled-password --gecos "" "$USERNAME"
+fi
+echo "$USERNAME:$PASSWORD" | chpasswd
+usermod -aG sudo "$USERNAME"
+chown -R "$USERNAME:$USERNAME" "/home/$USERNAME"
 mkdir -p /boot/openhd/
 
 rm /etc/motd
@@ -78,34 +82,60 @@ fi
 
  if [[ "${OS}" == "raspbian" ]] ; then
      touch /boot/openhd/rpi.txt
+     if [[ "${RPI5:-false}" == "true" ]]; then
+         touch /boot/openhd/rpi5.txt
+     fi
      #allow autologin and remove the raspberryos first boot menu
      cp /usr/local/share/openhd_misc/userconf.txt /boot/userconf.txt
-     cp /usr/local/share/openhd_misc/default_raspi_config.txt /boot/config.txt
      cat /opt/additionalFiles/issue-new.txt >> /boot/issue.txt
      cp /usr/local/share/openhd_misc/initPi.sh /usr/local/bin/initPi.sh
      #remove serial console
      sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
      sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
-     # enable dualcam-csi this file is the one from the Ochin board, but should work on most carrier boards
-     rm -Rf /boot/dt-blob.bin
-     wget https://openhd-images.fra1.cdn.digitaloceanspaces.com/Downloader/dt-blob.bin -P /boot/
-     # remove preexisting wifi driver for 88xxxu
-     rm -Rf /lib/modules/6.1.29-v7l+/kernel/drivers/net/wireless/realtek/rtl8xxxu*
-     rm -Rf /lib/modules/6.1.29-v7l/kernel/drivers/net/wireless/realtek/rtl8xxxu*
-     # comment out resize function to use our own resizing
-     sudo sed -i '141,174 s/^/#/' /usr/lib/raspberrypi-sys-mods/firstboot
+     if [[ "${RPI5:-false}" == "true" ]]; then
+         # Keep Raspberry Pi OS Bookworm's Pi 5-compatible KMS configuration.
+         # OpenHD's legacy config enables FKMS and installs a dt-blob that is
+         # not compatible with BCM2712.
+         if ! grep -q '#OPENHD_DYNAMIC_CONTENT_BEGIN#' /boot/config.txt; then
+             cat >> /boot/config.txt <<'EOF'
+
+[all]
+enable_uart=1
+dtparam=i2c_arm=on
+#OPENHD_DYNAMIC_CONTENT_BEGIN#
+EOF
+         fi
+
+         for group in video render input dialout plugdev netdev; do
+             if getent group "${group}" >/dev/null 2>&1; then
+                 usermod -aG "${group}" openhd
+             fi
+         done
+     else
+         cp /usr/local/share/openhd_misc/default_raspi_config.txt /boot/config.txt
+         # enable dualcam-csi this file is the one from the Ochin board, but should work on most carrier boards
+         rm -Rf /boot/dt-blob.bin
+         wget https://openhd-images.fra1.cdn.digitaloceanspaces.com/Downloader/dt-blob.bin -P /boot/
+         # remove preexisting wifi driver for 88xxxu
+         rm -Rf /lib/modules/6.1.29-v7l+/kernel/drivers/net/wireless/realtek/rtl8xxxu*
+         rm -Rf /lib/modules/6.1.29-v7l/kernel/drivers/net/wireless/realtek/rtl8xxxu*
+         # comment out resize function to use our own resizing
+         sudo sed -i '141,174 s/^/#/' /usr/lib/raspberrypi-sys-mods/firstboot
+     fi
      touch /boot/openhd/resize.txt
      sudo systemctl disable getty@tty1.service
      sudo systemctl mask getty@tty1.service
 
-    # dirty fix libcamera updated
-    curl -s --compressed "https://arducam.github.io/arducam_ppa/KEY.gpg" | sudo apt-key add -
-    sudo curl -s --compressed -o /etc/apt/sources.list.d/arducam_list_files.list "https://arducam.github.io/arducam_ppa/arducam_list_files.list"
-    sudo apt update
-    apt-cache madison arducam-pivariety-sdk-dev
+    if [[ "${RPI5:-false}" != "true" ]]; then
+        # Legacy Bullseye/armhf camera stack.
+        curl -s --compressed "https://arducam.github.io/arducam_ppa/KEY.gpg" | sudo apt-key add -
+        sudo curl -s --compressed -o /etc/apt/sources.list.d/arducam_list_files.list "https://arducam.github.io/arducam_ppa/arducam_list_files.list"
+        sudo apt update
+        apt-cache madison arducam-pivariety-sdk-dev
 
-    sudo apt install -y -o Dpkg::Options::="--force-overwrite" arducam-pivariety-sdk-dev=1.0.5
-    sudo cp /opt/additionalFiles/imx662.json /usr/share/libcamera/ipa/rpi/vc4/imx662.json
+        sudo apt install -y -o Dpkg::Options::="--force-overwrite" arducam-pivariety-sdk-dev=1.0.5
+        sudo cp /opt/additionalFiles/imx662.json /usr/share/libcamera/ipa/rpi/vc4/imx662.json
+    fi
  fi
 
  if [[ "${OS}" == "ubuntu" ]]; then

@@ -599,22 +599,29 @@ install_cubie_kernel_image_without_dkms_prerm() {
 }
 
 if [[ "${OS}" == "raspbian" ]]; then
-  $APT remove openhd-linux-pi
-  echo "Installing custom Kernel package"
-  $APT install openhd-linux-pi
-  $APT install openhd-linux-pi-headers
-  # Fix Arducam Pivariety driver + imx662
-  curl -s --compressed "https://arducam.github.io/arducam_ppa/KEY.gpg" | sudo apt-key add -
-            sudo curl -s --compressed -o /etc/apt/sources.list.d/arducam_list_files.list "https://arducam.github.io/arducam_ppa/arducam_list_files.list"
-            sudo apt update
-            apt-cache madison arducam-pivariety-sdk-dev
-  sudo apt install -y \
-  -o Dpkg::Options::=--force-overwrite \
-  arducam-pivariety-sdk-dev=1.0.5
-  wget https://dl.cloudsmith.io/public/openhd/release/deb/raspbian/pool/bullseye/main/l/li/libcamera-openhd_1.2.7/libcamera-openhd_1.2.7_armhf.deb
-  dpkg -i --force-overwrite libcamera-openhd_1.2.7_armhf.deb 
-  wget https://raw.githubusercontent.com/OpenHD/libcamera/refs/heads/openhd/src/ipa/rpi/vc4/data/imx662.json
-  mv imx662.json /usr/share/libcamera/ipa/rpi/vc4/imx662.json
+  if [[ "${RPI5:-false}" == "true" ]]; then
+    echo "Keeping the Raspberry Pi 5 Bookworm kernel and PiSP libcamera stack"
+    $APT install gstreamer1.0-libcamera gstreamer1.0-libav
+    mkdir -p /boot/openhd
+    touch /boot/openhd/rpi.txt /boot/openhd/rpi5.txt /boot/openhd/resize.txt
+  else
+    $APT remove openhd-linux-pi
+    echo "Installing custom Kernel package"
+    $APT install openhd-linux-pi
+    $APT install openhd-linux-pi-headers
+    # Fix Arducam Pivariety driver + imx662
+    curl -s --compressed "https://arducam.github.io/arducam_ppa/KEY.gpg" | sudo apt-key add -
+    sudo curl -s --compressed -o /etc/apt/sources.list.d/arducam_list_files.list "https://arducam.github.io/arducam_ppa/arducam_list_files.list"
+    sudo apt update
+    apt-cache madison arducam-pivariety-sdk-dev
+    sudo apt install -y \
+      -o Dpkg::Options::=--force-overwrite \
+      arducam-pivariety-sdk-dev=1.0.5
+    wget https://dl.cloudsmith.io/public/openhd/release/deb/raspbian/pool/bullseye/main/l/li/libcamera-openhd_1.2.7/libcamera-openhd_1.2.7_armhf.deb
+    dpkg -i --force-overwrite libcamera-openhd_1.2.7_armhf.deb
+    wget https://raw.githubusercontent.com/OpenHD/libcamera/refs/heads/openhd/src/ipa/rpi/vc4/data/imx662.json
+    mv imx662.json /usr/share/libcamera/ipa/rpi/vc4/imx662.json
+  fi
 fi
 
 if [[ "${OS}" == "radxa-debian-cubie" ]]; then
@@ -646,6 +653,9 @@ elif [[ "${OPENHD_LITE_IMAGE:-false}" == "true" ]]; then
     install_radxa_ssh_boot_fix
     configure_headless_runtime
   fi
+elif [[ "${RPI5:-false}" == "true" ]]; then
+  echo "Skipping QOpenHD on the Raspberry Pi 5 image"
+  ensure_openhd_user
 else
   echo "Installing QOpenHD package: ${qopenhd_package}"
   $APT install "${qopenhd_package}"

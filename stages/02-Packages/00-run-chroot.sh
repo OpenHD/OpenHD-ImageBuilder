@@ -59,11 +59,21 @@ function verify_x20_rtl8812au_version {
 }
 # Raspbian-specific code
 function install_raspbian_packages {
-    sudo apt update && apt remove -y dkms
-    BASE_PACKAGES="openhd-sys-utils openhd qopenhd apt-transport-https apt-utils open-hd-web-ui"
-    PLATFORM_PACKAGES_HOLD="raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc raspberrypi-bootloader"
-    PLATFORM_PACKAGES_REMOVE="locales gdb librsvg2-2 guile-2.2-libs firmware-libertas gcc-10 nfs-common libcamera* raspberrypi-kernel"
-    PLATFORM_PACKAGES="openhd-linux-pi firmware-atheros openhd-userland libseek-thermal libcamera-openhd openhd-qt openssh-server"
+    if [[ "${RPI5:-false}" == "true" ]]; then
+        # Pi 5 requires the stock Bookworm kernel, firmware and PiSP libcamera
+        # stack. The legacy OpenHD kernel/userland packages are armhf-only and
+        # replacing these packages makes a Pi 5 image unbootable.
+        BASE_PACKAGES="openhd-sys-utils openhd apt-transport-https apt-utils open-hd-web-ui"
+        PLATFORM_PACKAGES_HOLD=""
+        PLATFORM_PACKAGES_REMOVE=""
+        PLATFORM_PACKAGES="firmware-atheros openssh-server network-manager v4l-utils"
+    else
+        BASE_PACKAGES="openhd-sys-utils openhd qopenhd apt-transport-https apt-utils open-hd-web-ui"
+        sudo apt update && apt remove -y dkms
+        PLATFORM_PACKAGES_HOLD="raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc raspberrypi-bootloader"
+        PLATFORM_PACKAGES_REMOVE="locales gdb librsvg2-2 guile-2.2-libs firmware-libertas gcc-10 nfs-common libcamera* raspberrypi-kernel"
+        PLATFORM_PACKAGES="openhd-linux-pi firmware-atheros openhd-userland libseek-thermal libcamera-openhd openhd-qt openssh-server"
+    fi
 }
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
