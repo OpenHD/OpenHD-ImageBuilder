@@ -8,6 +8,7 @@ set -e
 
 CLEANCLEAN=true
 X20_RTL8812AU_VERSION="2.6-evo-07071732"
+OPENHD_MEDIA_RUNTIME_PACKAGES="libsodium23 libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly libsdl2-2.0-0"
 
 function run_depmod_for_installed_kernels {
     local modules_root
@@ -27,6 +28,44 @@ function run_depmod_for_installed_kernels {
     if [[ "${ran_depmod}" != "true" ]]; then
         echo "No target kernel module directories found for depmod."
     fi
+}
+
+function validate_openhd_runtime {
+    local openhd_binary
+    local ldd_output
+    local elements=(h264parse rtph264pay)
+    local element
+
+    openhd_binary="$(command -v openhd || true)"
+    if [[ -z "${openhd_binary}" ]]; then
+        echo "OpenHD runtime validation failed: openhd binary is missing."
+        return 1
+    fi
+
+    ldconfig
+    ldd_output="$(ldd "${openhd_binary}")"
+    echo "${ldd_output}"
+    if grep -q "not found" <<<"${ldd_output}"; then
+        echo "OpenHD runtime validation failed: unresolved shared libraries."
+        return 1
+    fi
+
+    rm -f /root/.cache/gstreamer-1.0/registry.* \
+          /home/openhd/.cache/gstreamer-1.0/registry.* 2>/dev/null || true
+    if [[ "${RPI5:-false}" == "true" ]]; then
+        elements+=(libcamerasrc x264enc)
+    fi
+    if [[ "${OS}" == "radxa-debian-rock5a" ||
+          "${OS}" == "radxa-debian-rock5b" ]]; then
+        elements+=(mpph264enc)
+    fi
+    for element in "${elements[@]}"; do
+        if ! gst-inspect-1.0 "${element}" >/dev/null 2>&1; then
+            echo "OpenHD runtime validation failed: GStreamer element ${element} is missing."
+            return 1
+        fi
+        echo "Verified GStreamer element: ${element}"
+    done
 }
 
 function remove_dead_bullseye_backports {
@@ -66,7 +105,7 @@ function install_raspbian_packages {
         BASE_PACKAGES="openhd-sys-utils openhd apt-transport-https apt-utils open-hd-web-ui"
         PLATFORM_PACKAGES_HOLD=""
         PLATFORM_PACKAGES_REMOVE=""
-        PLATFORM_PACKAGES="firmware-atheros openssh-server network-manager v4l-utils"
+        PLATFORM_PACKAGES="firmware-atheros openssh-server network-manager v4l-utils gstreamer1.0-libcamera ${OPENHD_MEDIA_RUNTIME_PACKAGES}"
     else
         BASE_PACKAGES="openhd-sys-utils openhd qopenhd apt-transport-https apt-utils open-hd-web-ui"
         sudo apt update && apt remove -y dkms
@@ -78,13 +117,13 @@ function install_raspbian_packages {
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
     BASE_PACKAGES="openhd-sys-utils openhd apt-transport-https apt-utils open-hd-web-ui"
-    PLATFORM_PACKAGES="rsync procps gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-tools gstreamer1.0-rockchip1 gstreamer1.0-gl mali-g610-firmware malirun rockchip-multimedia-config librist4 librist-dev rist-tools libv4l-0 libv4l2rds0 libv4lconvert0 libv4l-dev libv4l-rkmpp qv4l2 v4l-utils librockchip-mpp1 librockchip-mpp-dev librockchip-vpu0 rockchip-mpp-demos librga2 librga-dev libegl-mesa0 libegl1-mesa-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev libglx-mesa0 mesa-common-dev mesa-vulkan-drivers mesa-utils libwidevinecdm"
+    PLATFORM_PACKAGES="rsync procps ${OPENHD_MEDIA_RUNTIME_PACKAGES} gstreamer1.0-rockchip1 gstreamer1.0-gl mali-g610-firmware malirun rockchip-multimedia-config librist4 librist-dev rist-tools libv4l-0 libv4l2rds0 libv4lconvert0 libv4l-dev libv4l-rkmpp qv4l2 v4l-utils librockchip-mpp1 librockchip-mpp-dev librockchip-vpu0 rockchip-mpp-demos librga2 librga-dev libegl-mesa0 libegl1-mesa-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev libglx-mesa0 mesa-common-dev mesa-vulkan-drivers mesa-utils libwidevinecdm"
 }
 function install_radxa-debian_packages {
     BASE_PACKAGES="openhd-sys-utils openhd qopenhd-rk3588 apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="task-rk356x task-rockchip radxa-system-config-rockchip 8852bu-dkms 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-rock-5a linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip"
     PLATFORM_PACKAGES_REMOVE="sddm plymouth plasma-desktop kde*"
-    PLATFORM_PACKAGES="net-tools network-manager linux-headers-5.10.160-radxa-rk3588-ohd  linux-image-5.10.160-radxa-rk3588-ohd  rockchip-iq-openhd-r5 rsync procps mpp-rk3566 fpv-rk3566"
+    PLATFORM_PACKAGES="net-tools network-manager ${OPENHD_MEDIA_RUNTIME_PACKAGES} gstreamer1.0-rockchip1 linux-headers-5.10.160-radxa-rk3588-ohd linux-image-5.10.160-radxa-rk3588-ohd rockchip-iq-openhd-r5 rsync procps mpp-rk3566 fpv-rk3566"
 }
 function install_radxa-debian_packages_rk3566 {
     mkdir -p /usr/share/sddm/themes/breeze/
@@ -260,6 +299,7 @@ curl -fsSL https://apt.radxa.com/bullseye-stable/public.key | gpg --dearmor | su
         verify_x20_rtl8812au_version
     fi
     run_depmod_for_installed_kernels
+    validate_openhd_runtime
 
     # Clean up packages and cache
     echo "Cleaning up packages and cache..."

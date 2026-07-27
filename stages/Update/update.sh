@@ -11,6 +11,14 @@ fi
 
 export DEBIAN_FRONTEND=noninteractive
 APT="apt -o Dpkg::Options::=--force-confnew -y --allow-downgrades"
+OPENHD_MEDIA_RUNTIME_PACKAGES="libsodium23 libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly libsdl2-2.0-0"
+if [[ "${RPI5:-false}" == "true" ]]; then
+  OPENHD_MEDIA_RUNTIME_PACKAGES+=" gstreamer1.0-libcamera"
+fi
+if [[ "${OS:-}" == "radxa-debian-rock5a" ||
+      "${OS:-}" == "radxa-debian-rock5b" ]]; then
+  OPENHD_MEDIA_RUNTIME_PACKAGES+=" gstreamer1.0-rockchip1"
+fi
 
 run_depmod_for_installed_kernels() {
   local modules_root
@@ -215,7 +223,7 @@ elif [[ "${OS}" != "radxa-debian-rock3a" ]]; then
   $APT remove openhd openhd-sys-utils 'qopenhd*' || true
 
   # Install base packages
-  $APT install openhd libpoco-dev open-hd-web-ui openhd-sys-utils
+  $APT install openhd open-hd-web-ui openhd-sys-utils ${OPENHD_MEDIA_RUNTIME_PACKAGES}
 else
   echo "Skipping OpenHD package install for Radxa Rock 3A"
 fi
@@ -346,7 +354,7 @@ install_lite_kernel_packages() {
 install_openhd_lite_packages() {
   local glide_package="${GLIDE_PACKAGE:-openhd-glide}"
   local core_packages="${OPENHD_LITE_PACKAGES:-openhd openhd-sys-utils}"
-  local runtime_packages="${OPENHD_RUNTIME_PACKAGES:-}"
+  local runtime_packages="${OPENHD_RUNTIME_PACKAGES:-} ${OPENHD_MEDIA_RUNTIME_PACKAGES}"
 
   echo "Installing OpenHD Lite package set"
   apt purge -y 'qopenhd*' || true
@@ -356,6 +364,43 @@ install_openhd_lite_packages() {
   install_packages_from_list "OpenHD Glide package" "${glide_package}"
   install_packages_from_list "RTL driver packages" "${RTL_DRIVER_PACKAGES:-}"
   run_depmod_for_installed_kernels
+}
+
+validate_openhd_runtime() {
+  local openhd_binary=""
+  openhd_binary="$(command -v openhd || true)"
+  if [[ -z "${openhd_binary}" ]]; then
+    echo "OpenHD runtime validation failed: openhd binary is missing." >&2
+    return 1
+  fi
+
+  ldconfig
+  local ldd_output=""
+  ldd_output="$(ldd "${openhd_binary}")"
+  echo "${ldd_output}"
+  if grep -q "not found" <<<"${ldd_output}"; then
+    echo "OpenHD runtime validation failed: unresolved shared libraries." >&2
+    return 1
+  fi
+
+  rm -f /root/.cache/gstreamer-1.0/registry.* \
+        /home/openhd/.cache/gstreamer-1.0/registry.* 2>/dev/null || true
+  local elements=(h264parse rtph264pay)
+  if [[ "${RPI5:-false}" == "true" ]]; then
+    elements+=(libcamerasrc x264enc)
+  fi
+  if [[ "${OS:-}" == "radxa-debian-rock5a" ||
+        "${OS:-}" == "radxa-debian-rock5b" ]]; then
+    elements+=(mpph264enc)
+  fi
+  local element=""
+  for element in "${elements[@]}"; do
+    if ! gst-inspect-1.0 "${element}" >/dev/null 2>&1; then
+      echo "OpenHD runtime validation failed: GStreamer element ${element} is missing." >&2
+      return 1
+    fi
+    echo "Verified GStreamer element: ${element}"
+  done
 }
 
 ensure_openhd_user() {
@@ -679,5 +724,7 @@ if [[ "${OS}" != "radxa-debian-rock3a" ]]; then
 fi
 
 finalize_openhd_glide_service
+
+validate_openhd_runtime
 
 echo "Done. Detected board: ${OS}"
