@@ -57,11 +57,30 @@ function validate_openhd_runtime {
     fi
     if [[ "${OS}" == "radxa-debian-rock5a" ||
           "${OS}" == "radxa-debian-rock5b" ]]; then
-        elements+=(mpph264enc)
+        if [[ "$(uname -m)" == "aarch64" ]]; then
+            elements+=(mpph264enc)
+        else
+            local rockchip_plugin
+            local rockchip_ldd
+            rockchip_plugin="$(find /usr/lib -path "*/gstreamer-1.0/libgstrockchipmpp.so" \
+                -type f -print -quit 2>/dev/null)"
+            if [[ -z "${rockchip_plugin}" ]]; then
+                echo "OpenHD runtime validation failed: Rockchip GStreamer plugin is missing."
+                return 1
+            fi
+            rockchip_ldd="$(ldd "${rockchip_plugin}")"
+            echo "${rockchip_ldd}"
+            if grep -q "not found" <<<"${rockchip_ldd}"; then
+                echo "OpenHD runtime validation failed: Rockchip GStreamer plugin has unresolved libraries."
+                return 1
+            fi
+            echo "Verified Rockchip GStreamer plugin runtime: ${rockchip_plugin}"
+        fi
     fi
     for element in "${elements[@]}"; do
         if ! gst-inspect-1.0 "${element}" >/dev/null 2>&1; then
             echo "OpenHD runtime validation failed: GStreamer element ${element} is missing."
+            GST_DEBUG=2 gst-inspect-1.0 "${element}" || true
             return 1
         fi
         echo "Verified GStreamer element: ${element}"
