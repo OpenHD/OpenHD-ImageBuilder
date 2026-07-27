@@ -12,4 +12,4 @@ BIT="64"
 
 OPENHD_LITE_IMAGE=true
 GLIDE_PACKAGE="openhd-glide-rock5a"
-OPENHD_RUNTIME_PACKAGES="libpoconet80 open-hd-web-ui net-tools wireless-tools"
+OPENHD_RUNTIME_PACKAGES="libpoconet80 open-hd-web-ui net-tools wireless-tools network-manager"

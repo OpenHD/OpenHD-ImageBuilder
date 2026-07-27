@@ -624,6 +624,14 @@ if [[ "${OS}" == "raspbian" ]]; then
   fi
 fi
 
+if [[ "${OS}" == "radxa-debian-rock5a" ]] ||
+   [[ "${OS}" == "radxa-debian-rock5b" ]]; then
+  echo "Ensuring NetworkManager manages Rock 5 Ethernet"
+  $APT install network-manager
+  systemctl unmask NetworkManager.service >/dev/null 2>&1 || true
+  systemctl enable NetworkManager.service || true
+fi
+
 if [[ "${OS}" == "radxa-debian-cubie" ]]; then
   echo "Removing KDE desktop packages for Radxa Cubie shell image"
   remove_radxa_desktop_stack

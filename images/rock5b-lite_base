@@ -12,5 +12,5 @@ BIT="64"
 
 OPENHD_LITE_IMAGE=true
 GLIDE_PACKAGE="openhd-glide-rock5b"
-OPENHD_RUNTIME_PACKAGES="libpoconet80 open-hd-web-ui net-tools wireless-tools"
+OPENHD_RUNTIME_PACKAGES="libpoconet80 open-hd-web-ui net-tools wireless-tools network-manager"
 RTL_DRIVER_PACKAGES="rtl8812au-radxa-cm5-base-6.1.43-15-rk2312* rtl88x2bu-radxa-cm5-base-6.1.43-15-rk2312* rtl88x2cu-radxa-cm5-base-6.1.43-15-rk2312* rtl88x2eu-radxa-cm5-base-6.1.43-15-rk2312*"
