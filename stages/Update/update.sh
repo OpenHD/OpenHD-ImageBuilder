@@ -210,6 +210,27 @@ if [[ -z "${OS:-}" ]]; then
   export OS="${os_id}"
 fi
 
+if [[ "${OPENHD_PACKAGE:-openhd}" == "openhd" ]]; then
+  case "${OS}" in
+    debian-X20)
+      OPENHD_PACKAGE="openhd-x20"
+      ;;
+  esac
+  if [[ "${OPENHD_PACKAGE}" == "openhd" ]]; then
+    case "$(dpkg --print-architecture)" in
+      amd64)
+        OPENHD_PACKAGE="openhd-amd64"
+        ;;
+      arm64)
+        OPENHD_PACKAGE="openhd-arm64"
+        ;;
+      armhf)
+        OPENHD_PACKAGE="openhd-armhf"
+        ;;
+    esac
+  fi
+fi
+
 # Best-effort update
 refresh_radxa_apt_for_lite
 apt update || echo "Warning: apt update failed but continuing…"
@@ -220,10 +241,10 @@ if [[ "${OPENHD_LITE_IMAGE:-false}" == "true" ]]; then
   echo "OpenHD Lite image detected, skipping full OpenHD/QOpenHD package set."
 elif [[ "${OS}" != "radxa-debian-rock3a" ]]; then
   # Remove conflicting packages
-  $APT remove openhd openhd-sys-utils 'qopenhd*' || true
+  $APT remove openhd openhd-arm64 openhd-armhf openhd-amd64 openhd-x20 openhd-sys-utils 'qopenhd*' || true
 
   # Install base packages
-  $APT install openhd open-hd-web-ui openhd-sys-utils ${OPENHD_MEDIA_RUNTIME_PACKAGES}
+  $APT install "${OPENHD_PACKAGE}" open-hd-web-ui openhd-sys-utils ${OPENHD_MEDIA_RUNTIME_PACKAGES}
 else
   echo "Skipping OpenHD package install for Radxa Rock 3A"
 fi
@@ -353,7 +374,7 @@ install_lite_kernel_packages() {
 
 install_openhd_lite_packages() {
   local glide_package="${GLIDE_PACKAGE:-openhd-glide}"
-  local core_packages="${OPENHD_LITE_PACKAGES:-openhd openhd-sys-utils}"
+  local core_packages="${OPENHD_LITE_PACKAGES:-${OPENHD_PACKAGE} openhd-sys-utils}"
   local runtime_packages="${OPENHD_RUNTIME_PACKAGES:-} ${OPENHD_MEDIA_RUNTIME_PACKAGES}"
 
   echo "Installing OpenHD Lite package set"

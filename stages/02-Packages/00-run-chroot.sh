@@ -121,12 +121,12 @@ function install_raspbian_packages {
         # Pi 5 requires the stock Bookworm kernel, firmware and PiSP libcamera
         # stack. The legacy OpenHD kernel/userland packages are armhf-only and
         # replacing these packages makes a Pi 5 image unbootable.
-        BASE_PACKAGES="openhd-sys-utils openhd apt-transport-https apt-utils open-hd-web-ui"
+        BASE_PACKAGES="openhd-sys-utils ${OPENHD_PACKAGE} apt-transport-https apt-utils open-hd-web-ui"
         PLATFORM_PACKAGES_HOLD=""
         PLATFORM_PACKAGES_REMOVE=""
         PLATFORM_PACKAGES="firmware-atheros openssh-server network-manager v4l-utils gstreamer1.0-libcamera ${OPENHD_MEDIA_RUNTIME_PACKAGES}"
     else
-        BASE_PACKAGES="openhd-sys-utils openhd qopenhd apt-transport-https apt-utils open-hd-web-ui"
+        BASE_PACKAGES="openhd-sys-utils ${OPENHD_PACKAGE} qopenhd apt-transport-https apt-utils open-hd-web-ui"
         sudo apt update && apt remove -y dkms
         PLATFORM_PACKAGES_HOLD="raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc raspberrypi-bootloader"
         PLATFORM_PACKAGES_REMOVE="locales gdb librsvg2-2 guile-2.2-libs firmware-libertas gcc-10 nfs-common libcamera* raspberrypi-kernel"
@@ -135,11 +135,11 @@ function install_raspbian_packages {
 }
 # Ubuntu-Rockship-specific code
 function install_radxa-ubuntu_packages {
-    BASE_PACKAGES="openhd-sys-utils openhd apt-transport-https apt-utils open-hd-web-ui"
+    BASE_PACKAGES="openhd-sys-utils ${OPENHD_PACKAGE} apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES="rsync procps ${OPENHD_MEDIA_RUNTIME_PACKAGES} gstreamer1.0-rockchip1 gstreamer1.0-gl mali-g610-firmware malirun rockchip-multimedia-config librist4 librist-dev rist-tools libv4l-0 libv4l2rds0 libv4lconvert0 libv4l-dev libv4l-rkmpp qv4l2 v4l-utils librockchip-mpp1 librockchip-mpp-dev librockchip-vpu0 rockchip-mpp-demos librga2 librga-dev libegl-mesa0 libegl1-mesa-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev libglx-mesa0 mesa-common-dev mesa-vulkan-drivers mesa-utils libwidevinecdm"
 }
 function install_radxa-debian_packages {
-    BASE_PACKAGES="openhd-sys-utils openhd qopenhd-rk3588 apt-transport-https apt-utils open-hd-web-ui"
+    BASE_PACKAGES="openhd-sys-utils ${OPENHD_PACKAGE} qopenhd-rk3588 apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="task-rk356x task-rockchip radxa-system-config-rockchip 8852bu-dkms 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-rock-5a linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip"
     PLATFORM_PACKAGES_REMOVE="sddm plymouth plasma-desktop kde*"
     PLATFORM_PACKAGES="net-tools network-manager ${OPENHD_MEDIA_RUNTIME_PACKAGES} gstreamer1.0-rockchip1 linux-headers-5.10.160-radxa-rk3588-ohd linux-image-5.10.160-radxa-rk3588-ohd rockchip-iq-openhd-r5 rsync procps mpp-rk3566 fpv-rk3566"
@@ -150,14 +150,14 @@ function install_radxa-debian_packages_rk3566 {
     rm -Rf /etc/modprobe.d/panfrost.conf
     rm -Rf /etc/apt/preferences.d/radxa-rockchip
     mkdir -p /usr/local/share/openhd_platform/rock/rk3566
-    BASE_PACKAGES="dosfstools gstreamer1.0-plugins-rtp gstreamer1.0-rockchip1 gstreamer1.0-vaapi libavahi-glib1 libdrm-cursor linux-headers-5.10.160-radxa-rk356x linux-image-5.10.160-radxa-rk356x openhd-sys-utils openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
+    BASE_PACKAGES="dosfstools gstreamer1.0-plugins-rtp gstreamer1.0-rockchip1 gstreamer1.0-vaapi libavahi-glib1 libdrm-cursor linux-headers-5.10.160-radxa-rk356x linux-image-5.10.160-radxa-rk356x openhd-sys-utils ${OPENHD_PACKAGE} qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_REMOVE="gvfs gvfs-backends gvfs-fuse plymouth plymouth-theme-breeze plymouth-themes vulkan-tools xdg-desktop-portal xdg-desktop-portal-gtk xdg-user-dirs xdg-user-dirs-gtk xdg-utils task-xfce-desktop thunar-volman xfce4-clipman xfce4-notifyd xfce4-power-manager xfce4-screenshooter xfce4-terminal xiccd aha breeze-cursor-theme clinfo cups desktop-base firefox-esr fonts-noto-cjk fprintd fwupd maliit-keyboard"
     PLATFORM_PACKAGES_HOLD="camera-engine-rkaiq libdvbv5-0 libv4l2rds0 libv4lconvert0 xserver-common xserver-xorg-core xserver-xorg-legacy linux-headers-radxa-zero3 linux-image-radxa-zero3 task-rk356x task-rockchip radxa-system-config-rockchip task-radxa-cm3-rpi-cm4-io radxa-firmware"
     # PLATFORM_PACKAGES_HOLD="u-boot-radxa-zero3 radxa-system-config-common radxa-system-config-kernel-cmdline-ttyfiq0 radxa-firmware radxa-system-config-bullseye 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-radxa-cm3-rpi-cm4-io linux-headers-radxa-cm3-rpi-cm4-io linux-image-5.10.160-12-rk356x linux-headers-5.10.160-12-rk356x"
     PLATFORM_PACKAGES="dialog pv net-tools wireless-tools isc-dhcp-client network-manager glances rockchip-iq-openhd-r3 librga2=2.2.0-1 procps camera-engine-rkaiq mpp-rk3566 fpv-rk3566"
 }
 function install_packages-core3566 {
-    BASE_PACKAGES="openhd-sys-utils openhd qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
+    BASE_PACKAGES="openhd-sys-utils ${OPENHD_PACKAGE} qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES="dialog pv gst-latest net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd-r3 librga2=2.2.0-1 linux-image-5.10.160-core3566-rk356x linux-headers-5.10.160-core3566-rk356x linux-libc-dev-5.10.160-core3566-rk356x procps camera-engine-rkaiq"
     PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
 }
@@ -169,12 +169,12 @@ CLEAN=false
         else
         PLATFORM_PACKAGES_HOLD="grub-efi-amd64-bin grub-efi-amd64-signed linux-generic linux-headers-generic linux-image-generic linux-libc-dev"
         fi
-    BASE_PACKAGES="openhd-sys-utils openhd apt-transport-https apt-utils"
+    BASE_PACKAGES="openhd-sys-utils ${OPENHD_PACKAGE} apt-transport-https apt-utils"
     PLATFORM_PACKAGES="net-tools gnome-disk-utility openssh-server gnome-terminal qopenhd python3-pip htop libavcodec-dev libavformat-dev libelf-dev libboost-filesystem-dev libspdlog-dev build-essential libfontconfig1-dev libdbus-1-dev libfreetype6-dev libicu-dev libinput-dev libxkbcommon-dev libsqlite3-dev libssl-dev libpng-dev libjpeg-dev libglib2.0-dev libgles2-mesa-dev libgbm-dev libdrm-dev libwayland-dev pulseaudio libpulse-dev flex bison gperf libre2-dev libnss3-dev libdrm-dev libxml2-dev libxslt1-dev libminizip-dev libjsoncpp-dev liblcms2-dev libevent-dev libprotobuf-dev protobuf-compiler libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-x11-dev libgtk2.0-dev libgtk-3-dev libfuse2 mono-complete mono-runtime libmono-system-windows-forms4.0-cil libmono-system-core4.0-cil libmono-system-management4.0-cil libmono-system-xml-linq4.0-cil libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-plugins-bad libgstreamer-plugins-bad1.0-dev gstreamer1.0-pulseaudio gstreamer1.0-tools gstreamer1.0-alsa gstreamer1.0-qt5 openhdimagewriter"
     PLATFORM_PACKAGES_REMOVE=""
 }
 function install_ubuntu_x86_minimal_packages {
-    BASE_PACKAGES="openhd-sys-utils openhd apt-transport-https apt-utils rtl8812au-x86 rtl88x2bu-x86 rtl88x2eu-x86 nano linux-firmware"
+    BASE_PACKAGES="openhd-sys-utils ${OPENHD_PACKAGE} apt-transport-https apt-utils rtl8812au-x86 rtl88x2bu-x86 rtl88x2eu-x86 nano linux-firmware"
     PLATFORM_PACKAGES="wireless-tools net-tools gstreamer1.0-qt5"
     PLATFORM_PACKAGES_HOLD="grub-efi-amd64-bin grub-efi-amd64-signed linux-generic linux-headers-generic linux-image-generic linux-libc-dev"
     PLATFORM_PACKAGES_REMOVE=""
@@ -390,7 +390,7 @@ fi
 #
 # Write the openhd package version back to the base of the image and
 # in the work dir so the builder can use it in the image name
-export OPENHD_VERSION=$(dpkg -s openhd | grep "^Version" | awk '{ print $2 }')
+export OPENHD_VERSION=$(dpkg -s "${OPENHD_PACKAGE}" | grep "^Version" | awk '{ print $2 }')
 
 echo ${OPENHD_VERSION} > /openhd_version.txt
 echo ${OPENHD_VERSION} > /boot/openhd_version.txt
