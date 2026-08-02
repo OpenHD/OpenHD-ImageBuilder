@@ -10,7 +10,27 @@ if [[ ${EUID:-$(id -u)} -ne 0 ]]; then
 fi
 
 export DEBIAN_FRONTEND=noninteractive
-APT="apt -o Dpkg::Options::=--force-confnew -y --allow-downgrades"
+apt_with_retries() {
+  local attempt
+  local status=1
+
+  for attempt in 1 2 3; do
+    echo "Running apt operation (attempt ${attempt}/3): $*"
+    if apt -o Dpkg::Options::=--force-confnew \
+      -o Acquire::Retries=5 \
+      -o Acquire::http::Timeout=30 \
+      -o Acquire::https::Timeout=30 \
+      -y --allow-downgrades "$@"; then
+      return 0
+    else
+      status=$?
+    fi
+    sleep $((attempt * 2))
+  done
+
+  return "${status}"
+}
+APT="apt_with_retries"
 OPENHD_MEDIA_RUNTIME_PACKAGES="libsodium23 libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly libsdl2-2.0-0"
 if [[ "${RPI5:-false}" == "true" ]]; then
   OPENHD_MEDIA_RUNTIME_PACKAGES+=" gstreamer1.0-libcamera"
