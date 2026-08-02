@@ -48,13 +48,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y unzip curl git qemu-user-static binfmt-support
-          git clone --depth 1 https://github.com/tytso/e2fsprogs "$RUNNER_TEMP/e2fsprogs"
-          cmake -E make_directory "$RUNNER_TEMP/e2fsprogs/build"
-          cd "$RUNNER_TEMP/e2fsprogs/build"
-          ../configure
-          make -j"$(nproc)"
-          sudo make install
-          cd "$GITHUB_WORKSPACE"
+          bash ./scripts/install_current_e2fsprogs.sh
           sudo ./install_dep.sh
       - name: Build image
         run: sudo ./build.sh "${{ matrix.target }}" false false true
@@ -124,10 +118,11 @@ jobs:
             microsoft-edge-stable mono-devel || true
           sudo apt-get autoremove -y
           sudo apt-get clean
-      - name: Install dependencies
+      - name: Install host tools and current e2fsprogs
         run: |
           sudo apt-get update
           sudo apt-get install -y unzip curl git qemu-user-static binfmt-support rclone
+          bash ./scripts/install_current_e2fsprogs.sh
           sudo ./install_dep.sh
       - name: Build Lite image
         env:
