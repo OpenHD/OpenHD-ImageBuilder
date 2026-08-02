@@ -10,6 +10,7 @@ ROOT_PART=3
 BIT="64"
 
 OPENHD_LITE_IMAGE=true
-GLIDE_PACKAGE="openhd-glide-radxa-cm5"
+GLIDE_PACKAGE="openhd-glide"
+GLIDE_MIN_VERSION="0.1.0.111"
 OPENHD_RUNTIME_PACKAGES="libpoconet80 open-hd-web-ui net-tools wireless-tools"
 RTL_DRIVER_PACKAGES="rtl8812au-radxa-cm5-base-6.1.43-15-rk2312* rtl88x2bu-radxa-cm5-base-6.1.43-15-rk2312* rtl88x2cu-radxa-cm5-base-6.1.43-15-rk2312* rtl88x2eu-radxa-cm5-base-6.1.43-15-rk2312*"

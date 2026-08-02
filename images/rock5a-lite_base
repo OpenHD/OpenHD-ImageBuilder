@@ -11,5 +11,6 @@ ROOT_PART=3
 BIT="64"
 
 OPENHD_LITE_IMAGE=true
-GLIDE_PACKAGE="openhd-glide-rock5a"
+GLIDE_PACKAGE="openhd-glide"
+GLIDE_MIN_VERSION="0.1.0.111"
 OPENHD_RUNTIME_PACKAGES="libpoconet80 open-hd-web-ui net-tools wireless-tools network-manager"

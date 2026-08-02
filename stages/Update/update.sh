@@ -423,6 +423,16 @@ install_openhd_lite_packages() {
   install_packages_from_list "OpenHD Lite core packages" "${core_packages}"
   install_packages_from_list "OpenHD runtime packages" "${runtime_packages}"
   install_packages_from_list "OpenHD Glide package" "${glide_package}"
+  if [[ -n "${GLIDE_MIN_VERSION:-}" ]]; then
+    local installed_glide_version=""
+    installed_glide_version="$(dpkg-query -W -f='${Version}' "${glide_package}" 2>/dev/null || true)"
+    echo "Installed ${glide_package} version: ${installed_glide_version:-missing}; required minimum: ${GLIDE_MIN_VERSION}"
+    apt-cache policy "${glide_package}" || true
+    if [[ -z "${installed_glide_version}" ]] || ! dpkg --compare-versions "${installed_glide_version}" ge "${GLIDE_MIN_VERSION}"; then
+      echo "OpenHD Glide validation failed: ${glide_package} ${installed_glide_version:-missing} is older than required ${GLIDE_MIN_VERSION}." >&2
+      return 1
+    fi
+  fi
   install_packages_from_list "RTL driver packages" "${RTL_DRIVER_PACKAGES:-}"
   run_depmod_for_installed_kernels
 }
