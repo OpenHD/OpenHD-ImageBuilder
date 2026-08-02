@@ -1,6 +1,7 @@
 name: final_image_ci
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - dev-release
