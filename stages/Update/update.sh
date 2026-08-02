@@ -113,11 +113,47 @@ remove_unindexed_openhd_any_distribution_repos() {
     /etc/apt/sources.list.d/openhd-dev-release-any.list
 }
 
+setup_openhd_repository() {
+  local channel="$1"
+  local source_file="/etc/apt/sources.list.d/openhd-${channel}.list"
+  local attempt
+
+  rm -f "${source_file}"
+  for attempt in 1 2 3; do
+    echo "Configuring OpenHD ${channel} repository (attempt ${attempt}/3)"
+    if curl -1fsSL --retry 4 --retry-all-errors \
+      "https://dl.cloudsmith.io/public/openhd/${channel}/setup.deb.sh" \
+      | bash; then
+      if [[ -s "${source_file}" ]]; then
+        return 0
+      fi
+      echo "Cloudsmith setup completed without creating ${source_file}." >&2
+    fi
+    sleep $((attempt * 2))
+  done
+
+  echo "Failed to configure the OpenHD ${channel} repository." >&2
+  return 1
+}
+
+refresh_apt_indices() {
+  local attempt
+  for attempt in 1 2 3; do
+    echo "Refreshing APT indices (attempt ${attempt}/3)"
+    if apt-get update; then
+      return 0
+    fi
+    sleep $((attempt * 2))
+  done
+  echo "Failed to refresh APT indices after 3 attempts." >&2
+  return 1
+}
+
 if [[ "${UPDATE_LINUX_PACKAGES_ONLY:-false}" == "true" && "${OPENHD_LITE_IMAGE:-false}" != "true" ]]; then
   remove_dead_bullseye_backports
   remove_unindexed_openhd_any_distribution_repos
-  curl -1sLf "https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh" | bash || true
-  apt update || echo "Warning: apt update failed but continuing..."
+  setup_openhd_repository dev-release
+  refresh_apt_indices
   if [[ -n "${OPENHD_RUNTIME_PACKAGES:-}" ]]; then
     $APT install ${OPENHD_RUNTIME_PACKAGES}
   fi
@@ -200,16 +236,8 @@ refresh_radxa_apt_for_lite() {
   apt-get clean
   rm -rf /var/lib/apt/lists/*
 
-# Add OpenHD repo (ignore failures from gnupg checks)
-if command -v sudo >/dev/null 2>&1; then
-  curl -1sLf \
-    "https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh" \
-    | sudo -E bash || true
-else
-  curl -1sLf \
-    "https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh" \
-    | bash || true
-fi
+# Add and verify the OpenHD development repository.
+setup_openhd_repository dev-release
 
 # Determine OS (board)
 if [[ -z "${OS:-}" ]]; then
@@ -227,7 +255,7 @@ fi
 
 # Best-effort update
 refresh_radxa_apt_for_lite
-apt update || echo "Warning: apt update failed but continuing…"
+refresh_apt_indices
 
 print_linux_package_metadata
 
