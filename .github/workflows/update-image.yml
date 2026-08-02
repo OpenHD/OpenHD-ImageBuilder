@@ -99,7 +99,6 @@ jobs:
 
   lite-images:
     name: lite-${{ matrix.target }}
-    needs: x20-image
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
