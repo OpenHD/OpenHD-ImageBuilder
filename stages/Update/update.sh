@@ -108,9 +108,23 @@ remove_dead_bullseye_backports() {
   done
 }
 
+add_openhd_any_distribution_repo() {
+  local channel="$1"
+  local keyring="/usr/share/keyrings/openhd-${channel}-archive-keyring.gpg"
+  local source_file="/etc/apt/sources.list.d/openhd-${channel}-any.list"
+  if [[ ! -f "${keyring}" ]]; then
+    echo "Warning: cannot add OpenHD ${channel} universal feed without ${keyring}."
+    return 0
+  fi
+  printf '%s\n' \
+    "deb [signed-by=${keyring}] https://dl.cloudsmith.io/public/openhd/${channel}/deb/any-distro any-version main" \
+    >"${source_file}"
+}
+
 if [[ "${UPDATE_LINUX_PACKAGES_ONLY:-false}" == "true" && "${OPENHD_LITE_IMAGE:-false}" != "true" ]]; then
   remove_dead_bullseye_backports
   curl -1sLf "https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh" | bash || true
+  add_openhd_any_distribution_repo dev-release
   apt update || echo "Warning: apt update failed but continuing..."
   if [[ -n "${OPENHD_RUNTIME_PACKAGES:-}" ]]; then
     $APT install ${OPENHD_RUNTIME_PACKAGES}
@@ -203,6 +217,7 @@ else
     "https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh" \
     | bash || true
 fi
+add_openhd_any_distribution_repo dev-release
 
 # Determine OS (board)
 if [[ -z "${OS:-}" ]]; then
@@ -216,19 +231,6 @@ if [[ "${OPENHD_PACKAGE:-openhd}" == "openhd" ]]; then
       OPENHD_PACKAGE="openhd-x20"
       ;;
   esac
-  if [[ "${OPENHD_PACKAGE}" == "openhd" ]]; then
-    case "$(dpkg --print-architecture)" in
-      amd64)
-        OPENHD_PACKAGE="openhd-amd64"
-        ;;
-      arm64)
-        OPENHD_PACKAGE="openhd-arm64"
-        ;;
-      armhf)
-        OPENHD_PACKAGE="openhd-armhf"
-        ;;
-    esac
-  fi
 fi
 
 # Best-effort update

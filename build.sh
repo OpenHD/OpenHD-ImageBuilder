@@ -93,25 +93,12 @@ fi
 
 source "${IMAGE_METADATA_FILE}"
 
-# Select the portable OpenHD core by CPU architecture. Camera and encoder
-# backends remain board-specific GStreamer/runtime packages in the image.
+# All standard architectures use the common OpenHD package identity. Camera
+# and encoder backends remain board-specific GStreamer/runtime packages.
 if [[ "${OPENHD_PACKAGE:-openhd}" == "openhd" ]]; then
     case "${OS}" in
         debian-X20)
             OPENHD_PACKAGE="openhd-x20"
-            ;;
-        ubuntu-x86|ubuntu-x86-minimal)
-            OPENHD_PACKAGE="openhd-amd64"
-            ;;
-        raspbian|raspbian-*)
-            if [[ "${BIT}" == "64" ]]; then
-                OPENHD_PACKAGE="openhd-arm64"
-            else
-                OPENHD_PACKAGE="openhd-armhf"
-            fi
-            ;;
-        debian|debian-*|radxa-*|ubuntu)
-            OPENHD_PACKAGE="openhd-arm64"
             ;;
     esac
 fi
