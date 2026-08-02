@@ -261,14 +261,12 @@ print_linux_package_metadata
 
 if [[ "${OPENHD_LITE_IMAGE:-false}" == "true" ]]; then
   echo "OpenHD Lite image detected, skipping full OpenHD/QOpenHD package set."
-elif [[ "${OS}" != "radxa-debian-rock3a" ]]; then
+else
   # Remove conflicting packages
   $APT remove openhd openhd-arm64 openhd-armhf openhd-amd64 openhd-x20 openhd-sys-utils 'qopenhd*' || true
 
   # Install base packages
   $APT install "${OPENHD_PACKAGE}" open-hd-web-ui openhd-sys-utils ${OPENHD_MEDIA_RUNTIME_PACKAGES}
-else
-  echo "Skipping OpenHD package install for Radxa Rock 3A"
 fi
 
 # Install qopenhd or fallback
