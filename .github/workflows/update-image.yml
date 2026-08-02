@@ -1,167 +1,174 @@
-name: New_Image_Workflow
+name: final_image_ci
 
 on:
-  push:
-    branches:
-      - dev-release
+  workflow_dispatch:
+
+concurrency:
+  group: final-image-ci
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  BRANCH: dev-release
 
 jobs:
-  update-image:
+  full-images:
+    name: full-${{ matrix.target }}
     runs-on: ubuntu-22.04
     strategy:
-      fail-fast: false # Don't fail all if any of the jobs is failing
+      fail-fast: false
+      max-parallel: 2
       matrix:
-        TARGET: [rock5a,rock5b,radxa-zero3w,pi-bullseye,radxa-rock3a,x86-minimal,x86-noble] # <-- Add targets here!
+        target:
+          - rock5a
+          - rock5b
+          - radxa-zero3w
+          - pi-bullseye
+          - radxa-rock3a
+          - x86-minimal
+          - x86-noble
     steps:
-    # - name: Maximize build space
-    #   uses: easimon/maximize-build-space@master
-    #   with:
-    #     root-reserve-mb: 101
-    #     swap-size-mb: 200
-    #     remove-dotnet: 'true'
-    #     remove-android: 'true'
-    #     remove-haskell: 'true'
-    #     remove-codeql: 'true'
-    #     remove-docker-images: 'true'
-    #     overprovision-lvm: 'true'
-    - name: Setup env
-      run: |
-
-        echo "DT=$(date -d '+1 hour' +'%m-%d-%Y-%H-%M-%S')" >> $GITHUB_ENV
-        echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
-        echo "$GITHUB_ENV"
-       
-    ### ONLY THIS RELEVANT FOR BUILDING ###
-    - uses: actions/checkout@v4
-    - name: check for dev-release
-      if: ${{ env.BRANCH == 'dev-release' || env.BRANCH == 'debug_next' }}
-      run: | 
-        touch additionalFiles/dev-build
-    - name: update
-      run: sudo apt-get update
-    - name: remove even more
-      run: |
-        sudo apt-get purge -y \
-          '^llvm-.*' \
-          'php.*' \
-          '^mongodb-.*' \
-          '^mysql-.*' \
-          azure-cli \
-          google-chrome-stable \
-          firefox \
-          powershell \
-          microsoft-edge-stable \
-          mono-devel
-        sudo apt-get autoremove -y
-        sudo apt-get clean
-    - name: dep
-      run: sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
-    - name: update e2fsprogs
-      run: |
-          git clone https://github.com/tytso/e2fsprogs
-          cd e2fsprogs
-          mkdir build
-          cd build
+      - uses: actions/checkout@v4
+      - name: Prepare development image
+        run: |
+          echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
+          touch additionalFiles/dev-build
+      - name: Free runner disk space
+        run: |
+          sudo apt-get purge -y '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' \
+            azure-cli google-chrome-stable firefox powershell \
+            microsoft-edge-stable mono-devel || true
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+      - name: Install host tools and current e2fsprogs
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip curl git qemu-user-static binfmt-support
+          git clone --depth 1 https://github.com/tytso/e2fsprogs "$RUNNER_TEMP/e2fsprogs"
+          cmake -E make_directory "$RUNNER_TEMP/e2fsprogs/build"
+          cd "$RUNNER_TEMP/e2fsprogs/build"
           ../configure
-          make
+          make -j"$(nproc)"
           sudo make install
-
-    - name: Install build dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y qemu-user-static
-        sudo ./install_dep.sh
-
-    - name: Run OpenHD update workflow
-      run: |
-        sudo ./build.sh ${{ matrix.TARGET }} false false true
-
-    - name: Normalize image name for artifact
-      run: |
-        set -euo pipefail
-        count=$(ls -1 deploy/*.img 2>/dev/null | wc -l)
-        if [ "$count" -eq 0 ]; then
-          echo "No .img files found in deploy/"
-          exit 1
-        fi
-        if [ "$count" -gt 1 ]; then
-          echo "Multiple .img files found in deploy/:"
-          ls -1 deploy/*.img
-          exit 1
-        fi
-        img_path=$(ls -1 deploy/*.img)
-        target_name="openhd-image-${{ matrix.TARGET }}-${{ env.DT }}.img"
-        sudo mv "$img_path" "deploy/$target_name"
-
-    - name: Upload updated image artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: openhd-image-${{ matrix.TARGET }}-${{ env.DT }}
-        path: deploy/*.img
+          cd "$GITHUB_WORKSPACE"
+          sudo ./install_dep.sh
+      - name: Build image
+        run: sudo ./build.sh "${{ matrix.target }}" false false true
+      - name: Normalize image
+        run: |
+          set -euo pipefail
+          mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
+          test "${#images[@]}" -eq 1
+          sudo mv "${images[0]}" "deploy/openhd-image-${{ matrix.target }}-${DT}.img"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: openhd-image-${{ matrix.target }}-${{ env.DT }}
+          path: deploy/*.img
+          if-no-files-found: error
 
   x20-image:
+    name: full-x20
+    needs: full-images
     runs-on: ubuntu-22.04
     steps:
-    - name: Setup env
-      run: |
-        echo "DT=$(date -d '+1 hour' +'%m-%d-%Y-%H-%M-%S')" >> $GITHUB_ENV
-        echo "BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+      - uses: actions/checkout@v4
+      - name: Prepare and install dependencies
+        run: |
+          echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
+          touch additionalFiles/dev-build
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+          sudo ./install_dep.sh
+      - name: Build X20 image
+        run: sudo ./build.sh x20 false false false
+      - name: Normalize image
+        run: |
+          set -euo pipefail
+          mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
+          test "${#images[@]}" -eq 1
+          sudo mv "${images[0]}" "deploy/openhd-image-x20-${DT}.img"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: openhd-image-x20-${{ env.DT }}
+          path: deploy/*.img
+          if-no-files-found: error
 
-    - uses: actions/checkout@v4
+  lite-images:
+    name: lite-${{ matrix.target }}
+    needs: x20-image
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        target:
+          - radxa-cubie-lite
+          - radxa-zero3w-lite
+          - radxa-cm5-lite
+          - orangepi-zero3w-lite
+          - rock5a-lite
+          - rock5b-lite
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare development image
+        run: |
+          echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
+          touch additionalFiles/dev-build
+      - name: Free runner disk space
+        run: |
+          sudo apt-get purge -y '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' \
+            azure-cli google-chrome-stable firefox powershell \
+            microsoft-edge-stable mono-devel || true
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip curl git qemu-user-static binfmt-support rclone
+          sudo ./install_dep.sh
+      - name: Build Lite image
+        env:
+          OPENHD_RCLONE_CONFIG_GDRIVE: ${{ secrets.RCLONE_CONFIG_GDRIVE }}
+        run: sudo -E ./build.sh "${{ matrix.target }}" false false true
+      - name: Normalize image
+        run: |
+          set -euo pipefail
+          mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
+          test "${#images[@]}" -eq 1
+          sudo mv "${images[0]}" "deploy/openhd-lite-image-${{ matrix.target }}-${DT}.img"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: openhd-lite-image-${{ matrix.target }}-${{ env.DT }}
+          path: deploy/*.img
+          if-no-files-found: error
 
-    - name: Mark dev-release package source
-      if: ${{ env.BRANCH == 'dev-release' || env.BRANCH == 'debug_next' }}
-      run: |
-        touch additionalFiles/dev-build
-
-    - name: Update apt metadata
-      run: sudo apt-get update
-
-    - name: Free runner disk space
-      run: |
-        sudo apt-get purge -y \
-          '^llvm-.*' \
-          'php.*' \
-          '^mongodb-.*' \
-          '^mysql-.*' \
-          azure-cli \
-          google-chrome-stable \
-          firefox \
-          powershell \
-          microsoft-edge-stable \
-          mono-devel
-        sudo apt-get autoremove -y
-        sudo apt-get clean
-
-    - name: Install build dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y qemu-user-static
-        sudo ./install_dep.sh
-
-    - name: Build X20 image
-      run: |
-        sudo ./build.sh x20 false false false
-
-    - name: Normalize X20 image name for artifact
-      run: |
-        set -euo pipefail
-        count=$(ls -1 deploy/*.img 2>/dev/null | wc -l)
-        if [ "$count" -eq 0 ]; then
-          echo "No .img files found in deploy/"
-          exit 1
-        fi
-        if [ "$count" -gt 1 ]; then
-          echo "Multiple .img files found in deploy/:"
-          ls -1 deploy/*.img
-          exit 1
-        fi
-        img_path=$(ls -1 deploy/*.img)
-        target_name="openhd-image-x20-${{ env.DT }}.img"
-        sudo mv "$img_path" "deploy/$target_name"
-
-    - name: Upload X20 image artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: openhd-image-x20-${{ env.DT }}
-        path: deploy/*.img
+  pi5-image:
+    name: full-pi5-bookworm
+    needs: lite-images
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Free runner disk space
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc
+          sudo apt-get clean
+      - name: Prepare and install dependencies
+        run: |
+          touch additionalFiles/dev-build
+          printf '%s\n' 'OpenHD Raspberry Pi 5 Bookworm image' > additionalFiles/issue-new.txt
+          sudo ./install_dep.sh
+      - name: Build Raspberry Pi 5 image
+        run: sudo ./build.sh pi5-bookworm false small false
+      - name: Normalize image
+        run: |
+          set -euo pipefail
+          mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
+          test "${#images[@]}" -eq 1
+          sudo mv "${images[0]}" deploy/OpenHD-RPi5-Bookworm-arm64.img
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OpenHD-RPi5-Bookworm-arm64
+          path: deploy/OpenHD-RPi5-Bookworm-arm64.img
+          if-no-files-found: error
