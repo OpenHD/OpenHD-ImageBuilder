@@ -108,23 +108,15 @@ remove_dead_bullseye_backports() {
   done
 }
 
-add_openhd_any_distribution_repo() {
-  local channel="$1"
-  local keyring="/usr/share/keyrings/openhd-${channel}-archive-keyring.gpg"
-  local source_file="/etc/apt/sources.list.d/openhd-${channel}-any.list"
-  if [[ ! -f "${keyring}" ]]; then
-    echo "Warning: cannot add OpenHD ${channel} universal feed without ${keyring}."
-    return 0
-  fi
-  printf '%s\n' \
-    "deb [signed-by=${keyring}] https://dl.cloudsmith.io/public/openhd/${channel}/deb/any-distro any-version main" \
-    >"${source_file}"
+remove_unindexed_openhd_any_distribution_repos() {
+  rm -f /etc/apt/sources.list.d/openhd-release-any.list \
+    /etc/apt/sources.list.d/openhd-dev-release-any.list
 }
 
 if [[ "${UPDATE_LINUX_PACKAGES_ONLY:-false}" == "true" && "${OPENHD_LITE_IMAGE:-false}" != "true" ]]; then
   remove_dead_bullseye_backports
+  remove_unindexed_openhd_any_distribution_repos
   curl -1sLf "https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh" | bash || true
-  add_openhd_any_distribution_repo dev-release
   apt update || echo "Warning: apt update failed but continuing..."
   if [[ -n "${OPENHD_RUNTIME_PACKAGES:-}" ]]; then
     $APT install ${OPENHD_RUNTIME_PACKAGES}
@@ -196,6 +188,7 @@ refresh_radxa_apt_for_lite() {
 }
 
 # Remove old OpenHD repo if exists
+  remove_unindexed_openhd_any_distribution_repos
   if [[ -f /etc/apt/sources.list.d/openhd-dev-release.list ]]; then
     echo "Removing old OpenHD APT sources…"
     rm /etc/apt/sources.list.d/openhd-dev-release.list
@@ -217,7 +210,6 @@ else
     "https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh" \
     | bash || true
 fi
-add_openhd_any_distribution_repo dev-release
 
 # Determine OS (board)
 if [[ -z "${OS:-}" ]]; then

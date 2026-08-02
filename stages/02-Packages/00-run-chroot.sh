@@ -262,14 +262,14 @@ curl -fsSL https://apt.radxa.com/bullseye-stable/public.key | gpg --dearmor | su
         install_jetson_packages
     fi
 
-     # Add the detected-distribution feed for platform packages and the
-     # universal feed for the common OpenHD core package.
+     # The setup scripts add the detected-distribution feed. OpenHD publishes
+     # its common package to every supported feed as well as to any-distro.
         apt install -y curl
+        rm -f /etc/apt/sources.list.d/openhd-release-any.list \
+            /etc/apt/sources.list.d/openhd-dev-release-any.list
         curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
-        echo 'deb [signed-by=/usr/share/keyrings/openhd-release-archive-keyring.gpg] https://dl.cloudsmith.io/public/openhd/release/deb/any-distro any-version main' > /etc/apt/sources.list.d/openhd-release-any.list
         if [ -e "/opt/additionalFiles/dev-build" ]; then
             curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
-            echo 'deb [signed-by=/usr/share/keyrings/openhd-dev-release-archive-keyring.gpg] https://dl.cloudsmith.io/public/openhd/dev-release/deb/any-distro any-version main' > /etc/apt/sources.list.d/openhd-dev-release-any.list
             echo "BUILDING DEVELOPMENT IMAGE"
             echo "BUILDING DEVELOPMENT IMAGE"
             echo "BUILDING DEVELOPMENT IMAGE"
