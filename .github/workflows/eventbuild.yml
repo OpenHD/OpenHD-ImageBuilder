@@ -176,7 +176,7 @@ jobs:
 
     - name: Download Zero3w Artifact
       id: download_zero3w_artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: ${{ steps.list_artifacts.outputs.zero3w_artifacts }}
 
@@ -231,7 +231,7 @@ jobs:
 
     - uses: actions/checkout@v4
 
-    - uses: actions/download-artifact@v4
+    - uses: actions/download-artifact@v8
       with:
         name: "${{ matrix.TARGET }}*"
     
@@ -308,7 +308,7 @@ jobs:
 
   #   - uses: actions/checkout@v4
 
-  #   - uses: actions/download-artifact@v4
+  #   - uses: actions/download-artifact@v8
   #     with:
   #       name: "${{ matrix.TARGET }}-${{ env.DT }}"
     
