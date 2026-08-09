@@ -11,7 +11,7 @@ if [[ "${IMAGE_TYPE}" == "" ]]; then
     IMAGE_TYPE="pi-bullseye"
 
     echo "Usage: ./reset.sh pi-bullseye"
-    echo "------------------------------------------------------"
+    echo "-----------------------------------------------------"
     echo ""
 fi
 
