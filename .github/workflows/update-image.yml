@@ -22,7 +22,6 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
-      max-parallel: 2
       matrix:
         target:
           - rock5a
@@ -40,11 +39,16 @@ jobs:
           touch additionalFiles/dev-build
       - name: Free runner disk space
         run: |
+          # The Android SDK and language toolchains occupy most of a hosted
+          # runner's disk.  Radxa images need enough temporary space for both
+          # the downloaded base image and the expanded working image.
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup
           sudo apt-get purge -y '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' \
             azure-cli google-chrome-stable firefox powershell \
             microsoft-edge-stable mono-devel || true
           sudo apt-get autoremove -y
           sudo apt-get clean
+          df -h "$GITHUB_WORKSPACE"
       - name: Install host tools and current e2fsprogs
         run: |
           sudo apt-get update
@@ -67,7 +71,6 @@ jobs:
 
   x20-image:
     name: full-x20
-    needs: full-images
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -97,7 +100,6 @@ jobs:
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
-      max-parallel: 2
       matrix:
         target:
           - radxa-cubie-lite
@@ -114,11 +116,13 @@ jobs:
           touch additionalFiles/dev-build
       - name: Free runner disk space
         run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup
           sudo apt-get purge -y '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' \
             azure-cli google-chrome-stable firefox powershell \
             microsoft-edge-stable mono-devel || true
           sudo apt-get autoremove -y
           sudo apt-get clean
+          df -h "$GITHUB_WORKSPACE"
       - name: Install host tools and current e2fsprogs
         run: |
           sudo apt-get update
@@ -143,7 +147,6 @@ jobs:
 
   pi5-image:
     name: full-pi5-bookworm
-    needs: lite-images
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -151,6 +154,7 @@ jobs:
         run: |
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc
           sudo apt-get clean
+          df -h "$GITHUB_WORKSPACE"
       - name: Prepare and install dependencies
         run: |
           touch additionalFiles/dev-build
