@@ -201,6 +201,14 @@ refresh_apt_indices() {
 # Run before any repository bootstrap or APT operation, in both update modes.
 remove_dead_bullseye_sources
 
+if [[ "${OS:-}" == "radxa-debian-cubie" ]]; then
+  # Cubie's base image already contains security-updated libc and libsodium.
+  # Preserve matching development packages using the signed pre-retirement
+  # snapshot. Only this frozen source bypasses its expired Valid-Until date.
+  echo 'deb [check-valid-until=no] https://snapshot.debian.org/archive/debian-security/20260901T000000Z/ bullseye-security main' \
+    > /etc/apt/sources.list.d/openhd-cubie-bullseye-security-snapshot.list
+fi
+
 if [[ "${UPDATE_LINUX_PACKAGES_ONLY:-false}" == "true" && "${OPENHD_LITE_IMAGE:-false}" != "true" ]]; then
   remove_unindexed_openhd_any_distribution_repos
   setup_openhd_repository dev-release
