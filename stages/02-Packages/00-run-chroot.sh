@@ -97,8 +97,8 @@ function remove_dead_bullseye_backports {
 function install_x20_packages {
     #sudo apt install -y firmware-realtek NEEDS FIXING
     sudo apt install -y whiptail libpoco-dev
-    rm -Rf /etc/apt/sources.list.d/*
-    rm -Rf /etc/apt/sources.list
+    # Keep Debian sources: current OpenHD packages need distro runtime
+    # dependencies that are not provided by the OpenHD package repository.
     BASE_PACKAGES="openhd-x20 encode-sunxi openhd-sys-utils rtl8812au-x20=${X20_RTL8812AU_VERSION}"
     PLATFORM_PACKAGES_REMOVE="*boost* locales guile-2.2-libs network-manager"
     PLATFORM_PACKAGES=""
