@@ -17,6 +17,7 @@ apt_with_retries() {
   for attempt in 1 2 3; do
     echo "Running apt operation (attempt ${attempt}/3): $*"
     if apt -o Dpkg::Options::=--force-confnew \
+      -o APT::Install-Recommends=false \
       -o Acquire::Retries=5 \
       -o Acquire::http::Timeout=30 \
       -o Acquire::https::Timeout=30 \
@@ -114,8 +115,8 @@ print_linux_package_metadata() {
   )
 }
 
-remove_dead_bullseye_backports() {
-  echo "Removing dead bullseye-backports APT sources..."
+remove_dead_bullseye_sources() {
+  echo "Disabling retired Bullseye backports and security APT sources..."
 
   local files=(/etc/apt/sources.list)
   if compgen -G "/etc/apt/sources.list.d/*.list" > /dev/null; then
@@ -124,7 +125,9 @@ remove_dead_bullseye_backports() {
 
   for f in "${files[@]}"; do
     [[ -f "$f" ]] || continue
-    sed -i '/bullseye-backports/d' "$f" || true
+    # Match the suite, including security mirrors served by deb.debian.org.
+    # Keep base Bullseye and supported releases' security sources enabled.
+    sed -i -E '/[[:space:]]bullseye-(backports|security)([[:space:]]|$)/s/^[[:space:]]*deb/# &/' "$f"
   done
 }
 
@@ -169,8 +172,10 @@ refresh_apt_indices() {
   return 1
 }
 
+# Run before any repository bootstrap or APT operation, in both update modes.
+remove_dead_bullseye_sources
+
 if [[ "${UPDATE_LINUX_PACKAGES_ONLY:-false}" == "true" && "${OPENHD_LITE_IMAGE:-false}" != "true" ]]; then
-  remove_dead_bullseye_backports
   remove_unindexed_openhd_any_distribution_repos
   setup_openhd_repository dev-release
   refresh_apt_indices
