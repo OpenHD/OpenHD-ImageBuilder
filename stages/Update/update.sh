@@ -141,6 +141,32 @@ setup_openhd_repository() {
   local source_file="/etc/apt/sources.list.d/openhd-${channel}.list"
   local attempt
 
+  if [[ "${OS:-}" == "radxa-debian-cubie" && "${channel}" == "dev-release" ]]; then
+    # Cubie ships gpg/gpgv from a newer security revision than the base
+    # gnupg metapackage. Use the existing tools to install the same signed
+    # Cloudsmith feed without downgrading the image's cryptographic tools.
+    local key_file
+    local distro codename version
+    command -v gpg >/dev/null
+    distro="$(. /etc/os-release; echo "$ID")"
+    codename="$(. /etc/os-release; echo "$VERSION_CODENAME")"
+    version="$(. /etc/os-release; echo "$VERSION_ID")"
+    key_file="$(mktemp)"
+    curl -fsSL --retry 4 --retry-all-errors \
+      https://dl.cloudsmith.io/public/openhd/dev-release/gpg.F0CA89D23AE83112.key \
+      -o "${key_file}"
+    mkdir -p /usr/share/keyrings /etc/apt/sources.list.d
+    gpg --batch --yes --dearmor \
+      -o /usr/share/keyrings/openhd-dev-release-archive-keyring.gpg "${key_file}"
+    rm -f "${key_file}"
+    chmod 644 /usr/share/keyrings/openhd-dev-release-archive-keyring.gpg
+    curl -fsSL --retry 4 --retry-all-errors \
+      "https://dl.cloudsmith.io/public/openhd/dev-release/config.deb.txt?distro=${distro}&codename=${codename}&version=${version}&arch=$(dpkg --print-architecture)" \
+      -o "${source_file}"
+    chmod 644 "${source_file}"
+    return 0
+  fi
+
   rm -f "${source_file}"
   for attempt in 1 2 3; do
     echo "Configuring OpenHD ${channel} repository (attempt ${attempt}/3)"
