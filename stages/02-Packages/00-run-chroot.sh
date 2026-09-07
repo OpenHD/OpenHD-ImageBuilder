@@ -191,6 +191,11 @@ function install_openhd {
     remove_dead_bullseye_backports
 
     if [[ "${OS}" == "debian-X20" ]]; then
+        # The legacy image enables Bullseye security via the bare host URL.
+        # Its stale index references removed packages; disable that source
+        # before the first install, as in the X20 package compiler chroot.
+        find /etc/apt -type f \( -name 'sources.list' -o -name '*.list' \) \
+            -exec sed -i '/security\.debian\.org/s/^[[:space:]]*deb/# &/' {} +
         rm -Rf /etc/apt/sources.list.d/armbian.list
         apt update
         apt install libpoco-dev -y
