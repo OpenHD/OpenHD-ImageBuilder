@@ -14,6 +14,8 @@ on:
   push:
     branches:
       - dev-release
+    paths-ignore:
+      - .github/workflows/publish-x21b-inputs.yml
 
 concurrency:
   group: final-image-ci-${{ github.event_name == 'workflow_dispatch' && inputs.target == 'x21-update' && 'x21-update' || github.ref }}
