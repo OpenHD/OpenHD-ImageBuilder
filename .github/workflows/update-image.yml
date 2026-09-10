@@ -2,6 +2,15 @@ name: final_image_ci
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Image set to build
+        required: true
+        type: choice
+        default: all
+        options:
+          - all
+          - x21-update
   push:
     branches:
       - dev-release
@@ -19,6 +28,7 @@ env:
 jobs:
   x21-update:
     name: fast-x21-update
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'x21-update'
     uses: OpenHD/OpenHD/.github/workflows/build_x21_bundle.yml@openhd-3.0
     with:
       openhd_ref: openhd-3.0
@@ -28,6 +38,7 @@ jobs:
 
   full-images:
     name: full-${{ matrix.target }}
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all'
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
@@ -80,6 +91,7 @@ jobs:
 
   x20-image:
     name: full-x20
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all'
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
@@ -106,6 +118,7 @@ jobs:
 
   lite-images:
     name: lite-${{ matrix.target }}
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all'
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
@@ -156,6 +169,7 @@ jobs:
 
   pi5-image:
     name: full-pi5-bookworm
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
