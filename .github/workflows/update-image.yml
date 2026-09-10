@@ -16,7 +16,7 @@ on:
       - dev-release
 
 concurrency:
-  group: final-image-ci
+  group: final-image-ci-${{ github.event_name == 'workflow_dispatch' && inputs.target == 'x21-update' && 'x21-update' || github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -24,17 +24,87 @@ permissions:
 
 env:
   BRANCH: dev-release
+  X21_SDK_REPOSITORY: OpenHD/OpenHD-X21B
+  X21_OHD_SEED_RUN_ID: "34479273960"
+  X21_OHD_SEED_ARTIFACT: openhd-x21b-ohd-root
+  X21_COMPONENT_BASE_URL: https://dl.cloudsmith.io/public/openhd/dev-release/raw/files
 
 jobs:
   x21-update:
     name: fast-x21-update
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'x21-update'
-    uses: OpenHD/OpenHD/.github/workflows/build_x21_bundle.yml@openhd-3.0
-    with:
-      openhd_ref: openhd-3.0
-    secrets:
-      OPENHD_SUBMODULE_TOKEN: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
+    runs-on: ubuntu-24.04
+    env:
       CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download X21B component packages from Cloudsmith
+        run: |
+          set -euo pipefail
+          mkdir -p x21-components
+          for name in openhd-x21b-latest.tar.gz openhd-sys-utils-x21b-latest.tar.gz; do
+            curl --fail --location --retry 5 --retry-delay 3 \
+              "${X21_COMPONENT_BASE_URL}/${name}" -o "x21-components/${name}"
+            curl --fail --location --retry 5 --retry-delay 3 \
+              "${X21_COMPONENT_BASE_URL}/${name}.sha256" -o "x21-components/${name}.sha256"
+          done
+          cd x21-components
+          sha256sum -c openhd-x21b-latest.tar.gz.sha256
+          sha256sum -c openhd-sys-utils-x21b-latest.tar.gz.sha256
+
+      - name: Download pinned X21B OHD filesystem seed
+        uses: actions/download-artifact@v4
+        with:
+          repository: ${{ env.X21_SDK_REPOSITORY }}
+          run-id: ${{ env.X21_OHD_SEED_RUN_ID }}
+          name: ${{ env.X21_OHD_SEED_ARTIFACT }}
+          github-token: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
+          path: x21-ohd-seed-artifact
+
+      - name: Verify and extract filesystem seed
+        run: |
+          set -euo pipefail
+          mkdir -p x21-ohd-seed
+          (
+            cd x21-ohd-seed-artifact
+            sha256sum -c openhd-x21b-ohd-root.tar.gz.sha256
+          )
+          echo "X21_OHD_SEED_SHA256=$(sha256sum x21-ohd-seed-artifact/openhd-x21b-ohd-root.tar.gz | awk '{print $1}')" >>"${GITHUB_ENV}"
+          tar -xzf x21-ohd-seed-artifact/openhd-x21b-ohd-root.tar.gz -C x21-ohd-seed
+
+      - name: Install SWUpdate image tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cpio fakeroot file mtd-utils
+
+      - name: Assemble flashable X21B update
+        run: |
+          fakeroot -- ./scripts/build_x21_update.sh \
+            "${GITHUB_WORKSPACE}/x21-ohd-seed" \
+            "${GITHUB_WORKSPACE}/x21-components/openhd-x21b-latest.tar.gz" \
+            "${GITHUB_WORKSPACE}/x21-components/openhd-sys-utils-x21b-latest.tar.gz" \
+            "${GITHUB_WORKSPACE}/x21-output"
+
+      - name: Upload flashable X21B update
+        uses: actions/upload-artifact@v4
+        with:
+          name: openhd-image-x21b
+          path: x21-output/
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Install Cloudsmith CLI
+        if: env.CLOUDSMITH_API_KEY != ''
+        run: pipx install cloudsmith-cli
+
+      - name: Publish X21B update files to Cloudsmith
+        if: env.CLOUDSMITH_API_KEY != ''
+        run: |
+          set -euo pipefail
+          for package in x21-output/*; do
+            cloudsmith push raw --republish openhd/dev-release "${package}"
+          done
 
   full-images:
     name: full-${{ matrix.target }}
