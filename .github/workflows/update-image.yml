@@ -24,9 +24,6 @@ permissions:
 
 env:
   BRANCH: dev-release
-  X21_SDK_REPOSITORY: OpenHD/OpenHD-X21B
-  X21_OHD_SEED_RUN_ID: "34479273960"
-  X21_OHD_SEED_ARTIFACT: openhd-x21b-ohd-root
   X21_COMPONENT_BASE_URL: https://dl.cloudsmith.io/public/openhd/dev-release/raw/files
 
 jobs:
@@ -53,18 +50,14 @@ jobs:
           sha256sum -c openhd-x21b-latest.tar.gz.sha256
           sha256sum -c openhd-sys-utils-x21b-latest.tar.gz.sha256
 
-      - name: Download pinned X21B OHD filesystem seed
-        uses: actions/download-artifact@v4
-        with:
-          repository: ${{ env.X21_SDK_REPOSITORY }}
-          run-id: ${{ env.X21_OHD_SEED_RUN_ID }}
-          name: ${{ env.X21_OHD_SEED_ARTIFACT }}
-          github-token: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
-          path: x21-ohd-seed-artifact
-
-      - name: Verify and extract filesystem seed
+      - name: Download, verify and extract the stable X21B filesystem seed
         run: |
           set -euo pipefail
+          mkdir -p x21-ohd-seed-artifact
+          for name in openhd-x21b-ohd-root.tar.gz openhd-x21b-ohd-root.tar.gz.sha256 openhd-x21b-ohd-root.tar.gz.manifest.json; do
+            curl --fail --location --retry 5 --retry-delay 3 \
+              "${X21_COMPONENT_BASE_URL}/${name}" -o "x21-ohd-seed-artifact/${name}"
+          done
           mkdir -p x21-ohd-seed
           (
             cd x21-ohd-seed-artifact
