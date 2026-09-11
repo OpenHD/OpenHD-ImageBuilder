@@ -96,7 +96,7 @@ jobs:
           github-token: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
           path: x21-firmware-input
 
-      - name: Prepare timestamped X21B full firmware
+      - name: Stage the base X21B full firmware
         run: |
           set -euo pipefail
           if [[ "${{ steps.x21-firmware-cache.outcome }}" == "success" ]]; then
@@ -106,12 +106,12 @@ jobs:
           fi
           test -s "${firmware_source}"
           mkdir -p x21-output
-          cp "${firmware_source}" "x21-output/firmware-${DT}.zip"
+          cp "${firmware_source}" x21-output/firmware-base.zip
 
       - name: Install SWUpdate image tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends cpio fakeroot file mtd-utils
+          sudo apt-get install -y --no-install-recommends cpio fakeroot file mtd-utils unzip zip
 
       - name: Assemble flashable X21B update
         run: |
@@ -126,6 +126,15 @@ jobs:
           set -euo pipefail
           mv x21-output/OpenHD-X21B-latest.ohd \
             "x21-output/OpenHD-X21B-full-${DT}.ohd"
+
+      - name: Put the updated OHD partition into the full X21B firmware
+        run: |
+          set -euo pipefail
+          bash ./scripts/repack_x21_firmware.sh \
+            "${GITHUB_WORKSPACE}/x21-output/firmware-base.zip" \
+            "${GITHUB_WORKSPACE}/x21-output/OpenHD-X21B-full-${DT}.ohd" \
+            "${GITHUB_WORKSPACE}/x21-output/firmware-${DT}.zip"
+          rm x21-output/firmware-base.zip
 
       - name: Upload flashable X21B update
         uses: actions/upload-artifact@v4
