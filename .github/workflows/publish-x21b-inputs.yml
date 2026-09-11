@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       source_run_id:
-        description: Successful X21B OTA workflow run containing SDK and OHD seed artifacts
+        description: Successful X21B OTA workflow run containing firmware, SDK, and OHD seed artifacts
         required: true
         default: "34479273960"
   push:
@@ -54,6 +54,15 @@ jobs:
           github-token: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
           path: publish-inputs
 
+      - name: Download cached X21B full firmware
+        uses: actions/download-artifact@v4
+        with:
+          repository: OpenHD/OpenHD-X21B
+          run-id: ${{ env.SOURCE_RUN_ID }}
+          name: ota-img
+          github-token: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
+          path: firmware-input
+
       - name: Verify cached inputs
         working-directory: publish-inputs
         run: |
@@ -62,11 +71,14 @@ jobs:
           sha256sum -c openhd-x21b-ohd-root.tar.gz.sha256
           test -s openhd-x21b-sdk.manifest.json
           test -s openhd-x21b-ohd-root.tar.gz.manifest.json
+          test -s ../firmware-input/firmware.zip
+          cp ../firmware-input/firmware.zip .
+          sha256sum firmware.zip >firmware.zip.sha256
 
       - name: Install Cloudsmith CLI
         run: pipx install cloudsmith-cli
 
-      - name: Publish stable X21B SDK and filesystem seed
+      - name: Publish stable X21B firmware, SDK, and filesystem seed
         run: |
           set -euo pipefail
           for package in publish-inputs/*; do

@@ -27,6 +27,7 @@ permissions:
 env:
   BRANCH: dev-release
   X21_COMPONENT_BASE_URL: https://dl.cloudsmith.io/public/openhd/dev-release/raw/files
+  X21_SOURCE_RUN_ID: "34479273960"
 
 jobs:
   x21-update:
@@ -67,6 +68,43 @@ jobs:
           )
           echo "X21_OHD_SEED_SHA256=$(sha256sum x21-ohd-seed-artifact/openhd-x21b-ohd-root.tar.gz | awk '{print $1}')" >>"${GITHUB_ENV}"
           tar -xzf x21-ohd-seed-artifact/openhd-x21b-ohd-root.tar.gz -C x21-ohd-seed
+
+      - name: Download and verify the stable X21B full firmware
+        id: x21-firmware-cache
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          mkdir -p x21-output
+          for name in firmware.zip firmware.zip.sha256; do
+            curl --fail --location --retry 5 --retry-delay 3 \
+              "${X21_COMPONENT_BASE_URL}/${name}" -o "x21-output/${name}"
+          done
+          cd x21-output
+          sha256sum -c firmware.zip.sha256
+
+      # The publisher and image workflows can start together after this cache
+      # definition changes. Fall back to the pinned source run for that first
+      # build; subsequent builds use the durable Cloudsmith copy above.
+      - name: Download X21B full firmware from the source run
+        if: steps.x21-firmware-cache.outcome == 'failure'
+        uses: actions/download-artifact@v4
+        with:
+          repository: OpenHD/OpenHD-X21B
+          run-id: ${{ env.X21_SOURCE_RUN_ID }}
+          name: ota-img
+          github-token: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
+          path: x21-firmware-input
+
+      - name: Prepare source-run X21B full firmware
+        if: steps.x21-firmware-cache.outcome == 'failure'
+        run: |
+          set -euo pipefail
+          test -s x21-firmware-input/firmware.zip
+          cp x21-firmware-input/firmware.zip x21-output/firmware.zip
+          (
+            cd x21-output
+            sha256sum firmware.zip >firmware.zip.sha256
+          )
 
       - name: Install SWUpdate image tools
         run: |
