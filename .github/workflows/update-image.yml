@@ -1,4 +1,4 @@
-name: final_image_ci
+name: New_Image_Workflow
 
 on:
   workflow_dispatch:
@@ -14,8 +14,6 @@ on:
   push:
     branches:
       - dev-release
-    paths-ignore:
-      - .github/workflows/publish-x21b-inputs.yml
 
 concurrency:
   group: final-image-ci-${{ github.event_name == 'workflow_dispatch' && inputs.target == 'x21-update' && 'x21-update' || github.ref }}
@@ -38,6 +36,9 @@ jobs:
       CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set X21B release timestamp
+        run: echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >>"${GITHUB_ENV}"
 
       - name: Download X21B component packages from Cloudsmith
         run: |
@@ -74,12 +75,12 @@ jobs:
         continue-on-error: true
         run: |
           set -euo pipefail
-          mkdir -p x21-output
+          mkdir -p x21-firmware-cache
           for name in firmware.zip firmware.zip.sha256; do
             curl --fail --location --retry 5 --retry-delay 3 \
-              "${X21_COMPONENT_BASE_URL}/${name}" -o "x21-output/${name}"
+              "${X21_COMPONENT_BASE_URL}/${name}" -o "x21-firmware-cache/${name}"
           done
-          cd x21-output
+          cd x21-firmware-cache
           sha256sum -c firmware.zip.sha256
 
       # The publisher and image workflows can start together after this cache
@@ -95,16 +96,17 @@ jobs:
           github-token: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
           path: x21-firmware-input
 
-      - name: Prepare source-run X21B full firmware
-        if: steps.x21-firmware-cache.outcome == 'failure'
+      - name: Prepare timestamped X21B full firmware
         run: |
           set -euo pipefail
-          test -s x21-firmware-input/firmware.zip
-          cp x21-firmware-input/firmware.zip x21-output/firmware.zip
-          (
-            cd x21-output
-            sha256sum firmware.zip >firmware.zip.sha256
-          )
+          if [[ "${{ steps.x21-firmware-cache.outcome }}" == "success" ]]; then
+            firmware_source=x21-firmware-cache/firmware.zip
+          else
+            firmware_source=x21-firmware-input/firmware.zip
+          fi
+          test -s "${firmware_source}"
+          mkdir -p x21-output
+          cp "${firmware_source}" "x21-output/firmware-${DT}.zip"
 
       - name: Install SWUpdate image tools
         run: |
@@ -119,24 +121,36 @@ jobs:
             "${GITHUB_WORKSPACE}/x21-components/openhd-sys-utils-x21b-latest.tar.gz" \
             "${GITHUB_WORKSPACE}/x21-output"
 
+      - name: Timestamp the latest X21B update
+        run: |
+          set -euo pipefail
+          mv x21-output/OpenHD-X21B-latest.ohd \
+            "x21-output/OpenHD-X21B-full-${DT}.ohd"
+
       - name: Upload flashable X21B update
         uses: actions/upload-artifact@v4
         with:
-          name: openhd-image-x21b
-          path: x21-output/
+          name: openhd-image-x21b-${{ env.DT }}
+          path: |
+            x21-output/OpenHD-X21B-full-${{ env.DT }}.ohd
+            x21-output/firmware-${{ env.DT }}.zip
           if-no-files-found: error
           retention-days: 30
 
       - name: Install Cloudsmith CLI
-        if: env.CLOUDSMITH_API_KEY != ''
         run: pipx install cloudsmith-cli
 
       - name: Publish X21B update files to Cloudsmith
-        if: env.CLOUDSMITH_API_KEY != ''
         run: |
           set -euo pipefail
-          for package in x21-output/*; do
-            cloudsmith push raw --republish openhd/dev-release "${package}"
+          : "${CLOUDSMITH_API_KEY:?CLOUDSMITH_API_KEY secret is required to publish X21B files}"
+          packages=(
+            "x21-output/OpenHD-X21B-full-${DT}.ohd"
+            "x21-output/firmware-${DT}.zip"
+          )
+          for package in "${packages[@]}"; do
+            test -s "${package}"
+            cloudsmith push raw --republish openhd/x21 "${package}"
           done
 
   full-images:
