@@ -153,14 +153,18 @@ jobs:
         run: |
           set -euo pipefail
           : "${CLOUDSMITH_API_KEY:?CLOUDSMITH_API_KEY secret is required to publish X21B files}"
-          packages=(
-            "x21-output/OpenHD-X21B-full-${DT}.ohd"
-            "x21-output/firmware-${DT}.zip"
-          )
-          for package in "${packages[@]}"; do
-            test -s "${package}"
-            cloudsmith push raw --republish openhd/x21 "${package}"
-          done
+          ohd_package="x21-output/OpenHD-X21B-full-${DT}.ohd"
+          firmware_package="x21-output/firmware-${DT}.zip"
+          test -s "${ohd_package}"
+          test -s "${firmware_package}"
+          cloudsmith push raw --republish \
+            --name openhd-x21b-full \
+            --version "${DT}" \
+            openhd/x21 "${ohd_package}"
+          cloudsmith push raw --republish \
+            --name firmware \
+            --version "${DT}" \
+            openhd/x21 "${firmware_package}"
 
   full-images:
     name: full-${{ matrix.target }}
