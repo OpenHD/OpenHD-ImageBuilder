@@ -277,10 +277,10 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p luckfox-firmware-cache
-          for name in firmware.zip firmware.zip.sha256; do
+          curl --fail --location --retry 5 --retry-delay 3 \
+              "${LUCKFOX_COMPONENT_BASE_URL}/openhd-luckfox-firmware.zip" -o "luckfox-firmware-cache/firmware.zip"
             curl --fail --location --retry 5 --retry-delay 3 \
-              "${LUCKFOX_COMPONENT_BASE_URL}/${name}" -o "luckfox-firmware-cache/${name}"
-          done
+              "${LUCKFOX_COMPONENT_BASE_URL}/openhd-luckfox-firmware.zip.sha256" -o "luckfox-firmware-cache/firmware.zip.sha256"
           cd luckfox-firmware-cache
           sha256sum -c firmware.zip.sha256
 
@@ -418,10 +418,10 @@ openhd-hardware-luckfox:
         run: |
           set -euo pipefail
           mkdir -p luckfox-firmware-cache
-          for name in firmware.zip firmware.zip.sha256; do
+          curl --fail --location --retry 5 --retry-delay 3 \
+              "${LUCKFOX_COMPONENT_BASE_URL}/openhd-luckfox-firmware.zip" -o "luckfox-firmware-cache/firmware.zip"
             curl --fail --location --retry 5 --retry-delay 3 \
-              "${LUCKFOX_COMPONENT_BASE_URL}/${name}" -o "luckfox-firmware-cache/${name}"
-          done
+              "${LUCKFOX_COMPONENT_BASE_URL}/openhd-luckfox-firmware.zip.sha256" -o "luckfox-firmware-cache/firmware.zip.sha256"
           cd luckfox-firmware-cache
           sha256sum -c firmware.zip.sha256
 
@@ -730,6 +730,7 @@ openhd-hardware-luckfox:
             buildroot/output/images/*
             /home/orqa/yocto-data/build/tmp/deploy/images/*
           if-no-files-found: warn
+
 
 
 

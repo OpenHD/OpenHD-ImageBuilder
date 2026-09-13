@@ -1,5 +1,6 @@
-GITHUB_URL="https://github.com/LuckfoxTECH/luckfox-pico.git"
+GITHUB_URL="https://github.com/OpenHD/luckfox-pico-sdk.git"
 PLATFORMIDENT="Luckfox"
 TYPE_1="1"
 TYPE_2="0"
 TYPE_3="0"
+

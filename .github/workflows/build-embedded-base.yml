@@ -22,37 +22,78 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Free runner disk space
         run: |
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup
-          sudo apt-get purge -y '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' \
-            azure-cli google-chrome-stable firefox powershell \
+          sudo apt-get purge -y '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' \\
+            azure-cli google-chrome-stable firefox powershell \\
             microsoft-edge-stable mono-devel || true
           sudo apt-get autoremove -y
           sudo apt-get clean
           df -h "$GITHUB_WORKSPACE"
-          
+
       - name: Prepare and build SDK
         env:
           OPENHD_SUBMODULE_TOKEN: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
         run: |
           echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
           chmod +x scripts/sdk_builder.sh
-          
+
           if [ -n "${OPENHD_SUBMODULE_TOKEN}" ]; then
             git config --global url."https://x-access-token:${OPENHD_SUBMODULE_TOKEN}@github.com/OpenHD/".insteadOf "https://github.com/OpenHD/"
+            git config --global url."https://x-access-token:${OPENHD_SUBMODULE_TOKEN}@github.com/OpenHD-Technologies/".insteadOf "https://github.com/OpenHD-Technologies/"
           fi
-          
+
           # Run the builder script which executes the Buildroot/Yocto process
           ./scripts/sdk_builder.sh "${{ inputs.target }}"
+
+      - name: Compress and package firmware
+        run: |
+          mkdir -p deploy
+          ZIP_NAME="openhd-${{ inputs.target }}-firmware.zip"
+          if [ -d "buildroot/output/image" ]; then
+            cd buildroot/output/image
+            zip -r "$GITHUB_WORKSPACE/deploy/$ZIP_NAME" .
+            cd "$GITHUB_WORKSPACE"
+          elif [ -d "buildroot/output/images" ]; then
+            cd buildroot/output/images
+            zip -r "$GITHUB_WORKSPACE/deploy/$ZIP_NAME" .
+            cd "$GITHUB_WORKSPACE"
+          elif [ -d "/home/orqa/yocto-data/build/tmp/deploy/images" ]; then
+            cd /home/orqa/yocto-data/build/tmp/deploy/images
+            zip -r "$GITHUB_WORKSPACE/deploy/$ZIP_NAME" .
+            cd "$GITHUB_WORKSPACE"
+          else
+            echo "No output directory found!"
+            exit 1
+          fi
           
+          cd deploy
+          sha256sum "$ZIP_NAME" > "$ZIP_NAME.sha256"
+          echo "ZIP_NAME=$ZIP_NAME" >> "$GITHUB_ENV"
+
       - name: Upload Base Image Artifact
         uses: actions/upload-artifact@v4
         with:
           name: base-image-${{ inputs.target }}-${{ env.DT }}
-          path: |
-            buildroot/output/image/*
-            buildroot/output/images/*
-            /home/orqa/yocto-data/build/tmp/deploy/images/*
+          path: deploy/
           if-no-files-found: warn
+
+      - name: Install Cloudsmith CLI
+        run: pipx install cloudsmith-cli
+
+      - name: Publish Firmware to Cloudsmith
+        env:
+          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+        run: |
+          : "${CLOUDSMITH_API_KEY:?CLOUDSMITH_API_KEY secret is required to publish}"
+          cloudsmith push raw --republish \\
+            --name "openhd-${{ inputs.target }}-firmware" \\
+            --version "$DT" \\
+            openhd/dev-release "deploy/$ZIP_NAME"
+            
+          cloudsmith push raw --republish \\
+            --name "openhd-${{ inputs.target }}-firmware-sha256" \\
+            --version "$DT" \\
+            openhd/dev-release "deploy/$ZIP_NAME.sha256"
