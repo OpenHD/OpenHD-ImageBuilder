@@ -104,13 +104,13 @@ perform_build() {
   echo "Starting build steps for: $platform"
   echo "------------------------------------------------------------"
 
-  if [[ -n "${DOWNLOAD_URL}" && "${DOWNLOAD_URL}" != " " ]]; then
+  if [[ -n "${DOWNLOAD_URL:-}" && "${DOWNLOAD_URL:-}" != " " ]]; then
     echo "Downloading Buildroot from $DOWNLOAD_URL ..."
-    wget -q "$DOWNLOAD_URL" -O buildroot.tar.gz
+    wget -q "${DOWNLOAD_URL:-}" -O buildroot.tar.gz
     tar -xf buildroot.tar.gz
-  elif [[ -n "${GITHUB_URL}" && "${GITHUB_URL}" != " " ]]; then
+  elif [[ -n "${GITHUB_URL:-}" && "${GITHUB_URL:-}" != " " ]]; then
     echo "Cloning Buildroot from GitHub: $GITHUB_URL ..."
-    git clone "$GITHUB_URL" buildroot
+    git clone "${GITHUB_URL:-}" buildroot
   else
     echo "Error: Neither DOWNLOAD_URL nor GITHUB_URL is set! Cannot proceed."
     exit 1
@@ -118,7 +118,7 @@ perform_build() {
 
   cd buildroot
 
-  if [[ "$PLATFORMIDENT" == "Orqa" ]]; then
+  if [[ "${PLATFORMIDENT:-}" == "Orqa" ]]; then
     echo "Executing Orqa Yocto build process..."
     sudo apt-get update && sudo apt-get install -y dos2unix
     dos2unix build.sh setup-environment || true
@@ -134,9 +134,9 @@ perform_build() {
   fi
 
   ./build.sh lunch <<EOF
-$TYPE_1
-$TYPE_2
-$TYPE_2
+${TYPE_1:-}
+${TYPE_2:-}
+${TYPE_2:-}
 EOF
 
   echo "Extracting buildroot so we can patch it..."
@@ -185,9 +185,9 @@ BR2_PACKAGE_POCO=y' "$defconf" || true
   fi
 
   ./build.sh lunch <<EOF
-$TYPE_1
-$TYPE_2
-$TYPE_2
+${TYPE_1:-}
+${TYPE_2:-}
+${TYPE_2:-}
 EOF
 
   echo "Starting build steps for: $platform"
