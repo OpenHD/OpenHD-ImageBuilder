@@ -368,135 +368,6 @@ jobs:
 
 
 
-      - name: Download Luckfox component packages from Cloudsmith
-        run: |
-          set -euo pipefail
-          mkdir -p luckfox-components
-          for name in openhd-luckfox-latest.tar.gz openhd-sys-utils-luckfox-latest.tar.gz; do
-            curl --fail --location --retry 5 --retry-delay 3 \
-              "${LUCKFOX_COMPONENT_BASE_URL}/${name}" -o "luckfox-components/${name}"
-            curl --fail --location --retry 5 --retry-delay 3 \
-              "${LUCKFOX_COMPONENT_BASE_URL}/${name}.sha256" -o "luckfox-components/${name}.sha256"
-          done
-          cd luckfox-components
-          sha256sum -c openhd-luckfox-latest.tar.gz.sha256
-          sha256sum -c openhd-sys-utils-luckfox-latest.tar.gz.sha256
-
-      - name: Download, verify and extract the stable Luckfox filesystem seed
-        run: |
-          set -euo pipefail
-          mkdir -p luckfox-ohd-seed-artifact
-          for name in openhd-luckfox-ohd-root.tar.gz openhd-luckfox-ohd-root.tar.gz.sha256 openhd-luckfox-ohd-root.tar.gz.manifest.json; do
-            curl --fail --location --retry 5 --retry-delay 3 \
-              "${LUCKFOX_COMPONENT_BASE_URL}/${name}" -o "luckfox-ohd-seed-artifact/${name}"
-          done
-          mkdir -p luckfox-ohd-seed
-          (
-            cd luckfox-ohd-seed-artifact
-            sha256sum -c openhd-luckfox-ohd-root.tar.gz.sha256
-          )
-          echo "LUCKFOX_OHD_SEED_SHA256=$(sha256sum luckfox-ohd-seed-artifact/openhd-luckfox-ohd-root.tar.gz | awk '{print $1}')" >>"${GITHUB_ENV}"
-          tar -xzf luckfox-ohd-seed-artifact/openhd-luckfox-ohd-root.tar.gz -C luckfox-ohd-seed
-
-      - name: Download and verify the stable Luckfox full firmware
-        id: luckfox-firmware-cache
-        continue-on-error: true
-        run: |
-          set -euo pipefail
-          mkdir -p luckfox-firmware-cache
-          curl --fail --location --retry 5 --retry-delay 3 \
-              "${LUCKFOX_COMPONENT_BASE_URL}/openhd-luckfox-firmware.zip" -o "luckfox-firmware-cache/firmware.zip"
-            curl --fail --location --retry 5 --retry-delay 3 \
-              "${LUCKFOX_COMPONENT_BASE_URL}/openhd-luckfox-firmware.zip.sha256" -o "luckfox-firmware-cache/firmware.zip.sha256"
-          cd luckfox-firmware-cache
-          sha256sum -c firmware.zip.sha256
-
-      # The publisher and image workflows can start together after this cache
-      # definition changes. Fall back to the pinned source run for that first
-      # build; subsequent builds use the durable Cloudsmith copy above.
-      - name: Download Luckfox full firmware from the source run
-        if: steps.luckfox-firmware-cache.outcome == 'failure'
-        uses: actions/download-artifact@v4
-        with:
-          repository: OpenHD/OpenHD-Luckfox
-          run-id: ${{ env.LUCKFOX_SOURCE_RUN_ID }}
-          name: ota-img
-          github-token: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
-          path: luckfox-firmware-input
-
-      - name: Stage the base Luckfox full firmware
-        run: |
-          set -euo pipefail
-          if [[ "${{ steps.luckfox-firmware-cache.outcome }}" == "success" ]]; then
-            firmware_source=luckfox-firmware-cache/firmware.zip
-          else
-            firmware_source=luckfox-firmware-input/firmware.zip
-          fi
-          test -s "${firmware_source}"
-          mkdir -p luckfox-output
-          cp "${firmware_source}" luckfox-output/firmware-base.zip
-
-      - name: Install SWUpdate image tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends cpio fakeroot file mtd-utils unzip zip
-
-      - name: Assemble flashable Luckfox update
-        run: |
-          fakeroot -- ./scripts/build_luckfox_update.sh \
-            "${GITHUB_WORKSPACE}/luckfox-ohd-seed" \
-            "${GITHUB_WORKSPACE}/luckfox-components/openhd-luckfox-latest.tar.gz" \
-            "${GITHUB_WORKSPACE}/luckfox-components/openhd-sys-utils-luckfox-latest.tar.gz" \
-            "${GITHUB_WORKSPACE}/luckfox-output"
-
-      - name: Timestamp the latest Luckfox update
-        run: |
-          set -euo pipefail
-          mv luckfox-output/OpenHD-Luckfox-latest.ohd \
-            "luckfox-output/OpenHD-Luckfox-full-${DT}.ohd"
-
-      - name: Put the updated OHD partition into the full Luckfox firmware
-        run: |
-          set -euo pipefail
-          bash ./scripts/repack_luckfox_firmware.sh \
-            "${GITHUB_WORKSPACE}/luckfox-output/firmware-base.zip" \
-            "${GITHUB_WORKSPACE}/luckfox-output/OpenHD-Luckfox-full-${DT}.ohd" \
-            "${GITHUB_WORKSPACE}/luckfox-output/firmware-${DT}.zip"
-          rm luckfox-output/firmware-base.zip
-
-      - name: Upload flashable Luckfox update
-        uses: actions/upload-artifact@v4
-        with:
-          name: openhd-image-luckfox-${{ env.DT }}
-          path: |
-            luckfox-output/OpenHD-Luckfox-full-${{ env.DT }}.ohd
-            luckfox-output/firmware-${{ env.DT }}.zip
-          if-no-files-found: error
-          retention-days: 30
-
-      - name: Install Cloudsmith CLI
-        run: pipx install cloudsmith-cli
-
-      - name: Publish Luckfox update files to Cloudsmith
-        run: |
-          set -euo pipefail
-          : "${CLOUDSMITH_API_KEY:?CLOUDSMITH_API_KEY secret is required to publish Luckfox files}"
-          ohd_package="luckfox-output/OpenHD-Luckfox-full-${DT}.ohd"
-          firmware_package="luckfox-output/firmware-${DT}.zip"
-          test -s "${ohd_package}"
-          test -s "${firmware_package}"
-          cloudsmith push raw --republish \
-            --name openhd-luckfox-full \
-            --version "${DT}" \
-            openhd/luckfox "${ohd_package}"
-          cloudsmith push raw --republish \
-            --name firmware \
-            --version "${DT}" \
-            openhd/luckfox "${firmware_package}"
-
-  openhd-hardware-x20:
-
-
   openhd-hardware-x20:
     name: openhd-hardware-x20
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'openhd-hardware'
@@ -716,6 +587,7 @@ jobs:
             buildroot/output/images/*
             /home/orqa/yocto-data/build/tmp/deploy/images/*
           if-no-files-found: warn
+
 
 
 
