@@ -1,4 +1,4 @@
-GITHUB_URL="https://github.com/OpenHD/orqa_build.git"
+GITHUB_URL="https://github.com/OpenHD/orqa_main.git"
 PLATFORMIDENT="Orqa"
 TYPE_1="1"
 TYPE_2="0"
