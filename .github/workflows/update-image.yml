@@ -370,7 +370,7 @@ jobs:
   openhd-hardware-x20:
 
 
-openhd-hardware-luckfox:
+  openhd-hardware-luckfox:
     name: openhd-hardware-luckfox
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'openhd-hardware' || inputs.target == 'luckfox-update'
     runs-on: ubuntu-24.04
@@ -730,6 +730,7 @@ openhd-hardware-luckfox:
             buildroot/output/images/*
             /home/orqa/yocto-data/build/tmp/deploy/images/*
           if-no-files-found: warn
+
 
 
 
