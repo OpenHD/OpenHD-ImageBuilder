@@ -419,21 +419,22 @@ jobs:
           sudo apt-get autoremove -y
           sudo apt-get clean
           df -h "$GITHUB_WORKSPACE"
-      - name: Prepare and build SDK
-        env:
-          OPENHD_SUBMODULE_TOKEN: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
+      - name: Download Base Image & Inject OpenHD
         run: |
           echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
-          touch additionalFiles/dev-build
-          chmod +x scripts/sdk_builder.sh
+          mkdir -p workdir && cd workdir
           
-          # Configure git to use the token for OpenHD repositories
-          if [ -n "${OPENHD_SUBMODULE_TOKEN}" ]; then
-            git config --global url."https://x-access-token:${OPENHD_SUBMODULE_TOKEN}@github.com/OpenHD/".insteadOf "https://github.com/OpenHD/"
+          # 1. Download Base Image
+          if [ "${{ matrix.target }}" == "orqa" ]; then
+            echo "Downloading Orqa Base Image from GDrive..."
+            ../scripts/gdrive.sh "https://drive.google.com/file/d/1lYf-aFTybxMjypOnnGbCbTNpYZJGX9xA/view?usp=sharing" orqa-base.img
+          else
+            echo "TODO: Add artifact download step for ${{ matrix.target }} base image"
           fi
           
-          # The sdk_builder.sh handles dependency installation and buildroot/SDK process
-          ./scripts/sdk_builder.sh "${{ matrix.target }}"
+          # 2. Download OpenHD latest binaries from Cloudsmith
+          # e.g., curl -L -O https://dl.cloudsmith.io/public/openhd/dev-release/raw/files/openhd-${{ matrix.target }}-latest.tar.gz
+          echo "TODO: Download OpenHD binaries and inject them into base image"
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
