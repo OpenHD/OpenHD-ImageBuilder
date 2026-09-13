@@ -420,10 +420,18 @@ jobs:
           sudo apt-get clean
           df -h "$GITHUB_WORKSPACE"
       - name: Prepare and build SDK
+        env:
+          OPENHD_SUBMODULE_TOKEN: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
         run: |
           echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
           touch additionalFiles/dev-build
           chmod +x scripts/sdk_builder.sh
+          
+          # Configure git to use the token for OpenHD repositories
+          if [ -n "${OPENHD_SUBMODULE_TOKEN}" ]; then
+            git config --global url."https://x-access-token:${OPENHD_SUBMODULE_TOKEN}@github.com/OpenHD/".insteadOf "https://github.com/OpenHD/"
+          fi
+          
           # The sdk_builder.sh handles dependency installation and buildroot/SDK process
           ./scripts/sdk_builder.sh "${{ matrix.target }}"
       - name: Upload Artifact
