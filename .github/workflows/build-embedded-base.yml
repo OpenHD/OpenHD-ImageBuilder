@@ -1,0 +1,58 @@
+name: Build Embedded Base Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Target SDK to build the base image for
+        required: true
+        type: choice
+        default: luckfox
+        options:
+          - orqa
+          - luckfox
+          - lyra
+          - aura
+          - rv1106
+          - rv1103
+
+jobs:
+  build-base:
+    name: build-base-${{ inputs.target }}
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Free runner disk space
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup
+          sudo apt-get purge -y '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' \
+            azure-cli google-chrome-stable firefox powershell \
+            microsoft-edge-stable mono-devel || true
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+          df -h "$GITHUB_WORKSPACE"
+          
+      - name: Prepare and build SDK
+        env:
+          OPENHD_SUBMODULE_TOKEN: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
+        run: |
+          echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
+          chmod +x scripts/sdk_builder.sh
+          
+          if [ -n "${OPENHD_SUBMODULE_TOKEN}" ]; then
+            git config --global url."https://x-access-token:${OPENHD_SUBMODULE_TOKEN}@github.com/OpenHD/".insteadOf "https://github.com/OpenHD/"
+          fi
+          
+          # Run the builder script which executes the Buildroot/Yocto process
+          ./scripts/sdk_builder.sh "${{ inputs.target }}"
+          
+      - name: Upload Base Image Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: base-image-${{ inputs.target }}-${{ env.DT }}
+          path: |
+            buildroot/output/image/*
+            buildroot/output/images/*
+            /home/orqa/yocto-data/build/tmp/deploy/images/*
+          if-no-files-found: warn
