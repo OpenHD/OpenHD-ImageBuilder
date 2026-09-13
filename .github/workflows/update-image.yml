@@ -10,13 +10,19 @@ on:
         default: all
         options:
           - all
+          - supported
+          - openhd-hardware
+          - full
+          - lite
+          - experimental
+          - embedded-sdk
           - x21-update
   push:
     branches:
       - dev-release
 
 concurrency:
-  group: final-image-ci-${{ github.event_name == 'workflow_dispatch' && inputs.target == 'x21-update' && 'x21-update' || github.ref }}
+  group: final-image-ci-${{ github.event_name == 'workflow_dispatch' && inputs.target || github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -28,9 +34,62 @@ env:
   X21_SOURCE_RUN_ID: "34479273960"
 
 jobs:
-  x21-update:
-    name: fast-x21-update
-    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'x21-update'
+  # =========================================================================
+  # 1. Fully Supported (Raspberry Pi)
+  # =========================================================================
+  supported-images:
+    name: supported-${{ matrix.target }}
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'supported'
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - pi-bullseye
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare development image
+        run: |
+          echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
+          touch additionalFiles/dev-build
+      - name: Free runner disk space
+        run: |
+          # The Android SDK and language toolchains occupy most of a hosted
+          # runner's disk. Radxa images need enough temporary space for both
+          # the downloaded base image and the expanded working image.
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup
+          sudo apt-get purge -y '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' \
+            azure-cli google-chrome-stable firefox powershell \
+            microsoft-edge-stable mono-devel || true
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+          df -h "$GITHUB_WORKSPACE"
+      - name: Install host tools and current e2fsprogs
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip curl git qemu-user-static binfmt-support
+          bash ./scripts/install_current_e2fsprogs.sh
+          sudo ./install_dep.sh
+      - name: Build image
+        run: sudo ./build.sh "${{ matrix.target }}" false false true
+      - name: Normalize image
+        run: |
+          set -euo pipefail
+          mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
+          test "${#images[@]}" -eq 1
+          sudo mv "${images[0]}" "deploy/openhd-image-${{ matrix.target }}-${DT}.img"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: openhd-image-${{ matrix.target }}-${{ env.DT }}
+          path: deploy/*.img
+          if-no-files-found: error
+
+  # =========================================================================
+  # 2. OpenHD Hardware (X21, X20)
+  # =========================================================================
+  openhd-hardware-x21:
+    name: openhd-hardware-x21
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'openhd-hardware' || inputs.target == 'x21-update'
     runs-on: ubuntu-24.04
     env:
       CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
@@ -166,9 +225,39 @@ jobs:
             --version "${DT}" \
             openhd/x21 "${firmware_package}"
 
+  openhd-hardware-x20:
+    name: openhd-hardware-x20
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'openhd-hardware'
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare and install dependencies
+        run: |
+          echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
+          touch additionalFiles/dev-build
+          sudo apt-get update
+          sudo apt-get install -y qemu-user-static
+          sudo ./install_dep.sh
+      - name: Build X20 image
+        run: sudo ./build.sh x20 false false false
+      - name: Normalize image
+        run: |
+          set -euo pipefail
+          mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
+          test "${#images[@]}" -eq 1
+          sudo mv "${images[0]}" "deploy/openhd-image-x20-${DT}.img"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: openhd-image-x20-${{ env.DT }}
+          path: deploy/*.img
+          if-no-files-found: error
+
+  # =========================================================================
+  # 3. Full (running QOpenHD)
+  # =========================================================================
   full-images:
     name: full-${{ matrix.target }}
-    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all'
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'full'
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
@@ -177,7 +266,6 @@ jobs:
           - rock5a
           - rock5b
           - radxa-zero3w
-          - pi-bullseye
           - radxa-rock3a
           - x86-minimal
           - x86-noble
@@ -190,7 +278,7 @@ jobs:
       - name: Free runner disk space
         run: |
           # The Android SDK and language toolchains occupy most of a hosted
-          # runner's disk.  Radxa images need enough temporary space for both
+          # runner's disk. Radxa images need enough temporary space for both
           # the downloaded base image and the expanded working image.
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup
           sudo apt-get purge -y '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' \
@@ -219,36 +307,12 @@ jobs:
           path: deploy/*.img
           if-no-files-found: error
 
-  x20-image:
-    name: full-x20
-    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all'
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-      - name: Prepare and install dependencies
-        run: |
-          echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
-          touch additionalFiles/dev-build
-          sudo apt-get update
-          sudo apt-get install -y qemu-user-static
-          sudo ./install_dep.sh
-      - name: Build X20 image
-        run: sudo ./build.sh x20 false false false
-      - name: Normalize image
-        run: |
-          set -euo pipefail
-          mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
-          test "${#images[@]}" -eq 1
-          sudo mv "${images[0]}" "deploy/openhd-image-x20-${DT}.img"
-      - uses: actions/upload-artifact@v4
-        with:
-          name: openhd-image-x20-${{ env.DT }}
-          path: deploy/*.img
-          if-no-files-found: error
-
+  # =========================================================================
+  # 4. Lite (OpenHD Glide) & Experimental Pi 5
+  # =========================================================================
   lite-images:
     name: lite-${{ matrix.target }}
-    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all'
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'lite'
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
@@ -297,9 +361,9 @@ jobs:
           path: deploy/*.img
           if-no-files-found: error
 
-  pi5-image:
-    name: full-pi5-bookworm
-    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all'
+  experimental-pi5-image:
+    name: experimental-pi5-bookworm
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'lite' || inputs.target == 'experimental'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -326,3 +390,47 @@ jobs:
           name: OpenHD-RPi5-Bookworm-arm64
           path: deploy/OpenHD-RPi5-Bookworm-arm64.img
           if-no-files-found: error
+
+  # =========================================================================
+  # 5. Embedded SDKs (Buildroot / Cross-compiled)
+  # =========================================================================
+  embedded-sdk-images:
+    name: embedded-sdk-${{ matrix.target }}
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'embedded-sdk'
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - orqa
+          - luckfox
+          - lyra
+          - aura
+          - rv1106
+          - rv1103
+    steps:
+      - uses: actions/checkout@v4
+      - name: Free runner disk space
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup
+          sudo apt-get purge -y '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' \
+            azure-cli google-chrome-stable firefox powershell \
+            microsoft-edge-stable mono-devel || true
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+          df -h "$GITHUB_WORKSPACE"
+      - name: Prepare and build SDK
+        run: |
+          echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
+          touch additionalFiles/dev-build
+          chmod +x scripts/sdk_builder.sh
+          # The sdk_builder.sh handles dependency installation and buildroot/SDK process
+          ./scripts/sdk_builder.sh "${{ matrix.target }}"
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: embedded-sdk-${{ matrix.target }}-${{ env.DT }}
+          path: |
+            buildroot/output/image/*
+            buildroot/output/images/*
+          if-no-files-found: warn
