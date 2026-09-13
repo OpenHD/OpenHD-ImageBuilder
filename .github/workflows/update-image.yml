@@ -267,8 +267,7 @@ jobs:
             cd luckfox-ohd-seed-artifact
             sha256sum -c openhd-luckfox-ohd-root.tar.gz.sha256
           )
-          echo "LUCKFOX_OHD_SEED_SHA256=$(sha256sum luckfox-ohd-seed-artifact/openhd-luckfox-ohd-root.tar.gz | awk '{print openhd-hardware-x20:
-    name: openhd-hardware-x20}')" >>"${GITHUB_ENV}"
+          echo "LUCKFOX_OHD_SEED_SHA256=$(sha256sum luckfox-ohd-seed-artifact/openhd-luckfox-ohd-root.tar.gz | awk '{print $1}')" >>"${GITHUB_ENV}"
           tar -xzf luckfox-ohd-seed-artifact/openhd-luckfox-ohd-root.tar.gz -C luckfox-ohd-seed
 
       - name: Download and verify the stable Luckfox full firmware
@@ -367,20 +366,7 @@ jobs:
             --version "${DT}" \
             openhd/luckfox "${firmware_package}"
 
-  openhd-hardware-x20:
 
-
-  openhd-hardware-luckfox:
-    name: openhd-hardware-luckfox
-    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'openhd-hardware' || inputs.target == 'luckfox-update'
-    runs-on: ubuntu-24.04
-    env:
-      CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set Luckfox release timestamp
-        run: echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >>"${GITHUB_ENV}"
 
       - name: Download Luckfox component packages from Cloudsmith
         run: |
@@ -730,6 +716,8 @@ jobs:
             buildroot/output/images/*
             /home/orqa/yocto-data/build/tmp/deploy/images/*
           if-no-files-found: warn
+
+
 
 
 
