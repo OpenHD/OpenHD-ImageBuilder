@@ -103,20 +103,17 @@ perform_build() {
   echo "Starting build steps for: $platform"
   echo "------------------------------------------------------------"
 
-    if [[ -n "${DOWNLOAD_URL}" && "${DOWNLOAD_URL}" != " " ]]; then
+  if [[ -n "${DOWNLOAD_URL}" && "${DOWNLOAD_URL}" != " " ]]; then
     echo "Downloading Buildroot from $DOWNLOAD_URL ..."
     wget -q "$DOWNLOAD_URL" -O buildroot.tar.gz
     tar -xf buildroot.tar.gz
-
-
-    elif [[ -n "${GITHUB_URL}" && "${GITHUB_URL}" != " " ]]; then
+  elif [[ -n "${GITHUB_URL}" && "${GITHUB_URL}" != " " ]]; then
     echo "Cloning Buildroot from GitHub: $GITHUB_URL ..."
     git clone "$GITHUB_URL" buildroot
-
-    else
+  else
     echo "Error: Neither DOWNLOAD_URL nor GITHUB_URL is set! Cannot proceed."
     exit 1
-    fi
+  fi
 
   cd buildroot
 
@@ -132,19 +129,17 @@ perform_build() {
     return
   fi
 
-./build.sh lunch <<EOF
+  ./build.sh lunch <<EOF
 $TYPE_1
 $TYPE_2
 $TYPE_2
 EOF
 
-  echo "Starting confiugation steps for: $platform"
-  echo "------------------------------------------------------------"
+  echo "Extracting buildroot so we can patch it..."
+  make buildroot_create -C sysdrv || true
 
-  if [ -d "sysdrv/tools/board/buildroot" ]; then
-    echo "Luckfox SDK detected. Extracting Buildroot..."
-    make buildroot_create -C sysdrv || true
-  fi
+  echo "Starting configuration steps for: $platform"
+  echo "------------------------------------------------------------"
 
   echo "adding Wifi driver (8812eu)"
   if [ -d "sysdrv/source/kernel/drivers/net/wireless/realtek" ]; then
@@ -160,7 +155,7 @@ EOF
     cp -rfv ../additionalFiles/Buildroot/openhd sysdrv/source/buildroot/buildroot-2023.02.6/package/ || true
     rm -Rf sysdrv/source/buildroot/buildroot-2023.02.6/package/poco || true
     cp -rfv ../additionalFiles/Buildroot/UpdatedDependencies/poco sysdrv/source/buildroot/buildroot-2023.02.6/package/poco || true
-    
+
     if ! grep -q "package/openhd/Config.in" sysdrv/source/buildroot/buildroot-2023.02.6/package/Config.in; then
       sed -i '/menu "Audio and video applications"/a\        source "package/openhd/Config.in"' sysdrv/source/buildroot/buildroot-2023.02.6/package/Config.in
     fi
@@ -170,7 +165,7 @@ EOF
 CONFIG_SYSDRV_ENABLE_OPENHD=y
 \$(eval \$(call MACRO_CHECK_ENABLE_PKG, RK_ENABLE_OPENHD))" >> sysdrv/cfg/package.mk
     fi
-    
+
     # Patch all luckfox defconfigs
     for defconf in sysdrv/tools/board/buildroot/*_defconfig; do
       if [ -f "$defconf" ]; then
@@ -182,67 +177,18 @@ BR2_PACKAGE_POCO=y' "$defconf" || true
     done
   fi
 
+  ./build.sh lunch <<EOF
+$TYPE_1
+$TYPE_2
+$TYPE_2
+EOF
+
   echo "Starting build steps for: $platform"
   echo "------------------------------------------------------------"
+  ./build.sh
 
-    if [[ -n "${DOWNLOAD_URL}" && "${DOWNLOAD_URL}" != " " ]]; then
-    echo "Downloading Buildroot from $DOWNLOAD_URL ..."
-    wget -q "$DOWNLOAD_URL" -O buildroot.tar.gz
-    tar -xf buildroot.tar.gz
+  echo "Build process for $platform completed."
+  echo
+}
 
-
-    elif [[ -n "${GITHUB_URL}" && "${GITHUB_URL}" != " " ]]; then
-    echo "Cloning Buildroot from GitHub: $GITHUB_URL ..."
-    git clone "$GITHUB_URL" buildroot
-
-    else
-    echo "Error: Neither DOWNLOAD_URL nor GITHUB_URL is set! Cannot proceed."
-    exit 1
-    fi
-
-  cd buildroot
-
-  if [[ "$PLATFORMIDENT" == "Orqa" ]]; then
-    echo "Executing Orqa Yocto build process..."
-    sudo mkdir -p /home/orqa
-    sudo chown -R $(whoami):$(whoami) /home/orqa
-    sudo apt-get update
-    sudo apt-get install -y gawk wget git diffstat unzip texinfo gcc build-essential chrpath socat cpio python3 python3-pip python3-pexpect xz-utils debianutils iputils-ping python3-git python3-jinja2 libegl1-mesa libsdl1.2-dev xterm python3-subunit mesa-common-dev zstd liblz4-tool
-    ./build.sh pull
-    ./build.sh build
-    echo "Orqa Yocto build completed."
-    return
-  fi
-
-./build.sh lunch <<EOF
-$TYPE_1
-$TYPE_2
-$TYPE_2
-EOF
-
-  make buildroot_create -C sysdrv || true
-  echo "Starting confiugation steps for: $platform"
-  echo "------------------------------------------------------------"
  
-  echo "adding Wifi driver (8812eu)"
-  cd sysdrv/source/kernel/drivers/net/wireless/realtek
-  git clone https://github.com/openhd/rtl88x2eu
-  cd ../../../../../../../
-
-  echo "adding OpenHD and updating Poco"
-  cp -rfv ../additionalFiles/Buildroot/openhd sysdrv/source/buildroot/buildroot-2023.02.6/package/
-  rm -Rf sysdrv/source/buildroot/buildroot-2023.02.6/package/poco
-  cp -rfv ../additionalFiles/Buildroot/UpdatedDependencies/poco sysdrv/source/buildroot/buildroot-2023.02.6/package/poco
-  echo "adding OpenHD configuation option"
-  sed -i '/menu "Audio and video applications"/a\        source "package/openhd/Config.in"' sysdrv/source/buildroot/buildroot-2023.02.6/package/Config.in
-  echo -e "\n# Enable build OpenHD\nCONFIG_SYSDRV_ENABLE_OPENHD=y\n\$(eval \$(call MACRO_CHECK_ENABLE_PKG, RK_ENABLE_OPENHD))" >> sysdrv/cfg/package.mk
-
-./build.sh lunch <<EOF
-$TYPE_1
-$TYPE_2
-$TYPE_2
-EOF
-
-sed -i '/BR2_PACKAGE_BUSYBOX_SHOW_OTHERS=y/a\BR2_PACKAGE_OPENHD=y\nBR2_PACKAGE_POCO=y' config/buildroot_defconfig
-
-  
