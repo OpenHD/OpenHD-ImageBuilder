@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -euo pipefail
 
 ################################################################################
 # OpenHD
@@ -119,6 +120,9 @@ perform_build() {
 
   if [[ "$PLATFORMIDENT" == "Orqa" ]]; then
     echo "Executing Orqa Yocto build process..."
+    sudo apt-get update && sudo apt-get install -y dos2unix
+    dos2unix build.sh setup-environment || true
+    sed -i 's/\r$//' build.sh setup-environment || true
     sudo mkdir -p /home/orqa
     sudo chown -R $(whoami):$(whoami) /home/orqa
     sudo apt-get update
@@ -165,6 +169,9 @@ EOF
 CONFIG_SYSDRV_ENABLE_OPENHD=y
 \$(eval \$(call MACRO_CHECK_ENABLE_PKG, RK_ENABLE_OPENHD))" >> sysdrv/cfg/package.mk
     fi
+
+    # Remove python-pillow from all luckfox defconfigs to prevent build failure on Ubuntu 24.04
+    sed -i 's/BR2_PACKAGE_PYTHON_PILLOW=y/# BR2_PACKAGE_PYTHON_PILLOW is not set/g' sysdrv/tools/board/buildroot/*_defconfig || true
 
     # Patch all luckfox defconfigs
     for defconf in sysdrv/tools/board/buildroot/*_defconfig; do
