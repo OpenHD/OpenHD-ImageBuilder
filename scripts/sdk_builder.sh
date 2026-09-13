@@ -151,7 +151,6 @@ sed -i '/BR2_PACKAGE_BUSYBOX_SHOW_OTHERS=y/a\BR2_PACKAGE_OPENHD=y\nBR2_PACKAGE_P
 
   echo "Starting build steps for: $platform"
   echo "------------------------------------------------------------"
-exit
 ./build.sh
 
   echo "Build process for $platform completed (placeholder)."
