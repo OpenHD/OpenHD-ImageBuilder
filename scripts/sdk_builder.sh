@@ -192,3 +192,25 @@ EOF
 }
 
  
+###############################################################################
+# 4) Main logic: parse argument, or list and prompt if none
+###############################################################################
+if [[ -z "$1" ]]; then
+  # No platform given. List available ones and let user choose:
+  list_platforms
+
+  read -rp "Enter a platform name to build (or press Ctrl+C to exit): " chosen_platform
+  if [[ -z "$chosen_platform" ]]; then
+    echo "No platform selected; exiting."
+    exit 1
+  fi
+  # Now load config & build
+  load_config "$chosen_platform"
+  perform_build "$chosen_platform"
+
+else
+  # A specific platform was given as an argument
+  platform="$1"
+  load_config "$platform"
+  perform_build "$platform"
+fi
