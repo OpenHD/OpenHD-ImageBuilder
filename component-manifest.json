@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "component": "openhd",
+  "component_version": "3.0.0-evo",
+  "package_version": "3.0.0-evo-2044bb4cc73c",
+  "platform": "x21b",
+  "targets": ["x21b", "luckfox-aura", "rv1126b"],
+  "architecture": "aarch64",
+  "source_commit": "2044bb4cc73c709ac856f6a8245e10df0587599e",
+  "sdk_sha256": "b0ef07b92c904d09e389c8e3e804ef55490ba7fba9a880dcf2fd2d3969d6f6a4",
+  "sdk_buildroot_commit": "4ca9f2e6f2d3570bc9e2ae835e1727ebb951122f",
+  "generated_at": "2026-09-12T23:55:32Z"
+}

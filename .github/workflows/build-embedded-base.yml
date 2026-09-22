@@ -26,8 +26,8 @@ jobs:
       - name: Free runner disk space
         run: |
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup
-          sudo apt-get purge -y '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' \\
-            azure-cli google-chrome-stable firefox powershell \\
+          sudo apt-get purge -y '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' \
+            azure-cli google-chrome-stable firefox powershell \
             microsoft-edge-stable mono-devel || true
           sudo apt-get autoremove -y
           sudo apt-get clean
@@ -88,12 +88,12 @@ jobs:
           CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
         run: |
           : "${CLOUDSMITH_API_KEY:?CLOUDSMITH_API_KEY secret is required to publish}"
-          cloudsmith push raw --republish \\
-            --name "openhd-${{ inputs.target }}-firmware" \\
-            --version "$DT" \\
+          cloudsmith push raw --republish \
+            --name "openhd-${{ inputs.target }}-firmware" \
+            --version "$DT" \
             openhd/dev-release "deploy/$ZIP_NAME"
             
-          cloudsmith push raw --republish \\
-            --name "openhd-${{ inputs.target }}-firmware-sha256" \\
-            --version "$DT" \\
+          cloudsmith push raw --republish \
+            --name "openhd-${{ inputs.target }}-firmware-sha256" \
+            --version "$DT" \
             openhd/dev-release "deploy/$ZIP_NAME.sha256"
