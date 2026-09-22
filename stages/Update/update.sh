@@ -43,8 +43,10 @@ ensure_rtlsdr_runtime() {
   fi
 
   if apt-cache show librtlsdr0 >/dev/null 2>&1; then
-    $APT install librtlsdr0
-    return 0
+    if $APT install librtlsdr0; then
+      return 0
+    fi
+    echo "Repository librtlsdr0 install failed; trying the pinned amd64 package." >&2
   fi
 
   if [[ "$(dpkg --print-architecture)" != "amd64" ]]; then
