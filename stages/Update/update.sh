@@ -36,6 +36,33 @@ OPENHD_MEDIA_RUNTIME_PACKAGES="libsodium23 libgstreamer1.0-0 libgstreamer-plugin
 if [[ "${RPI5:-false}" == "true" ]]; then
   OPENHD_MEDIA_RUNTIME_PACKAGES+=" gstreamer1.0-libcamera"
 fi
+
+ensure_rtlsdr_runtime() {
+  if dpkg-query -W -f='${db:Status-Abbrev}' librtlsdr0 2>/dev/null | grep -q '^ii'; then
+    return 0
+  fi
+
+  if apt-cache show librtlsdr0 >/dev/null 2>&1; then
+    $APT install librtlsdr0
+    return 0
+  fi
+
+  if [[ "$(dpkg --print-architecture)" != "amd64" ]]; then
+    echo "librtlsdr0 is unavailable for $(dpkg --print-architecture)." >&2
+    return 1
+  fi
+
+  # Ubuntu Noble replaced librtlsdr0 with an ABI-incompatible librtlsdr2,
+  # while the current OpenHD amd64 package still links librtlsdr.so.0.
+  local package=/tmp/librtlsdr0_0.6.0-4_amd64.deb
+  curl -fsSL --retry 4 --retry-all-errors \
+    https://archive.ubuntu.com/ubuntu/pool/universe/r/rtl-sdr/librtlsdr0_0.6.0-4_amd64.deb \
+    -o "${package}"
+  echo '55fae12bca5dd27c4a5dca2937b018b134a7c6fa37261f3113822ab6e36d050f  /tmp/librtlsdr0_0.6.0-4_amd64.deb' \
+    | sha256sum -c -
+  apt -o Dpkg::Options::=--force-confnew -y install "${package}"
+  rm -f "${package}"
+}
 if [[ "${OS:-}" == "radxa-debian-rock5a" ||
       "${OS:-}" == "radxa-debian-rock5b" ]]; then
   OPENHD_MEDIA_RUNTIME_PACKAGES+=" gstreamer1.0-rockchip1"
@@ -315,6 +342,7 @@ fi
 # Best-effort update
 refresh_radxa_apt_for_lite
 refresh_apt_indices
+ensure_rtlsdr_runtime
 
 print_linux_package_metadata
 

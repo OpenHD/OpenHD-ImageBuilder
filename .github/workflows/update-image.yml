@@ -15,9 +15,7 @@ on:
           - full
           - lite
           - experimental
-          - embedded-sdk
           - x21-update
-          - luckfox-update
   push:
     branches:
       - dev-release
@@ -33,8 +31,6 @@ env:
   BRANCH: dev-release
   X21_COMPONENT_BASE_URL: https://dl.cloudsmith.io/public/openhd/dev-release/raw/files
   X21_SOURCE_RUN_ID: "34479273960"
-  LUCKFOX_COMPONENT_BASE_URL: https://dl.cloudsmith.io/public/openhd/dev-release/raw/files
-  LUCKFOX_SOURCE_RUN_ID: "0"
 
 jobs:
   # =========================================================================
@@ -102,19 +98,27 @@ jobs:
       - name: Set X21B release timestamp
         run: echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >>"${GITHUB_ENV}"
 
+      - name: Resolve a compatible X21B component pair
+        run: |
+          python3 scripts/resolve_matching_components.py \
+            --platform x21b \
+            --openhd-prefix openhd-x21b- \
+            --sysutils-prefix openhd-sys-utils-x21b- \
+            >>"${GITHUB_ENV}"
+
       - name: Download X21B component packages from Cloudsmith
         run: |
           set -euo pipefail
           mkdir -p x21-components
-          for name in openhd-x21b-latest.tar.gz openhd-sys-utils-x21b-latest.tar.gz; do
+          for name in "${OPENHD_COMPONENT_NAME}" "${SYSUTILS_COMPONENT_NAME}"; do
             curl --fail --location --retry 5 --retry-delay 3 \
               "${X21_COMPONENT_BASE_URL}/${name}" -o "x21-components/${name}"
             curl --fail --location --retry 5 --retry-delay 3 \
               "${X21_COMPONENT_BASE_URL}/${name}.sha256" -o "x21-components/${name}.sha256"
           done
           cd x21-components
-          sha256sum -c openhd-x21b-latest.tar.gz.sha256
-          sha256sum -c openhd-sys-utils-x21b-latest.tar.gz.sha256
+          sha256sum -c "${OPENHD_COMPONENT_NAME}.sha256"
+          sha256sum -c "${SYSUTILS_COMPONENT_NAME}.sha256"
 
       - name: Download, verify and extract the stable X21B filesystem seed
         run: |
@@ -179,8 +183,8 @@ jobs:
         run: |
           fakeroot -- ./scripts/build_x21_update.sh \
             "${GITHUB_WORKSPACE}/x21-ohd-seed" \
-            "${GITHUB_WORKSPACE}/x21-components/openhd-x21b-latest.tar.gz" \
-            "${GITHUB_WORKSPACE}/x21-components/openhd-sys-utils-x21b-latest.tar.gz" \
+            "${GITHUB_WORKSPACE}/x21-components/${OPENHD_COMPONENT_NAME}" \
+            "${GITHUB_WORKSPACE}/x21-components/${SYSUTILS_COMPONENT_NAME}" \
             "${GITHUB_WORKSPACE}/x21-output"
 
       - name: Timestamp the latest X21B update
@@ -227,156 +231,6 @@ jobs:
             --name firmware \
             --version "${DT}" \
             openhd/x21 "${firmware_package}"
-
-  openhd-hardware-luckfox:
-    name: openhd-hardware-luckfox-${{ matrix.target }}
-    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'openhd-hardware' || inputs.target == 'luckfox-update'
-    runs-on: ubuntu-24.04
-    strategy:
-      fail-fast: false
-      matrix:
-        target:
-          - luckfox
-          - lyra
-          - aura
-          - rv1106
-          - rv1103
-          - luckfox_picoA
-    env:
-      CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set Luckfox release timestamp
-        run: echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >>"$GITHUB_ENV"
-
-      - name: Download Luckfox component packages from Cloudsmith
-        run: |
-          set -euo pipefail
-          mkdir -p luckfox-components
-          for name in openhd-${{ matrix.target }}-latest.tar.gz openhd-sys-utils-${{ matrix.target }}-latest.tar.gz; do
-            curl --fail --location --retry 5 --retry-delay 3 \
-              "${LUCKFOX_COMPONENT_BASE_URL}/${name}" -o "luckfox-components/${name}"
-            curl --fail --location --retry 5 --retry-delay 3 \
-              "${LUCKFOX_COMPONENT_BASE_URL}/${name}.sha256" -o "luckfox-components/${name}.sha256"
-          done
-          cd luckfox-components
-          sha256sum -c openhd-${{ matrix.target }}-latest.tar.gz.sha256
-          sha256sum -c openhd-sys-utils-${{ matrix.target }}-latest.tar.gz.sha256
-
-      - name: Download, verify and extract the stable Luckfox filesystem seed
-        run: |
-          set -euo pipefail
-          mkdir -p luckfox-ohd-seed-artifact
-          for name in openhd-${{ matrix.target }}-ohd-root.tar.gz openhd-${{ matrix.target }}-ohd-root.tar.gz.sha256; do
-            curl --fail --location --retry 5 --retry-delay 3 \
-              "${LUCKFOX_COMPONENT_BASE_URL}/${name}" -o "luckfox-ohd-seed-artifact/${name}"
-          done
-          mkdir -p luckfox-ohd-seed
-          (
-            cd luckfox-ohd-seed-artifact
-            sha256sum -c openhd-${{ matrix.target }}-ohd-root.tar.gz.sha256
-          )
-          echo "LUCKFOX_OHD_SEED_SHA256=$(sha256sum luckfox-ohd-seed-artifact/openhd-${{ matrix.target }}-ohd-root.tar.gz | awk '{print $1}')" >>"$GITHUB_ENV"
-          tar -xzf luckfox-ohd-seed-artifact/openhd-${{ matrix.target }}-ohd-root.tar.gz -C luckfox-ohd-seed
-
-      - name: Download and verify the stable Luckfox full firmware
-        id: luckfox-firmware-cache
-        continue-on-error: true
-        run: |
-          set -euo pipefail
-          mkdir -p luckfox-firmware-cache
-          curl --fail --location --retry 5 --retry-delay 3 \
-              "${LUCKFOX_COMPONENT_BASE_URL}/openhd-${{ matrix.target }}-firmware.zip" -o "luckfox-firmware-cache/firmware.zip"
-          curl --fail --location --retry 5 --retry-delay 3 \
-              "${LUCKFOX_COMPONENT_BASE_URL}/openhd-${{ matrix.target }}-firmware.zip.sha256" -o "luckfox-firmware-cache/firmware.zip.sha256"
-          cd luckfox-firmware-cache
-          sha256sum -c firmware.zip.sha256
-
-      # The publisher and image workflows can start together after this cache
-      # definition changes. Fall back to the pinned source run for that first
-      # build; subsequent builds use the durable Cloudsmith copy above.
-      - name: Download Luckfox full firmware from the source run
-        if: steps.luckfox-firmware-cache.outcome == 'failure'
-        uses: actions/download-artifact@v4
-        with:
-          repository: OpenHD/OpenHD-Luckfox
-          run-id: ${{ env.LUCKFOX_SOURCE_RUN_ID }}
-          name: ota-img
-          github-token: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
-          path: luckfox-firmware-input
-
-      - name: Stage the base Luckfox full firmware
-        run: |
-          set -euo pipefail
-          if [[ "${{ steps.luckfox-firmware-cache.outcome }}" == "success" ]]; then
-            firmware_source=luckfox-firmware-cache/firmware.zip
-          else
-            firmware_source=luckfox-firmware-input/firmware.zip
-          fi
-          test -s "${firmware_source}"
-          mkdir -p luckfox-output
-          cp "${firmware_source}" luckfox-output/firmware-base.zip
-
-      - name: Install SWUpdate image tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends cpio fakeroot file mtd-utils unzip zip
-
-      - name: Assemble flashable Luckfox update
-        run: |
-          fakeroot -- ./scripts/build_luckfox_update.sh \
-            "${GITHUB_WORKSPACE}/luckfox-ohd-seed" \
-            "${GITHUB_WORKSPACE}/luckfox-components/openhd-${{ matrix.target }}-latest.tar.gz" \
-            "${GITHUB_WORKSPACE}/luckfox-components/openhd-sys-utils-${{ matrix.target }}-latest.tar.gz" \
-            "${GITHUB_WORKSPACE}/luckfox-output"
-
-      - name: Timestamp the latest Luckfox update
-        run: |
-          set -euo pipefail
-          mv luckfox-output/OpenHD-Luckfox-latest.ohd \
-            "luckfox-output/OpenHD-${{ matrix.target }}-full-${DT}.ohd"
-
-      - name: Put the updated OHD partition into the full Luckfox firmware
-        run: |
-          set -euo pipefail
-          bash ./scripts/repack_luckfox_firmware.sh \
-            "${GITHUB_WORKSPACE}/luckfox-output/firmware-base.zip" \
-            "${GITHUB_WORKSPACE}/luckfox-output/OpenHD-${{ matrix.target }}-full-${DT}.ohd" \
-            "${GITHUB_WORKSPACE}/luckfox-output/openhd-${{ matrix.target }}-firmware-${DT}.zip"
-          rm luckfox-output/firmware-base.zip
-
-      - name: Upload flashable Luckfox update
-        uses: actions/upload-artifact@v4
-        with:
-          name: openhd-image-${{ matrix.target }}-${{ env.DT }}
-          path: |
-            luckfox-output/OpenHD-${{ matrix.target }}-full-${{ env.DT }}.ohd
-            luckfox-output/openhd-${{ matrix.target }}-firmware-${{ env.DT }}.zip
-          if-no-files-found: error
-          retention-days: 30
-
-      - name: Install Cloudsmith CLI
-        run: pipx install cloudsmith-cli
-
-      - name: Publish Luckfox update files to Cloudsmith
-        run: |
-          set -euo pipefail
-          : "${CLOUDSMITH_API_KEY:?CLOUDSMITH_API_KEY secret is required to publish Luckfox files}"
-          ohd_package="luckfox-output/OpenHD-${{ matrix.target }}-full-${DT}.ohd"
-          firmware_package="luckfox-output/openhd-${{ matrix.target }}-firmware-${DT}.zip"
-          test -s "${ohd_package}"
-          test -s "${firmware_package}"
-          cloudsmith push raw --republish \
-            --name "openhd-${{ matrix.target }}-full" \
-            --version "${DT}" \
-            openhd/luckfox "${ohd_package}"
-          cloudsmith push raw --republish \
-            --name "openhd-${{ matrix.target }}-firmware" \
-            --version "${DT}" \
-            openhd/luckfox "${firmware_package}"
-
-
 
   openhd-hardware-x20:
     name: openhd-hardware-x20
@@ -471,10 +325,8 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - radxa-cubie-lite
           - radxa-zero3w-lite
           - radxa-cm5-lite
-          - orangepi-zero3w-lite
           - rock5a-lite
           - rock5b-lite
     steps:
@@ -516,7 +368,7 @@ jobs:
 
   experimental-pi5-image:
     name: experimental-pi5-bookworm
-    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'lite' || inputs.target == 'experimental'
+    if: github.event_name == 'workflow_dispatch' && inputs.target == 'experimental'
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -544,25 +396,22 @@ jobs:
           path: deploy/OpenHD-RPi5-Bookworm-arm64.img
           if-no-files-found: error
 
-  # =========================================================================
-  # 5. Embedded SDKs (Buildroot / Cross-compiled)
-  # =========================================================================
-  embedded-sdk-images:
-    name: embedded-sdk-${{ matrix.target }}
-    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'embedded-sdk'
-    runs-on: ubuntu-24.04
+  experimental-lite-images:
+    name: experimental-${{ matrix.target }}
+    if: github.event_name == 'workflow_dispatch' && inputs.target == 'experimental'
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
         target:
-          - orqa
-          - luckfox
-          - lyra
-          - aura
-          - rv1106
-          - rv1103
+          - radxa-cubie-lite
+          - orangepi-zero3w-lite
     steps:
       - uses: actions/checkout@v4
+      - name: Prepare development image
+        run: |
+          echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
+          touch additionalFiles/dev-build
       - name: Free runner disk space
         run: |
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup
@@ -572,31 +421,27 @@ jobs:
           sudo apt-get autoremove -y
           sudo apt-get clean
           df -h "$GITHUB_WORKSPACE"
-      - name: Download Base Image & Inject OpenHD
+      - name: Install host tools and current e2fsprogs
         run: |
-          echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
-          mkdir -p workdir && cd workdir
-          
-          # 1. Download Base Image
-          if [ "${{ matrix.target }}" == "orqa" ]; then
-            echo "Downloading Orqa Base Image from GDrive..."
-            ../scripts/gdrive.sh "https://drive.google.com/file/d/1lYf-aFTybxMjypOnnGbCbTNpYZJGX9xA/view?usp=sharing" orqa-base.img
-          else
-            echo "TODO: Add artifact download step for ${{ matrix.target }} base image"
-          fi
-          
-          # 2. Download OpenHD latest binaries from Cloudsmith
-          # e.g., curl -L -O https://dl.cloudsmith.io/public/openhd/dev-release/raw/files/openhd-${{ matrix.target }}-latest.tar.gz
-          echo "TODO: Download OpenHD binaries and inject them into base image"
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+          sudo apt-get update
+          sudo apt-get install -y unzip curl git qemu-user-static binfmt-support rclone
+          bash ./scripts/install_current_e2fsprogs.sh
+          sudo ./install_dep.sh
+      - name: Build experimental Lite image
+        env:
+          OPENHD_RCLONE_CONFIG_GDRIVE: ${{ secrets.RCLONE_CONFIG_GDRIVE }}
+        run: sudo -E ./build.sh "${{ matrix.target }}" false false true
+      - name: Normalize image
+        run: |
+          set -euo pipefail
+          mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
+          test "${#images[@]}" -eq 1
+          sudo mv "${images[0]}" "deploy/openhd-lite-image-${{ matrix.target }}-${DT}.img"
+      - uses: actions/upload-artifact@v4
         with:
-          name: embedded-sdk-${{ matrix.target }}-${{ env.DT }}
-          path: |
-            buildroot/output/image/*
-            buildroot/output/images/*
-            /home/orqa/yocto-data/build/tmp/deploy/images/*
-          if-no-files-found: warn
+          name: openhd-lite-image-${{ matrix.target }}-${{ env.DT }}
+          path: deploy/*.img
+          if-no-files-found: error
 
 
 
