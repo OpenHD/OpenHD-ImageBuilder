@@ -1,3 +1,4 @@
 BASE_IMAGE_URL="https://dl.cloudsmith.io/public/openhd/base/generic/download/orqa"
 BASE_IMAGE="ORQA_DTK-EVK_core-dev.zip"
 BASE_IMAGE_SHA256="c92ddb1bcf3b3fd384d30eef10624eef2b9293ece6e45095b7eb9cb9731fbb8c"
+OUTPUT_IMAGE="OpenHD-ORQA-DTK-EVK"

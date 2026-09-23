@@ -278,6 +278,7 @@ jobs:
             echo "ORQA_BASE_IMAGE=${BASE_IMAGE}"
             echo "ORQA_BASE_URL=${BASE_IMAGE_URL}/${BASE_IMAGE}"
             echo "ORQA_BASE_SHA256=${BASE_IMAGE_SHA256}"
+            echo "ORQA_OUTPUT_IMAGE=${OUTPUT_IMAGE}"
           } >>"${GITHUB_ENV}"
 
       - name: Download and verify the ORQA base firmware
@@ -319,12 +320,12 @@ jobs:
             "orqa-input/${ORQA_BASE_IMAGE}" \
             orqa-input/openhd/openhd-orqa-deploy.tar.gz \
             orqa-input/wifi_cards.json \
-            "deploy/OpenHD-ORQA-DTK-STANDALONE-${DT}.zip"
+            "deploy/${ORQA_OUTPUT_IMAGE}-${DT}.zip"
 
       - name: Verify the ORQA flash bundle
         run: |
           set -euo pipefail
-          archive="deploy/OpenHD-ORQA-DTK-STANDALONE-${DT}.zip"
+          archive="deploy/${ORQA_OUTPUT_IMAGE}-${DT}.zip"
           test -s "${archive}"
           mapfile -t files < <(unzip -Z1 "${archive}" | sort)
           expected=(
@@ -343,8 +344,8 @@ jobs:
         with:
           name: openhd-image-orqa-${{ env.DT }}
           path: |
-            deploy/OpenHD-ORQA-DTK-STANDALONE-${{ env.DT }}.zip
-            deploy/OpenHD-ORQA-DTK-STANDALONE-${{ env.DT }}.zip.sha256
+            deploy/${{ env.ORQA_OUTPUT_IMAGE }}-${{ env.DT }}.zip
+            deploy/${{ env.ORQA_OUTPUT_IMAGE }}-${{ env.DT }}.zip.sha256
           if-no-files-found: error
           retention-days: 30
 
