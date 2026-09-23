@@ -1,0 +1,19 @@
+[Unit]
+Description=OpenHD system utilities orchestrator
+After=local-fs.target
+Wants=local-fs.target
+Before=openhd.service
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/local/bin/openhd_sys_utils
+ExecStartPost=/bin/sh -c 'i=0; while [ "$i" -lt 300 ]; do [ -S /run/openhd/openhd_sys.sock ] && exit 0; i=$((i + 1)); sleep 0.1; done; exit 1'
+TimeoutStartSec=35
+TimeoutStopSec=5
+KillMode=mixed
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

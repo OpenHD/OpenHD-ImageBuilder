@@ -16,6 +16,7 @@ on:
           - lite
           - experimental
           - x21-update
+          - orqa
   push:
     branches:
       - dev-release
@@ -258,6 +259,94 @@ jobs:
           name: openhd-image-x20-${{ env.DT }}
           path: deploy/*.img
           if-no-files-found: error
+
+  openhd-hardware-orqa:
+    name: openhd-hardware-orqa
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'openhd-hardware' || inputs.target == 'orqa'
+    runs-on: ubuntu-24.04
+    env:
+      GH_TOKEN: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare ORQA image build
+        run: |
+          set -euo pipefail
+          echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >>"${GITHUB_ENV}"
+          source images/orqa
+          {
+            echo "ORQA_BASE_IMAGE=${BASE_IMAGE}"
+            echo "ORQA_BASE_URL=${BASE_IMAGE_URL}/${BASE_IMAGE}"
+            echo "ORQA_BASE_SHA256=${BASE_IMAGE_SHA256}"
+          } >>"${GITHUB_ENV}"
+
+      - name: Download and verify the ORQA base firmware
+        run: |
+          set -euo pipefail
+          mkdir -p orqa-input
+          curl --fail --location --retry 5 --retry-delay 3 \
+            "${ORQA_BASE_URL}" -o "orqa-input/${ORQA_BASE_IMAGE}"
+          echo "${ORQA_BASE_SHA256}  orqa-input/${ORQA_BASE_IMAGE}" | sha256sum -c -
+
+      - name: Download the latest successful ORQA OpenHD payload
+        run: |
+          set -euo pipefail
+          : "${GH_TOKEN:?OPENHD_SUBMODULE_TOKEN secret is required to download the ORQA payload}"
+          run_json="$(gh api \
+            'repos/OpenHD/OpenHD/actions/workflows/final_ci.yml/runs?branch=openhd-3.0&status=success&per_page=1')"
+          run_id="$(jq -er '.workflow_runs[0].id' <<<"${run_json}")"
+          head_sha="$(jq -er '.workflow_runs[0].head_sha' <<<"${run_json}")"
+          echo "Using OpenHD final_ci run ${run_id} at ${head_sha}"
+
+          mkdir -p orqa-input/openhd
+          gh run download "${run_id}" \
+            --repo OpenHD/OpenHD \
+            --name openhd-orqa \
+            --dir orqa-input/openhd
+          test -s orqa-input/openhd/openhd-orqa-deploy.tar.gz
+
+          curl --fail --location --retry 5 --retry-delay 3 \
+            "https://raw.githubusercontent.com/OpenHD/OpenHD/${head_sha}/OpenHD-SysUtils/misc/wifi_cards.json" \
+            -o orqa-input/wifi_cards.json
+
+      - name: Install OpenHD into the ORQA flash bundle
+        run: |
+          set -euo pipefail
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends e2fsprogs unzip zip
+          mkdir -p deploy
+          sudo bash scripts/build_orqa_image.sh \
+            "orqa-input/${ORQA_BASE_IMAGE}" \
+            orqa-input/openhd/openhd-orqa-deploy.tar.gz \
+            orqa-input/wifi_cards.json \
+            "deploy/OpenHD-ORQA-DTK-STANDALONE-${DT}.zip"
+
+      - name: Verify the ORQA flash bundle
+        run: |
+          set -euo pipefail
+          archive="deploy/OpenHD-ORQA-DTK-STANDALONE-${DT}.zip"
+          test -s "${archive}"
+          mapfile -t files < <(unzip -Z1 "${archive}" | sort)
+          expected=(
+            bootloader.img
+            kernel.img
+            partition-table.img
+            recovery.img
+            rootfs.img
+            uuu.auto
+          )
+          mapfile -t expected < <(printf '%s\n' "${expected[@]}" | sort)
+          diff -u <(printf '%s\n' "${expected[@]}") <(printf '%s\n' "${files[@]}")
+          sha256sum "${archive}" >"${archive}.sha256"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: openhd-image-orqa-${{ env.DT }}
+          path: |
+            deploy/OpenHD-ORQA-DTK-STANDALONE-${{ env.DT }}.zip
+            deploy/OpenHD-ORQA-DTK-STANDALONE-${{ env.DT }}.zip.sha256
+          if-no-files-found: error
+          retention-days: 30
 
   # =========================================================================
   # 3. Full (running QOpenHD)

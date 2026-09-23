@@ -1,0 +1,17 @@
+[Unit]
+Description=OpenHD
+Requires=openhd-sys-utils.service
+After=openhd-sys-utils.service network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=root
+Environment="LIBCAMERA_LOG_LEVELS=*:ERROR"
+ExecStart=/usr/local/bin/openhd
+Restart=always
+RestartSec=5
+LimitCORE=infinity
+
+[Install]
+WantedBy=multi-user.target
