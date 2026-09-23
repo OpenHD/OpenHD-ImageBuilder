@@ -306,7 +306,7 @@ jobs:
           test -s orqa-input/openhd/openhd-orqa-deploy.tar.gz
 
           curl --fail --location --retry 5 --retry-delay 3 \
-            "https://raw.githubusercontent.com/OpenHD/OpenHD/${head_sha}/OpenHD-SysUtils/misc/wifi_cards.json" \
+            "https://raw.githubusercontent.com/OpenHD/OpenHD-SysUtils/dev-release/misc/wifi_cards.json" \
             -o orqa-input/wifi_cards.json
 
       - name: Install OpenHD into the ORQA flash bundle
