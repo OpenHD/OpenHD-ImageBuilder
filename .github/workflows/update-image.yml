@@ -78,16 +78,18 @@ jobs:
           mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
           test "${#images[@]}" -eq 1
           sudo mv "${images[0]}" "deploy/openhd-image-${{ matrix.target }}-${DT}.img"
+      - name: Compress image for distribution
+        run: sudo xz --threads=0 -3 "deploy/openhd-image-${{ matrix.target }}-${DT}.img"
       - uses: actions/upload-artifact@v4
         with:
           name: openhd-image-${{ matrix.target }}-${{ env.DT }}
-          path: deploy/*.img
+          path: deploy/*.img.xz
           if-no-files-found: error
       - name: Stage image on FleetControl
         if: github.event_name == 'push'
         env:
           FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
-        run: bash scripts/publish_dev_image.sh "${{ matrix.target }}" "deploy/openhd-image-${{ matrix.target }}-${DT}.img"
+        run: bash scripts/publish_dev_image.sh "${{ matrix.target }}" "deploy/openhd-image-${{ matrix.target }}-${DT}.img.xz"
 
   # =========================================================================
   # 2. OpenHD Hardware (X21, X20)
