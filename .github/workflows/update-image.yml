@@ -83,6 +83,11 @@ jobs:
           name: openhd-image-${{ matrix.target }}-${{ env.DT }}
           path: deploy/*.img
           if-no-files-found: error
+      - name: Stage image on FleetControl
+        if: github.event_name == 'push'
+        env:
+          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
+        run: bash scripts/publish_dev_image.sh "${{ matrix.target }}" "deploy/openhd-image-${{ matrix.target }}-${DT}.img"
 
   # =========================================================================
   # 2. OpenHD Hardware (X21, X20)
@@ -233,6 +238,14 @@ jobs:
             --version "${DT}" \
             openhd/x21 "${firmware_package}"
 
+      - name: Stage X21B image on FleetControl
+        if: github.event_name == 'push'
+        env:
+          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
+        run: |
+          cp "x21-output/firmware-${DT}.zip" "x21-output/openhd-image-x21b-${DT}.zip"
+          bash scripts/publish_dev_image.sh x21b "x21-output/openhd-image-x21b-${DT}.zip"
+
   openhd-hardware-x20:
     name: openhd-hardware-x20
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'openhd-hardware'
@@ -259,6 +272,11 @@ jobs:
           name: openhd-image-x20-${{ env.DT }}
           path: deploy/*.img
           if-no-files-found: error
+      - name: Stage image on FleetControl
+        if: github.event_name == 'push'
+        env:
+          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
+        run: bash scripts/publish_dev_image.sh x20 "deploy/openhd-image-x20-${DT}.img"
 
   openhd-hardware-orqa:
     name: openhd-hardware-orqa
@@ -348,6 +366,13 @@ jobs:
             deploy/${{ env.ORQA_OUTPUT_IMAGE }}-${{ env.DT }}.zip.sha256
           if-no-files-found: error
           retention-days: 30
+      - name: Stage image on FleetControl
+        if: github.event_name == 'push'
+        env:
+          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
+        run: |
+          cp "deploy/${ORQA_OUTPUT_IMAGE}-${DT}.zip" "deploy/openhd-image-orqa-${DT}.zip"
+          bash scripts/publish_dev_image.sh orqa "deploy/openhd-image-orqa-${DT}.zip"
 
   # =========================================================================
   # 3. Full (running QOpenHD)
@@ -403,6 +428,11 @@ jobs:
           name: openhd-image-${{ matrix.target }}-${{ env.DT }}
           path: deploy/*.img
           if-no-files-found: error
+      - name: Stage image on FleetControl
+        if: github.event_name == 'push'
+        env:
+          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
+        run: bash scripts/publish_dev_image.sh "${{ matrix.target }}" "deploy/openhd-image-${{ matrix.target }}-${DT}.img"
 
   # =========================================================================
   # 4. Lite (OpenHD Glide) & Experimental Pi 5
@@ -455,6 +485,11 @@ jobs:
           name: openhd-lite-image-${{ matrix.target }}-${{ env.DT }}
           path: deploy/*.img
           if-no-files-found: error
+      - name: Stage image on FleetControl
+        if: github.event_name == 'push'
+        env:
+          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
+        run: bash scripts/publish_dev_image.sh "${{ matrix.target }}" "deploy/openhd-lite-image-${{ matrix.target }}-${DT}.img"
 
   experimental-pi5-image:
     name: experimental-pi5-bookworm
@@ -532,6 +567,31 @@ jobs:
           name: openhd-lite-image-${{ matrix.target }}-${{ env.DT }}
           path: deploy/*.img
           if-no-files-found: error
+
+  publish-development-images:
+    name: publish-development-images
+    if: github.event_name == 'push'
+    needs:
+      - supported-images
+      - openhd-hardware-x21
+      - openhd-hardware-x20
+      - openhd-hardware-orqa
+      - full-images
+      - lite-images
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Atomically promote completed image set
+        env:
+          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
+        run: |
+          set -euo pipefail
+          : "${FLEETCONTROL_DEV_IMAGE_TOKEN:?FLEETCONTROL_DEV_IMAGE_TOKEN is required}"
+          curl --fail-with-body --retry 5 --retry-all-errors \
+            --request POST \
+            --header "Authorization: Bearer ${FLEETCONTROL_DEV_IMAGE_TOKEN}" \
+            --header "Content-Type: application/json" \
+            --data '{"platforms":["pi-bullseye","x21b","x20","orqa","rock5a","rock5b","radxa-zero3w","radxa-rock3a","x86-minimal","x86-noble","radxa-zero3w-lite","radxa-cm5-lite","rock5a-lite","rock5b-lite"]}' \
+            "https://openhd.tech/api/internal/dev-images/${GITHUB_RUN_ID}/promote"
 
 
 
