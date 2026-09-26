@@ -84,6 +84,7 @@ jobs:
           path: deploy/*.img
           if-no-files-found: error
       - name: Stage image on FleetControl
+        if: github.event_name == 'push'
         env:
           FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
         run: bash scripts/publish_dev_image.sh "${{ matrix.target }}" "deploy/openhd-image-${{ matrix.target }}-${DT}.img"
@@ -236,12 +237,6 @@ jobs:
             --name firmware \
             --version "${DT}" \
             openhd/x21 "${firmware_package}"
-      - name: Publish X21B image on FleetControl
-        env:
-          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
-        run: |
-          cp "x21-output/firmware-${DT}.zip" "x21-output/openhd-image-x21b-${DT}.zip"
-          bash scripts/publish_dev_image.sh x21b "x21-output/openhd-image-x21b-${DT}.zip" package
 
   openhd-hardware-x20:
     name: openhd-hardware-x20
@@ -269,10 +264,6 @@ jobs:
           name: openhd-image-x20-${{ env.DT }}
           path: deploy/*.img
           if-no-files-found: error
-      - name: Publish X20 image on FleetControl
-        env:
-          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
-        run: bash scripts/publish_dev_image.sh x20 "deploy/openhd-image-x20-${DT}.img"
   openhd-hardware-orqa:
     name: openhd-hardware-orqa
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'openhd-hardware' || inputs.target == 'orqa'
@@ -361,12 +352,6 @@ jobs:
             deploy/${{ env.ORQA_OUTPUT_IMAGE }}-${{ env.DT }}.zip.sha256
           if-no-files-found: error
           retention-days: 30
-      - name: Publish ORQA image on FleetControl
-        env:
-          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
-        run: |
-          cp "deploy/${ORQA_OUTPUT_IMAGE}-${DT}.zip" "deploy/openhd-image-orqa-${DT}.zip"
-          bash scripts/publish_dev_image.sh orqa "deploy/openhd-image-orqa-${DT}.zip" package
   # =========================================================================
   # 3. Full (running QOpenHD)
   # =========================================================================
@@ -421,10 +406,6 @@ jobs:
           name: openhd-image-${{ matrix.target }}-${{ env.DT }}
           path: deploy/*.img
           if-no-files-found: error
-      - name: Publish full image on FleetControl
-        env:
-          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
-        run: bash scripts/publish_dev_image.sh "${{ matrix.target }}" "deploy/openhd-image-${{ matrix.target }}-${DT}.img"
   # =========================================================================
   # 4. Lite (OpenHD Glide) & Experimental Pi 5
   # =========================================================================
@@ -476,10 +457,6 @@ jobs:
           name: openhd-lite-image-${{ matrix.target }}-${{ env.DT }}
           path: deploy/*.img
           if-no-files-found: error
-      - name: Publish Lite image on FleetControl
-        env:
-          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
-        run: bash scripts/publish_dev_image.sh "${{ matrix.target }}" "deploy/openhd-lite-image-${{ matrix.target }}-${DT}.img"
   experimental-pi5-image:
     name: experimental-pi5-bookworm
     if: github.event_name == 'workflow_dispatch' && inputs.target == 'experimental'
@@ -493,7 +470,6 @@ jobs:
           df -h "$GITHUB_WORKSPACE"
       - name: Prepare and install dependencies
         run: |
-          echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
           touch additionalFiles/dev-build
           printf '%s\n' 'OpenHD Raspberry Pi 5 Bookworm image' > additionalFiles/issue-new.txt
           sudo ./install_dep.sh
@@ -510,12 +486,6 @@ jobs:
           name: OpenHD-RPi5-Bookworm-arm64
           path: deploy/OpenHD-RPi5-Bookworm-arm64.img
           if-no-files-found: error
-      - name: Publish Raspberry Pi 5 image on FleetControl
-        env:
-          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
-        run: |
-          mv deploy/OpenHD-RPi5-Bookworm-arm64.img "deploy/openhd-image-pi5-bookworm-${DT}.img"
-          bash scripts/publish_dev_image.sh pi5-bookworm "deploy/openhd-image-pi5-bookworm-${DT}.img"
 
   experimental-lite-images:
     name: experimental-${{ matrix.target }}
@@ -563,10 +533,26 @@ jobs:
           name: openhd-lite-image-${{ matrix.target }}-${{ env.DT }}
           path: deploy/*.img
           if-no-files-found: error
-      - name: Publish experimental Lite image on FleetControl
+
+  publish-pi-image:
+    name: publish-pi-image
+    if: github.event_name == 'push'
+    needs:
+      - supported-images
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Promote completed Pi image
         env:
           FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
-        run: bash scripts/publish_dev_image.sh "${{ matrix.target }}" "deploy/openhd-lite-image-${{ matrix.target }}-${DT}.img"
+        run: |
+          set -euo pipefail
+          : "${FLEETCONTROL_DEV_IMAGE_TOKEN:?FLEETCONTROL_DEV_IMAGE_TOKEN is required}"
+          curl --fail-with-body --retry 5 --retry-all-errors \
+            --request POST \
+            --header "Authorization: Bearer ${FLEETCONTROL_DEV_IMAGE_TOKEN}" \
+            --header "Content-Type: application/json" \
+            --data '{"platforms":["pi-bullseye"]}' \
+            "https://openhd.tech/api/internal/dev-images/${GITHUB_RUN_ID}/promote"
 
 
 
