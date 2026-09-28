@@ -6,7 +6,7 @@
 # Here we configue all our services
 
 sudo systemctl enable NetworkManager
-sudo systemctl enable openhd_sys_utils.service
+sudo systemctl enable openhd-sys-utils.service
 
 if [[ "${OS}" == "raspian" ]] ; then
 #We now use NetworkManager

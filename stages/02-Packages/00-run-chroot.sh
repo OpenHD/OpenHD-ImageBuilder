@@ -275,6 +275,8 @@ curl -fsSL https://apt.radxa.com/bullseye-stable/public.key | gpg --dearmor | su
         curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh'| sudo -E bash
         if [ -e "/opt/additionalFiles/dev-build" ]; then
             curl -1sLf 'https://dl.cloudsmith.io/public/openhd/dev-release/setup.deb.sh'| sudo -E bash
+            mkdir -p /usr/local/share/openhd
+            touch /usr/local/share/openhd/dev_image.txt
             echo "BUILDING DEVELOPMENT IMAGE"
             echo "BUILDING DEVELOPMENT IMAGE"
             echo "BUILDING DEVELOPMENT IMAGE"
@@ -284,6 +286,9 @@ curl -fsSL https://apt.radxa.com/bullseye-stable/public.key | gpg --dearmor | su
             echo "BUILDING DEVELOPMENT IMAGE"
             echo "BUILDING DEVELOPMENT IMAGE"
 
+        fi
+        if [ ! -e "/opt/additionalFiles/dev-build" ]; then
+            rm -f /usr/local/share/openhd/dev_image.txt
         fi
         #apt update
 
