@@ -218,6 +218,29 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+      - name: Stage X21B firmware and update on FleetControl
+        if: github.ref == 'refs/heads/dev-release'
+        env:
+          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
+        run: |
+          set -euo pipefail
+          bash scripts/publish_dev_image.sh x21b "x21-output/firmware-${DT}.zip" none
+          bash scripts/publish_dev_image.sh x21b-update "x21-output/OpenHD-X21B-full-${DT}.ohd"
+
+      - name: Promote completed X21B firmware and update
+        if: github.ref == 'refs/heads/dev-release'
+        env:
+          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
+        run: |
+          set -euo pipefail
+          : "${FLEETCONTROL_DEV_IMAGE_TOKEN:?FLEETCONTROL_DEV_IMAGE_TOKEN is required}"
+          curl --fail-with-body --retry 5 --retry-all-errors \
+            --request POST \
+            --header "Authorization: Bearer ${FLEETCONTROL_DEV_IMAGE_TOKEN}" \
+            --header "Content-Type: application/json" \
+            --data '{"platforms":["x21b","x21b-update"]}' \
+            "https://openhd.tech/api/internal/dev-images/${GITHUB_RUN_ID}/promote"
+
       - name: Install Cloudsmith CLI
         run: pipx install cloudsmith-cli
 
