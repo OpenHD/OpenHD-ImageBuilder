@@ -126,7 +126,7 @@ function install_raspbian_packages {
         PLATFORM_PACKAGES_REMOVE=""
         PLATFORM_PACKAGES="firmware-atheros openssh-server network-manager v4l-utils gstreamer1.0-libcamera ${OPENHD_MEDIA_RUNTIME_PACKAGES}"
     else
-        BASE_PACKAGES="openhd-sys-utils ${OPENHD_PACKAGE} qopenhd apt-transport-https apt-utils open-hd-web-ui"
+        BASE_PACKAGES="openhd-sys-utils ${OPENHD_PACKAGE} openhd-veye-gx qopenhd apt-transport-https apt-utils open-hd-web-ui"
         sudo apt update && apt remove -y dkms
         PLATFORM_PACKAGES_HOLD="raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc raspberrypi-bootloader"
         PLATFORM_PACKAGES_REMOVE="locales gdb librsvg2-2 guile-2.2-libs firmware-libertas gcc-10 nfs-common libcamera* raspberrypi-kernel"
