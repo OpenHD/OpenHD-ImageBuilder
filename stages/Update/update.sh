@@ -327,6 +327,12 @@ refresh_radxa_apt_for_lite() {
 # Add and verify the OpenHD development repository.
 setup_openhd_repository dev-release
 
+# The Bullseye Pi camera package is published to release, while OpenHD itself
+# comes from dev-release. Keep both signed feeds available for APT selection.
+if [[ "${OS:-}" == "raspbian" && "${RPI5:-false}" != "true" ]]; then
+  setup_openhd_repository release
+fi
+
 # Determine OS (board)
 if [[ -z "${OS:-}" ]]; then
   os_id="$(. /etc/os-release; echo "${ID}-${VERSION_CODENAME}")"
@@ -821,16 +827,13 @@ if [[ "${OS}" == "raspbian" ]]; then
     sudo apt install -y \
       -o Dpkg::Options::=--force-overwrite \
       arducam-pivariety-sdk-dev=1.0.5
-    LIBCAMERA_OPENHD_VERSION="1.2.10"
-    LIBCAMERA_OPENHD_DEB="libcamera-openhd_${LIBCAMERA_OPENHD_VERSION}_armhf.deb"
-    wget -O "${LIBCAMERA_OPENHD_DEB}" \
-      "https://dl.cloudsmith.io/public/openhd/release/deb/raspbian/pool/bullseye/main/l/li/libcamera-openhd_${LIBCAMERA_OPENHD_VERSION}/${LIBCAMERA_OPENHD_DEB}"
-    echo "7e93e8e8c9320e7a43a5b138a5a74acd4fea0c5d63b8fad3a0a5d4bb55b81170  ${LIBCAMERA_OPENHD_DEB}" | sha256sum -c -
-    # Install through apt so the rpicam-apps runtime dependencies declared by
-    # libcamera-openhd are pulled into the image as well.
-    $APT install -y \
+    # Select the newest indexed version and refresh republished packages even
+    # when the base image already contains the same libcamera-openhd version.
+    apt-cache policy libcamera-openhd
+    $APT install --reinstall \
       -o Dpkg::Options::=--force-overwrite \
-      "./${LIBCAMERA_OPENHD_DEB}"
+      libcamera-openhd
+    dpkg-query -W -f='${Package} ${Version}\n' libcamera-openhd
     wget https://raw.githubusercontent.com/OpenHD/libcamera/refs/heads/openhd/src/ipa/rpi/vc4/data/imx662.json
     mv imx662.json /usr/share/libcamera/ipa/rpi/vc4/imx662.json
   fi

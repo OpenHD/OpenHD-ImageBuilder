@@ -85,8 +85,11 @@ fi
      if [[ "${RPI5:-false}" == "true" ]]; then
          touch /boot/openhd/rpi5.txt
      fi
-     #allow autologin and remove the raspberryos first boot menu
-     cp /usr/local/share/openhd_misc/userconf.txt /boot/userconf.txt
+     # The account above is already configured. Raspberry Pi OS userconfig
+     # must not repeat first-boot user setup and reload SSH on every retry.
+     rm -f /boot/userconf.txt /boot/userconf /boot/firmware/userconf.txt /boot/firmware/userconf
+     systemctl disable userconfig.service 2>/dev/null || true
+     systemctl mask userconfig.service
      cat /opt/additionalFiles/issue-new.txt >> /boot/issue.txt
      cp /usr/local/share/openhd_misc/initPi.sh /usr/local/bin/initPi.sh
      #remove serial console
