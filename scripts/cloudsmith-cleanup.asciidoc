@@ -1,0 +1,50 @@
+= Cloudsmith cleanup
+
+The `Cloudsmith cleanup` GitHub Actions workflow runs daily at 03:33 UTC.
+It discovers all repositories visible to the API key in the `openhd` workspace,
+and normally deletes packages only when `downloads` is exactly zero and `uploaded_at`
+is strictly older than one calendar month. At month ends, the cutoff is clamped
+to the last day of the previous month, retaining the current UTC time of day.
+All package formats and repository names are included.
+The `x21` repository is processed first, before cleanup of the other repositories.
+
+The `x21` repository has a separate policy: keep only the newest upload of each
+package, removing all superseded uploads regardless of age or download count.
+The newest upload is always protected, even if it is old and has zero downloads.
+Packages are grouped by format, name, package type, architecture, distribution,
+and distribution version so distinct platform variants are retained separately.
+Known legacy raw names `firmware-YYYY-MM-DD-HH-MM-SS.zip` and
+`OpenHD-X21B-full-YYYY-MM-DD-HH-MM-SS.ohd` are grouped with the current stable
+names `firmware` and `openhd-x21b-full`, respectively.
+Newest means greatest `uploaded_at`; permanent package IDs break timestamp ties.
+If a group's timestamps or IDs are missing or malformed, or its newest upload is
+not downloadable, that group is retained without deletion.
+
+Set the repository's `CLOUDSMITH_API_KEY` Actions secret to a Cloudsmith key with
+permission to list and delete packages in every `openhd` repository. Repositories
+hidden from that key cannot be discovered. Scheduled workflows run from the
+GitHub repository's default branch, so the workflow and script must be merged
+there to activate the daily cleanup.
+
+Use Actions -> Cloudsmith cleanup -> Run workflow for a manual run.
+`dry_run` defaults to true; uncheck it to delete matching packages.
+The script can also be used locally with Python 3.12, without dependencies:
+
+[source,bash]
+----
+export CLOUDSMITH_API_KEY='your-key'
+python scripts/cloudsmith_cleanup.py --owner openhd          # dry run
+python scripts/cloudsmith_cleanup.py --owner openhd --delete # delete
+----
+
+Repository and package listings are fully paginated before deleting packages
+from a repository. Each candidate's metadata is fetched again before deletion;
+packages outside `x21` that have gained downloads are retained. In `x21`, the
+replacement is also fetched again and must still be downloadable and newer in
+the same package family. If it has been removed, deletion of the older version
+fails safely. Outside `x21`, missing or malformed download counts and upload dates
+never qualify. Errors cause a nonzero exit status and
+are logged along with candidate and deletion counts.
+
+Cloudsmith download statistics may lag actual downloads; the recheck uses the
+count reported by the API and cannot make the check and deletion atomic.
