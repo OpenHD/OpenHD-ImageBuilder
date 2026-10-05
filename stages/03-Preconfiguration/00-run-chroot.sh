@@ -155,12 +155,11 @@ if [[ "${OS}" == "ubuntu-x86-minimal" ]]; then
     sudo systemctl enable openhd
     sudo systemctl enable qopenhd
     sudo touch /opt/setup
-    find /lib/modules /usr/lib/modules -path '*/kernel/drivers/net/wireless/realtek' -type d -prune -exec rm -Rf {} + || true
-    echo "_______wifi-drivers_______"
+    bash /opt/additionalFiles/prepare-devourer-image.sh || exit 1
 fi
 
 if [[ "${OS}" == "ubuntu-x86" ]] ; then
-       sudo find /lib/modules /usr/lib/modules \( -name '88x2bu.ko' -o -path '*/kernel/drivers/net/wireless/realtek/rtw88' \) -exec rm -Rf {} + || true
+       bash /opt/additionalFiles/prepare-devourer-image.sh || exit 1
        sudo usermod -a -G dialout openhd
        sudo apt remove -y modemmanager
        cp /usr/local/bin/desktop-truster.sh /etc/profile.d/desktop-truster.sh
@@ -229,7 +228,6 @@ if [[ "${OS}" == "debian-X20" ]]; then
 #  rm -Rf /usr/share/locale/*
 #  rm -Rf /usr/local/share/openhd/video/sunxisrc_h264.json
  rm -Rf /etc/rc.local
- rm -Rf /lib/modules/5.8.0/kernel/drivers/net/88XXau_wfb.ko
  sudo mkdir /external
  echo "HdZero" >> /etc/modules-load.d/modules.conf
  sudo sed -i '/^\/dev\/mmcblk0p2/d' /etc/fstab

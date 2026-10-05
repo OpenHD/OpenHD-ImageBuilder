@@ -248,10 +248,7 @@ if [[ "${UPDATE_LINUX_PACKAGES_ONLY:-false}" == "true" && "${OPENHD_LITE_IMAGE:-
   if [[ -n "${KERNEL_PACKAGES:-}" ]]; then
     $APT install ${KERNEL_PACKAGES}
   fi
-  if [[ -n "${RTL_DRIVER_PACKAGES:-}" ]]; then
-    $APT install ${RTL_DRIVER_PACKAGES}
-    run_depmod_for_installed_kernels
-  fi
+  bash /opt/additionalFiles/prepare-devourer-image.sh
   print_linux_package_metadata
   echo "Done. UPDATE_LINUX_PACKAGES_ONLY is set, skipping OpenHD/QOpenHD package changes."
   exit 0
@@ -508,7 +505,6 @@ install_openhd_lite_packages() {
       return 1
     fi
   fi
-  install_packages_from_list "RTL driver packages" "${RTL_DRIVER_PACKAGES:-}"
   run_depmod_for_installed_kernels
 }
 
@@ -884,6 +880,8 @@ else
   $APT install "${qopenhd_package}"
   ensure_openhd_user
 fi
+
+bash /opt/additionalFiles/prepare-devourer-image.sh
 
 if [[ "${OS}" != "radxa-debian-rock3a" ]]; then
   # Enable service

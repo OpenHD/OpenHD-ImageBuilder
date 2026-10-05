@@ -7,7 +7,6 @@
 set -e
 
 CLEANCLEAN=true
-X20_RTL8812AU_VERSION="2.6-evo-07071732"
 OPENHD_MEDIA_RUNTIME_PACKAGES="libsodium23 libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad gstreamer1.0-plugins-ugly libsdl2-2.0-0"
 
 function run_depmod_for_installed_kernels {
@@ -99,22 +98,11 @@ function install_x20_packages {
     sudo apt install -y whiptail libpoco-dev
     # Keep Debian sources: current OpenHD packages need distro runtime
     # dependencies that are not provided by the OpenHD package repository.
-    BASE_PACKAGES="openhd-x20 encode-sunxi openhd-sys-utils rtl8812au-x20=${X20_RTL8812AU_VERSION}"
+    BASE_PACKAGES="openhd-x20 encode-sunxi openhd-sys-utils"
     PLATFORM_PACKAGES_REMOVE="*boost* locales guile-2.2-libs network-manager"
     PLATFORM_PACKAGES=""
 }
 
-function verify_x20_rtl8812au_version {
-    local installed_version
-
-    installed_version="$(dpkg-query -W -f='${Version}' rtl8812au-x20)"
-    if [[ "${installed_version}" != "${X20_RTL8812AU_VERSION}" ]]; then
-        echo "rtl8812au-x20 version mismatch: expected ${X20_RTL8812AU_VERSION}, installed ${installed_version}"
-        exit 1
-    fi
-
-    echo "Verified rtl8812au-x20 version ${installed_version}"
-}
 # Raspbian-specific code
 function install_raspbian_packages {
     if [[ "${RPI5:-false}" == "true" ]]; then
@@ -174,7 +162,7 @@ CLEAN=false
     PLATFORM_PACKAGES_REMOVE=""
 }
 function install_ubuntu_x86_minimal_packages {
-    BASE_PACKAGES="openhd-sys-utils ${OPENHD_PACKAGE} apt-transport-https apt-utils rtl8812au-x86 rtl88x2bu-x86 rtl88x2eu-x86 nano linux-firmware"
+    BASE_PACKAGES="openhd-sys-utils ${OPENHD_PACKAGE} apt-transport-https apt-utils nano linux-firmware"
     PLATFORM_PACKAGES="wireless-tools net-tools gstreamer1.0-qt5"
     PLATFORM_PACKAGES_HOLD="grub-efi-amd64-bin grub-efi-amd64-signed linux-generic linux-headers-generic linux-image-generic linux-libc-dev"
     PLATFORM_PACKAGES_REMOVE=""
@@ -327,9 +315,7 @@ curl -fsSL https://apt.radxa.com/bullseye-stable/public.key | gpg --dearmor | su
             exit 1
         fi
     done
-    if [[ "${OS}" == "debian-X20" ]]; then
-        verify_x20_rtl8812au_version
-    fi
+    bash /opt/additionalFiles/prepare-devourer-image.sh
     run_depmod_for_installed_kernels
     validate_openhd_runtime
 

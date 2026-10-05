@@ -1,0 +1,35 @@
+name: Test Devourer image policy
+on:
+  pull_request:
+  push:
+    paths:
+      - additionalFiles/prepare-devourer-image.sh
+      - images/**
+      - scripts/common.sh
+      - scripts/sdk_builder.sh
+      - X86-Installer.sh
+      - additionalFiles/Buildroot/openhd/**
+      - scripts/tests/test_devourer_image.sh
+      - stages/**
+      - .github/workflows/test-devourer-image.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check shell syntax
+        run: |
+          bash -n additionalFiles/prepare-devourer-image.sh
+          bash -n scripts/common.sh
+          bash -n scripts/sdk_builder.sh
+          bash -n X86-Installer.sh
+          bash -n stages/02-Packages/00-run-chroot.sh
+          bash -n stages/03-Preconfiguration/00-run-chroot.sh
+          bash -n stages/03-Preconfiguration/01-run-chroot.sh
+          bash -n stages/03-Preconfiguration/02-run-chroot.sh
+          bash -n stages/Update/update.sh
+      - name: Test image cleanup
+        run: bash scripts/tests/test_devourer_image.sh

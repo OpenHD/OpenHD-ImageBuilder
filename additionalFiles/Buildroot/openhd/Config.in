@@ -1,6 +1,7 @@
 config BR2_PACKAGE_OPENHD
     bool "openhd"
     select BR2_PACKAGE_LIBPCAP
+    select BR2_PACKAGE_LIBUSB
     select BR2_PACKAGE_LIBSODIUM
     select BR2_PACKAGE_GSTREAMER1
     select BR2_PACKAGE_GST1_PLUGINS_BASE

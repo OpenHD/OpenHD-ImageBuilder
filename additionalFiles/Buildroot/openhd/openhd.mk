@@ -27,8 +27,10 @@ OPENHD_SITE = https://github.com/openhd/OpenHD.git
 OPENHD_SITE_METHOD = git
 OPENHD_GIT_SUBMODULES = YES
 
-# Set the version to the latest commit of the default branch
-OPENHD_VERSION = 2.6-evo
+# OpenHD 3.0 and its matching Devourer gitlink, kept together for reproducibility.
+OPENHD_VERSION = 9d998bcc17fcfa07b38f3f1c8675eb4269347374
+OPENHD_DEVOURER_VERSION = 46c3e7c48bbd663b329ec9d54667d5bab99a1836
+OPENHD_EXTRA_DOWNLOADS = https://github.com/OpenHD/devourer/archive/$(OPENHD_DEVOURER_VERSION).tar.gz
 
 # Enable Git submodules if the project requires them
 OPENHD_GIT_SUBMODULES = YES
@@ -41,13 +43,26 @@ OPENHD_INSTALL_STAGING = YES
 OPENHD_INSTALL_TARGET = YES
 
 # List of dependencies that must be built before OpenHD
-OPENHD_DEPENDENCIES = poco libsodium gstreamer1 gst1-plugins-base libpcap host-pkgconf
+OPENHD_DEPENDENCIES = poco libsodium gstreamer1 gst1-plugins-base libpcap libusb host-pkgconf host-kmod
+
+# Buildroot source archives have no .git directory. Download the pinned backend
+# through its download cache and extract it without reference-driver submodules.
+define OPENHD_EXTRACT_DEVOURER
+	mkdir -p $(@D)/OpenHD/ohd_interface/lib/devourer
+	$(TAR) -xzf $(OPENHD_DL_DIR)/$(OPENHD_DEVOURER_VERSION).tar.gz --strip-components=1 -C $(@D)/OpenHD/ohd_interface/lib/devourer
+endef
+OPENHD_POST_EXTRACT_HOOKS += OPENHD_EXTRACT_DEVOURER
+
+define OPENHD_PREPARE_DEVOURER_ROOTFS
+	grep -a -q 'Devourer identified' $(TARGET_DIR)/usr/bin/openhd
+	PATH="$(BR_PATH)" bash $(OPENHD_PKGDIR)/prepare-devourer-image.sh $(TARGET_DIR)
+endef
+OPENHD_TARGET_FINALIZE_HOOKS += OPENHD_PREPARE_DEVOURER_ROOTFS
 
 # Additional configuration options for the CMake build
 OPENHD_CONF_OPTS = \
     -DENABLE_USB_CAMERAS=OFF \
-    -DCMAKE_C_COMPILER=gcc-11 \
-    -DCMAKE_CXX_COMPILER=g++-11 \
+    -DOPENHD_ENABLE_DEVOURER=ON \
     -DPCAP_NEEDS_THREADS=ON
 	
 # Use Buildroot's CMake package infrastructure to handle the build

@@ -145,18 +145,18 @@ EOF
   echo "Starting configuration steps for: $platform"
   echo "------------------------------------------------------------"
 
-  echo "adding Wifi driver (8812eu)"
-  if [ -d "sysdrv/source/kernel/drivers/net/wireless/realtek" ]; then
-    cd sysdrv/source/kernel/drivers/net/wireless/realtek
-    if [ ! -d "rtl88x2eu" ]; then
-      git clone https://github.com/openhd/rtl88x2eu
-    fi
-    cd ../../../../../../../
-  fi
+  echo "Using Devourer for broadcast USB radios"
+  # The SDK may enable a vendor radio driver in its shipped kernel defconfig.
+  # Disable those USB alternatives before compiling the base kernel.
+  while IFS= read -r -d '' defconf; do
+    sed -i -E 's/^(CONFIG_(RTL8812AU|RTL88XXAU|RTL88X2BU|RTL88X2CU|RTL88X2EU|RTL8812EU|RTL8822EU|RTL8852BU|RTW88_8812AU|RTW88_8822BU|RTW88_8822CU|RTW89_8852BU))=[ym]/# \1 is not set/' "$defconf"
+  done < <(find sysdrv -type f -name '*defconfig' -print0)
 
   echo "adding OpenHD and updating Poco"
   if [ -d "sysdrv/source/buildroot/buildroot-2023.02.6/package" ]; then
     cp -rfv ../additionalFiles/Buildroot/openhd sysdrv/source/buildroot/buildroot-2023.02.6/package/ || true
+    cp ../additionalFiles/prepare-devourer-image.sh \
+      sysdrv/source/buildroot/buildroot-2023.02.6/package/openhd/
     rm -Rf sysdrv/source/buildroot/buildroot-2023.02.6/package/poco || true
     cp -rfv ../additionalFiles/Buildroot/UpdatedDependencies/poco sysdrv/source/buildroot/buildroot-2023.02.6/package/poco || true
 

@@ -14,7 +14,7 @@ rm -Rf /opt/additionalFiles
 #echo "alias led='led_sys.sh'" | sudo tee -a /etc/bash.bashrc >/dev/null
 sudo mkdir -p /ramdisk && echo "tmpfs /ramdisk tmpfs defaults,size=100M 0 0" | sudo tee -a /etc/fstab && sudo mount /ramdisk
 
-echo "options 88x2eu_ohd rtw_regd_src=1 rtw_tx_pwr_by_rate=0 rtw_tx_pwr_lmt_enable=0" | sudo tee /etc/modprobe.d/realtek_88x2eu.conf > /dev/null
+# Devourer configures EU radios directly; no kernel-driver options are needed.
 
 if [[ "${OS}" == "radxa-debian-rock5a" ]]; then
 mkdir -p /usr/local/share/openhd_platform/rock/rock5a

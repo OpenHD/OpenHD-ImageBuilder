@@ -152,6 +152,10 @@ on_chroot() {
     df -h
     cp -r "${STAGE_DIR}/../../additionalFiles" "${MNT_DIR}/opt"
     fi
+    # Refresh the image policy even when updating an existing base image that
+    # still carries an older /opt/additionalFiles directory.
+    install -m 0644 "${BASE_DIR}/additionalFiles/prepare-devourer-image.sh" \
+        "${MNT_DIR}/opt/additionalFiles/prepare-devourer-image.sh"
     #sudo chroot --userspec=1000:1000 "$MNT_DIR" /bin/bash "/home/pi/install.sh"
     capsh --drop=cap_setfcap "--chroot=${MNT_DIR}/" -- "$@"
 

@@ -22,8 +22,6 @@ prepareOpenHD()
     mkdir -p /boot/openhd/
     touch /boot/openhd/x86.txt
     touch /boot/openhd/ground.txt
-    git clone https://github.com/OpenHD/rtl88x2bu /usr/src/rtl88x2bu-5.13.1 || { echo "Failed to clone rtl88x2bu repository"; exit 1; }
-    git clone https://github.com/OpenHD/rtl8812au /usr/src/rtl8812au-git || { echo "Failed to clone rtl8812au repository"; exit 1; }
     echo "OpenHD preparation completed successfully."
 }
 
@@ -55,27 +53,10 @@ installShortcuts()
     echo "Shortcuts installed successfully."
 }
 
-installRtl8812au()
-{
-    echo "Installing RTL8812AU..."
-    cd /usr/src/rtl8812au-git
-    ./dkms-install.sh || { echo "Failed to install RTL8812AU"; exit 1; }
-    echo "RTL8812AU installed successfully."
-}
-
-installRtl8812bu()
-{
-    echo "Installing RTL8812BU..."
-    cd /usr/src/rtl88x2bu-5.13.1
-    sed -i 's/PACKAGE_VERSION="@PKGVER@"/PACKAGE_VERSION="5.13.1"/g' /usr/src/rtl88x2bu-5.13.1/dkms.conf
-    dkms add -m rtl88x2bu -v 5.13.1 || { echo "Failed to install RTL8812BU"; exit 1; }
-    echo "RTL8812BU installed successfully."
-}
-
 installOpenHDRepositories()
 {
     echo "Installing OpenHD repositories..."
-    apt install -y git dkms curl || { echo "Failed to install required packages"; exit 1; }
+    apt install -y git curl || { echo "Failed to install required packages"; exit 1; }
     curl -1sLf 'https://dl.cloudsmith.io/public/openhd/release/setup.deb.sh' | sudo -E bash || { echo "Failed to clone OpenHD repositories"; exit 1; }
     echo "OpenHD repositories installed successfully."
 }
@@ -84,7 +65,8 @@ installOpenHD()
 {
     echo "Installing OpenHD..."
     sudo apt update || { echo "Failed to update package lists"; exit 1; }
-    sudo apt install -y openhd qopenhd open-hd-web-ui || { echo "Failed to install OpenHD packages"; exit 1; }
+    sudo apt install -y openhd openhd-sys-utils qopenhd open-hd-web-ui || { echo "Failed to install OpenHD packages"; exit 1; }
+    bash /opt/X86/additionalFiles/prepare-devourer-image.sh || exit 1
     systemctl disable openhd
     systemctl disable qopenhd
     echo "OpenHD installed successfully."
@@ -107,8 +89,6 @@ fi
 
 installOpenHDRepositories
 prepareOpenHD
-installRtl8812au
-installRtl8812bu
 installOpenHD || { echo "Failed to install OpenHD"; exit 1; }
 installShortcuts
 cleanup
