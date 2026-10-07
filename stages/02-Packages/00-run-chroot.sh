@@ -53,6 +53,8 @@ function validate_openhd_runtime {
           /home/openhd/.cache/gstreamer-1.0/registry.* 2>/dev/null || true
     if [[ "${RPI5:-false}" == "true" ]]; then
         elements+=(libcamerasrc x264enc)
+    elif [[ "${OS}" == "raspbian" ]]; then
+        elements+=(rpicamsrc)
     fi
     if [[ "${OS}" == "radxa-debian-rock5a" ||
           "${OS}" == "radxa-debian-rock5b" ]]; then
@@ -118,7 +120,9 @@ function install_raspbian_packages {
         sudo apt update && apt remove -y dkms
         PLATFORM_PACKAGES_HOLD="raspberrypi-kernel libraspberrypi-dev libraspberrypi-bin libraspberrypi0 libraspberrypi-doc raspberrypi-bootloader"
         PLATFORM_PACKAGES_REMOVE="locales gdb librsvg2-2 guile-2.2-libs firmware-libertas gcc-10 nfs-common libcamera* raspberrypi-kernel"
-        PLATFORM_PACKAGES="openhd-linux-pi firmware-atheros openhd-userland libseek-thermal libcamera-openhd openhd-qt openssh-server"
+        # Install the legacy camera plugin explicitly; OpenHD no longer pulls
+        # gst-openhd-plugins in through its package dependencies.
+        PLATFORM_PACKAGES="openhd-linux-pi firmware-atheros openhd-userland libseek-thermal libcamera-openhd gst-openhd-plugins openhd-qt openssh-server"
     fi
 }
 # Ubuntu-Rockship-specific code

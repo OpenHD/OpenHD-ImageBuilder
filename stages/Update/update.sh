@@ -530,6 +530,8 @@ validate_openhd_runtime() {
   local elements=(h264parse rtph264pay perf)
   if [[ "${RPI5:-false}" == "true" ]]; then
     elements+=(libcamerasrc x264enc)
+  elif [[ "${OS:-}" == "raspbian" ]]; then
+    elements+=(rpicamsrc)
   fi
   if [[ "${OS:-}" == "radxa-debian-rock5a" ||
         "${OS:-}" == "radxa-debian-rock5b" ]]; then
@@ -830,6 +832,8 @@ if [[ "${OS}" == "raspbian" ]]; then
       -o Dpkg::Options::=--force-overwrite \
       libcamera-openhd
     dpkg-query -W -f='${Package} ${Version}\n' libcamera-openhd
+    # The legacy GStreamer camera source is a separate package from libcamera.
+    $APT install gst-openhd-plugins
     wget https://raw.githubusercontent.com/OpenHD/libcamera/refs/heads/openhd/src/ipa/rpi/vc4/data/imx662.json
     mv imx662.json /usr/share/libcamera/ipa/rpi/vc4/imx662.json
   fi
