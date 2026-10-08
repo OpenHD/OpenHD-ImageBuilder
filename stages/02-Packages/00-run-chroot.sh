@@ -54,7 +54,27 @@ function validate_openhd_runtime {
     if [[ "${RPI5:-false}" == "true" ]]; then
         elements+=(libcamerasrc x264enc)
     elif [[ "${OS}" == "raspbian" ]]; then
-        elements+=(rpicamsrc)
+        if systemd-detect-virt --chroot >/dev/null 2>&1; then
+            # Loading this plugin initializes MMAL and opens /dev/vchiq.
+            # A build chroot cannot do that, even with every library installed.
+            local rpicamsrc_plugin
+            local rpicamsrc_ldd
+            rpicamsrc_plugin="$(find /usr/lib -path "*/gstreamer-1.0/libgstrpicamsrc.so" \
+                -type f -print -quit 2>/dev/null)"
+            if [[ -z "${rpicamsrc_plugin}" ]]; then
+                echo "OpenHD runtime validation failed: rpicamsrc plugin file is missing."
+                return 1
+            fi
+            rpicamsrc_ldd="$(ldd "${rpicamsrc_plugin}")"
+            echo "${rpicamsrc_ldd}"
+            if grep -q "not found" <<<"${rpicamsrc_ldd}"; then
+                echo "OpenHD runtime validation failed: rpicamsrc plugin has unresolved libraries."
+                return 1
+            fi
+            echo "Verified rpicamsrc plugin libraries in chroot; hardware load check requires a running Pi."
+        else
+            elements+=(rpicamsrc)
+        fi
     fi
     if [[ "${OS}" == "radxa-debian-rock5a" ||
           "${OS}" == "radxa-debian-rock5b" ]]; then
@@ -86,6 +106,10 @@ function validate_openhd_runtime {
         fi
         echo "Verified GStreamer element: ${element}"
     done
+    # The scanner may blacklist hardware plugins while checking other elements
+    # in the chroot. Do not ship that registry to the real Pi.
+    rm -f /root/.cache/gstreamer-1.0/registry.* \
+          /home/openhd/.cache/gstreamer-1.0/registry.* 2>/dev/null || true
 }
 
 function remove_dead_bullseye_backports {
@@ -122,7 +146,7 @@ function install_raspbian_packages {
         PLATFORM_PACKAGES_REMOVE="locales gdb librsvg2-2 guile-2.2-libs firmware-libertas gcc-10 nfs-common libcamera* raspberrypi-kernel"
         # Install the legacy camera plugin explicitly; OpenHD no longer pulls
         # gst-openhd-plugins in through its package dependencies.
-        PLATFORM_PACKAGES="openhd-linux-pi firmware-atheros openhd-userland libseek-thermal libcamera-openhd gst-openhd-plugins openhd-qt openssh-server"
+        PLATFORM_PACKAGES="openhd-linux-pi firmware-atheros openhd-userland libraspberrypi0 libseek-thermal libcamera-openhd gst-openhd-plugins openhd-qt openssh-server"
     fi
 }
 # Ubuntu-Rockship-specific code

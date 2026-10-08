@@ -531,7 +531,27 @@ validate_openhd_runtime() {
   if [[ "${RPI5:-false}" == "true" ]]; then
     elements+=(libcamerasrc x264enc)
   elif [[ "${OS:-}" == "raspbian" ]]; then
-    elements+=(rpicamsrc)
+    if systemd-detect-virt --chroot >/dev/null 2>&1; then
+      # Loading this plugin initializes MMAL and opens /dev/vchiq.
+      # A build chroot cannot do that, even with every library installed.
+      local rpicamsrc_plugin=""
+      local rpicamsrc_ldd=""
+      rpicamsrc_plugin="$(find /usr/lib -path "*/gstreamer-1.0/libgstrpicamsrc.so" \
+        -type f -print -quit 2>/dev/null)"
+      if [[ -z "${rpicamsrc_plugin}" ]]; then
+        echo "OpenHD runtime validation failed: rpicamsrc plugin file is missing." >&2
+        return 1
+      fi
+      rpicamsrc_ldd="$(ldd "${rpicamsrc_plugin}")"
+      echo "${rpicamsrc_ldd}"
+      if grep -q "not found" <<<"${rpicamsrc_ldd}"; then
+        echo "OpenHD runtime validation failed: rpicamsrc plugin has unresolved libraries." >&2
+        return 1
+      fi
+      echo "Verified rpicamsrc plugin libraries in chroot; hardware load check requires a running Pi."
+    else
+      elements+=(rpicamsrc)
+    fi
   fi
   if [[ "${OS:-}" == "radxa-debian-rock5a" ||
         "${OS:-}" == "radxa-debian-rock5b" ]]; then
@@ -564,6 +584,10 @@ validate_openhd_runtime() {
     fi
     echo "Verified GStreamer element: ${element}"
   done
+  # The scanner may blacklist hardware plugins while checking other elements
+  # in the chroot. Do not ship that registry to the real Pi.
+  rm -f /root/.cache/gstreamer-1.0/registry.* \
+        /home/openhd/.cache/gstreamer-1.0/registry.* 2>/dev/null || true
 }
 
 ensure_openhd_user() {
@@ -832,8 +856,8 @@ if [[ "${OS}" == "raspbian" ]]; then
       -o Dpkg::Options::=--force-overwrite \
       libcamera-openhd
     dpkg-query -W -f='${Package} ${Version}\n' libcamera-openhd
-    # The legacy GStreamer camera source is a separate package from libcamera.
-    $APT install gst-openhd-plugins
+    # The plugin package does not declare its MMAL runtime dependency.
+    $APT install libraspberrypi0 gst-openhd-plugins
     wget https://raw.githubusercontent.com/OpenHD/libcamera/refs/heads/openhd/src/ipa/rpi/vc4/data/imx662.json
     mv imx662.json /usr/share/libcamera/ipa/rpi/vc4/imx662.json
   fi
