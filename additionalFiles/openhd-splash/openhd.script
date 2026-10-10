@@ -1,0 +1,22 @@
+Window.SetBackgroundTopColor(0, 0, 0);
+Window.SetBackgroundBottomColor(0, 0, 0);
+
+size = Window.GetWidth();
+if (Window.GetHeight() < size) size = Window.GetHeight();
+size *= 0.24;
+logo.image = Image("logo.png").Scale(size, size);
+logo.sprite = Sprite(logo.image);
+logo.sprite.SetPosition(Window.GetX() + (Window.GetWidth() - size) / 2,
+                        Window.GetY() + (Window.GetHeight() - size) / 2, 1);
+for (i = 0; i < 3; i++) {
+    dots[i] = Sprite(Image("dot.png"));
+    dots[i].SetPosition(Window.GetX() + Window.GetWidth() / 2 - 19 + i * 16,
+                        Window.GetY() + (Window.GetHeight() + size) / 2 + 24, 2);
+}
+angle = 0;
+fun refresh_callback() {
+    angle += 0.15;
+    for (i = 0; i < 3; i++)
+        dots[i].SetOpacity(0.25 + 0.75 * (Math.Cos(angle - i * 0.9) + 1) / 2);
+}
+Plymouth.SetRefreshFunction(refresh_callback);

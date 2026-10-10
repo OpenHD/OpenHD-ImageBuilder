@@ -156,6 +156,11 @@ on_chroot() {
     # still carries an older /opt/additionalFiles directory.
     install -m 0644 "${BASE_DIR}/additionalFiles/prepare-devourer-image.sh" \
         "${MNT_DIR}/opt/additionalFiles/prepare-devourer-image.sh"
+    install -m 0644 "${BASE_DIR}/additionalFiles/configure-rpi-splash.sh" \
+        "${MNT_DIR}/opt/additionalFiles/configure-rpi-splash.sh"
+    mkdir -p "${MNT_DIR}/opt/additionalFiles/openhd-splash"
+    cp -r "${BASE_DIR}/additionalFiles/openhd-splash/." \
+        "${MNT_DIR}/opt/additionalFiles/openhd-splash/"
     #sudo chroot --userspec=1000:1000 "$MNT_DIR" /bin/bash "/home/pi/install.sh"
     capsh --drop=cap_setfcap "--chroot=${MNT_DIR}/" -- "$@"
 

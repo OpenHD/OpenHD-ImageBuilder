@@ -30,11 +30,8 @@ rm -Rf /usr/share/man/*
 rm -Rf /var/swap
 
 
-#Disable plymoth (boot animation)
-sudo systemctl mask plymouth-start.service
-sudo systemctl mask plymouth-read-write.service
-sudo systemctl mask plymouth-quit-wait.service
-sudo systemctl mask plymouth-quit.service
+# The Raspberry Pi splash and its QOpenHD handoff are configured by
+# configure-rpi-splash.sh in the preceding stage.
 
 fi
 

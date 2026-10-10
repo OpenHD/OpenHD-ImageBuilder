@@ -911,6 +911,8 @@ fi
 
 bash /opt/additionalFiles/prepare-devourer-image.sh
 
+OS="${OS}" RPI5="${RPI5:-false}" bash /opt/additionalFiles/configure-rpi-splash.sh
+
 if [[ "${OS}" != "radxa-debian-rock3a" ]]; then
   # Enable service
   systemctl enable openhd || true

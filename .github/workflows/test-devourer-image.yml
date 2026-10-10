@@ -4,6 +4,8 @@ on:
   push:
     paths:
       - additionalFiles/prepare-devourer-image.sh
+      - additionalFiles/configure-rpi-splash.sh
+      - additionalFiles/openhd-splash/**
       - images/**
       - scripts/common.sh
       - scripts/sdk_builder.sh
@@ -23,6 +25,7 @@ jobs:
       - name: Check shell syntax
         run: |
           bash -n additionalFiles/prepare-devourer-image.sh
+          bash -n additionalFiles/configure-rpi-splash.sh
           bash -n scripts/common.sh
           bash -n scripts/sdk_builder.sh
           bash -n X86-Installer.sh

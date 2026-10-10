@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=OpenHD
+Description=OpenHD startup
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/openhd
+ScriptFile=/usr/share/plymouth/themes/openhd/openhd.script
