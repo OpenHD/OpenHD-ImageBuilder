@@ -1,0 +1,57 @@
+name: Publish completed Pi development image
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run:
+        description: Successful dev-release New_Image_Workflow run containing the Pi image
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: publish-pi-development-image
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify source run and choose its Pi artifact
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_RUN: ${{ inputs.source_run }}
+        run: |
+          set -euo pipefail
+          [[ "$SOURCE_RUN" =~ ^[0-9]+$ ]]
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN" > /tmp/source-run.json
+          jq -e '.head_branch == "dev-release" and .name == "New_Image_Workflow" and .conclusion == "success"' /tmp/source-run.json
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN/artifacts?per_page=100" > /tmp/source-artifacts.json
+          artifact=$(jq -er '[.artifacts[] | select(.expired == false and (.name | startswith("openhd-image-pi-bullseye-")))] | if length == 1 then .[0].name else error("Expected exactly one Pi image") end' /tmp/source-artifacts.json)
+          echo "artifact=$artifact" >> "$GITHUB_OUTPUT"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.source_run }}
+          name: ${{ steps.source.outputs.artifact }}
+          path: deploy
+      - name: Stage and publish the verified image
+        env:
+          SOURCE_RUN: ${{ inputs.source_run }}
+          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
+        run: |
+          set -euo pipefail
+          mapfile -t images < <(find deploy -maxdepth 1 -type f -name 'openhd-image-pi-bullseye-*.img')
+          test "${#images[@]}" -eq 1
+          export GITHUB_RUN_ID="$SOURCE_RUN"
+          bash scripts/publish_dev_image.sh pi-bullseye "${images[0]}"
+          curl --fail-with-body --retry 5 --retry-all-errors \
+            --request POST --header "Authorization: Bearer $FLEETCONTROL_DEV_IMAGE_TOKEN" \
+            --header 'Content-Type: application/json' --data '{"platforms":["pi-bullseye"]}' \
+            "https://openhd.tech/api/internal/dev-images/$SOURCE_RUN/promote"
