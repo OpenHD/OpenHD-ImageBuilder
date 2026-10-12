@@ -10,6 +10,10 @@ echo "$USERNAME:$PASSWORD" | chpasswd
 usermod -aG sudo "$USERNAME"
 chown -R "$USERNAME:$USERNAME" "/home/$USERNAME"
 mkdir -p /boot/openhd/
+# The provisioning UI must use definitions packaged with this image's OpenHD.
+if [ -f /usr/share/openhd/settings/imagewriter-settings.json ]; then
+    cp /usr/share/openhd/settings/imagewriter-settings.json /boot/openhd/settings-manifest.json
+fi
 
 rm /etc/motd
 cp /usr/local/share/openhd_misc/motd /etc/motd
