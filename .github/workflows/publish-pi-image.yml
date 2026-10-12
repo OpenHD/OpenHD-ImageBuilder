@@ -1,6 +1,14 @@
 name: Publish completed Pi development image
 
 on:
+  workflow_call:
+    inputs:
+      source_run:
+        required: true
+        type: string
+    secrets:
+      FLEETCONTROL_DEV_IMAGE_TOKEN:
+        required: true
   workflow_dispatch:
     inputs:
       source_run:

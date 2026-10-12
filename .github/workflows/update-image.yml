@@ -17,6 +17,11 @@ on:
           - experimental
           - x21-update
           - orqa
+          - publish-pi
+      source_run:
+        description: Successful dev-release image build to publish when target is publish-pi
+        required: false
+        type: string
   push:
     branches:
       - dev-release
@@ -27,6 +32,7 @@ concurrency:
 
 permissions:
   contents: read
+  actions: read
 
 env:
   BRANCH: dev-release
@@ -34,6 +40,12 @@ env:
   X21_SOURCE_RUN_ID: "34479273960"
 
 jobs:
+  publish-existing-pi:
+    if: github.event_name == 'workflow_dispatch' && inputs.target == 'publish-pi'
+    uses: ./.github/workflows/publish-pi-image.yml
+    with:
+      source_run: ${{ inputs.source_run }}
+    secrets: inherit
   # =========================================================================
   # 1. Fully Supported (Raspberry Pi)
   # =========================================================================
