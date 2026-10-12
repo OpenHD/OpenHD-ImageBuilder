@@ -79,7 +79,7 @@ jobs:
       - name: Install host tools and current e2fsprogs
         run: |
           sudo apt-get update
-          sudo apt-get install -y unzip curl git qemu-user-static binfmt-support
+          sudo apt-get install -y unzip curl git qemu-user-static binfmt-support mtools
           bash ./scripts/install_current_e2fsprogs.sh
           sudo ./install_dep.sh
       - name: Build image
@@ -90,6 +90,7 @@ jobs:
           mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
           test "${#images[@]}" -eq 1
           sudo mv "${images[0]}" "deploy/openhd-image-${{ matrix.target }}-${DT}.img"
+          bash scripts/validate_pi_settings_manifest.sh "deploy/openhd-image-${{ matrix.target }}-${DT}.img"
       - uses: actions/upload-artifact@v4
         with:
           name: openhd-image-${{ matrix.target }}-${{ env.DT }}
