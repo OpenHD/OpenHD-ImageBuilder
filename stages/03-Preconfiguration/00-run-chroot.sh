@@ -13,6 +13,9 @@ mkdir -p /boot/openhd/
 # The provisioning UI must use definitions packaged with this image's OpenHD.
 if [ -f /usr/share/openhd/settings/imagewriter-settings.json ]; then
     cp /usr/share/openhd/settings/imagewriter-settings.json /boot/openhd/settings-manifest.json
+    if [ -d /conf ]; then
+        install -D -m 0644 /usr/share/openhd/settings/imagewriter-settings.json /conf/openhd/settings-manifest.json
+    fi
 fi
 
 rm /etc/motd

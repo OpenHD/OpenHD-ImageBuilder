@@ -57,6 +57,13 @@ jobs:
           set -euo pipefail
           mapfile -t images < <(find deploy -maxdepth 1 -type f -name 'openhd-image-pi-bullseye-*.img')
           test "${#images[@]}" -eq 1
+          if ! command -v mcopy >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y mtools
+          fi
+          offset=$(python3 -c 'import sys,struct; f=open(sys.argv[1],"rb"); m=f.read(512); assert m[510:]==b"\x55\xaa"; print(struct.unpack_from("<I",m,454)[0]*512)' "${images[0]}")
+          mcopy -i "${images[0]}@@${offset}" ::/openhd/settings-manifest.json /tmp/settings-manifest.json
+          python3 -m json.tool /tmp/settings-manifest.json >/dev/null
           export GITHUB_RUN_ID="$SOURCE_RUN"
           bash scripts/publish_dev_image.sh pi-bullseye "${images[0]}"
           curl --fail-with-body --retry 5 --retry-all-errors \

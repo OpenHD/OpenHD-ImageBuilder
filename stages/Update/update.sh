@@ -923,6 +923,15 @@ fi
 
 finalize_openhd_glide_service
 
+# Cached images skip 03-Preconfiguration; refresh the offline contract here too.
+if [[ -f /usr/share/openhd/settings/imagewriter-settings.json ]]; then
+  install -D -m 0644 /usr/share/openhd/settings/imagewriter-settings.json /boot/openhd/settings-manifest.json
+  if [[ -d /conf ]]; then
+    install -D -m 0644 /usr/share/openhd/settings/imagewriter-settings.json /conf/openhd/settings-manifest.json
+  fi
+  echo "Installed shared ImageWriter settings manifest"
+fi
+
 validate_openhd_runtime
 
 echo "Done. Detected board: ${OS}"
