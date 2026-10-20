@@ -7,6 +7,7 @@ on:
       - additionalFiles/configure-rpi-splash.sh
       - additionalFiles/openhd-splash/**
       - images/**
+      - additionalFiles/install-current-components.sh
       - scripts/common.sh
       - scripts/sdk_builder.sh
       - X86-Installer.sh
@@ -26,6 +27,7 @@ jobs:
         run: |
           bash -n additionalFiles/prepare-devourer-image.sh
           bash -n additionalFiles/configure-rpi-splash.sh
+          bash -n additionalFiles/install-current-components.sh
           bash -n scripts/common.sh
           bash -n scripts/sdk_builder.sh
           bash -n X86-Installer.sh
@@ -34,5 +36,7 @@ jobs:
           bash -n stages/03-Preconfiguration/01-run-chroot.sh
           bash -n stages/03-Preconfiguration/02-run-chroot.sh
           bash -n stages/Update/update.sh
+      - name: Test release component selection
+        run: python3 scripts/tests/test_release_components.py
       - name: Test image cleanup
         run: bash scripts/tests/test_devourer_image.sh

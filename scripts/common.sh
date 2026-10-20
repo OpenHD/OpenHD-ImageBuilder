@@ -158,6 +158,26 @@ on_chroot() {
         "${MNT_DIR}/opt/additionalFiles/prepare-devourer-image.sh"
     install -m 0644 "${BASE_DIR}/additionalFiles/configure-rpi-splash.sh" \
         "${MNT_DIR}/opt/additionalFiles/configure-rpi-splash.sh"
+    install -m 0644 "${BASE_DIR}/additionalFiles/install-current-components.sh" \
+        "${MNT_DIR}/opt/additionalFiles/install-current-components.sh"
+    install -m 0644 "${BASE_DIR}/last.release" "${MNT_DIR}/opt/additionalFiles/image-release"
+    cp "${BASE_DIR}/release-components.json" "${MNT_DIR}/opt/additionalFiles/release-components.json"
+    python3 - "${BASE_DIR}/release-components.json" > "${MNT_DIR}/opt/additionalFiles/component-commits" <<'PY'
+import json, sys
+sources = json.load(open(sys.argv[1]))["sources"]
+for source in sources:
+    if source["repo"] == "OpenHD/OpenHD":
+        for package in ("openhd", "openhd-x20"):
+            print(f"{package}={source['commit'][:8]}")
+    elif source["repo"] == "OpenHD/QOpenHD":
+        for package in ("qopenhd", "qopenhd-rk3566", "qopenhd-rk3588"):
+            print(f"{package}={source['commit'][:8]}")
+PY
+    if [[ -e "${BASE_DIR}/additionalFiles/dev-build" ]]; then
+        touch "${MNT_DIR}/opt/additionalFiles/dev-build"
+    else
+        rm -f "${MNT_DIR}/opt/additionalFiles/dev-build"
+    fi
     mkdir -p "${MNT_DIR}/opt/additionalFiles/openhd-splash"
     cp -r "${BASE_DIR}/additionalFiles/openhd-splash/." \
         "${MNT_DIR}/opt/additionalFiles/openhd-splash/"

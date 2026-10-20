@@ -343,6 +343,7 @@ curl -fsSL https://apt.radxa.com/bullseye-stable/public.key | gpg --dearmor | su
             exit 1
         fi
     done
+    bash /opt/additionalFiles/install-current-components.sh
     bash /opt/additionalFiles/prepare-devourer-image.sh
     run_depmod_for_installed_kernels
     validate_openhd_runtime

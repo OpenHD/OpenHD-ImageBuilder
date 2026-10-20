@@ -904,10 +904,10 @@ elif [[ "${RPI5:-false}" == "true" ]]; then
   echo "Skipping QOpenHD on the Raspberry Pi 5 image"
   ensure_openhd_user
 else
-  echo "Installing QOpenHD package: ${qopenhd_package}"
-  $APT install "${qopenhd_package}"
   ensure_openhd_user
 fi
+
+bash /opt/additionalFiles/install-current-components.sh
 
 bash /opt/additionalFiles/prepare-devourer-image.sh
 

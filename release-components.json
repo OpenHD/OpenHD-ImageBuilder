@@ -1,0 +1,46 @@
+{
+  "release": "3.0-albatros-beta1",
+  "sources": [
+    {
+      "repo": "OpenHD/OpenHD",
+      "ref": "openhd-3.0",
+      "commit": "4cac8b0c1c0b0a1467bd93337c2f3a2f842cd72e",
+      "workflows": [
+        "final_ci.yml",
+        "build_x21_bundle.yml"
+      ]
+    },
+    {
+      "repo": "OpenHD/QOpenHD",
+      "ref": "dev-release",
+      "commit": "e052e2eaff91ba04343ce1db82f74c8df5843e69",
+      "workflows": [
+        "build_package_rpi.yml",
+        "build_package_Rock5.yml",
+        "build_package_x86_jammy.yml",
+        "build_package_x86_noble.yml"
+      ]
+    },
+    {
+      "repo": "OpenHD/OpenHD-SysUtils",
+      "ref": "dev-release",
+      "commit": "b171a3d9e4e22451cb385a247f6fdf948ad7ac8d",
+      "workflows": [
+        "build_sysutils_package_rpi.yml",
+        "build_sysutils_Rock5_Chroot_debian.yml",
+        "build_sysutils_x20_Chroot_debian.yml",
+        "build_x21_component.yml",
+        "build_sysutils_package_x86_22.04.yml",
+        "build_sysutils_package_x86_24.04.yml"
+      ]
+    },
+    {
+      "repo": "OpenHD/OpenHD-WebUI",
+      "ref": "master",
+      "commit": "88f490c361579c8d3a24d928d29abad8f071542d",
+      "workflows": [
+        "continuous.yml"
+      ]
+    }
+  ]
+}
