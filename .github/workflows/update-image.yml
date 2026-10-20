@@ -59,7 +59,7 @@ jobs:
         target:
           - pi-bullseye
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Prepare development image
         run: |
           echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
@@ -91,7 +91,7 @@ jobs:
           test "${#images[@]}" -eq 1
           sudo mv "${images[0]}" "deploy/openhd-image-${{ matrix.target }}-${DT}.img"
           bash scripts/validate_pi_settings_manifest.sh "deploy/openhd-image-${{ matrix.target }}-${DT}.img"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: openhd-image-${{ matrix.target }}-${{ env.DT }}
           path: deploy/*.img
@@ -112,7 +112,7 @@ jobs:
     env:
       CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set X21B release timestamp
         run: echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >>"${GITHUB_ENV}"
@@ -173,7 +173,7 @@ jobs:
       # build; subsequent builds use the durable Cloudsmith copy above.
       - name: Download X21B full firmware from the source run
         if: steps.x21-firmware-cache.outcome == 'failure'
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           repository: OpenHD/OpenHD-X21B
           run-id: ${{ env.X21_SOURCE_RUN_ID }}
@@ -222,7 +222,7 @@ jobs:
           rm x21-output/firmware-base.zip
 
       - name: Upload flashable X21B update
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: openhd-image-x21b-${{ env.DT }}
           path: |
@@ -279,7 +279,7 @@ jobs:
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'openhd-hardware'
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Prepare and install dependencies
         run: |
           echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
@@ -295,7 +295,7 @@ jobs:
           mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
           test "${#images[@]}" -eq 1
           sudo mv "${images[0]}" "deploy/openhd-image-x20-${DT}.img"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: openhd-image-x20-${{ env.DT }}
           path: deploy/*.img
@@ -307,7 +307,7 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Prepare ORQA image build
         run: |
@@ -380,7 +380,7 @@ jobs:
           diff -u <(printf '%s\n' "${expected[@]}") <(printf '%s\n' "${files[@]}")
           sha256sum "${archive}" >"${archive}.sha256"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: openhd-image-orqa-${{ env.DT }}
           path: |
@@ -406,7 +406,7 @@ jobs:
           - x86-minimal
           - x86-noble
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Prepare development image
         run: |
           echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
@@ -437,7 +437,7 @@ jobs:
           mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
           test "${#images[@]}" -eq 1
           sudo mv "${images[0]}" "deploy/openhd-image-${{ matrix.target }}-${DT}.img"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: openhd-image-${{ matrix.target }}-${{ env.DT }}
           path: deploy/*.img
@@ -458,7 +458,7 @@ jobs:
           - rock5a-lite
           - rock5b-lite
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Prepare development image
         run: |
           echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
@@ -488,7 +488,7 @@ jobs:
           mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
           test "${#images[@]}" -eq 1
           sudo mv "${images[0]}" "deploy/openhd-lite-image-${{ matrix.target }}-${DT}.img"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: openhd-lite-image-${{ matrix.target }}-${{ env.DT }}
           path: deploy/*.img
@@ -498,7 +498,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch' && inputs.target == 'experimental'
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Free runner disk space
         run: |
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc
@@ -517,7 +517,7 @@ jobs:
           mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
           test "${#images[@]}" -eq 1
           sudo mv "${images[0]}" deploy/OpenHD-RPi5-Bookworm-arm64.img
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: OpenHD-RPi5-Bookworm-arm64
           path: deploy/OpenHD-RPi5-Bookworm-arm64.img
@@ -534,7 +534,7 @@ jobs:
           - radxa-cubie-lite
           - orangepi-zero3w-lite
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Prepare development image
         run: |
           echo "DT=$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
@@ -564,7 +564,7 @@ jobs:
           mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
           test "${#images[@]}" -eq 1
           sudo mv "${images[0]}" "deploy/openhd-lite-image-${{ matrix.target }}-${DT}.img"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: openhd-lite-image-${{ matrix.target }}-${{ env.DT }}
           path: deploy/*.img
