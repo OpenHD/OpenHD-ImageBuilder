@@ -37,7 +37,7 @@ jobs:
         echo "$GITHUB_ENV"
        
     ### ONLY THIS RELEVANT FOR BUILDING ###
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
     - name: check for dev-release
       if: ${{ env.BRANCH == 'dev-release' || env.BRANCH == 'add-ramdisk' }}
       run: | 
@@ -114,7 +114,7 @@ jobs:
       run: echo "artifact_name=OpenHD-image-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
         
     - name: Pack image for ${{ matrix.TARGET }}
-      uses: 'actions/upload-artifact@v4'
+      uses: 'actions/upload-artifact@v7'
       with:
         name: "${{ matrix.TARGET }}-${{ env.DT }}"
         path: |
@@ -160,7 +160,7 @@ jobs:
         echo "ARTIFACT_PREFIX=${ARTIFACT_PREFIX}" >> $GITHUB_ENV
       
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
         
     - name: dep
       run: sudo apt update && sudo apt-get install -y unzip curl git qemu qemu-user-static binfmt-support
@@ -177,7 +177,7 @@ jobs:
 
     - name: Download Zero3w Artifact
       id: download_zero3w_artifact
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
       with:
         name: ${{ steps.list_artifacts.outputs.zero3w_artifacts }}
 
@@ -211,7 +211,7 @@ jobs:
       run: echo "artifact_name=OpenHD-EMMC-image-${{ matrix.TARGET }}-${{ matrix.DISTRO }}-${GITHUB_REF##*/}-${{ env.DT }}" >> $GITHUB_ENV
         
     - name: Pack image for ${{ matrix.TARGET }}
-      uses: 'actions/upload-artifact@v4'
+      uses: 'actions/upload-artifact@v7'
       with:
         name: "${{ matrix.TARGET }}-${{ env.DT }}-EMMC"
         path: |
@@ -230,9 +230,9 @@ jobs:
     - name: debug
       run: df -h
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
-    - uses: actions/download-artifact@v4
+    - uses: actions/download-artifact@v8
       with:
         name: "${{ matrix.TARGET }}*"
     
