@@ -21,7 +21,7 @@ jobs:
     name: build-base-${{ inputs.target }}
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       
       - name: Free runner disk space
         run: |
@@ -48,7 +48,7 @@ jobs:
           ./scripts/sdk_builder.sh "${{ inputs.target }}"
           
       - name: Upload Base Image Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: base-image-${{ inputs.target }}-${{ env.DT }}
           path: |
