@@ -161,18 +161,10 @@ on_chroot() {
     install -m 0644 "${BASE_DIR}/additionalFiles/install-current-components.sh" \
         "${MNT_DIR}/opt/additionalFiles/install-current-components.sh"
     install -m 0644 "${BASE_DIR}/last.release" "${MNT_DIR}/opt/additionalFiles/image-release"
-    cp "${BASE_DIR}/release-components.json" "${MNT_DIR}/opt/additionalFiles/release-components.json"
-    python3 - "${BASE_DIR}/release-components.json" > "${MNT_DIR}/opt/additionalFiles/component-commits" <<'PY'
-import json, sys
-sources = json.load(open(sys.argv[1]))["sources"]
-for source in sources:
-    if source["repo"] == "OpenHD/OpenHD":
-        for package in ("openhd", "openhd-x20"):
-            print(f"{package}={source['commit'][:8]}")
-    elif source["repo"] == "OpenHD/QOpenHD":
-        for package in ("qopenhd", "qopenhd-rk3566", "qopenhd-rk3588"):
-            print(f"{package}={source['commit'][:8]}")
-PY
+    # Retire source pins carried over from older base images. Package selection
+    # uses the newest indexed version in the selected OpenHD channel.
+    rm -f "${MNT_DIR}/opt/additionalFiles/release-components.json" \
+        "${MNT_DIR}/opt/additionalFiles/component-commits"
     if [[ -e "${BASE_DIR}/additionalFiles/dev-build" ]]; then
         touch "${MNT_DIR}/opt/additionalFiles/dev-build"
     else

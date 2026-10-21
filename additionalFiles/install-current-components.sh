@@ -24,13 +24,6 @@ for package in "${packages[@]}"; do
     echo "No $channel package indexed for $package on $(dpkg --print-architecture)" >&2
     exit 1
   fi
-  if [[ "$channel" == dev-release && -f /opt/additionalFiles/component-commits ]]; then
-    expected_commit="$(awk -F= -v package="$package" '$1 == package {print $2}' /opt/additionalFiles/component-commits)"
-    if [[ -n "$expected_commit" && "$newest" != *"$expected_commit"* ]]; then
-      echo "Package $package=$newest does not match release source $expected_commit" >&2
-      exit 1
-    fi
-  fi
   echo "Selected $channel component: $package=$newest"
   specs+=("$package=$newest")
   apt-mark unhold "$package" >/dev/null
@@ -38,9 +31,8 @@ done
 apt-get -y --allow-downgrades --reinstall --no-install-recommends \
   -o Acquire::Retries=5 -o Dpkg::Options::=--force-confnew install "${specs[@]}"
 mkdir -p /usr/share/openhd /boot/openhd
-if [[ -f /opt/additionalFiles/release-components.json ]]; then
-  cp /opt/additionalFiles/release-components.json /usr/share/openhd/release-components.json
-fi
+# Updated base images may still contain the retired source pins.
+rm -f /usr/share/openhd/release-components.json
 manifest=/usr/share/openhd/image-components.txt
 : > "$manifest"
 for spec in "${specs[@]}"; do

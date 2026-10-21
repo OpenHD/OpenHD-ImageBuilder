@@ -42,21 +42,6 @@ env:
   X21_SOURCE_RUN_ID: "34479273960"
 
 jobs:
-  release-components:
-    if: inputs.target != 'publish-pi'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 95
-    steps:
-      - uses: actions/checkout@v7
-      - name: Wait for the release source packages
-        env:
-          GH_TOKEN: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
-        run: python3 -u scripts/wait_for_release_components.py
-      - uses: actions/upload-artifact@v7
-        with:
-          name: release-component-sources
-          path: release-components.json
-          if-no-files-found: error
   publish-existing-pi:
     if: github.event_name == 'workflow_dispatch' && inputs.target == 'publish-pi'
     uses: ./.github/workflows/publish-pi-image.yml
@@ -67,7 +52,6 @@ jobs:
   # 1. Fully Supported (Raspberry Pi)
   # =========================================================================
   supported-images:
-    needs: release-components
     name: supported-${{ matrix.target }}
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'supported'
     runs-on: ubuntu-22.04
@@ -124,7 +108,6 @@ jobs:
   # 2. OpenHD Hardware (X21, X20)
   # =========================================================================
   openhd-hardware-x21:
-    needs: release-components
     name: openhd-hardware-x21
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'openhd-hardware' || inputs.target == 'x21-update'
     runs-on: ubuntu-24.04
@@ -294,7 +277,6 @@ jobs:
             openhd/x21 "${firmware_package}"
 
   openhd-hardware-x20:
-    needs: release-components
     name: openhd-hardware-x20
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'openhd-hardware'
     runs-on: ubuntu-22.04
@@ -321,7 +303,6 @@ jobs:
           path: deploy/*.img
           if-no-files-found: error
   openhd-hardware-orqa:
-    needs: release-components
     name: openhd-hardware-orqa
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'openhd-hardware' || inputs.target == 'orqa'
     runs-on: ubuntu-24.04
@@ -413,7 +394,6 @@ jobs:
   # 3. Full (running QOpenHD)
   # =========================================================================
   full-images:
-    needs: release-components
     name: full-${{ matrix.target }}
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'full'
     runs-on: ubuntu-22.04
@@ -468,7 +448,6 @@ jobs:
   # 4. Lite (OpenHD Glide) & Experimental Pi 5
   # =========================================================================
   lite-images:
-    needs: release-components
     name: lite-${{ matrix.target }}
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'lite'
     runs-on: ubuntu-22.04
@@ -517,7 +496,6 @@ jobs:
           path: deploy/*.img
           if-no-files-found: error
   experimental-pi5-image:
-    needs: release-components
     name: experimental-pi5-bookworm
     if: github.event_name == 'workflow_dispatch' && inputs.target == 'experimental'
     runs-on: ubuntu-24.04
@@ -548,7 +526,6 @@ jobs:
           if-no-files-found: error
 
   experimental-lite-images:
-    needs: release-components
     name: experimental-${{ matrix.target }}
     if: github.event_name == 'workflow_dispatch' && inputs.target == 'experimental'
     runs-on: ubuntu-22.04
