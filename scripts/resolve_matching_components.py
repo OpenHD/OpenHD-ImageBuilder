@@ -55,6 +55,7 @@ def manifests(prefix: str, platform: str) -> list[tuple[dict[str, object], str, 
 def select_pair(
     openhd_candidates: list[tuple[dict[str, object], str, str]],
     sysutils_candidates: list[tuple[dict[str, object], str, str]],
+    required_sdk_sha256: str | None = None,
 ) -> tuple[str, str, str, str]:
     matches: list[tuple[str, str, str, str, str]] = []
     for openhd, openhd_archive, openhd_uploaded in openhd_candidates:
@@ -62,6 +63,8 @@ def select_pair(
             sdk_sha = str(openhd.get("sdk_sha256", ""))
             buildroot_commit = str(openhd.get("sdk_buildroot_commit", ""))
             if not sdk_sha or sdk_sha == "unknown":
+                continue
+            if required_sdk_sha256 and sdk_sha != required_sdk_sha256:
                 continue
             if sdk_sha != str(sysutils.get("sdk_sha256", "")):
                 continue
@@ -89,11 +92,13 @@ def main() -> int:
     parser.add_argument("--platform", required=True)
     parser.add_argument("--openhd-prefix", required=True)
     parser.add_argument("--sysutils-prefix", required=True)
+    parser.add_argument("--sdk-sha256", help="Require the SDK used by the selected base firmware")
     args = parser.parse_args()
 
     pair = select_pair(
         manifests(args.openhd_prefix, args.platform),
         manifests(args.sysutils_prefix, args.platform),
+        args.sdk_sha256,
     )
     openhd_archive, sysutils_archive, sdk_sha, buildroot_commit = pair
     print(f"OPENHD_COMPONENT_NAME={openhd_archive}")

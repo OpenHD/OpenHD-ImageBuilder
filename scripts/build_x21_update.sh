@@ -30,6 +30,7 @@ tar -xzf "${sysutils_archive}" -C "${sysutils_dir}"
 python3 - "${openhd_dir}/component-manifest.json" \
   "${sysutils_dir}/component-manifest.json" <<'PY'
 import json
+import os
 import sys
 
 openhd = json.load(open(sys.argv[1], encoding="utf-8"))
@@ -43,6 +44,9 @@ for manifest, component in expected:
     assert manifest["sdk_sha256"] != "unknown"
 assert openhd["sdk_sha256"] == sysutils["sdk_sha256"], "component SDK checksums differ"
 assert openhd["sdk_buildroot_commit"] == sysutils["sdk_buildroot_commit"], "component Buildroot commits differ"
+if os.environ.get("X21_BASE_SDK_SHA256"):
+    assert openhd["sdk_sha256"] == os.environ["X21_BASE_SDK_SHA256"], "component SDK differs from base firmware"
+    assert openhd["sdk_buildroot_commit"] == os.environ["X21_BASE_BUILDROOT_COMMIT"], "component Buildroot differs from base firmware"
 PY
 
 cp -a "${seed_dir}/." "${stage_dir}/"
@@ -125,6 +129,9 @@ for update_name in "${versioned_name}" "${latest_name}"; do
 {
   "schema": 1,
   "platform": "x21b",
+  "update_kind": "applications-only",
+  "base_firmware_version": "${X21_BASE_VERSION:-unknown}",
+  "camera_profile": "${X21_CAMERA_PROFILE:-unknown}",
   "architecture": "aarch64",
   "openhd_package_version": "${openhd_version}",
   "sysutils_package_version": "${sysutils_version}",

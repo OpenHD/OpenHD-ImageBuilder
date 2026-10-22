@@ -39,7 +39,6 @@ env:
   IMAGE_RELEASE: 3.0-albatros-beta1
   BRANCH: dev-release
   X21_COMPONENT_BASE_URL: https://dl.cloudsmith.io/public/openhd/dev-release/raw/files
-  X21_SOURCE_RUN_ID: "34479273960"
 
 jobs:
   publish-existing-pi:
@@ -119,12 +118,16 @@ jobs:
       - name: Set X21B release timestamp
         run: echo "DT=${IMAGE_RELEASE}-$(date -u +'%Y-%m-%d-%H-%M-%S')" >>"${GITHUB_ENV}"
 
+      - name: Fetch the coherent production X21B base
+        run: python3 scripts/fetch_x21_base.py --output x21-base --env-file "${GITHUB_ENV}"
+
       - name: Resolve a compatible X21B component pair
         run: |
           python3 scripts/resolve_matching_components.py \
             --platform x21b \
             --openhd-prefix openhd-x21b- \
             --sysutils-prefix openhd-sys-utils-x21b- \
+            --sdk-sha256 "${X21_BASE_SDK_SHA256}" \
             >>"${GITHUB_ENV}"
 
       - name: Download X21B component packages from Cloudsmith
@@ -141,64 +144,23 @@ jobs:
           sha256sum -c "${OPENHD_COMPONENT_NAME}.sha256"
           sha256sum -c "${SYSUTILS_COMPONENT_NAME}.sha256"
 
-      - name: Download, verify and extract the stable X21B filesystem seed
+      - name: Stage the verified X21B base and filesystem seed
         run: |
           set -euo pipefail
-          mkdir -p x21-ohd-seed-artifact
-          for name in openhd-x21b-ohd-root.tar.gz openhd-x21b-ohd-root.tar.gz.sha256 openhd-x21b-ohd-root.tar.gz.manifest.json; do
-            curl --fail --location --retry 5 --retry-delay 3 \
-              "${X21_COMPONENT_BASE_URL}/${name}" -o "x21-ohd-seed-artifact/${name}"
-          done
-          mkdir -p x21-ohd-seed
-          (
-            cd x21-ohd-seed-artifact
-            sha256sum -c openhd-x21b-ohd-root.tar.gz.sha256
-          )
-          echo "X21_OHD_SEED_SHA256=$(sha256sum x21-ohd-seed-artifact/openhd-x21b-ohd-root.tar.gz | awk '{print $1}')" >>"${GITHUB_ENV}"
-          tar -xzf x21-ohd-seed-artifact/openhd-x21b-ohd-root.tar.gz -C x21-ohd-seed
-
-      - name: Download and verify the stable X21B full firmware
-        id: x21-firmware-cache
-        continue-on-error: true
-        run: |
-          set -euo pipefail
-          mkdir -p x21-firmware-cache
-          for name in firmware.zip firmware.zip.sha256; do
-            curl --fail --location --retry 5 --retry-delay 3 \
-              "${X21_COMPONENT_BASE_URL}/${name}" -o "x21-firmware-cache/${name}"
-          done
-          cd x21-firmware-cache
-          sha256sum -c firmware.zip.sha256
-
-      # The publisher and image workflows can start together after this cache
-      # definition changes. Fall back to the pinned source run for that first
-      # build; subsequent builds use the durable Cloudsmith copy above.
-      - name: Download X21B full firmware from the source run
-        if: steps.x21-firmware-cache.outcome == 'failure'
-        uses: actions/download-artifact@v8
-        with:
-          repository: OpenHD/OpenHD-X21B
-          run-id: ${{ env.X21_SOURCE_RUN_ID }}
-          name: ota-img
-          github-token: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
-          path: x21-firmware-input
-
-      - name: Stage the base X21B full firmware
-        run: |
-          set -euo pipefail
-          if [[ "${{ steps.x21-firmware-cache.outcome }}" == "success" ]]; then
-            firmware_source=x21-firmware-cache/firmware.zip
-          else
-            firmware_source=x21-firmware-input/firmware.zip
-          fi
-          test -s "${firmware_source}"
-          mkdir -p x21-output
-          cp "${firmware_source}" x21-output/firmware-base.zip
+          test "${COMPONENT_SDK_SHA256}" = "${X21_BASE_SDK_SHA256}"
+          test "${COMPONENT_BUILDROOT_COMMIT}" = "${X21_BASE_BUILDROOT_COMMIT}"
+          mkdir -p x21-ohd-seed x21-output
+          tar -xzf x21-base/ohd-seed.tar.gz -C x21-ohd-seed
+          cp x21-base/firmware.zip x21-output/firmware-base.zip
+          cp x21-base/base-manifest.json x21-output/base-manifest.json
 
       - name: Install SWUpdate image tools
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends cpio fakeroot file mtd-utils unzip zip
+
+      - name: Check production packaging
+        run: python3 -m unittest discover -s scripts/tests -p 'test_x21_production.py' -v
 
       - name: Assemble flashable X21B update
         run: |
@@ -212,14 +174,22 @@ jobs:
         run: |
           set -euo pipefail
           mv x21-output/OpenHD-X21B-latest.ohd \
-            "x21-output/OpenHD-X21B-full-${DT}.ohd"
+            "x21-output/OpenHD-X21B-applications-${DT}.ohd"
+          cp x21-output/OpenHD-X21B-latest.ohd.manifest.json x21-output/applications-manifest.json
+
+      - name: Assemble the complete A/B base and application update
+        run: |
+          python3 scripts/build_x21_full_update.py \
+            x21-output/firmware-base.zip \
+            "x21-output/OpenHD-X21B-applications-${DT}.ohd" \
+            "x21-output/OpenHD-X21B-full-${DT}.ohd_base"
 
       - name: Put the updated OHD partition into the full X21B firmware
         run: |
           set -euo pipefail
           bash ./scripts/repack_x21_firmware.sh \
             "${GITHUB_WORKSPACE}/x21-output/firmware-base.zip" \
-            "${GITHUB_WORKSPACE}/x21-output/OpenHD-X21B-full-${DT}.ohd" \
+            "${GITHUB_WORKSPACE}/x21-output/OpenHD-X21B-applications-${DT}.ohd" \
             "${GITHUB_WORKSPACE}/x21-output/firmware-${DT}.zip"
           rm x21-output/firmware-base.zip
 
@@ -228,7 +198,9 @@ jobs:
         with:
           name: openhd-image-x21b-${{ env.DT }}
           path: |
-            x21-output/OpenHD-X21B-full-${{ env.DT }}.ohd
+            x21-output/OpenHD-X21B-applications-${{ env.DT }}.ohd
+            x21-output/OpenHD-X21B-full-${{ env.DT }}.ohd_base*
+            x21-output/*manifest.json
             x21-output/firmware-${{ env.DT }}.zip
           if-no-files-found: error
           retention-days: 30
@@ -240,7 +212,7 @@ jobs:
         run: |
           set -euo pipefail
           bash scripts/publish_dev_image.sh x21b "x21-output/firmware-${DT}.zip" none
-          bash scripts/publish_dev_image.sh x21b-update "x21-output/OpenHD-X21B-full-${DT}.ohd"
+          bash scripts/publish_dev_image.sh x21b-update "x21-output/OpenHD-X21B-full-${DT}.ohd_base"
 
       - name: Promote completed X21B firmware and update
         if: github.ref == 'refs/heads/dev-release'
@@ -263,7 +235,7 @@ jobs:
         run: |
           set -euo pipefail
           : "${CLOUDSMITH_API_KEY:?CLOUDSMITH_API_KEY secret is required to publish X21B files}"
-          ohd_package="x21-output/OpenHD-X21B-full-${DT}.ohd"
+          ohd_package="x21-output/OpenHD-X21B-full-${DT}.ohd_base"
           firmware_package="x21-output/firmware-${DT}.zip"
           test -s "${ohd_package}"
           test -s "${firmware_package}"
