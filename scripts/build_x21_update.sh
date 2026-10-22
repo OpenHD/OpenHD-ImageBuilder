@@ -66,6 +66,8 @@ file "${stage_dir}/usr/bin/openhd_sys_utils" | grep -q 'ARM aarch64'
 
 openhd_version="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["package_version"])' "${openhd_dir}/component-manifest.json")"
 sysutils_version="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["package_version"])' "${sysutils_dir}/component-manifest.json")"
+openhd_commit="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["source_commit"])' "${openhd_dir}/component-manifest.json")"
+sysutils_commit="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["source_commit"])' "${sysutils_dir}/component-manifest.json")"
 sdk_sha256="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["sdk_sha256"])' "${openhd_dir}/component-manifest.json")"
 sdk_buildroot_commit="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["sdk_buildroot_commit"])' "${openhd_dir}/component-manifest.json")"
 bundle_version="openhd-${openhd_version}_sysutils-${sysutils_version}"
@@ -135,6 +137,8 @@ for update_name in "${versioned_name}" "${latest_name}"; do
   "architecture": "aarch64",
   "openhd_package_version": "${openhd_version}",
   "sysutils_package_version": "${sysutils_version}",
+  "openhd_source_commit": "${openhd_commit}",
+  "sysutils_source_commit": "${sysutils_commit}",
   "sdk_sha256": "${sdk_sha256}",
   "sdk_buildroot_commit": "${sdk_buildroot_commit}",
   "ohd_seed_sha256": "${X21_OHD_SEED_SHA256:-unknown}",

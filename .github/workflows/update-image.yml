@@ -191,6 +191,8 @@ jobs:
             "${GITHUB_WORKSPACE}/x21-output/firmware-base.zip" \
             "${GITHUB_WORKSPACE}/x21-output/OpenHD-X21B-applications-${DT}.ohd" \
             "${GITHUB_WORKSPACE}/x21-output/firmware-${DT}.zip"
+          zip -q -j "x21-output/firmware-${DT}.zip" \
+            x21-output/base-manifest.json x21-output/applications-manifest.json
           rm x21-output/firmware-base.zip
 
       - name: Upload flashable X21B update
