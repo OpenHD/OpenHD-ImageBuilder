@@ -101,7 +101,13 @@ def assemble(base, applications, sdk, target, output):
         try:
             # Copy into the existing filesystem, retaining all board/runtime data.
             for directory in ('usr', 'lib'):
+                if (root / directory).is_symlink():
+                    raise ValueError('Unexpected symlink at root directory: ' + directory)
                 subprocess.run(['cp', '-a', str(stage / directory) + '/.', str(root / directory)], check=True)
+            for name, expected in app['files'].items():
+                installed = update.target_file(root, root / name)
+                if hashlib.sha256(installed.read_bytes()).hexdigest() != expected:
+                    raise ValueError('Installed application differs from payload: ' + name)
             package = sdk / 'sysdrv/tools/board/buildroot/package'
             for source, destination in (
                     ('openhd/start.sh', 'etc/init.d/S99openhd'),
@@ -133,6 +139,10 @@ def assemble(base, applications, sdk, target, output):
             with zipfile.ZipFile(base / 'firmware.zip') as archive:
                 loader = work / 'download.bin'
                 loader.write_bytes(archive.read('download.bin'))
+                transport = json.loads(archive.read('firmware-manifest.json'))
+                if (transport['sdk_commit'] != meta['sdk_commit'] or
+                        transport['loader_sha256'] != firmware.digest(loader)):
+                    raise ValueError('Base loader provenance mismatch')
             firmware.package(disk, loader,
                              sdk / 'project/cfg/BoardConfig_IPC' / meta['board_config'],
                              output / 'firmware.zip', meta['sdk_commit'])

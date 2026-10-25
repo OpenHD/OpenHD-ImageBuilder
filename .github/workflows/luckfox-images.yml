@@ -31,6 +31,8 @@ jobs:
       run: ${{ steps.base.outputs.run }}
     steps:
       - uses: actions/checkout@v7
+      - name: Check assembly integrity boundaries
+        run: python3 -m unittest discover -s scripts/tests -p test_pico_assembly.py -v
       - uses: actions/checkout@v7
         with:
           repository: OpenHD/luckfox-pico-sdk
@@ -115,8 +117,7 @@ jobs:
             case "$name" in firmware.zip*) name="openhd-${TARGET_ID}-${name}" ;; esac
             cp "$artifact" "publish/$name"
             if [ "$(basename "$artifact")" = firmware.zip.sha256 ]; then
-              printf '%s  %s\n' "$(sha256sum deploy/firmware.zip | cut -d' ' -f1)" "$name" > "publish/$name"
-              sed -i 's/-firmware.zip.sha256$/-firmware.zip/' "publish/$name"
+              printf '%s  %s\n' "$(sha256sum deploy/firmware.zip | cut -d' ' -f1)" "${name%.sha256}" > "publish/$name"
             fi
           done
           for artifact in publish/*; do
