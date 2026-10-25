@@ -44,6 +44,15 @@ class PicoAssemblyTests(unittest.TestCase):
             stream.write(b'!')
         self.assertNotEqual(outside_digest(disk, offset, length), expected)
 
+    def test_boot_partition_selection_is_explicit(self):
+        disk = self.disk()
+        data = bytearray(disk.read_bytes())
+        data[1024 + 56:1024 + 128] = 'boot'.encode('utf-16-le').ljust(72, b'\0')
+        disk.write_bytes(data)
+        self.assertEqual(root_partition(disk, 'boot'), (8192, 8192))
+        with self.assertRaises(ValueError):
+            root_partition(disk)
+
     def test_reject_partition_outside_disk(self):
         with self.assertRaisesRegex(ValueError, 'bounded'):
             root_partition(self.disk(100))

@@ -20,7 +20,7 @@ def load(path, name):
     return module
 
 
-def root_partition(image):
+def root_partition(image, name="rootfs"):
     with image.open('rb') as stream:
         stream.seek(512)
         header = stream.read(512)
@@ -36,7 +36,7 @@ def root_partition(image):
         entry = entries[start:start + size]
         if entry[:16] == bytes(16):
             continue
-        if entry[56:128].decode('utf-16-le').rstrip('\0') == 'rootfs':
+        if entry[56:128].decode('utf-16-le').rstrip('\0') == name:
             first, last = struct.unpack_from('<QQ', entry, 32)
             roots.append((first * 512, (last - first + 1) * 512))
     if len(roots) != 1 or roots[0][0] + roots[0][1] > image.stat().st_size:
@@ -81,6 +81,8 @@ def assemble(base, applications, sdk, target, output):
     if (meta['target'], meta['runtime_abi'], app['platform'], app['architecture']) != (
             target, 'armv7a-hardfloat-uclibc', 'luckfox-pico', 'armhf'):
         raise ValueError('Incompatible Pico application/base pair')
+    if meta.get('usb_role') != 'host':
+        raise ValueError('Pico base lacks USB host support; rebuild/publish SDK board bases')
     subprocess.run(['sha256sum', '-c', 'applications.sha256'], cwd=applications, check=True)
     firmware = load(sdk / 'scripts/package_imagewriter_firmware.py', 'pico_firmware')
     update = load(sdk / 'scripts/package-pico-update.py', 'pico_update')
@@ -91,6 +93,22 @@ def assemble(base, applications, sdk, target, output):
         with lzma.open(base / meta['image']) as src, disk.open('wb') as dst:
             shutil.copyfileobj(src, dst, 4 << 20)
         firmware.check_disk(disk)
+        boot_offset, boot_length = root_partition(disk, 'boot')
+        boot_image, boot_dtb = work / 'boot.img', work / 'boot.dtb'
+        with disk.open('rb') as src, boot_image.open('wb') as dst:
+            src.seek(boot_offset)
+            remaining = boot_length
+            while remaining:
+                block = src.read(min(4 << 20, remaining))
+                if not block:
+                    raise ValueError('Truncated Pico boot partition')
+                dst.write(block)
+                remaining -= len(block)
+        subprocess.run(['dumpimage', '-T', 'flat_dt', '-p', '0', '-o', str(boot_dtb), str(boot_image)], check=True)
+        usb_mode = subprocess.check_output(['fdtget', '-t', 's', str(boot_dtb),
+                                           '/usbdrd/usb@ffb00000', 'dr_mode'], text=True).strip()
+        if usb_mode != 'host':
+            raise ValueError('Pico base boot DTB does not enable USB host mode')
         offset, length = root_partition(disk)
         before = outside_digest(disk, offset, length)
         root.mkdir()
@@ -126,6 +144,16 @@ def assemble(base, applications, sdk, target, output):
                 path.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(package / source, path)
                 path.chmod(0o755)
+            overlay = sdk / 'project/cfg/BoardConfig_IPC/overlay/overlay-luckfox-buildroot-init/etc/init.d'
+            for name in ('S39ethernet-mac', 'S50sshd'):
+                shutil.copyfile(overlay / name, root / 'etc/init.d' / name)
+                (root / 'etc/init.d' / name).chmod(0o755)
+            shutil.copyfile(sdk / 'sysdrv/tools/board/android-tools/S50usbdevice', root / 'etc/init.d/S50usbdevice')
+            (root / 'etc/init.d/S50usbdevice').chmod(0o755)
+            hotspot = root / 'usr/sbin/openhd-pico-hotspot'
+            hotspot.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(sdk / 'project/cfg/BoardConfig_IPC/overlay/overlay-luckfox-buildroot-init/usr/sbin/openhd-pico-hotspot', hotspot)
+            hotspot.chmod(0o755)
             base_id = hashlib.sha256((meta['sdk_commit'] + ':' + target).encode()).hexdigest()
             (root / 'etc/openhd-pico-base-id').write_text(base_id + '\n')
             commits = app['source_commits']
@@ -134,7 +162,8 @@ def assemble(base, applications, sdk, target, output):
             recorded = verifier.inspect(root, payload, target, dict(sdk=meta['sdk_commit'], **commits))
             recorded.update(base_image_sha256=meta['sha256'], base_run=meta.get('base_run'),
                             sdk_sha256=app['sdk_sha256'], assembly='existing-base-application-overlay',
-                            video_backend=app['video_backend'], gstreamer=False)
+                            video_backend=app['video_backend'], gstreamer=False, usb_role='host',
+                            ethernet_mac='persistent', venc_packet_address='mb-valid')
             manifest = json.dumps(recorded, indent=2) + '\n'
             (root / 'etc/openhd-image-components.json').write_text(manifest)
             (output / ('openhd-' + target + '.components.json')).write_text(manifest)

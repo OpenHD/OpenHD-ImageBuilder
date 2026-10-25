@@ -26,6 +26,7 @@ jobs:
       OPENHD_SUBMODULE_TOKEN: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
   prepare:
     runs-on: ubuntu-24.04
+    timeout-minutes: 150
     outputs:
       matrix: ${{ steps.base.outputs.matrix }}
       run: ${{ steps.base.outputs.run }}
@@ -39,6 +40,19 @@ jobs:
           ref: main
           path: pico-sdk
           sparse-checkout: scripts
+      - name: Wait for the current SDK board-base build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          sdk_commit=$(gh api repos/OpenHD/luckfox-pico-sdk/commits/main --jq .sha)
+          base_run=$(gh run list --repo OpenHD/luckfox-pico-sdk --workflow build.yml \
+            --branch main --event push --commit "$sdk_commit" --limit 1 \
+            --json databaseId --jq '.[0].databaseId // empty')
+          if [ -n "$base_run" ]; then
+            gh run watch "$base_run" --repo OpenHD/luckfox-pico-sdk --interval 30 --exit-status
+          fi
       - id: base
         env:
           GH_TOKEN: ${{ github.token }}
@@ -69,6 +83,9 @@ jobs:
             project/cfg/BoardConfig_IPC
             sysdrv/tools/board/buildroot/package/OpenHD
             sysdrv/tools/board/buildroot/package/OpenHD-SysUtils
+            sysdrv/tools/board/android-tools
+      - name: Install boot image verification tools
+        run: sudo apt-get update && sudo apt-get install -y device-tree-compiler u-boot-tools
       - name: Verify application startup assets in the sparse SDK checkout
         run: |
           test -f pico-sdk/sysdrv/tools/board/buildroot/package/OpenHD/start.sh
