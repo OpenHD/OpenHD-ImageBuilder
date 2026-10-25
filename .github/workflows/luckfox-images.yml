@@ -133,7 +133,7 @@ jobs:
           done
           # Seed permanent base files only once; ordinary image updates reuse them.
           base_name="openhd-base-${TARGET_ID}"
-          if ! curl --fail --silent --head "https://dl.cloudsmith.io/public/openhd/dev-release/raw/files/${base_name}.json" >/dev/null; then
+          if ! curl --fail --silent --head "https://dl.cloudsmith.io/public/openhd/dev-release/raw/names/${base_name}.json/versions/latest/${base_name}.json" >/dev/null; then
             mkdir base-publish
             cp base/*.img.xz base-publish/
             if [ -f base/firmware.zip ]; then

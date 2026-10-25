@@ -4,11 +4,17 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+import urllib.parse
 import urllib.request
 
 REPO = 'OpenHD/luckfox-pico-sdk'
 TARGETS = ['zero', 'ultra-w', 'ultra', 'pro-max', 'plus', 'mini']
-BASE_URL = 'https://dl.cloudsmith.io/public/openhd/dev-release/raw/files/'
+BASE_URL = 'https://dl.cloudsmith.io/public/openhd/dev-release/raw/names/'
+
+
+def published_url(filename):
+    name = urllib.parse.quote(filename, safe='')
+    return BASE_URL + name + '/versions/latest/' + name
 
 
 def api(path):
@@ -38,7 +44,7 @@ def fetch(target, output, run):
     # Published bases remain available after GitHub's temporary artifacts expire.
     name = 'openhd-base-' + target
     try:
-        with urllib.request.urlopen(BASE_URL + name + '.json', timeout=30) as response:
+        with urllib.request.urlopen(published_url(name + '.json'), timeout=30) as response:
             manifest = json.load(response)
         if manifest['target'] != target or manifest['runtime_abi'] != 'armv7a-hardfloat-uclibc':
             raise ValueError('Wrong published Pico base')
@@ -46,7 +52,7 @@ def fetch(target, output, run):
         if manifest['boot_medium'] == 'emmc':
             filenames += [name + '-firmware.zip', name + '-firmware.zip.sha256']
         for filename in filenames:
-            urllib.request.urlretrieve(BASE_URL + filename, output / filename)
+            urllib.request.urlretrieve(published_url(filename), output / filename)
         if manifest['boot_medium'] == 'emmc':
             (output / (name + '-firmware.zip')).rename(output / 'firmware.zip')
             checksum = (output / (name + '-firmware.zip.sha256')).read_text().split()[0]
