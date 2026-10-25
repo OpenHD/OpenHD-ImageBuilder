@@ -17,7 +17,16 @@ on:
           - rv1103
 
 jobs:
+  pico-images:
+    name: Complete Pico images with current applications
+    if: inputs.target == 'luckfox' || inputs.target == 'rv1106' || inputs.target == 'rv1103'
+    uses: OpenHD/luckfox-pico-sdk/.github/workflows/openhd-images.yml@main
+    with:
+      target: ${{ inputs.target == 'rv1106' && 'luckfox-pico-pro-max' || inputs.target == 'rv1103' && 'luckfox-pico-mini' || 'all' }}
+    secrets: inherit
+
   build-base:
+    if: inputs.target != 'luckfox' && inputs.target != 'rv1106' && inputs.target != 'rv1103'
     name: build-base-${{ inputs.target }}
     runs-on: ubuntu-24.04
     steps:

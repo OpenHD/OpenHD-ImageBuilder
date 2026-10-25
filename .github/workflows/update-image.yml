@@ -18,6 +18,7 @@ on:
           - experimental
           - x21-update
           - orqa
+          - luckfox
           - publish-pi
       source_run:
         description: Successful dev-release image build to publish when target is publish-pi
@@ -41,6 +42,14 @@ env:
   X21_COMPONENT_BASE_URL: https://dl.cloudsmith.io/public/openhd/dev-release/raw/files
 
 jobs:
+  luckfox-pico-images:
+    name: Luckfox Pico images with current OpenHD and SysUtils
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'luckfox'
+    uses: OpenHD/luckfox-pico-sdk/.github/workflows/openhd-images.yml@main
+    with:
+      target: all
+    secrets: inherit
+
   publish-existing-pi:
     if: github.event_name == 'workflow_dispatch' && inputs.target == 'publish-pi'
     uses: ./.github/workflows/publish-pi-image.yml
