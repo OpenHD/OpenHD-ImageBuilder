@@ -10,6 +10,11 @@ archive includes the complete transitive runtime library closure and SysUtils
 radio policy. WebUI is not installed. No kernel, bootloader, Buildroot or board
 SDK compilation runs during this workflow.
 
+Pico applications use the native RKAIQ and Rockit VI/VENC camera worker.
+GStreamer is disabled when compiling OpenHD. Assembly rejects binaries linking
+GStreamer or missing the Rockit/RKAIQ runtime libraries, and records the native
+camera backend in the embedded component manifest.
+
 The assembler downloads the existing verified board base, mounts its ext4 root
 partition, and replaces application files, libraries and startup scripts. It
 checks ARM ELF dependencies, Devourer discovery, radio configuration, checksums

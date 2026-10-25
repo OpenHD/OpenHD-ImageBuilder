@@ -96,6 +96,14 @@ def assemble(base, applications, sdk, target, output):
         root.mkdir()
         stage.mkdir()
         extract_applications(applications / 'applications.tar.gz', stage, app)
+        if app.get('video_backend') != 'native-pico-mpi' or app.get('gstreamer') is not False:
+            raise ValueError('Pico images require the native VI/VENC camera build')
+        dynamic = subprocess.check_output(['readelf', '-d', str(stage / 'usr/bin/openhd')], text=True)
+        if 'libgst' in dynamic:
+            raise ValueError('Pico OpenHD must run without GStreamer')
+        for library in ('librockit.so', 'librkaiq.so'):
+            if not (stage / 'usr/lib' / library).is_file():
+                raise ValueError('Missing native camera runtime: ' + library)
         subprocess.run(['mount', '-o', f'loop,offset={offset},sizelimit={length}',
                         str(disk), str(root)], check=True)
         try:
@@ -125,7 +133,8 @@ def assemble(base, applications, sdk, target, output):
             update.package(root, payload, 'readelf', {n: commits[n] for n in ('openhd', 'sysutils')})
             recorded = verifier.inspect(root, payload, target, dict(sdk=meta['sdk_commit'], **commits))
             recorded.update(base_image_sha256=meta['sha256'], base_run=meta.get('base_run'),
-                            sdk_sha256=app['sdk_sha256'], assembly='existing-base-application-overlay')
+                            sdk_sha256=app['sdk_sha256'], assembly='existing-base-application-overlay',
+                            video_backend=app['video_backend'], gstreamer=False)
             manifest = json.dumps(recorded, indent=2) + '\n'
             (root / 'etc/openhd-image-components.json').write_text(manifest)
             (output / ('openhd-' + target + '.components.json')).write_text(manifest)
