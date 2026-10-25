@@ -67,8 +67,14 @@ jobs:
           sparse-checkout: |
             scripts
             project/cfg/BoardConfig_IPC
-            sysdrv/tools/board/buildroot/package/openhd
-            sysdrv/tools/board/buildroot/package/openhd-sysutils
+            sysdrv/tools/board/buildroot/package/OpenHD
+            sysdrv/tools/board/buildroot/package/OpenHD-SysUtils
+      - name: Verify application startup assets in the sparse SDK checkout
+        run: |
+          test -f pico-sdk/sysdrv/tools/board/buildroot/package/OpenHD/start.sh
+          test -f pico-sdk/sysdrv/tools/board/buildroot/package/OpenHD/slots.sh
+          test -f pico-sdk/sysdrv/tools/board/buildroot/package/OpenHD/pico-update.py
+          test -f pico-sdk/sysdrv/tools/board/buildroot/package/OpenHD-SysUtils/start.sh
       - uses: actions/download-artifact@v8
         with:
           name: pico-applications
@@ -120,6 +126,7 @@ jobs:
               printf '%s  %s\n' "$(sha256sum deploy/firmware.zip | cut -d' ' -f1)" "${name%.sha256}" > "publish/$name"
             fi
           done
+          sed -i "s/  firmware.zip$/  openhd-${TARGET_ID}-firmware.zip/" "publish/openhd-${TARGET_ID}.sha256"
           for artifact in publish/*; do
             "$HOME/.local/bin/cloudsmith" push raw --republish --name "$(basename "$artifact")" \
               --version "$version" openhd/dev-release "$artifact"

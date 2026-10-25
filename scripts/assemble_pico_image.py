@@ -110,10 +110,10 @@ def assemble(base, applications, sdk, target, output):
                     raise ValueError('Installed application differs from payload: ' + name)
             package = sdk / 'sysdrv/tools/board/buildroot/package'
             for source, destination in (
-                    ('openhd/start.sh', 'etc/init.d/S99openhd'),
-                    ('openhd/slots.sh', 'etc/init.d/S97openhd-slots'),
-                    ('openhd/pico-update.py', 'usr/sbin/openhd-pico-update'),
-                    ('openhd-sysutils/start.sh', 'etc/init.d/S98openhd-sysutils')):
+                    ('OpenHD/start.sh', 'etc/init.d/S99openhd'),
+                    ('OpenHD/slots.sh', 'etc/init.d/S97openhd-slots'),
+                    ('OpenHD/pico-update.py', 'usr/sbin/openhd-pico-update'),
+                    ('OpenHD-SysUtils/start.sh', 'etc/init.d/S98openhd-sysutils')):
                 path = root / destination
                 path.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(package / source, path)
