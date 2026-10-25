@@ -1,30 +1,34 @@
-# Complete Pico images
+# Pico images from reusable bases
 
-The `New_Image_Workflow` builds all six Pico board/storage combinations on a
-normal development image build or when dispatched with `target=luckfox`:
+The normal image workflow (`target=luckfox`) assembles all six Pico targets:
 Zero, Ultra W and Ultra eMMC; Pro/Max, Plus and Mini SD card.
 
-The job calls the canonical `OpenHD/luckfox-pico-sdk` image builder. It resolves
-the current Pico SDK `main`, OpenHD `openhd-3.0` and SysUtils `dev-release` once
-for the matrix. Devourer is built from the submodule revision selected by that
-OpenHD commit. Buildroot builds both applications and their runtime libraries
-for each board. WebUI is neither fetched nor installed.
+Board images and application builds are separate. The canonical OpenHD builder
+cross-compiles current `openhd-3.0` and SysUtils `dev-release` once against the
+published Pico SDK. Devourer uses the revision selected by OpenHD. The paired
+archive includes the complete transitive runtime library closure and SysUtils
+radio policy. WebUI is not installed. No kernel, bootloader, Buildroot or board
+SDK compilation runs during this workflow.
 
-Checks require both applications, their startup scripts, Devourer discovery,
-radio configuration, the runtime dependency closure and working kernel support
-for USB maintenance. Legacy broadcast kernel drivers and WebUI files fail the
-image check. `/etc/openhd-image-components.json` records the source commits,
-base identity and application/library checksums inside the root filesystem;
-the same manifest accompanies the downloadable artifact.
+The assembler downloads the existing verified board base, mounts its ext4 root
+partition, and replaces application files, libraries and startup scripts. It
+checks ARM ELF dependencies, Devourer discovery, radio configuration, checksums
+and absence of WebUI/legacy broadcast drivers. Every byte outside rootfs must
+remain unchanged, including the bootloader, kernel, OEM files and both GPTs.
+Source commits, base checksum and installed runtime checksums are recorded in
+`/etc/openhd-image-components.json` and the companion artifact.
 
-Each `openhd-image-luckfox-pico-*` artifact contains a raw `.img.xz`. The three
-eMMC artifacts also include a self-contained `firmware.zip` for ImageWriter's
-Rockchip USB page. SD targets use the disk/card writer path. Component manifests,
-checksums and paired `.pico-ohd` application updates use separate
-`openhd-components-luckfox-pico-*` artifacts, so SD writing cannot accidentally
-select an application update as a disk image. The base SDK images remain
-separate from these images with applications installed.
+Published bases are reused from Cloudsmith. On the first assembly the newest
+successful complete six-board SDK base build seeds these permanent files from
+its verified GitHub artifacts. Board support changes require an explicit new
+base build and publication; application updates do not rebuild the base.
 
-Aura and Lyra use different hardware/SDK families and are outside this Pico
-matrix. The historical embedded-base aliases for them are not substitutes for
-this builder.
+Each `openhd-image-luckfox-pico-*` artifact contains a raw `.img.xz`. eMMC targets
+also include `firmware.zip` containing the matching base loader and the updated
+complete disk for ImageWriter's Rockchip USB page. SD image artifacts contain
+only the disk image, because ImageWriter streams the first artifact entry.
+Manifests, checksums and paired `.pico-ohd` application slot updates live in
+separate `openhd-components-luckfox-pico-*` artifacts. Slots update applications
+and runtime libraries, not the kernel or complete operating system.
+
+Aura and Lyra are separate families and are not part of this matrix.

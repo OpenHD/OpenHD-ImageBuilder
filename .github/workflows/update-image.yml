@@ -43,9 +43,9 @@ env:
 
 jobs:
   luckfox-pico-images:
-    name: Luckfox Pico images with current OpenHD and SysUtils
+    name: Luckfox Pico application overlay images
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'luckfox'
-    uses: OpenHD/luckfox-pico-sdk/.github/workflows/openhd-images.yml@main
+    uses: ./.github/workflows/luckfox-images.yml
     with:
       target: all
     secrets: inherit

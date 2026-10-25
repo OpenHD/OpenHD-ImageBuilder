@@ -1,0 +1,140 @@
+name: Assemble Pico images from existing bases
+on:
+  workflow_call:
+    inputs:
+      target:
+        type: string
+        default: all
+    secrets:
+      OPENHD_SUBMODULE_TOKEN:
+        required: true
+      CLOUDSMITH_API_KEY:
+        required: true
+  workflow_dispatch:
+    inputs:
+      target:
+        type: string
+        default: all
+permissions:
+  contents: read
+  actions: read
+jobs:
+  applications:
+    name: Current OpenHD and SysUtils only
+    uses: OpenHD/OpenHD/.github/workflows/build_pico_components.yml@openhd-3.0
+    secrets:
+      OPENHD_SUBMODULE_TOKEN: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
+  prepare:
+    runs-on: ubuntu-24.04
+    outputs:
+      matrix: ${{ steps.base.outputs.matrix }}
+      run: ${{ steps.base.outputs.run }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: OpenHD/luckfox-pico-sdk
+          ref: main
+          path: pico-sdk
+          sparse-checkout: scripts
+      - id: base
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET: ${{ inputs.target }}
+        run: |
+          echo "matrix=$(python3 pico-sdk/scripts/select_pico_targets.py "$TARGET")" >> "$GITHUB_OUTPUT"
+          echo "run=$(python3 scripts/fetch_pico_base.py)" >> "$GITHUB_OUTPUT"
+  images:
+    name: Assemble ${{ matrix.name }}
+    needs: [applications, prepare]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    env:
+      TARGET_ID: ${{ matrix.id }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: OpenHD/luckfox-pico-sdk
+          ref: main
+          path: pico-sdk
+          sparse-checkout: |
+            scripts
+            project/cfg/BoardConfig_IPC
+            sysdrv/tools/board/buildroot/package/openhd
+            sysdrv/tools/board/buildroot/package/openhd-sysutils
+      - uses: actions/download-artifact@v8
+        with:
+          name: pico-applications
+          path: applications
+      - name: Fetch existing verified board base
+        env:
+          BASE_RUN: ${{ needs.prepare.outputs.run }}
+        run: python3 scripts/fetch_pico_base.py --target "$TARGET_ID" --run "$BASE_RUN" --output base
+      - name: Replace applications and verify all other partitions remain unchanged
+        run: |
+          sudo python3 scripts/assemble_pico_image.py --base base --applications applications \
+            --sdk pico-sdk --target "$TARGET_ID" --output deploy
+          sudo chown -R "$(id -u):$(id -g)" deploy
+          (cd deploy && sha256sum -c "openhd-${TARGET_ID}.sha256")
+      - uses: actions/upload-artifact@v7
+        with:
+          name: openhd-image-${{ matrix.id }}
+          # The SD writer streams the first artifact entry; keep it image-only.
+          path: |
+            deploy/*.img.xz
+            deploy/firmware.zip
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@v7
+        with:
+          name: openhd-components-${{ matrix.id }}
+          path: |
+            deploy/*.components.json
+            deploy/*.pico-ohd
+            deploy/*.sha256
+          compression-level: 0
+          if-no-files-found: error
+          retention-days: 30
+      - name: Publish images and preserve reusable bases
+        env:
+          CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
+        run: |
+          set -euo pipefail
+          : "${CLOUDSMITH_API_KEY:?Cloudsmith publication credentials are required}"
+          pipx install cloudsmith-cli
+          version="$(date -u +'%Y-%m-%d-%H-%M-%S')"
+          mkdir publish
+          for artifact in deploy/*; do
+            name=$(basename "$artifact")
+            case "$name" in firmware.zip*) name="openhd-${TARGET_ID}-${name}" ;; esac
+            cp "$artifact" "publish/$name"
+            if [ "$(basename "$artifact")" = firmware.zip.sha256 ]; then
+              printf '%s  %s\n' "$(sha256sum deploy/firmware.zip | cut -d' ' -f1)" "$name" > "publish/$name"
+              sed -i 's/-firmware.zip.sha256$/-firmware.zip/' "publish/$name"
+            fi
+          done
+          for artifact in publish/*; do
+            "$HOME/.local/bin/cloudsmith" push raw --republish --name "$(basename "$artifact")" \
+              --version "$version" openhd/dev-release "$artifact"
+          done
+          # Seed permanent base files only once; ordinary image updates reuse them.
+          base_name="openhd-base-${TARGET_ID}"
+          if ! curl --fail --silent --head "https://dl.cloudsmith.io/public/openhd/dev-release/raw/files/${base_name}.json" >/dev/null; then
+            mkdir base-publish
+            cp base/*.img.xz base-publish/
+            if [ -f base/firmware.zip ]; then
+              cp base/firmware.zip "base-publish/${base_name}-firmware.zip"
+              (cd base-publish && sha256sum "${base_name}-firmware.zip" > "${base_name}-firmware.zip.sha256")
+            fi
+            for artifact in base-publish/*; do
+              "$HOME/.local/bin/cloudsmith" push raw --republish --version "$version" openhd/dev-release "$artifact"
+            done
+            # Publish the discovery metadata last, once every base file is available.
+            "$HOME/.local/bin/cloudsmith" push raw --republish --version "$version" openhd/dev-release "base/${base_name}.json"
+          fi
