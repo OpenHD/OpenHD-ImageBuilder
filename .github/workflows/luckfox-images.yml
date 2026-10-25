@@ -128,7 +128,7 @@ jobs:
           done
           sed -i "s/  firmware.zip$/  openhd-${TARGET_ID}-firmware.zip/" "publish/openhd-${TARGET_ID}.sha256"
           for artifact in publish/*; do
-            "$HOME/.local/bin/cloudsmith" push raw --republish --name "$(basename "$artifact")" \
+            cloudsmith push raw --republish --name "$(basename "$artifact")" \
               --version "$version" openhd/dev-release "$artifact"
           done
           # Seed permanent base files only once; ordinary image updates reuse them.
@@ -141,8 +141,8 @@ jobs:
               (cd base-publish && sha256sum "${base_name}-firmware.zip" > "${base_name}-firmware.zip.sha256")
             fi
             for artifact in base-publish/*; do
-              "$HOME/.local/bin/cloudsmith" push raw --republish --version "$version" openhd/dev-release "$artifact"
+              cloudsmith push raw --republish --version "$version" openhd/dev-release "$artifact"
             done
             # Publish the discovery metadata last, once every base file is available.
-            "$HOME/.local/bin/cloudsmith" push raw --republish --version "$version" openhd/dev-release "base/${base_name}.json"
+            cloudsmith push raw --republish --version "$version" openhd/dev-release "base/${base_name}.json"
           fi
