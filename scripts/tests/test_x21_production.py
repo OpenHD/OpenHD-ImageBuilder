@@ -52,6 +52,12 @@ class ProductionTests(unittest.TestCase):
         self.assertEqual(select_pair(ohd,sysutils,'base')[:2],('newest-ohd','base-sys'))
         with self.assertRaises(RuntimeError):select_pair(ohd,sysutils,'missing')
 
+    def test_new_sysutils_is_selected_when_openhd_upload_is_older(self):
+        def candidate(date,name):return ({'sdk_sha256':'sdk','sdk_buildroot_commit':'base'},name,date)
+        ohd=[candidate('2026-01-01','openhd')]
+        sysutils=[candidate('2026-02-01','z-old-sysutils'),candidate('2026-03-01','a-new-sysutils')]
+        self.assertEqual(select_pair(ohd,sysutils,'sdk')[:2],('openhd','a-new-sysutils'))
+
     def test_full_update_contains_new_base_and_ohd_for_each_slot(self):
         ohd=self.work/'ohd.img'
         with ohd.open('wb') as f:f.truncate(100<<20)

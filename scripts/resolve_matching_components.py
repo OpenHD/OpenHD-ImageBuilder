@@ -57,7 +57,7 @@ def select_pair(
     sysutils_candidates: list[tuple[dict[str, object], str, str]],
     required_sdk_sha256: str | None = None,
 ) -> tuple[str, str, str, str]:
-    matches: list[tuple[str, str, str, str, str]] = []
+    matches: list[tuple[str, str, str, str, str, str]] = []
     for openhd, openhd_archive, openhd_uploaded in openhd_candidates:
         for sysutils, sysutils_archive, sysutils_uploaded in sysutils_candidates:
             sdk_sha = str(openhd.get("sdk_sha256", ""))
@@ -73,6 +73,7 @@ def select_pair(
             matches.append(
                 (
                     min(openhd_uploaded, sysutils_uploaded),
+                    max(openhd_uploaded, sysutils_uploaded),
                     openhd_archive,
                     sysutils_archive,
                     sdk_sha,
@@ -83,7 +84,7 @@ def select_pair(
     if not matches:
         raise RuntimeError("no OpenHD/SysUtils pair shares an SDK checksum and Buildroot commit")
 
-    _, openhd_archive, sysutils_archive, sdk_sha, buildroot_commit = max(matches)
+    _, _, openhd_archive, sysutils_archive, sdk_sha, buildroot_commit = max(matches)
     return openhd_archive, sysutils_archive, sdk_sha, buildroot_commit
 
 

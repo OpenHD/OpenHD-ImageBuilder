@@ -63,6 +63,11 @@ test -x "${stage_dir}/usr/bin/openhd"
 test -x "${stage_dir}/usr/bin/openhd_sys_utils"
 file "${stage_dir}/usr/bin/openhd" | grep -q 'ARM aarch64'
 file "${stage_dir}/usr/bin/openhd_sys_utils" | grep -q 'ARM aarch64'
+# The static volume must never be shipped with a runtime that ignores it.
+grep -aq 'openhd-provision' "${stage_dir}/usr/bin/openhd_sys_utils" || {
+  echo 'The X21 SysUtils component lacks ImageWriter provisioning support; rebuild SysUtils.' >&2
+  exit 1
+}
 
 openhd_version="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["package_version"])' "${openhd_dir}/component-manifest.json")"
 sysutils_version="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["package_version"])' "${sysutils_dir}/component-manifest.json")"
@@ -74,6 +79,12 @@ bundle_version="openhd-${openhd_version}_sysutils-${sysutils_version}"
 
 mkfs.ubifs -x lzo -e 126976 -m 2048 -c 825 \
   -d "${stage_dir}" -F -o "${update_work}/ohd.img.ubifs"
+python3 - "${update_work}/provisioning.bin" <<'PY'
+import struct, sys, zlib
+from pathlib import Path
+body = struct.pack('>I', 0)  # Factory placeholder: no files to import.
+Path(sys.argv[1]).write_bytes(b'OHDCFG1\0' + struct.pack('>II', len(body), zlib.crc32(body)) + body)
+PY
 cat >"${update_work}/ubinize.cfg" <<EOF
 [ubi]
 mode=ubi
@@ -83,6 +94,15 @@ vol_name=ohd
 vol_alignment=1
 vol_flags=autoresize
 image=${update_work}/ohd.img.ubifs
+
+[provisioning]
+mode=ubi
+vol_id=1
+vol_type=static
+vol_name=openhd-provision
+vol_alignment=1
+vol_size=2031616
+image=${update_work}/provisioning.bin
 EOF
 ubinize -o "${update_work}/ohd.img" -m 2048 -p 0x20000 \
   "${update_work}/ubinize.cfg"
