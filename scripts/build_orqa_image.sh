@@ -87,6 +87,7 @@ if [[ "$(find "${bundle_dir}" -mindepth 1 -maxdepth 1 -type f | wc -l)" -ne 6 ]]
 fi
 
 tar -xzf "${deploy_archive}" -C "${payload_dir}"
+python3 "${script_dir}/validate_orqa_ui.py" "${payload_dir}"
 for required in openhd openhd_sys_utils iwconfig; do
   if [[ ! -x "${payload_dir}/${required}" ]]; then
     echo "ORQA deploy archive does not contain executable ${required}" >&2
@@ -104,6 +105,15 @@ if command -v readelf >/dev/null 2>&1; then
 fi
 
 check_rootfs "${bundle_dir}/rootfs.img"
+# Fit the UI/compositor runtime into the rootfs partition already declared by
+# the vendor GPT. Never enlarge it into the following data partition.
+rootfs_capacity="$(python3 "${script_dir}/orqa_rootfs_capacity.py" "${bundle_dir}/partition-table.img")"
+if (( $(stat -c '%s' "${bundle_dir}/rootfs.img") > rootfs_capacity )); then
+  echo "ORQA rootfs image exceeds its GPT partition" >&2
+  exit 1
+fi
+truncate -s "${rootfs_capacity}" "${bundle_dir}/rootfs.img"
+resize2fs "${bundle_dir}/rootfs.img" "$((rootfs_capacity / 1024))K"
 loop_device="$(losetup --find --show "${bundle_dir}/rootfs.img")"
 mount "${loop_device}" "${root_dir}"
 root_mounted=true
@@ -114,6 +124,13 @@ root_mounted=true
 if [[ -d "${payload_dir}/usr" ]]; then
   cp -a "${payload_dir}/usr/." "${root_dir}/usr/"
 fi
+chown -R 0:0 "${root_dir}/usr/local/share/qopenhd-nxp"
+for unit in qopenhd.service qopenhd-nxp-compositor.service; do
+  install -D -m 0644 "${payload_dir}/usr/lib/systemd/system/${unit}" \
+    "${root_dir}/usr/lib/systemd/system/${unit}"
+done
+install -D -m 0644 "${payload_dir}/etc/qopenhd-nxp/weston.ini" \
+  "${root_dir}/etc/qopenhd-nxp/weston.ini"
 install -D -m 0755 "${payload_dir}/openhd" \
   "${root_dir}/usr/local/bin/openhd"
 install -D -m 0755 "${payload_dir}/openhd_sys_utils" \
@@ -148,6 +165,7 @@ if [[ ! -e "${root_dir}/usr/local/share/OpenHD/SysUtils/config.json" ]]; then
     "${root_dir}/usr/local/share/OpenHD/SysUtils/config.json"
 fi
 
+python3 "${script_dir}/validate_orqa_ui.py" "${root_dir}" --installed
 sync
 umount "${root_dir}"
 root_mounted=false
