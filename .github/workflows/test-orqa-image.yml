@@ -1,0 +1,23 @@
+name: Test ORQA image integration
+on:
+  push:
+    paths:
+      - scripts/build_orqa_image.sh
+      - scripts/validate_orqa_ui.py
+      - scripts/orqa_rootfs_capacity.py
+      - scripts/prepare_orqa_storage.py
+      - scripts/tests/test_orqa_*.py
+      - .github/workflows/test-orqa-image.yml
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Check ORQA assembly syntax
+        run: bash -n scripts/build_orqa_image.sh
+      - name: Check boot payload, rootfs bounds and storage layout
+        run: python3 -m unittest discover -s scripts/tests -p 'test_orqa_*.py'

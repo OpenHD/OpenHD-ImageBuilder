@@ -126,10 +126,13 @@ if [[ -d "${payload_dir}/usr" ]]; then
   cp -a "${payload_dir}/usr/." "${root_dir}/usr/"
 fi
 chown -R 0:0 "${root_dir}/usr/local/share/qopenhd-nxp"
-for unit in qopenhd.service qopenhd-nxp-compositor.service; do
+for unit in qopenhd.service qopenhd-nxp-compositor.service openhd-nxp-boot-splash.service; do
   install -D -m 0644 "${payload_dir}/usr/lib/systemd/system/${unit}" \
     "${root_dir}/usr/lib/systemd/system/${unit}"
 done
+mkdir -p "${root_dir}/usr/lib/systemd/system/sysinit.target.wants"
+ln -sfn ../openhd-nxp-boot-splash.service \
+  "${root_dir}/usr/lib/systemd/system/sysinit.target.wants/openhd-nxp-boot-splash.service"
 install -D -m 0644 "${payload_dir}/etc/qopenhd-nxp/weston.ini" \
   "${root_dir}/etc/qopenhd-nxp/weston.ini"
 mkdir -p "${root_dir}/Config" "${root_dir}/Video"

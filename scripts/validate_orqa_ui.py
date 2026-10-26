@@ -9,6 +9,7 @@ from pathlib import Path
 def validate(root: Path, installed: bool) -> None:
     runtime = root / "usr/local/share/qopenhd-nxp"
     required = ["QOpenHD", "weston", "run-qopenhd.sh", "run-weston.sh",
+                "nxp-boot-splash", "boot-logo.png",
                 "libweston-9/drm-backend.so", "libweston-9/gl-renderer.so",
                 "weston-modules/kiosk-shell.so"]
     manifest = json.loads((runtime / "manifest.json").read_text())
@@ -25,9 +26,14 @@ def validate(root: Path, installed: bool) -> None:
             raise ValueError(f"ORQA runtime checksum mismatch: {name}")
     if (runtime / "tests").exists() or (runtime / "libweston-9/headless-backend.so").exists():
         raise ValueError("Headless test components must not enter the production runtime")
-    for name in ["qopenhd.service", "qopenhd-nxp-compositor.service"]:
+    for name in ["qopenhd.service", "qopenhd-nxp-compositor.service", "openhd-nxp-boot-splash.service"]:
         if not (root / "usr/lib/systemd/system" / name).is_file():
             raise ValueError(f"Missing ORQA UI unit: {name}")
+    early_splash = root / "usr/lib/systemd/system/sysinit.target.wants/openhd-nxp-boot-splash.service"
+    if not early_splash.is_symlink() or str(early_splash.readlink()) != "../openhd-nxp-boot-splash.service":
+        raise ValueError("ORQA early boot splash is not enabled in sysinit.target")
+    if not (runtime / "nxp-boot-splash").stat().st_mode & 0o111:
+        raise ValueError("ORQA early boot splash helper is not executable")
     if not (root / "etc/qopenhd-nxp/weston.ini").is_file():
         raise ValueError("Missing ORQA compositor output configuration")
     if not installed:
