@@ -7,6 +7,12 @@ and writable by Windows when the eMMC is exposed as a disk (for example by
 a supported USB mass-storage mode or reader). Adding partitions does not by
 itself expose the board's soldered eMMC to Windows over USB.
 
+ImageWriter's NXP configuration path prepares the extracted `config.img` before
+UUU flashes it. It writes the selected settings, QOpenHD config, certificate and
+optional map into the FAT image and checks the installed file contents. Normal
+configuration therefore does not require Windows to mount the board or switch
+USB modes. The standalone mass-storage helper below is for later manual access.
+
 The package includes `uuu-mass-storage.auto`. With the correct board in USB
 download mode, run `uuu.exe uuu-mass-storage.auto` through its OTG port. The
 helper boots the supplied U-Boot in RAM and executes `ums 0 mmc 2`, exposing
