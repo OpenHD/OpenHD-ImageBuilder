@@ -5,6 +5,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from fetch_x21_base import validate_index,validate_payloads
 from resolve_matching_components import select_pair
 from build_x21_full_update import build,write_entry
+from prepare_x21_provisioning import prepare
 
 class ProductionTests(unittest.TestCase):
     def setUp(self):
@@ -57,6 +58,17 @@ class ProductionTests(unittest.TestCase):
         ohd=[candidate('2026-01-01','openhd')]
         sysutils=[candidate('2026-02-01','z-old-sysutils'),candidate('2026-03-01','a-new-sysutils')]
         self.assertEqual(select_pair(ohd,sysutils,'sdk')[:2],('openhd','a-new-sysutils'))
+
+    def test_launcher_waits_for_import_and_is_idempotent(self):
+        launcher=self.work/'start-ohd.sh'
+        launcher.write_text('#!/bin/sh\nnohup /ohd/usr/bin/openhd_sys_utils &\nnohup /ohd/usr/bin/openhd -a &\n')
+        prepare(launcher)
+        text=launcher.read_text()
+        self.assertLess(text.index('openhd_sys_utils &'),text.index('for openhd_wait'))
+        self.assertLess(text.index('openhd_sys.sock'),text.index('nohup /ohd/usr/bin/openhd -a'))
+        prepare(launcher)
+        self.assertEqual(text,launcher.read_text())
+        subprocess.run(['sh','-n',str(launcher)],check=True)
 
     def test_full_update_contains_new_base_and_ohd_for_each_slot(self):
         ohd=self.work/'ohd.img'

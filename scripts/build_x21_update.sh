@@ -59,6 +59,7 @@ cp -a "${sysutils_dir}/usr/." "${stage_dir}/usr/"
 # both unnecessary and unsafe across base-kernel updates.
 sed -i '\|insmod /ohd/drivers/88x2eu_ohd\.ko|d' "${stage_dir}/start-ohd.sh"
 rm -f "${stage_dir}/drivers/88x2eu_ohd.ko"
+python3 "$(dirname "$0")/prepare_x21_provisioning.py" "${stage_dir}/start-ohd.sh"
 test -x "${stage_dir}/usr/bin/openhd"
 test -x "${stage_dir}/usr/bin/openhd_sys_utils"
 file "${stage_dir}/usr/bin/openhd" | grep -q 'ARM aarch64'
