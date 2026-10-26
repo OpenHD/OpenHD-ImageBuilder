@@ -3,6 +3,7 @@ Description=OpenHD system utilities orchestrator
 After=local-fs.target
 Wants=local-fs.target
 Before=openhd.service
+RequiresMountsFor=/Config /Video
 
 [Service]
 Type=simple

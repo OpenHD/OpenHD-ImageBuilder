@@ -86,6 +86,7 @@ if [[ "$(find "${bundle_dir}" -mindepth 1 -maxdepth 1 -type f | wc -l)" -ne 6 ]]
   exit 1
 fi
 
+python3 "${script_dir}/prepare_orqa_storage.py" "${bundle_dir}"
 tar -xzf "${deploy_archive}" -C "${payload_dir}"
 python3 "${script_dir}/validate_orqa_ui.py" "${payload_dir}"
 for required in openhd openhd_sys_utils iwconfig; do
@@ -131,6 +132,16 @@ for unit in qopenhd.service qopenhd-nxp-compositor.service; do
 done
 install -D -m 0644 "${payload_dir}/etc/qopenhd-nxp/weston.ini" \
   "${root_dir}/etc/qopenhd-nxp/weston.ini"
+mkdir -p "${root_dir}/Config" "${root_dir}/Video"
+# The initial package is a fresh flash. Mount by labels rather than board-
+# specific mmc numbering; SysUtils consumes the same config files as on Pi.
+sed -i '\|[[:space:]]/Config[[:space:]]|d; \|[[:space:]]/Video[[:space:]]|d' "${root_dir}/etc/fstab"
+printf '%s\n' \
+  'LABEL=openhd /Config vfat defaults,noatime,umask=0002 0 2' \
+  'LABEL=recordings /Video vfat defaults,noatime,umask=0002 0 2' >> "${root_dir}/etc/fstab"
+ln -sfn /Video "${root_dir}/Videos"
+install -D -m 0644 "${bundle_dir}/openhd-storage.json" \
+  "${root_dir}/usr/local/share/openhd/orqa-storage.json"
 install -D -m 0755 "${payload_dir}/openhd" \
   "${root_dir}/usr/local/bin/openhd"
 install -D -m 0755 "${payload_dir}/openhd_sys_utils" \
@@ -183,7 +194,8 @@ rm -f "${output_archive}"
     partition-table.img \
     recovery.img \
     rootfs.img \
-    uuu.auto
+    uuu.auto \
+    data.img config.img recordings.img openhd-storage.json
 )
 
 test -s "${output_archive}"
