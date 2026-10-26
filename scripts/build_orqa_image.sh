@@ -195,7 +195,8 @@ rm -f "${output_archive}"
     recovery.img \
     rootfs.img \
     uuu.auto \
-    data.img config.img recordings.img openhd-storage.json
+    data.img config.img recordings.img openhd-storage.json \
+    uuu-mass-storage.auto USB-MASS-STORAGE.txt
 )
 
 test -s "${output_archive}"

@@ -67,6 +67,24 @@ def prepare(bundle: Path):
         raise ValueError('Unexpected vendor UUU rootfs flash command')
     text = text.replace(anchor, anchor+'\n'+ '\n'.join(
         f'FB[-t 30000]: flash -raw2sparse {name} {name}.img' for name, *_ in partitions))
+    # Reuse only the vendor's RAM download/boot sequence. No flash, erase,
+    # partition creation or saved environment mutation is permitted here.
+    ram_boot = text.split('FB: ucmd setenv fastboot_dev mmc',1)[0]
+    if ram_boot == text or 'Use the UMS [USB Mass Storage]' not in (bundle/'bootloader.img').read_bytes().decode('latin1'):
+        raise ValueError('Vendor bootloader does not advertise the UMS command')
+    (bundle/'uuu-mass-storage.auto').write_text(ram_boot+
+        '# Export the eMMC user area. Exit/eject before returning to normal boot.\n'
+        'FB: acmd ums 0 mmc 2\nFB: done\n')
+    (bundle/'USB-MASS-STORAGE.txt').write_text(
+        'ORQA eMMC access from Windows\n\n'
+        'Use the bootloader supplied for this exact board, in USB download mode.\n'
+        'Connect its USB OTG port and run: uuu.exe uuu-mass-storage.auto\n'
+        'This helper boots U-Boot in RAM and exports mmc 2 as USB mass storage.\n'
+        'It contains no flash/erase command. Host writes still modify the eMMC.\n'
+        'Windows should mount the openhd and recordings FAT volumes. Do not format Linux volumes.\n'
+        'Safely eject the disk, then reset/power-cycle into normal eMMC boot.\n'
+        'Do not use this helper with a bootloader from a different board.\n'
+        'USB enumeration and host mounting require a physical board test.\n',encoding='ascii')
     with tempfile.TemporaryDirectory(prefix='orqa-config-') as temporary:
         seed = Path(temporary)
         (seed/'openhd').mkdir()

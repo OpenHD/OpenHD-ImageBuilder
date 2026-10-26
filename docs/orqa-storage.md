@@ -7,6 +7,15 @@ and writable by Windows when the eMMC is exposed as a disk (for example by
 a supported USB mass-storage mode or reader). Adding partitions does not by
 itself expose the board's soldered eMMC to Windows over USB.
 
+The package includes `uuu-mass-storage.auto`. With the correct board in USB
+download mode, run `uuu.exe uuu-mass-storage.auto` through its OTG port. The
+helper boots the supplied U-Boot in RAM and executes `ums 0 mmc 2`, exposing
+the eMMC user area as a USB disk while Linux is stopped. It contains no flash
+or erase operation. Safely eject in Windows, then reset/power-cycle back into
+normal eMMC boot. The bootloader must match the board. UMS support was checked
+in the supplied ORQA bootloader, but USB enumeration has not been tested on
+the connected FRDM board. `USB-MASS-STORAGE.txt` contains these instructions.
+
 The first four vendor partitions (`kernel`, `recovery`, `nvram`, `rootfs`)
 keep their exact indices, offsets and GUIDs. The original `data` extent is
 split into a 128 MiB ext4 `data` partition, a 128 MiB FAT32 `config` partition,
