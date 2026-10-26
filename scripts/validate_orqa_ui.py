@@ -10,6 +10,10 @@ def validate(root: Path, installed: bool) -> None:
     runtime = root / "usr/local/share/qopenhd-nxp"
     required = ["QOpenHD", "weston", "run-qopenhd.sh", "run-weston.sh",
                 "nxp-boot-splash", "boot-logo.png",
+                "plugins/geoservices/libqtgeoservices_mapboxgl.so",
+                "plugins/geoservices/libqtgeoservices_osm.so", "plugins/sqldrivers/libqsqlite.so",
+                "qml/QtLocation/qmldir", "qml/QtPositioning/qmldir",
+                "lib/libssl.so.1.1", "lib/libcrypto.so.1.1", "certs/ca-certificates.crt",
                 "libweston-9/drm-backend.so", "libweston-9/gl-renderer.so",
                 "weston-modules/kiosk-shell.so"]
     manifest = json.loads((runtime / "manifest.json").read_text())

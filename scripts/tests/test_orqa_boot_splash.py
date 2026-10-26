@@ -19,7 +19,12 @@ class BootSplashPayloadTests(unittest.TestCase):
         self.root = Path(self.temporary.name)
         self.runtime = self.root / 'usr/local/share/qopenhd-nxp'
         files = ['QOpenHD', 'weston', 'run-qopenhd.sh', 'run-weston.sh',
-                 'nxp-boot-splash', 'boot-logo.png', 'libweston-9/drm-backend.so',
+                 'nxp-boot-splash', 'boot-logo.png',
+                 "plugins/geoservices/libqtgeoservices_mapboxgl.so",
+                "plugins/geoservices/libqtgeoservices_osm.so", "plugins/sqldrivers/libqsqlite.so",
+                "qml/QtLocation/qmldir", "qml/QtPositioning/qmldir",
+                "lib/libssl.so.1.1", "lib/libcrypto.so.1.1", "certs/ca-certificates.crt",
+                 'libweston-9/drm-backend.so',
                  'libweston-9/gl-renderer.so', 'weston-modules/kiosk-shell.so']
         manifest = dict(backend='hantro-wayland-dmabuf', media_frameworks=[], files={})
         for name in files:
@@ -42,6 +47,18 @@ class BootSplashPayloadTests(unittest.TestCase):
 
     def test_complete_boot_payload_passes(self):
         validator.validate(self.root, False)
+
+    def test_missing_map_runtime_fails(self):
+        for name in ['plugins/geoservices/libqtgeoservices_mapboxgl.so',
+                     'plugins/sqldrivers/libqsqlite.so', 'lib/libssl.so.1.1',
+                     'certs/ca-certificates.crt']:
+            with self.subTest(name=name):
+                path = self.runtime / name
+                original = path.read_bytes()
+                path.unlink()
+                with self.assertRaisesRegex(ValueError, 'Invalid ORQA runtime manifest path'):
+                    validator.validate(self.root, False)
+                path.write_bytes(original)
 
     def test_missing_logo_fails(self):
         (self.runtime / 'boot-logo.png').unlink()
