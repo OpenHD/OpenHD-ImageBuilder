@@ -155,7 +155,7 @@ function install_radxa-ubuntu_packages {
     PLATFORM_PACKAGES="rsync procps ${OPENHD_MEDIA_RUNTIME_PACKAGES} gstreamer1.0-rockchip1 gstreamer1.0-gl mali-g610-firmware malirun rockchip-multimedia-config librist4 librist-dev rist-tools libv4l-0 libv4l2rds0 libv4lconvert0 libv4l-dev libv4l-rkmpp qv4l2 v4l-utils librockchip-mpp1 librockchip-mpp-dev librockchip-vpu0 rockchip-mpp-demos librga2 librga-dev libegl-mesa0 libegl1-mesa-dev libgbm-dev libgl1-mesa-dev libgles2-mesa-dev libglx-mesa0 mesa-common-dev mesa-vulkan-drivers mesa-utils libwidevinecdm"
 }
 function install_radxa-debian_packages {
-    BASE_PACKAGES="openhd-sys-utils ${OPENHD_PACKAGE} qopenhd-rk3588 apt-transport-https apt-utils open-hd-web-ui"
+    BASE_PACKAGES="openhd-sys-utils ${OPENHD_PACKAGE} qopenhd-native-rk3588 apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_HOLD="task-rk356x task-rockchip radxa-system-config-rockchip 8852bu-dkms 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-rock-5a linux-image-5.10.110-6-rockchip linux-image-5.10.110-11-rockchip"
     PLATFORM_PACKAGES_REMOVE="sddm plymouth plasma-desktop kde*"
     PLATFORM_PACKAGES="net-tools network-manager ${OPENHD_MEDIA_RUNTIME_PACKAGES} gstreamer1.0-rockchip1 linux-headers-5.10.160-radxa-rk3588-ohd linux-image-5.10.160-radxa-rk3588-ohd rockchip-iq-openhd-r5 rsync procps mpp-rk3566 fpv-rk3566"
@@ -166,14 +166,14 @@ function install_radxa-debian_packages_rk3566 {
     rm -Rf /etc/modprobe.d/panfrost.conf
     rm -Rf /etc/apt/preferences.d/radxa-rockchip
     mkdir -p /usr/local/share/openhd_platform/rock/rk3566
-    BASE_PACKAGES="dosfstools gstreamer1.0-plugins-rtp gstreamer1.0-rockchip1 gstreamer1.0-vaapi libavahi-glib1 libdrm-cursor linux-headers-5.10.160-radxa-rk356x linux-image-5.10.160-radxa-rk356x openhd-sys-utils ${OPENHD_PACKAGE} qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
+    BASE_PACKAGES="dosfstools gstreamer1.0-plugins-rtp gstreamer1.0-rockchip1 gstreamer1.0-vaapi libavahi-glib1 libdrm-cursor linux-headers-5.10.160-radxa-rk356x linux-image-5.10.160-radxa-rk356x openhd-sys-utils ${OPENHD_PACKAGE} qopenhd-native-rk3566 apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES_REMOVE="gvfs gvfs-backends gvfs-fuse plymouth plymouth-theme-breeze plymouth-themes vulkan-tools xdg-desktop-portal xdg-desktop-portal-gtk xdg-user-dirs xdg-user-dirs-gtk xdg-utils task-xfce-desktop thunar-volman xfce4-clipman xfce4-notifyd xfce4-power-manager xfce4-screenshooter xfce4-terminal xiccd aha breeze-cursor-theme clinfo cups desktop-base firefox-esr fonts-noto-cjk fprintd fwupd maliit-keyboard"
     PLATFORM_PACKAGES_HOLD="camera-engine-rkaiq libdvbv5-0 libv4l2rds0 libv4lconvert0 xserver-common xserver-xorg-core xserver-xorg-legacy linux-headers-radxa-zero3 linux-image-radxa-zero3 task-rk356x task-rockchip radxa-system-config-rockchip task-radxa-cm3-rpi-cm4-io radxa-firmware"
     # PLATFORM_PACKAGES_HOLD="u-boot-radxa-zero3 radxa-system-config-common radxa-system-config-kernel-cmdline-ttyfiq0 radxa-firmware radxa-system-config-bullseye 8852be-dkms task-rockchip radxa-system-config-rockchip linux-image-radxa-cm3-rpi-cm4-io linux-headers-radxa-cm3-rpi-cm4-io linux-image-5.10.160-12-rk356x linux-headers-5.10.160-12-rk356x"
     PLATFORM_PACKAGES="dialog pv net-tools wireless-tools isc-dhcp-client network-manager glances rockchip-iq-openhd-r3 librga2=2.2.0-1 procps camera-engine-rkaiq mpp-rk3566 fpv-rk3566"
 }
 function install_packages-core3566 {
-    BASE_PACKAGES="openhd-sys-utils ${OPENHD_PACKAGE} qopenhd-rk3566 apt-transport-https apt-utils open-hd-web-ui"
+    BASE_PACKAGES="openhd-sys-utils ${OPENHD_PACKAGE} qopenhd-native-rk3566 apt-transport-https apt-utils open-hd-web-ui"
     PLATFORM_PACKAGES="dialog pv gst-latest net-tools isc-dhcp-client network-manager glances rockchip-iq-openhd-r3 librga2=2.2.0-1 linux-image-5.10.160-core3566-rk356x linux-headers-5.10.160-core3566-rk356x linux-libc-dev-5.10.160-core3566-rk356x procps camera-engine-rkaiq"
     PLATFORM_PACKAGES_REMOVE="firefox* dkms sddm plymouth plasma-desktop kde*"
 }

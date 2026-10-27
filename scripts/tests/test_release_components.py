@@ -32,8 +32,10 @@ export OPENHD_COMPONENT_CHANNEL=dev-release
             self.check_board_packages(setup, script)
 
     def check_board_packages(self, setup, script):
-        cases = [("radxa-debian-rock3a", False, "qopenhd-rk3566=2.0"),
-                 ("radxa-debian-rock5a", False, "qopenhd-rk3588=2.0"),
+        cases = [("radxa-debian-rock3a", False, "qopenhd-native-rk3566=2.0"),
+                 ("radxa-debian-rock5a", False, "qopenhd-native-rk3588=2.0"),
+                 ("radxa-debian-rock5b", False, "qopenhd-native-rk3588=2.0"),
+                 ("radxa-debian-rock-cm3", False, "qopenhd-native-rk3566=2.0"),
                  ("raspbian", False, "qopenhd=2.0"),
                  ("radxa-debian-rock5a", True, None),
                  ("debian-X20", False, None)]

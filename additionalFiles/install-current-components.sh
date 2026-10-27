@@ -7,8 +7,8 @@ packages=("${OPENHD_PACKAGE:-openhd}" openhd-sys-utils open-hd-web-ui)
 if [[ "${OPENHD_LITE_IMAGE:-false}" != true && "${RPI5:-false}" != true && "${OS:-}" != debian-X20 ]]; then
   qopenhd_package="${QOPENHD_PACKAGE:-qopenhd}"
   case "${OS:-}" in
-    radxa-debian-rock5a|radxa-debian-rock5b) qopenhd_package=qopenhd-rk3588 ;;
-    radxa-debian-rock-cm3|radxa-debian-rock-cm3-core3566|radxa-debian-rock3a) qopenhd_package=qopenhd-rk3566 ;;
+    radxa-debian-rock5*) qopenhd_package=qopenhd-native-rk3588 ;;
+    radxa-debian-rock-cm3*|radxa-debian-rock3*) qopenhd_package=qopenhd-native-rk3566 ;;
   esac
   packages+=("$qopenhd_package")
 fi
@@ -48,3 +48,5 @@ if [[ -f /opt/additionalFiles/image-release ]]; then
   install -m 0644 /opt/additionalFiles/image-release /usr/share/openhd/image-release
   cp /usr/share/openhd/image-release /boot/openhd/image-release
 fi
+
+bash "$(dirname "$0")/configure-rockchip-native.sh"

@@ -14,7 +14,6 @@ on:
           - supported
           - openhd-hardware
           - full
-          - lite
           - experimental
           - x21-update
           - orqa
@@ -446,56 +445,8 @@ jobs:
           path: deploy/*.img
           if-no-files-found: error
   # =========================================================================
-  # 4. Lite (OpenHD Glide) & Experimental Pi 5
+  # 4. Experimental Pi 5
   # =========================================================================
-  lite-images:
-    name: lite-${{ matrix.target }}
-    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'lite'
-    runs-on: ubuntu-22.04
-    strategy:
-      fail-fast: false
-      matrix:
-        target:
-          - radxa-zero3w-lite
-          - radxa-cm5-lite
-          - rock5a-lite
-          - rock5b-lite
-    steps:
-      - uses: actions/checkout@v7
-      - name: Prepare development image
-        run: |
-          echo "DT=${IMAGE_RELEASE}-$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
-          touch additionalFiles/dev-build
-      - name: Free runner disk space
-        run: |
-          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup
-          sudo apt-get purge -y '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' \
-            azure-cli google-chrome-stable firefox powershell \
-            microsoft-edge-stable mono-devel || true
-          sudo apt-get autoremove -y
-          sudo apt-get clean
-          df -h "$GITHUB_WORKSPACE"
-      - name: Install host tools and current e2fsprogs
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y unzip curl git qemu-user-static binfmt-support rclone
-          bash ./scripts/install_current_e2fsprogs.sh
-          sudo ./install_dep.sh
-      - name: Build Lite image
-        env:
-          OPENHD_RCLONE_CONFIG_GDRIVE: ${{ secrets.RCLONE_CONFIG_GDRIVE }}
-        run: sudo -E ./build.sh "${{ matrix.target }}" false false true
-      - name: Normalize image
-        run: |
-          set -euo pipefail
-          mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
-          test "${#images[@]}" -eq 1
-          sudo mv "${images[0]}" "deploy/openhd-lite-image-${{ matrix.target }}-${DT}.img"
-      - uses: actions/upload-artifact@v7
-        with:
-          name: openhd-lite-image-${{ matrix.target }}-${{ env.DT }}
-          path: deploy/*.img
-          if-no-files-found: error
   experimental-pi5-image:
     name: experimental-pi5-bookworm
     if: github.event_name == 'workflow_dispatch' && inputs.target == 'experimental'
@@ -524,53 +475,6 @@ jobs:
         with:
           name: OpenHD-RPi5-Bookworm-arm64
           path: deploy/OpenHD-RPi5-Bookworm-arm64.img
-          if-no-files-found: error
-
-  experimental-lite-images:
-    name: experimental-${{ matrix.target }}
-    if: github.event_name == 'workflow_dispatch' && inputs.target == 'experimental'
-    runs-on: ubuntu-22.04
-    strategy:
-      fail-fast: false
-      matrix:
-        target:
-          - radxa-cubie-lite
-          - orangepi-zero3w-lite
-    steps:
-      - uses: actions/checkout@v7
-      - name: Prepare development image
-        run: |
-          echo "DT=${IMAGE_RELEASE}-$(date -u +'%Y-%m-%d-%H-%M-%S')" >> "$GITHUB_ENV"
-          touch additionalFiles/dev-build
-      - name: Free runner disk space
-        run: |
-          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc /usr/local/.ghcup
-          sudo apt-get purge -y '^llvm-.*' 'php.*' '^mongodb-.*' '^mysql-.*' \
-            azure-cli google-chrome-stable firefox powershell \
-            microsoft-edge-stable mono-devel || true
-          sudo apt-get autoremove -y
-          sudo apt-get clean
-          df -h "$GITHUB_WORKSPACE"
-      - name: Install host tools and current e2fsprogs
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y unzip curl git qemu-user-static binfmt-support rclone
-          bash ./scripts/install_current_e2fsprogs.sh
-          sudo ./install_dep.sh
-      - name: Build experimental Lite image
-        env:
-          OPENHD_RCLONE_CONFIG_GDRIVE: ${{ secrets.RCLONE_CONFIG_GDRIVE }}
-        run: sudo -E ./build.sh "${{ matrix.target }}" false false true
-      - name: Normalize image
-        run: |
-          set -euo pipefail
-          mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
-          test "${#images[@]}" -eq 1
-          sudo mv "${images[0]}" "deploy/openhd-lite-image-${{ matrix.target }}-${DT}.img"
-      - uses: actions/upload-artifact@v7
-        with:
-          name: openhd-lite-image-${{ matrix.target }}-${{ env.DT }}
-          path: deploy/*.img
           if-no-files-found: error
 
   publish-pi-image:
