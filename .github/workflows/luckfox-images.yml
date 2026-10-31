@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Check assembly integrity boundaries
-        run: python3 -m unittest discover -s scripts/tests -p test_pico_assembly.py -v
+        run: python3 -m unittest discover -s scripts/tests -p "test_pico*.py" -v
       - uses: actions/checkout@v7
         with:
           repository: OpenHD/luckfox-pico-sdk

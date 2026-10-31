@@ -39,6 +39,10 @@ def digest(path):
     return h.hexdigest()
 
 
+class IncompatiblePublishedBase(ValueError):
+    """A published base predates the required board capabilities."""
+
+
 def fetch(target, output, run):
     output.mkdir(parents=True, exist_ok=True)
     # Published bases remain available after GitHub's temporary artifacts expire.
@@ -48,6 +52,8 @@ def fetch(target, output, run):
             manifest = json.load(response)
         if manifest['target'] != target or manifest['runtime_abi'] != 'armv7a-hardfloat-uclibc':
             raise ValueError('Wrong published Pico base')
+        if manifest.get('usb_role') != 'host':
+            raise IncompatiblePublishedBase('Published Pico base predates USB host support')
         filenames = [manifest['image'], name + '.json']
         if manifest['boot_medium'] == 'emmc':
             filenames += [name + '-firmware.zip', name + '-firmware.zip.sha256']
@@ -58,8 +64,8 @@ def fetch(target, output, run):
             checksum = (output / (name + '-firmware.zip.sha256')).read_text().split()[0]
             if digest(output / 'firmware.zip') != checksum:
                 raise ValueError('Published base firmware checksum mismatch')
-    except urllib.error.HTTPError as error:
-        if error.code != 404:
+    except (urllib.error.HTTPError, IncompatiblePublishedBase) as error:
+        if isinstance(error, urllib.error.HTTPError) and error.code != 404:
             raise
         subprocess.run(['gh', 'run', 'download', str(run), '--repo', REPO,
                         '--name', name, '--dir', str(output)], check=True)
@@ -69,6 +75,8 @@ def fetch(target, output, run):
             subprocess.run(['sha256sum', '-c', 'firmware.zip.sha256'], cwd=output, check=True)
     if manifest['target'] != target or manifest['runtime_abi'] != 'armv7a-hardfloat-uclibc':
         raise ValueError('Base target or ABI mismatch')
+    if manifest.get('usb_role') != 'host':
+        raise ValueError('Selected Pico base lacks USB host support; rebuild SDK board bases')
     if digest(output / manifest['image']) != manifest['sha256']:
         raise ValueError('Base disk checksum mismatch')
     return manifest
