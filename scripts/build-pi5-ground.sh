@@ -59,8 +59,15 @@ for path in dev proc sys; do
     mount --make-rslave "$root/$path"
 done
 cp /usr/bin/qemu-aarch64-static "$root/usr/bin/"
-update-binfmts --import qemu-aarch64
-update-binfmts --enable qemu-aarch64
+if [[ -f /usr/share/binfmts/qemu-aarch64 ]]; then
+    update-binfmts --import qemu-aarch64
+    update-binfmts --enable qemu-aarch64
+elif [[ -f /usr/lib/binfmt.d/qemu-aarch64.conf ]]; then
+    /usr/lib/systemd/systemd-binfmt qemu-aarch64.conf
+fi
+# Ubuntu 24.04 supplies systemd-binfmt configuration rather than the older
+# update-binfmts definition. Fail here if neither registration is usable.
+chroot "$root" /bin/true
 rm -f "$root/etc/resolv.conf"
 cp -L /etc/resolv.conf "$root/etc/resolv.conf"
 printf '#!/bin/sh\nexit 101\n' > "$root/usr/sbin/policy-rc.d"
