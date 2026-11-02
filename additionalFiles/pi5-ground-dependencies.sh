@@ -1,0 +1,5 @@
+#!/bin/bash
+set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
+apt-get update
+apt-get install -y --no-install-recommends qt6-base-dev qt6-base-private-dev qt6-declarative-dev qt6-wayland qt6-wayland-dev qt6-svg-dev qt6-charts-dev qt6-tools-dev qt6-tools-dev-tools qt6-shadertools-dev qml6-module-qtquick qml6-module-qtquick-window qml6-module-qtquick-controls qml6-module-qtquick-layouts qml6-module-qtquick-shapes qml6-module-qtquick-dialogs qml6-module-qt-labs-settings qml6-module-qt-labs-folderlistmodel qml6-module-qt5compat-graphicaleffects qml6-module-qtpositioning qml6-module-qtlocation qml6-module-qtcharts qml6-module-qtqml-workerscript qml6-module-qtqml-models qml6-module-qtquick-templates libqt6sql6-sqlite libavcodec-dev libavutil-dev libswscale-dev libwayland-dev wayland-protocols libdrm-dev libgbm-dev libegl-dev libgles-dev libpixman-1-dev libudev-dev libsystemd-dev libdbus-1-dev libpng-dev libcairo2-dev libinput-dev libxkbcommon-dev libjpeg-dev libwebp-dev libpam0g-dev libpango1.0-dev liblcms2-dev libseat-dev ca-certificates openssh-server iw rfkill ethtool iproute2

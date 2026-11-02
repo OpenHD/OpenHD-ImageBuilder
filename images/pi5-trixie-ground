@@ -1,0 +1,9 @@
+BASE_IMAGE_URL="https://downloads.raspberrypi.com/raspios_lite_arm64/images/raspios_lite_arm64-2026-10-06"
+BASE_IMAGE="2026-10-06-raspios-trixie-arm64-lite.img.xz"
+BASE_IMAGE_EXTRACT_SHA256="b8a393dc1c3701450b5fffbfe74368a98fb6eab7415ce456cc0cead886ea8780"
+BASE_IMAGE_DOWNLOAD_SIZE=550466056
+OS="raspbian"
+DISTRO="trixie"
+BIT="64"
+RPI5=true
+GROUND_ONLY=true

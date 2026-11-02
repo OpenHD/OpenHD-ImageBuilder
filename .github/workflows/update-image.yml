@@ -106,7 +106,7 @@ jobs:
           path: deploy/*.img
           if-no-files-found: error
       - name: Stage image on FleetControl
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || inputs.target == 'all' || inputs.target == 'supported'
         env:
           FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
         run: bash scripts/publish_dev_image.sh "${{ matrix.target }}" "deploy/openhd-image-${{ matrix.target }}-${DT}.img"
@@ -448,11 +448,36 @@ jobs:
   # 4. Experimental Pi 5
   # =========================================================================
   experimental-pi5-image:
-    name: experimental-pi5-bookworm
-    if: github.event_name == 'workflow_dispatch' && inputs.target == 'experimental'
+    name: experimental-pi5-trixie-qt6
+    if: github.event_name == 'workflow_dispatch' && (inputs.target == 'experimental' || inputs.target == 'all')
     runs-on: ubuntu-24.04
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: OpenHD/QOpenHD
+          ref: dev-release
+          submodules: recursive
+          path: components/QOpenHD
+      - uses: actions/checkout@v7
+        with:
+          repository: OpenHD/OpenHD-SysUtils
+          ref: dev-release
+          path: components/OpenHD-SysUtils
+      - uses: actions/checkout@v7
+        with:
+          repository: OpenHD/OpenHD
+          ref: openhd-3.0
+          submodules: true
+          token: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
+          path: components/OpenHD
+      - name: Fetch pinned backend inputs
+        working-directory: components/OpenHD
+        run: |
+          git -c submodule.OpenHD/ohd_interface/lib/devourer.update=checkout \
+              -c submodule.OpenHD/ohd_interface/video_crypto_private.update=checkout \
+              submodule update --init
       - name: Free runner disk space
         run: |
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc
@@ -460,26 +485,28 @@ jobs:
           df -h "$GITHUB_WORKSPACE"
       - name: Prepare and install dependencies
         run: |
-          touch additionalFiles/dev-build
-          printf '%s\n' 'OpenHD Raspberry Pi 5 Bookworm image' > additionalFiles/issue-new.txt
-          sudo ./install_dep.sh
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends python3 git qemu-user-static binfmt-support curl rsync xz-utils parted dosfstools e2fsprogs
       - name: Build Raspberry Pi 5 image
-        run: sudo ./build.sh pi5-bookworm false small false
-      - name: Normalize image
         run: |
-          set -euo pipefail
-          mapfile -t images < <(find deploy -maxdepth 1 -type f -name '*.img')
-          test "${#images[@]}" -eq 1
-          sudo mv "${images[0]}" deploy/OpenHD-RPi5-Bookworm-arm64.img
+          sudo env PI5_OPENHD_SOURCE="$GITHUB_WORKSPACE/components/OpenHD" BUILD_JOBS=2 \
+            bash scripts/build-pi5-ground.sh "$GITHUB_WORKSPACE/components/QOpenHD" \
+              "$GITHUB_WORKSPACE/components/OpenHD-SysUtils" "$GITHUB_WORKSPACE/pi5-build"
       - uses: actions/upload-artifact@v7
+        if: always()
         with:
-          name: OpenHD-RPi5-Bookworm-arm64
-          path: deploy/OpenHD-RPi5-Bookworm-arm64.img
+          name: OpenHD-RPi5-Ground-Trixie-Qt6
+          path: |
+            pi5-build/OpenHD-RPi5-Ground-Trixie.img.xz
+            pi5-build/OpenHD-RPi5-Ground-Trixie.img.xz.sha256
+            pi5-build/image-manifest.txt
+            pi5-build/*validation.txt
+            pi5-build/dpkg-audit.txt
           if-no-files-found: error
 
   publish-pi-image:
     name: publish-pi-image
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || inputs.target == 'all' || inputs.target == 'supported'
     needs:
       - supported-images
     runs-on: ubuntu-24.04
