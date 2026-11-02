@@ -476,8 +476,7 @@ jobs:
         working-directory: components/OpenHD
         run: |
           git -c submodule.OpenHD/ohd_interface/lib/devourer.update=checkout \
-              -c submodule.OpenHD/ohd_interface/video_crypto_private.update=checkout \
-              submodule update --init
+              submodule update --init -- OpenHD/ohd_interface/lib/devourer
       - name: Free runner disk space
         run: |
           sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc

@@ -28,6 +28,11 @@ def snapshot(checkout, revision, relative=Path('.')):
         mode, _, sha = metadata.split()
         if mode == b'160000':
             child = Path(path.decode())
+            # The optional private plugin is built and distributed separately;
+            # the ground backend does not compile it or need its checkout.
+            if (relative / child).as_posix() == 'OpenHD/ohd_interface/video_crypto_private':
+                manifest.append(f'{(relative / child).as_posix()}={sha.decode()} (external plugin; excluded)')
+                continue
             # Devourer's reference driver archives are not build inputs.
             if (relative / child).as_posix().startswith('OpenHD/ohd_interface/lib/devourer/reference/'):
                 continue
