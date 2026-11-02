@@ -145,6 +145,10 @@ cleanup
 trap - EXIT
 check_loop=$(losetup --find --show --partscan "$image")
 trap 'losetup -d "$check_loop"' EXIT
+# Complete journal recovery after the build mounts and Docker bind mounts have
+# been released. A read-only check deliberately skips it and can report stale
+# free-space counters from an otherwise valid pending transaction.
+e2fsck -pf "${check_loop}p2" > "$work/filesystem-recovery.txt" 2>&1 || [[ $? == 1 ]]
 e2fsck -fn "${check_loop}p2" > "$work/filesystem-validation.txt" 2>&1
 fsck.fat -n "${check_loop}p1" > "$work/boot-filesystem-validation.txt" 2>&1
 losetup -d "$check_loop"
