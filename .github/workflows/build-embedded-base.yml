@@ -11,6 +11,7 @@ on:
         options:
           - orqa
           - luckfox
+          - luckfox-pico-mini-nand
           - lyra
           - aura
           - rv1106
@@ -19,14 +20,14 @@ on:
 jobs:
   pico-images:
     name: Pico base images with current applications
-    if: inputs.target == 'luckfox' || inputs.target == 'rv1106' || inputs.target == 'rv1103'
+    if: inputs.target == 'luckfox-pico-mini-nand' || inputs.target == 'luckfox' || inputs.target == 'rv1106' || inputs.target == 'rv1103'
     uses: ./.github/workflows/luckfox-images.yml
     with:
-      target: ${{ inputs.target == 'rv1106' && 'luckfox-pico-pro-max' || inputs.target == 'rv1103' && 'luckfox-pico-mini' || 'all' }}
+      target: ${{ inputs.target == 'luckfox-pico-mini-nand' && 'luckfox-pico-mini-nand' || inputs.target == 'rv1106' && 'luckfox-pico-pro-max' || inputs.target == 'rv1103' && 'luckfox-pico-mini' || 'all' }}
     secrets: inherit
 
   build-base:
-    if: inputs.target != 'luckfox' && inputs.target != 'rv1106' && inputs.target != 'rv1103'
+    if: inputs.target != 'luckfox-pico-mini-nand' && inputs.target != 'luckfox' && inputs.target != 'rv1106' && inputs.target != 'rv1103'
     name: build-base-${{ inputs.target }}
     runs-on: ubuntu-24.04
     steps:

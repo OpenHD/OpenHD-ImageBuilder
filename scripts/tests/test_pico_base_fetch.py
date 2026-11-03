@@ -13,6 +13,34 @@ import fetch_pico_base as fetcher
 
 
 class BaseFetchTests(unittest.TestCase):
+    def test_nand_seed_is_downloaded_and_verified(self):
+        target = 'luckfox-pico-mini-nand'
+        name = 'openhd-base-' + target
+        contents = {'firmware.zip': b'board-partitions', 'seed.tar.xz': b'rootfs-seed'}
+        manifest = dict(target=target, runtime_abi='armv7a-hardfloat-uclibc',
+                        image='firmware.zip', boot_medium='spi_nand', usb_role='host',
+                        application_slots=False, rootfs_seed='seed.tar.xz',
+                        sha256=hashlib.sha256(contents['firmware.zip']).hexdigest(),
+                        rootfs_seed_sha256=hashlib.sha256(contents['seed.tar.xz']).hexdigest())
+        contents[name + '.json'] = json.dumps(manifest).encode()
+        for corrupt in (False, True):
+            with self.subTest(corrupt=corrupt), tempfile.TemporaryDirectory() as tmp:
+                def retrieve(url, destination):
+                    data = contents[Path(destination).name]
+                    if corrupt and Path(destination).name == 'seed.tar.xz':
+                        data += b'corrupted'
+                    Path(destination).write_bytes(data)
+
+                with patch.object(fetcher.urllib.request, 'urlopen', return_value=io.BytesIO(json.dumps(manifest).encode())), \
+                        patch.object(fetcher.urllib.request, 'urlretrieve', side_effect=retrieve), \
+                        patch.object(fetcher.subprocess, 'run') as fallback:
+                    if corrupt:
+                        with self.assertRaisesRegex(ValueError, 'seed checksum'):
+                            fetcher.fetch(target, Path(tmp), 123)
+                    else:
+                        self.assertEqual(fetcher.fetch(target, Path(tmp), 123), manifest)
+                    fallback.assert_not_called()
+
     def test_legacy_published_base_uses_selected_sdk_run(self):
         target = 'luckfox-pico-mini'
         name = 'openhd-base-' + target

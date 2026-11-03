@@ -1,7 +1,7 @@
 # Pico images from reusable bases
 
-The normal image workflow (`target=luckfox`) assembles all six Pico targets:
-Zero, Ultra W and Ultra eMMC; Pro/Max, Plus and Mini SD card.
+The normal image workflow (`target=luckfox`) assembles seven Pico targets:
+Zero, Ultra W and Ultra eMMC; Pro/Max, Plus and Mini SD card; and Mini B NAND.
 
 Board images and application builds are separate. The canonical OpenHD builder
 cross-compiles current `openhd-3.0` and SysUtils `dev-release` once against the
@@ -37,3 +37,25 @@ separate `openhd-components-luckfox-pico-*` artifacts. Slots update applications
 and runtime libraries, not the kernel or complete operating system.
 
 Aura and Lyra are separate families and are not part of this matrix.
+
+## Mini B NAND
+
+Select `luckfox-pico-mini-nand` in the normal image workflow to assemble only
+the 128 MiB NAND target. It also participates in `all` and `luckfox` builds.
+The SDK must first supply the corresponding reusable NAND base (see the SDK's
+`docs/pico-mini-nand.md`). Existing SD Mini bases are never used for this target.
+
+NAND assembly uses a minimal rootfs seed and preserves the base's bootloader,
+kernel, OEM and userdata images byte for byte. It injects the current paired
+OpenHD/SysUtils native-camera build, Devourer policies and transitive ELF library
+closure, rejects GStreamer/Python/slot updates, and regenerates only rootfs as
+UBI/UBIFS. Each partition is checked against the 120 MiB layout, retaining 8 MiB
+outside the partitions and UBI metadata/bad-block space internally.
+
+Its `openhd-image-luckfox-pico-mini-nand` artifact contains `firmware.zip` with
+Rockchip `update.img`, matching loader and individual partitions. It has no
+`.img.xz` SD image and no `.pico-ohd` application slots. Flash the complete NAND
+firmware with a compatible Rockchip tool; stock offsets differ.
+
+USB boots as host for a radio. USB Ethernet and ADB over that connector are not
+available in host mode. Native MIS5001 capture defaults to 1280x720 at 60 fps.

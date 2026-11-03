@@ -1,4 +1,4 @@
-"""Reuse a complete successful six-board base build; never start an SDK build."""
+"""Reuse a complete successful Pico base build; never start an SDK build."""
 import argparse
 import hashlib
 import json
@@ -8,7 +8,7 @@ import urllib.parse
 import urllib.request
 
 REPO = 'OpenHD/luckfox-pico-sdk'
-TARGETS = ['zero', 'ultra-w', 'ultra', 'pro-max', 'plus', 'mini']
+TARGETS = ['zero', 'ultra-w', 'ultra', 'pro-max', 'plus', 'mini', 'mini-nand']
 BASE_URL = 'https://dl.cloudsmith.io/public/openhd/dev-release/raw/names/'
 
 
@@ -54,7 +54,14 @@ def fetch(target, output, run):
             raise ValueError('Wrong published Pico base')
         if manifest.get('usb_role') != 'host':
             raise IncompatiblePublishedBase('Published Pico base predates USB host support')
+        if Path(manifest['image']).name != manifest['image']:
+            raise ValueError('Invalid Pico base image filename')
         filenames = [manifest['image'], name + '.json']
+        if manifest['boot_medium'] == 'spi_nand':
+            seed = manifest.get('rootfs_seed', '')
+            if Path(seed).name != seed or not seed:
+                raise ValueError('Invalid NAND seed filename')
+            filenames.append(seed)
         if manifest['boot_medium'] == 'emmc':
             filenames += [name + '-firmware.zip', name + '-firmware.zip.sha256']
         for filename in filenames:
@@ -77,8 +84,18 @@ def fetch(target, output, run):
         raise ValueError('Base target or ABI mismatch')
     if manifest.get('usb_role') != 'host':
         raise ValueError('Selected Pico base lacks USB host support; rebuild SDK board bases')
+    if Path(manifest['image']).name != manifest['image']:
+        raise ValueError('Invalid Pico base image filename')
     if digest(output / manifest['image']) != manifest['sha256']:
         raise ValueError('Base disk checksum mismatch')
+    if manifest['boot_medium'] == 'spi_nand':
+        seed = manifest.get('rootfs_seed', '')
+        if not seed or Path(seed).name != seed:
+            raise ValueError('Invalid NAND seed filename')
+        if manifest.get('application_slots') is not False:
+            raise ValueError('NAND base must not enable application slots')
+        if digest(output / manifest['rootfs_seed']) != manifest['rootfs_seed_sha256']:
+            raise ValueError('NAND rootfs seed checksum mismatch')
     return manifest
 
 

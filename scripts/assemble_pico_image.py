@@ -77,6 +77,9 @@ def assemble(base, applications, sdk, target, output):
     base, applications, sdk, output = [p.resolve() for p in (base, applications, sdk, output)]
     output.mkdir(parents=True, exist_ok=True)
     meta = json.loads((base / ('openhd-base-' + target + '.json')).read_text())
+    if meta.get('boot_medium') == 'spi_nand':
+        nand = load(Path(__file__).with_name('assemble_pico_nand_image.py'), 'nand_assembly')
+        return nand.assemble(base, applications, sdk, target, output)
     app = json.loads((applications / 'applications.json').read_text())
     if (meta['target'], meta['runtime_abi'], app['platform'], app['architecture']) != (
             target, 'armv7a-hardfloat-uclibc', 'luckfox-pico', 'armhf'):

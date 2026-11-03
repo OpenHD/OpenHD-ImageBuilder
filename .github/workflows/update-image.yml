@@ -18,6 +18,7 @@ on:
           - x21-update
           - orqa
           - luckfox
+          - luckfox-pico-mini-nand
           - publish-pi
       source_run:
         description: Source image run for publish-pi, or OpenHD component run for orqa
@@ -43,10 +44,10 @@ env:
 jobs:
   luckfox-pico-images:
     name: Luckfox Pico application overlay images
-    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'luckfox'
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'luckfox' || inputs.target == 'luckfox-pico-mini-nand'
     uses: ./.github/workflows/luckfox-images.yml
     with:
-      target: all
+      target: ${{ inputs.target == 'luckfox-pico-mini-nand' && 'luckfox-pico-mini-nand' || 'all' }}
     secrets: inherit
 
   publish-existing-pi:

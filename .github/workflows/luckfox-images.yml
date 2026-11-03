@@ -84,8 +84,9 @@ jobs:
             sysdrv/tools/board/buildroot/package/OpenHD
             sysdrv/tools/board/buildroot/package/OpenHD-SysUtils
             sysdrv/tools/board/android-tools
+            tools/linux/Linux_Pack_Firmware
       - name: Install boot image verification tools
-        run: sudo apt-get update && sudo apt-get install -y device-tree-compiler u-boot-tools
+        run: sudo apt-get update && sudo apt-get install -y device-tree-compiler u-boot-tools mtd-utils
       - name: Verify application startup assets in the sparse SDK checkout
         run: |
           test -f pico-sdk/sysdrv/tools/board/buildroot/package/OpenHD/start.sh
@@ -100,7 +101,7 @@ jobs:
         env:
           BASE_RUN: ${{ needs.prepare.outputs.run }}
         run: python3 scripts/fetch_pico_base.py --target "$TARGET_ID" --run "$BASE_RUN" --output base
-      - name: Replace applications and verify all other partitions remain unchanged
+      - name: Overlay applications and verify unchanged board partitions
         run: |
           sudo python3 scripts/assemble_pico_image.py --base base --applications applications \
             --sdk pico-sdk --target "$TARGET_ID" --output deploy
@@ -152,7 +153,14 @@ jobs:
           base_name="openhd-base-${TARGET_ID}"
           if ! curl --fail --silent --head "https://dl.cloudsmith.io/public/openhd/dev-release/raw/names/${base_name}.json/versions/latest/${base_name}.json" >/dev/null; then
             mkdir base-publish
-            cp base/*.img.xz base-publish/
+          python3 - "$base_name" <<'PY'
+          import json, shutil, sys
+          from pathlib import Path
+          meta = json.loads((Path('base') / (sys.argv[1] + '.json')).read_text())
+          for name in (meta['image'], meta.get('rootfs_seed')):
+              if name:
+                  shutil.copyfile(Path('base') / name, Path('base-publish') / name)
+          PY
             if [ -f base/firmware.zip ]; then
               cp base/firmware.zip "base-publish/${base_name}-firmware.zip"
               (cd base-publish && sha256sum "${base_name}-firmware.zip" > "${base_name}-firmware.zip.sha256")
