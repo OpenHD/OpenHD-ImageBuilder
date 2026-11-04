@@ -84,7 +84,7 @@ def assemble(base, applications, sdk, target, output):
     if (meta['target'], meta['runtime_abi'], app['platform'], app['architecture']) != (
             target, 'armv7a-hardfloat-uclibc', 'luckfox-pico', 'armhf'):
         raise ValueError('Incompatible Pico application/base pair')
-    if meta.get('usb_role') != 'host':
+    if meta.get('usb_role') != 'host' or meta.get('usb_role_switching') is not True:
         raise ValueError('Pico base lacks USB host support; rebuild/publish SDK board bases')
     subprocess.run(['sha256sum', '-c', 'applications.sha256'], cwd=applications, check=True)
     firmware = load(sdk / 'scripts/package_imagewriter_firmware.py', 'pico_firmware')
@@ -110,8 +110,8 @@ def assemble(base, applications, sdk, target, output):
         subprocess.run(['dumpimage', '-T', 'flat_dt', '-p', '0', '-o', str(boot_dtb), str(boot_image)], check=True)
         usb_mode = subprocess.check_output(['fdtget', '-t', 's', str(boot_dtb),
                                            '/usbdrd/usb@ffb00000', 'dr_mode'], text=True).strip()
-        if usb_mode != 'host':
-            raise ValueError('Pico base boot DTB does not enable USB host mode')
+        if usb_mode != 'otg':
+            raise ValueError('Pico base boot DTB does not enable selectable USB roles')
         offset, length = root_partition(disk)
         before = outside_digest(disk, offset, length)
         root.mkdir()
@@ -165,7 +165,7 @@ def assemble(base, applications, sdk, target, output):
             recorded = verifier.inspect(root, payload, target, dict(sdk=meta['sdk_commit'], **commits))
             recorded.update(base_image_sha256=meta['sha256'], base_run=meta.get('base_run'),
                             sdk_sha256=app['sdk_sha256'], assembly='existing-base-application-overlay',
-                            video_backend=app['video_backend'], gstreamer=False, usb_role='host',
+                            video_backend=app['video_backend'], gstreamer=False, usb_role='host', usb_role_switching=True,
                             ethernet_mac='persistent', venc_packet_address='mb-valid')
             manifest = json.dumps(recorded, indent=2) + '\n'
             (root / 'etc/openhd-image-components.json').write_text(manifest)

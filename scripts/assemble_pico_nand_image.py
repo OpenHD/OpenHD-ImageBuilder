@@ -62,7 +62,8 @@ def assemble(base, applications, sdk, target, output):
     meta = json.loads((base / ('openhd-base-' + target + '.json')).read_text())
     app = json.loads((applications / 'applications.json').read_text())
     if (target != nand.TARGET or meta['target'] != target or meta['boot_medium'] != 'spi_nand'
-            or meta.get('usb_role') != 'host' or meta.get('application_slots') is not False
+            or meta.get('usb_role') != 'host' or meta.get('usb_role_switching') is not True
+            or meta.get('provisioning') != 'ubi-static-rootfs-v1' or meta.get('application_slots') is not False
             or meta['runtime_abi'] != 'armv7a-hardfloat-uclibc'
             or app['platform'] != 'luckfox-pico' or app['architecture'] != 'armhf'
             or app.get('video_backend') != 'native-pico-mpi' or app.get('gstreamer') is not False):
@@ -106,7 +107,8 @@ def assemble(base, applications, sdk, target, output):
         recorded = dict(schema=1, target=target, source_commits=dict(sdk=meta['sdk_commit'], **app['source_commits']),
             base_image_sha256=meta['sha256'], sdk_sha256=app['sdk_sha256'], assembly='existing-nand-base-application-overlay',
             video_backend='native-pico-mpi', gstreamer=False, devourer=True, webui=False,
-            usb_role='host', application_slots=False, sensor='MIS5001', camera_format='1280x720@60',
+            usb_role='host', usb_role_switching=True, provisioning='ubi-static-rootfs-v1',
+            application_slots=False, sensor='MIS5001', camera_format='1280x720@60',
             runtime_elf_files_checked=checked, nand_capacity=nand.CAPACITY,
             nand_partition_bytes=sum(size for _, size in nand.PARTITIONS.values()),
             runtime_files={name: nand.digest(root / name) for name in app['files']})

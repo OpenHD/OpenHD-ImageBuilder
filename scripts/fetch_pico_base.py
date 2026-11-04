@@ -52,8 +52,8 @@ def fetch(target, output, run):
             manifest = json.load(response)
         if manifest['target'] != target or manifest['runtime_abi'] != 'armv7a-hardfloat-uclibc':
             raise ValueError('Wrong published Pico base')
-        if manifest.get('usb_role') != 'host':
-            raise IncompatiblePublishedBase('Published Pico base predates USB host support')
+        if manifest.get('usb_role') != 'host' or manifest.get('usb_role_switching') is not True:
+            raise IncompatiblePublishedBase('Published Pico base predates selectable USB host/Ethernet support')
         if Path(manifest['image']).name != manifest['image']:
             raise ValueError('Invalid Pico base image filename')
         filenames = [manifest['image'], name + '.json']
@@ -84,6 +84,8 @@ def fetch(target, output, run):
         raise ValueError('Base target or ABI mismatch')
     if manifest.get('usb_role') != 'host':
         raise ValueError('Selected Pico base lacks USB host support; rebuild SDK board bases')
+    if manifest.get('usb_role_switching') is not True:
+        raise ValueError('Selected Pico base lacks selectable USB roles; rebuild SDK board bases')
     if Path(manifest['image']).name != manifest['image']:
         raise ValueError('Invalid Pico base image filename')
     if digest(output / manifest['image']) != manifest['sha256']:

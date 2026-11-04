@@ -57,5 +57,11 @@ Rockchip `update.img`, matching loader and individual partitions. It has no
 `.img.xz` SD image and no `.pico-ohd` application slots. Flash the complete NAND
 firmware with a compatible Rockchip tool; stock offsets differ.
 
-USB boots as host for a radio. USB Ethernet and ADB over that connector are not
-available in host mode. Native MIS5001 capture defaults to 1280x720 at 60 fps.
+USB defaults to host for a radio. ImageWriter's review page offers "Enable
+Ethernet link over USB" to select USB device mode instead. SysUtils applies
+the provisioned choice before Wi-Fi detection. A new base advertising
+`usb_role_switching` is required; older fixed-role bases are rejected.
+NAND rootfs includes a 248 KiB static UBI provisioning volume; ImageWriter
+preserves all application/UBIFS blocks when storing the selection. USB
+Ethernet and ADB cannot share the connector with a host-mode radio.
+Native MIS5001 capture defaults to 1280x720 at 60 fps.

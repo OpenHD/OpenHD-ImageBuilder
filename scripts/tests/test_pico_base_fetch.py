@@ -19,7 +19,7 @@ class BaseFetchTests(unittest.TestCase):
         contents = {'firmware.zip': b'board-partitions', 'seed.tar.xz': b'rootfs-seed'}
         manifest = dict(target=target, runtime_abi='armv7a-hardfloat-uclibc',
                         image='firmware.zip', boot_medium='spi_nand', usb_role='host',
-                        application_slots=False, rootfs_seed='seed.tar.xz',
+                        application_slots=False, usb_role_switching=True, rootfs_seed='seed.tar.xz',
                         sha256=hashlib.sha256(contents['firmware.zip']).hexdigest(),
                         rootfs_seed_sha256=hashlib.sha256(contents['seed.tar.xz']).hexdigest())
         contents[name + '.json'] = json.dumps(manifest).encode()
@@ -48,7 +48,7 @@ class BaseFetchTests(unittest.TestCase):
         legacy = dict(target=target, runtime_abi='armv7a-hardfloat-uclibc',
                       image=name + '.img.xz', boot_medium='sd_card',
                       sha256=hashlib.sha256(disk).hexdigest())
-        current = dict(legacy, usb_role='host')
+        current = dict(legacy, usb_role='host', usb_role_switching=True)
         with tempfile.TemporaryDirectory() as tmp:
             output = Path(tmp)
 
