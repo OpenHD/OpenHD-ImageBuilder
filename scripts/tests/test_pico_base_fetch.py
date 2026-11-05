@@ -65,6 +65,40 @@ class BaseFetchTests(unittest.TestCase):
             self.assertEqual(result['usb_role'], 'host')
             published_download.assert_not_called()
 
+    def test_legacy_boolean_is_repaired_only_after_checksum_verification(self):
+        target = 'luckfox-pico-mini'
+        name = 'openhd-base-' + target
+        disk = b'verified-current-base'
+        manifest = dict(target=target, runtime_abi='armv7a-hardfloat-uclibc',
+                        image=name + '.img.xz', boot_medium='sd_card',
+                        usb_role='host', usb_role_switching=True,
+                        sha256=hashlib.sha256(disk).hexdigest())
+        original = json.dumps(manifest).replace('true', 'True')
+        for corrupt in (False, True):
+            with self.subTest(corrupt=corrupt), tempfile.TemporaryDirectory() as tmp:
+                output = Path(tmp)
+                metadata = output / (name + '.json')
+
+                def run(command, **kwargs):
+                    if command[:3] == ['gh', 'run', 'download']:
+                        metadata.write_text(original)
+                        (output / manifest['image']).write_bytes(disk)
+                    elif command[0] == 'sha256sum':
+                        self.assertEqual(metadata.read_text(), original)
+                        if corrupt:
+                            raise fetcher.subprocess.CalledProcessError(1, command)
+
+                legacy = dict(manifest, usb_role_switching=False)
+                with patch.object(fetcher.urllib.request, 'urlopen', return_value=io.BytesIO(json.dumps(legacy).encode())), \
+                        patch.object(fetcher.subprocess, 'run', side_effect=run):
+                    if corrupt:
+                        with self.assertRaises(fetcher.subprocess.CalledProcessError):
+                            fetcher.fetch(target, output, 123)
+                        self.assertEqual(metadata.read_text(), original)
+                    else:
+                        self.assertEqual(fetcher.fetch(target, output, 123), manifest)
+                        self.assertEqual(json.loads(metadata.read_text()), manifest)
+
     def test_reject_old_artifact_after_published_fallback(self):
         target = 'luckfox-pico-mini'
         manifest = dict(target=target, runtime_abi='armv7a-hardfloat-uclibc',

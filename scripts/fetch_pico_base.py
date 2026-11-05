@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 import subprocess
 import urllib.parse
@@ -76,8 +77,16 @@ def fetch(target, output, run):
             raise
         subprocess.run(['gh', 'run', 'download', str(run), '--repo', REPO,
                         '--name', name, '--dir', str(output)], check=True)
-        manifest = json.loads((output / (name + '.json')).read_text())
         subprocess.run(['sha256sum', '-c', name + '.sha256'], cwd=output, check=True)
+        metadata = output / (name + '.json')
+        original = metadata.read_text()
+        # SDK bases from November 2026 emitted this Python boolean in JSON.
+        # Verify the original artifact before repairing only the known field.
+        corrected = re.sub(r'("usb_role_switching"\s*:\s*)True(?=\s*[,}])', r'\1true', original)
+        manifest = json.loads(corrected)
+        if corrected != original:
+            metadata.write_text(corrected)
+
         if manifest['boot_medium'] == 'emmc':
             subprocess.run(['sha256sum', '-c', 'firmware.zip.sha256'], cwd=output, check=True)
     if manifest['target'] != target or manifest['runtime_abi'] != 'armv7a-hardfloat-uclibc':
