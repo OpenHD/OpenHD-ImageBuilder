@@ -1,5 +1,5 @@
 name: New_Image_Workflow
-run-name: OpenHD 3.0-albatros-beta1 (${{ inputs.target || 'all' }})
+run-name: OpenHD 3.0-albatros-beta2 (${{ inputs.target || 'all' }})
 
 on:
   workflow_dispatch:
@@ -37,7 +37,7 @@ permissions:
   actions: read
 
 env:
-  IMAGE_RELEASE: 3.0-albatros-beta1
+  IMAGE_RELEASE: 3.0-albatros-beta2
   BRANCH: dev-release
   X21_COMPONENT_BASE_URL: https://dl.cloudsmith.io/public/openhd/dev-release/raw/files
 
