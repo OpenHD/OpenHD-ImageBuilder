@@ -156,6 +156,8 @@ on_chroot() {
     # still carries an older /opt/additionalFiles directory.
     install -m 0644 "${BASE_DIR}/additionalFiles/prepare-devourer-image.sh" \
         "${MNT_DIR}/opt/additionalFiles/prepare-devourer-image.sh"
+    install -m 0644 "${BASE_DIR}/additionalFiles/prepare-veye-image.sh" \
+        "${MNT_DIR}/opt/additionalFiles/prepare-veye-image.sh"
     install -m 0644 "${BASE_DIR}/additionalFiles/configure-rpi-splash.sh" \
         "${MNT_DIR}/opt/additionalFiles/configure-rpi-splash.sh"
     install -m 0644 "${BASE_DIR}/additionalFiles/install-current-components.sh" \

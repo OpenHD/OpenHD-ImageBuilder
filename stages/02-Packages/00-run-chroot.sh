@@ -344,6 +344,9 @@ curl -fsSL https://apt.radxa.com/bullseye-stable/public.key | gpg --dearmor | su
         fi
     done
     bash /opt/additionalFiles/install-current-components.sh
+    if [[ "${OS:-}" == "raspbian" && "${RPI5:-false}" != "true" ]]; then
+        bash /opt/additionalFiles/prepare-veye-image.sh
+    fi
     bash /opt/additionalFiles/prepare-devourer-image.sh
     run_depmod_for_installed_kernels
     validate_openhd_runtime

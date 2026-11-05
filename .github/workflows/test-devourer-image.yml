@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - additionalFiles/prepare-devourer-image.sh
+      - additionalFiles/prepare-veye-image.sh
       - additionalFiles/configure-rpi-splash.sh
       - additionalFiles/configure-rockchip-native.sh
       - additionalFiles/rockchip-mali-runtime.py
@@ -16,6 +17,7 @@ on:
       - X86-Installer.sh
       - additionalFiles/Buildroot/openhd/**
       - scripts/tests/test_devourer_image.sh
+      - scripts/tests/test_veye_image.sh
       - scripts/tests/test_release_components.py
       - scripts/tests/test_rockchip_native.py
       - .github/workflows/update-image.yml
@@ -32,6 +34,7 @@ jobs:
       - name: Check shell syntax
         run: |
           bash -n additionalFiles/prepare-devourer-image.sh
+          bash -n additionalFiles/prepare-veye-image.sh
           bash -n additionalFiles/configure-rpi-splash.sh
           bash -n additionalFiles/configure-rockchip-native.sh
           bash -n additionalFiles/install-current-components.sh
@@ -52,3 +55,5 @@ jobs:
           /usr/bin/python3 scripts/tests/test_rockchip_native.py
       - name: Test image cleanup
         run: bash scripts/tests/test_devourer_image.sh
+      - name: Test VEYE driver and overlay staging
+        run: bash scripts/tests/test_veye_image.sh
