@@ -10,6 +10,18 @@ import zipfile
 from assemble_pico_image import extract_applications, load
 
 
+def install_config_mount(root, sdk):
+    name = 'etc/init.d/S25openhd-nand'
+    source = sdk / 'project/cfg/BoardConfig_IPC/overlay/overlay-openhd-pico-nand' / name
+    content = source.read_bytes()
+    if b'mount --bind /userdata/Config /Config' not in content:
+        raise ValueError('NAND startup must mount a real persistent /Config directory')
+    destination = root / name
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_bytes(content)
+    destination.chmod(0o755)
+
+
 def verify_runtime(root):
     for name in ('usr/local/share/OpenHD/SysUtils/wifi_cards.json',
                  'lib/modprobe.d/openhd-devourer-eu.conf',
@@ -88,6 +100,7 @@ def assemble(base, applications, sdk, target, output):
         nand.check_images(images)
         nand.check_boot(images / 'boot.img')
         nand.extract_seed(base / meta['rootfs_seed'], root)
+        install_config_mount(root, sdk)
         nand.check_root(root)
         extract_applications(applications / 'applications.tar.gz', stage, app)
         for directory in ('usr', 'lib'):
@@ -108,10 +121,12 @@ def assemble(base, applications, sdk, target, output):
             base_image_sha256=meta['sha256'], sdk_sha256=app['sdk_sha256'], assembly='existing-nand-base-application-overlay',
             video_backend='native-pico-mpi', gstreamer=False, devourer=True, webui=False,
             usb_role='host', usb_role_switching=True, provisioning='ubi-static-rootfs-v1',
-            application_slots=False, sensor='MIS5001', camera_format='1280x720@60',
+            application_slots=False, config_mount='userdata-bind-v1', sensor='MIS5001', camera_format='1280x720@60',
             runtime_elf_files_checked=checked, nand_capacity=nand.CAPACITY,
             nand_partition_bytes=sum(size for _, size in nand.PARTITIONS.values()),
             runtime_files={name: nand.digest(root / name) for name in app['files']})
+        recorded['config_startup_sha256'] = nand.digest(root / 'etc/init.d/S25openhd-nand')
+        recorded['assembly_sdk_commit'] = subprocess.check_output(['git', '-C', str(sdk), 'rev-parse', 'HEAD'], text=True).strip()
         manifest = json.dumps(recorded, indent=2) + '\n'
         (root / 'etc/openhd-image-components.json').write_text(manifest)
         nand.make_rootfs(root, images / 'rootfs.img')
