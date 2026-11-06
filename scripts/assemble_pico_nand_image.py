@@ -126,7 +126,7 @@ def assemble(base, applications, sdk, target, output):
             nand_partition_bytes=sum(size for _, size in nand.PARTITIONS.values()),
             runtime_files={name: nand.digest(root / name) for name in app['files']})
         recorded['config_startup_sha256'] = nand.digest(root / 'etc/init.d/S25openhd-nand')
-        recorded['assembly_sdk_commit'] = subprocess.check_output(['git', '-C', str(sdk), 'rev-parse', 'HEAD'], text=True).strip()
+        recorded['assembly_sdk_commit'] = subprocess.check_output(['git', '-c', 'safe.directory=' + str(sdk), '-C', str(sdk), 'rev-parse', 'HEAD'], text=True).strip()
         manifest = json.dumps(recorded, indent=2) + '\n'
         (root / 'etc/openhd-image-components.json').write_text(manifest)
         nand.make_rootfs(root, images / 'rootfs.img')
