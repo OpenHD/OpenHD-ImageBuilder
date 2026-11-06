@@ -121,6 +121,9 @@ def assemble(base, applications, sdk, target, output):
         usb_source = sdk / 'sysdrv/tools/board/android-tools/S50usbdevice'
         usb_destination = root / 'etc/init.d/S50usbdevice'
         usb_destination.write_bytes(usb_source.read_bytes()); usb_destination.chmod(0o755)
+        role_source = sdk / 'sysdrv/tools/board/android-tools/openhd-pico-usb-role'
+        role_destination = root / 'usr/sbin/openhd-pico-usb-role'
+        role_destination.write_bytes(role_source.read_bytes()); role_destination.chmod(0o755)
         network_source = sdk / 'project/cfg/BoardConfig_IPC/overlay/overlay-luckfox-buildroot-init/etc/init.d/S99usb0config'
         network_destination = root / 'etc/init.d/S99usb0config'
         network_destination.write_bytes(network_source.read_bytes()); network_destination.chmod(0o755)
