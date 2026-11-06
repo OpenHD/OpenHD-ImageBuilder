@@ -73,7 +73,9 @@ def assemble(base, applications, sdk, target, output):
     nand = load(sdk / 'scripts/pico_nand.py', 'pico_nand')
     meta = json.loads((base / ('openhd-base-' + target + '.json')).read_text())
     app = json.loads((applications / 'applications.json').read_text())
-    if (target != nand.TARGET or meta['target'] != target or meta['boot_medium'] != 'spi_nand'
+    profile = nand.TARGETS.get(target)
+    if (not profile or meta['target'] != target or meta.get('board_config') != profile['board']
+            or meta.get('nand_capacity') != profile['capacity'] or meta['boot_medium'] != 'spi_nand'
             or meta.get('usb_role') != 'host' or meta.get('usb_role_switching') is not True
             or meta.get('provisioning') != 'ubi-static-rootfs-v1' or meta.get('application_slots') is not False
             or meta['runtime_abi'] != 'armv7a-hardfloat-uclibc'
@@ -129,7 +131,7 @@ def assemble(base, applications, sdk, target, output):
             video_backend='native-pico-mpi', gstreamer=False, devourer=True, webui=False,
             usb_role='host', usb_role_switching=True, provisioning='ubi-static-rootfs-v1',
             application_slots=False, config_mount='userdata-bind-v1', usb_ethernet_ip='192.168.3.1', usb_host_ip='192.168.3.2', sensor='MIS5001', camera_format='1280x720@60',
-            runtime_elf_files_checked=checked, nand_capacity=nand.CAPACITY,
+            runtime_elf_files_checked=checked, nand_capacity=profile['capacity'],
             nand_partition_bytes=sum(size for _, size in nand.PARTITIONS.values()),
             runtime_files={name: nand.digest(root / name) for name in app['files']})
         recorded['config_startup_sha256'] = nand.digest(root / 'etc/init.d/S25openhd-nand')

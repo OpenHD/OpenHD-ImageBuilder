@@ -22,9 +22,10 @@ def api(path):
     return json.loads(subprocess.check_output(['gh', 'api', path]))
 
 
-def select():
-    runs = api(f'repos/{REPO}/actions/workflows/build.yml/runs?status=success&branch=main&event=push&per_page=30')
-    required = {'openhd-base-luckfox-pico-' + name for name in TARGETS}
+def select(target=None):
+    runs = api(f'repos/{REPO}/actions/workflows/build.yml/runs?status=success&branch=main&per_page=30')
+    required = ({'openhd-base-' + target} if target and target != 'all' else
+                {'openhd-base-luckfox-pico-' + name for name in TARGETS})
     for run in runs['workflow_runs']:
         artifacts = api(f'repos/{REPO}/actions/runs/{run["id"]}/artifacts?per_page=100')['artifacts']
         if required <= {a['name'] for a in artifacts if not a['expired']}:
@@ -75,6 +76,8 @@ def fetch(target, output, run):
     except (urllib.error.HTTPError, IncompatiblePublishedBase) as error:
         if isinstance(error, urllib.error.HTTPError) and error.code != 404:
             raise
+        if target == 'luckfox-pico-pro-max-nand':
+            run = select(target)['id']
         subprocess.run(['gh', 'run', 'download', str(run), '--repo', REPO,
                         '--name', name, '--dir', str(output)], check=True)
         subprocess.run(['sha256sum', '-c', name + '.sha256'], cwd=output, check=True)
@@ -115,6 +118,7 @@ if __name__ == '__main__':
     p.add_argument('--target')
     p.add_argument('--output', type=Path)
     p.add_argument('--run', type=int)
+    p.add_argument('--select-target')
     a = p.parse_args()
     if a.target:
         fetch(a.target, a.output, a.run)
@@ -122,6 +126,6 @@ if __name__ == '__main__':
         # The known verified build is a fallback only when a published base can
         # already be used; fetch() reports expired artifacts if no base exists.
         try:
-            print(select()['id'])
+            print(select(a.select_target)['id'])
         except ValueError:
             print(40189150025)

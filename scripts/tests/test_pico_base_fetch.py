@@ -13,6 +13,16 @@ import fetch_pico_base as fetcher
 
 
 class BaseFetchTests(unittest.TestCase):
+    def test_select_specific_nand_base_from_manual_sdk_build(self):
+        target = 'luckfox-pico-pro-max-nand'
+        def api(path):
+            if '/workflows/' in path:
+                self.assertNotIn('event=push', path)
+                return {'workflow_runs': [{'id': 456}]}
+            return {'artifacts': [{'name': 'openhd-base-' + target, 'expired': False}]}
+        with patch.object(fetcher, 'api', side_effect=api):
+            self.assertEqual(fetcher.select(target)['id'], 456)
+
     def test_nand_seed_is_downloaded_and_verified(self):
         target = 'luckfox-pico-mini-nand'
         name = 'openhd-base-' + target
