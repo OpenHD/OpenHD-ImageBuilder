@@ -114,8 +114,8 @@ def assemble(base, applications, sdk, target, output):
         config.write_text(json.dumps(dict(platform_type=25, platform_name='RV110X', run_mode='air',
             camera_type=140, camera_resolution_fps='1280x720@60', firstboot=False,
             init_system='init.d', shell='busybox', wifi_enable_autodetect=True,
-            disable_ethernet_link=True, nw_ethernet_card='usb0', air_unit_ip='192.168.3.1',
-            ground_unit_ip='192.168.3.2', nw_manual_forwarding_ips='192.168.3.2'), indent=2) + '\n')
+            disable_ethernet_link=True, air_unit_ip='192.168.3.1',
+            ground_unit_ip='192.168.3.2'), indent=2) + '\n')
         usb_source = sdk / 'sysdrv/tools/board/android-tools/S50usbdevice'
         usb_destination = root / 'etc/init.d/S50usbdevice'
         usb_destination.write_bytes(usb_source.read_bytes()); usb_destination.chmod(0o755)
