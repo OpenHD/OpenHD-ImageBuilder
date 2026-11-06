@@ -114,14 +114,21 @@ def assemble(base, applications, sdk, target, output):
         config.write_text(json.dumps(dict(platform_type=25, platform_name='RV110X', run_mode='air',
             camera_type=140, camera_resolution_fps='1280x720@60', firstboot=False,
             init_system='init.d', shell='busybox', wifi_enable_autodetect=True,
-            disable_ethernet_link=True), indent=2) + '\n')
+            disable_ethernet_link=True, nw_ethernet_card='usb0', air_unit_ip='192.168.3.1',
+            ground_unit_ip='192.168.3.2', nw_manual_forwarding_ips='192.168.3.2'), indent=2) + '\n')
+        usb_source = sdk / 'sysdrv/tools/board/android-tools/S50usbdevice'
+        usb_destination = root / 'etc/init.d/S50usbdevice'
+        usb_destination.write_bytes(usb_source.read_bytes()); usb_destination.chmod(0o755)
+        network_source = sdk / 'project/cfg/BoardConfig_IPC/overlay/overlay-luckfox-buildroot-init/etc/init.d/S99usb0config'
+        network_destination = root / 'etc/init.d/S99usb0config'
+        network_destination.write_bytes(network_source.read_bytes()); network_destination.chmod(0o755)
         checked = verify_runtime(root)
         nand.check_root(root, applications=True)
         recorded = dict(schema=1, target=target, source_commits=dict(sdk=meta['sdk_commit'], **app['source_commits']),
             base_image_sha256=meta['sha256'], sdk_sha256=app['sdk_sha256'], assembly='existing-nand-base-application-overlay',
             video_backend='native-pico-mpi', gstreamer=False, devourer=True, webui=False,
             usb_role='host', usb_role_switching=True, provisioning='ubi-static-rootfs-v1',
-            application_slots=False, config_mount='userdata-bind-v1', sensor='MIS5001', camera_format='1280x720@60',
+            application_slots=False, config_mount='userdata-bind-v1', usb_ethernet_ip='192.168.3.1', usb_host_ip='192.168.3.2', sensor='MIS5001', camera_format='1280x720@60',
             runtime_elf_files_checked=checked, nand_capacity=nand.CAPACITY,
             nand_partition_bytes=sum(size for _, size in nand.PARTITIONS.values()),
             runtime_files={name: nand.digest(root / name) for name in app['files']})

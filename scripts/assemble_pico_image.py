@@ -148,7 +148,7 @@ def assemble(base, applications, sdk, target, output):
                 shutil.copyfile(package / source, path)
                 path.chmod(0o755)
             overlay = sdk / 'project/cfg/BoardConfig_IPC/overlay/overlay-luckfox-buildroot-init/etc/init.d'
-            for name in ('S39ethernet-mac', 'S50sshd'):
+            for name in ('S39ethernet-mac', 'S50sshd', 'S99usb0config'):
                 shutil.copyfile(overlay / name, root / 'etc/init.d' / name)
                 (root / 'etc/init.d' / name).chmod(0o755)
             shutil.copyfile(sdk / 'sysdrv/tools/board/android-tools/S50usbdevice', root / 'etc/init.d/S50usbdevice')
