@@ -154,6 +154,17 @@ class Cloudsmith:
             page += 1
 
 
+def report_quota(client: Cloudsmith, owner: str) -> None:
+    """Report storage/delivery limits without blocking cleanup on missing access."""
+    namespace = quote(owner, safe="")
+    for kind in ("quota", "quota/oss"):
+        try:
+            data, _ = client.request(f"/{kind}/{namespace}/")
+            print(f"{kind}: {json.dumps(data, sort_keys=True)}", flush=True)
+        except Exception as exc:
+            print(f"{kind}: unavailable ({exc})", flush=True)
+
+
 def cleanup(client: Cloudsmith, owner: str, cutoff: datetime, dry_run: bool) -> int:
     namespace = quote(owner, safe="")
     repos = client.list_all(f"/repos/{namespace}/")
@@ -228,7 +239,13 @@ def main() -> int:
     print(f"Policy: downloads == 0 and uploaded_at < {cutoff.isoformat()}", flush=True)
     print("x21 override: keep the newest upload of each package; remove superseded uploads", flush=True)
     try:
-        return cleanup(Cloudsmith(api_key), args.owner.strip(), cutoff, not args.delete)
+        client = Cloudsmith(api_key)
+        owner = args.owner.strip()
+        report_quota(client, owner)
+        result = cleanup(client, owner, cutoff, not args.delete)
+        if args.delete:
+            report_quota(client, owner)
+        return result
     except Exception as exc:
         print(f"Cleanup failed: {exc}", file=sys.stderr, flush=True)
         return 1
