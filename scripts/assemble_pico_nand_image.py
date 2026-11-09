@@ -8,6 +8,7 @@ import subprocess
 import tempfile
 import zipfile
 from assemble_pico_image import extract_applications, load
+from pico_image_setup import install_ssh_login, install_nand_recordings
 
 
 def install_config_mount(root, sdk):
@@ -102,6 +103,8 @@ def assemble(base, applications, sdk, target, output):
         nand.check_images(images)
         nand.check_boot(images / 'boot.img')
         nand.extract_seed(base / meta['rootfs_seed'], root)
+        install_ssh_login(root)
+        install_nand_recordings(root)
         install_config_mount(root, sdk)
         nand.check_root(root)
         extract_applications(applications / 'applications.tar.gz', stage, app)
@@ -138,6 +141,8 @@ def assemble(base, applications, sdk, target, output):
             nand_partition_bytes=sum(size for _, size in nand.PARTITIONS.values()),
             runtime_files={name: nand.digest(root / name) for name in app['files']})
         recorded['config_startup_sha256'] = nand.digest(root / 'etc/init.d/S25openhd-nand')
+        recorded['recordings_startup_sha256'] = nand.digest(root / 'etc/init.d/S97openhd-recordings')
+        recorded['ssh_user'] = 'openhd'
         recorded['assembly_sdk_commit'] = subprocess.check_output(['git', '-c', 'safe.directory=' + str(sdk), '-C', str(sdk), 'rev-parse', 'HEAD'], text=True).strip()
         manifest = json.dumps(recorded, indent=2) + '\n'
         (root / 'etc/openhd-image-components.json').write_text(manifest)

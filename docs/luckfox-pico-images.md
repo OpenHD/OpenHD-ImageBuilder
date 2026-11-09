@@ -65,3 +65,22 @@ NAND rootfs includes a 248 KiB static UBI provisioning volume; ImageWriter
 preserves all application/UBIFS blocks when storing the selection. USB
 Ethernet and ADB cannot share the connector with a host-mode radio.
 Native MIS5001 capture defaults to 1280x720 at 60 fps.
+
+All assembled Luckfox SD, eMMC and NAND images provide SSH login with username
+`openhd` and password `openhd` (a regular user with home `/home/openhd`). This
+is applied during assembly, including when reusing older board bases.
+
+NAND images mount a separately prepared SD partition labelled `RECORDINGS` at
+`/Video` before SysUtils starts OpenHD. FAT32 cards work with the minimal image.
+Cards are never formatted automatically: preparing a card erases its contents
+and requires an explicit formatting action. The startup helper uses BusyBox
+`blkid`, rescans the vendor's non-removable SD controller when necessary, and
+does not claim partitions already mounted elsewhere. On the first successful
+mount it enables continuous MIS5001 recording; later recording-mode changes
+are preserved. Booting without the card temporarily disables recording and
+restores the saved mode when the card returns, avoiding writes into NAND.
+
+The live Pro/Max NAND board wrote a 33 MB 1280x720 H.264 MKV at about 58 fps.
+A power outage interrupted the download; complete playback and reboot
+verification of that board remain outstanding. This is not a full generated
+image flash/boot validation.
