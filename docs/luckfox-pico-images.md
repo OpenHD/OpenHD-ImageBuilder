@@ -70,15 +70,20 @@ All assembled Luckfox SD, eMMC and NAND images provide SSH login with username
 `openhd` and password `openhd` (a regular user with home `/home/openhd`). This
 is applied during assembly, including when reusing older board bases.
 
-NAND images mount a separately prepared SD partition labelled `RECORDINGS` at
-`/Video` before SysUtils starts OpenHD. FAT32 cards work with the minimal image.
+SD, eMMC and NAND images mount their dedicated recording partition at `/Video`
+before SysUtils starts OpenHD. An existing `/Videos` recording mount is reused
+with a bind mount, preserving its files and OpenHD's legacy path. Otherwise the
+helper finds a filesystem labelled `RECORDINGS`, or the existing GPT partition
+named `recordings` on older SD/eMMC images. FAT32 works with the minimal image.
 Cards are never formatted automatically: preparing a card erases its contents
 and requires an explicit formatting action. The startup helper uses BusyBox
-`blkid`, rescans the vendor's non-removable SD controller when necessary, and
-does not claim partitions already mounted elsewhere. On the first successful
+`blkid`, rescans the NAND board's non-removable SD controller when necessary,
+and rejects root, configuration, userdata and RAM filesystems as recording
+storage. It does not claim partitions already mounted at unrelated locations.
+On the first successful
 mount it enables continuous MIS5001 recording; later recording-mode changes
 are preserved. Booting without the card temporarily disables recording and
-restores the saved mode when the card returns, avoiding writes into NAND.
+restores the saved mode when storage returns, avoiding writes into rootfs.
 
 The live Pro/Max NAND board wrote a 33 MB 1280x720 H.264 MKV at about 58 fps.
 A power outage interrupted the download; complete playback and reboot

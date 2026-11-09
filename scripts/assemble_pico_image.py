@@ -11,7 +11,7 @@ import subprocess
 import tarfile
 import tempfile
 import zipfile
-from pico_image_setup import install_ssh_login
+from pico_image_setup import install_ssh_login, install_recordings
 
 
 def load(path, name):
@@ -140,6 +140,7 @@ def assemble(base, applications, sdk, target, output):
                     raise ValueError('Installed application differs from payload: ' + name)
             package = sdk / 'sysdrv/tools/board/buildroot/package'
             install_ssh_login(root)
+            install_recordings(root)
             for source, destination in (
                     ('OpenHD/start.sh', 'etc/init.d/S99openhd'),
                     ('OpenHD/slots.sh', 'etc/init.d/S97openhd-slots'),
@@ -169,6 +170,7 @@ def assemble(base, applications, sdk, target, output):
                             sdk_sha256=app['sdk_sha256'], assembly='existing-base-application-overlay',
                             video_backend=app['video_backend'], gstreamer=False, usb_role='host', usb_role_switching=True,
                             ethernet_mac='persistent', venc_packet_address='mb-valid', ssh_user='openhd')
+            recorded['recordings_startup_sha256'] = firmware.digest(root / 'etc/init.d/S97openhd-recordings')
             manifest = json.dumps(recorded, indent=2) + '\n'
             (root / 'etc/openhd-image-components.json').write_text(manifest)
             (output / ('openhd-' + target + '.components.json')).write_text(manifest)

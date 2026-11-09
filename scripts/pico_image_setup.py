@@ -47,8 +47,8 @@ def install_ssh_login(root):
     config.write_text(text)
 
 
-def install_nand_recordings(root):
-    source = Path(__file__).with_name('pico_nand_recordings.sh')
+def install_recordings(root):
+    source = Path(__file__).with_name('pico_recordings.sh')
     destination = Path(root) / 'etc/init.d/S97openhd-recordings'
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_bytes(source.read_bytes())

@@ -1,4 +1,4 @@
-"""Exercise real password hashing and the NAND startup storage decisions."""
+"""Exercise real password hashing and Pico recording storage decisions."""
 import json
 import os
 from pathlib import Path
@@ -8,7 +8,7 @@ import tempfile
 import unittest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from pico_image_setup import install_ssh_login, install_nand_recordings
+from pico_image_setup import install_ssh_login, install_recordings
 
 
 class ImageSetupTests(unittest.TestCase):
@@ -39,21 +39,22 @@ class ImageSetupTests(unittest.TestCase):
         self.assertTrue((etc / 'ssh/sshd_config').read_text().startswith('PasswordAuthentication yes\n'))
         self.assertIn('AllowUsers root openhd', (etc / 'ssh/sshd_config').read_text())
 
-    def startup(self, devices='', mount_result=0, already_mounted=False):
-        install_nand_recordings(self.root)
+    def startup(self, devices='', mount_result=0, already_mounted=False,
+                legacy_mounted=False, mounts='ubi0:rootfs / ubifs rw 0 0\n'):
+        install_recordings(self.root)
         script = self.root / 'etc/init.d/S97openhd-recordings'
         text = script.read_text()
-        for path in ('/proc/mounts', '/userdata/Config', '/usr/local/share/openhd', '/Video', '/sys/bus/platform/drivers/dwmmc_rockchip'):
+        for path in ('/proc/mounts', '/Config', '/usr/local/share/openhd', '/Video', '/sys/bus/platform/drivers/dwmmc_rockchip'):
             text = text.replace(path, str(self.root) + path)
         script.write_text(text)
-        mounts = self.root / 'proc/mounts'
-        mounts.parent.mkdir(exist_ok=True)
-        mounts.write_text('ubi0:rootfs / ubifs rw 0 0\n')
+        mounts_file = self.root / 'proc/mounts'
+        mounts_file.parent.mkdir(exist_ok=True)
+        mounts_file.write_text(mounts.replace('/Config', str(self.root) + '/Config').replace('/Video', str(self.root) + '/Video'))
         tools = self.root / 'bin'; tools.mkdir(exist_ok=True)
         for name, body in {
             'blkid': 'cat ' + str(self.root / 'devices'),
-            'mountpoint': 'exit ' + ('0' if already_mounted else '1'),
-            'mount': 'echo mount >> ' + str(self.root / 'mount-calls') + '; exit ' + str(mount_result),
+            'mountpoint': f'case "$2" in {self.root}/Video) exit {0 if already_mounted else 1} ;; {self.root}/Videos) exit {0 if legacy_mounted else 1} ;; *) exit 1 ;; esac',
+            'mount': 'echo "$@" >> ' + str(self.root / 'mount-calls') + '; exit ' + str(mount_result),
         }.items():
             path = tools / name; path.write_text('#!/bin/sh\n' + body + '\n'); path.chmod(0o755)
         (self.root / 'devices').write_text(devices)
@@ -76,8 +77,8 @@ class ImageSetupTests(unittest.TestCase):
 
     def test_missing_card_suspends_and_restores_mode(self):
         settings = self.settings(2)
-        (self.root / 'userdata/Config').mkdir(parents=True)
-        (self.root / 'userdata/Config/.sd-recording-initialized').touch()
+        (self.root / 'Config').mkdir(parents=True)
+        (self.root / 'Config/.sd-recording-initialized').touch()
         self.assertEqual(self.startup().returncode, 0)
         self.assertEqual(json.loads(settings.read_text())['air_recording'], 0)
         self.assertFalse((self.root / 'mount-calls').exists())
@@ -89,9 +90,46 @@ class ImageSetupTests(unittest.TestCase):
         card = '/dev/mmcblk1p1: LABEL="RECORDINGS"\n'
         self.assertNotEqual(self.startup(card, mount_result=1).returncode, 0)
         self.assertEqual(json.loads(settings.read_text())['air_recording'], 0)
-        self.assertFalse((self.root / 'userdata/Config/.sd-recording-initialized').exists())
+        self.assertFalse((self.root / 'Config/.sd-recording-initialized').exists())
         self.assertEqual(self.startup(card + '/dev/mmcblk2p1: LABEL="RECORDINGS"\n').returncode, 0)
         self.assertEqual(json.loads(settings.read_text())['air_recording'], 0)
+
+    def test_sd_and_emmc_roots_mount_dedicated_recording_partition(self):
+        for root_device in ('/dev/mmcblk1p4', '/dev/mmcblk0p4'):
+            with self.subTest(root_device=root_device):
+                self.settings(0)
+                result = self.startup('/dev/mmcblk1p7: LABEL="RECORDINGS"\n',
+                                      mounts=f'{root_device} / ext4 rw 0 0\n')
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertIn('-o noatime /dev/mmcblk1p7', (self.root / 'mount-calls').read_text())
+                self.assertTrue((self.root / 'Video/external_video_part.txt').exists())
+
+    def test_legacy_videos_mount_is_reused_without_reformatting(self):
+        self.settings(0)
+        mounts = '/dev/mmcblk0p4 / ext4 rw 0 0\n/dev/mmcblk0p7 /Videos vfat rw 0 0\n'
+        result = self.startup(legacy_mounted=True, mounts=mounts)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn(f'--bind {self.root}/Videos {self.root}/Video', (self.root / 'mount-calls').read_text())
+
+    def test_existing_video_mount_is_used_without_mounting_again(self):
+        self.settings(0)
+        mounts = '/dev/mmcblk1p4 / ext4 rw 0 0\n/dev/mmcblk1p7 /Video vfat rw 0 0\n'
+        result = self.startup(already_mounted=True, mounts=mounts)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse((self.root / 'mount-calls').exists())
+
+    def test_root_config_and_tmpfs_are_never_used_as_recording_storage(self):
+        for storage, mounts in (
+            ('/dev/mmcblk1p4', '/dev/mmcblk1p4 / ext4 rw 0 0\n'),
+            ('/dev/mmcblk1p5', '/dev/mmcblk1p4 / ext4 rw 0 0\n/dev/mmcblk1p5 /Config ext4 rw 0 0\n'),
+            ('tmpfs', '/dev/mmcblk1p4 / ext4 rw 0 0\n'),
+        ):
+            with self.subTest(storage=storage):
+                settings = self.settings(1)
+                result = self.startup(already_mounted=True, mounts=mounts + f'{storage} /Video ext4 rw 0 0\n')
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(json.loads(settings.read_text())['air_recording'], 0)
+                self.assertFalse((self.root / 'mount-calls').exists())
 
 
 if __name__ == '__main__':

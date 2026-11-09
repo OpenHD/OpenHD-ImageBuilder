@@ -8,7 +8,7 @@ import subprocess
 import tempfile
 import zipfile
 from assemble_pico_image import extract_applications, load
-from pico_image_setup import install_ssh_login, install_nand_recordings
+from pico_image_setup import install_ssh_login, install_recordings
 
 
 def install_config_mount(root, sdk):
@@ -104,7 +104,7 @@ def assemble(base, applications, sdk, target, output):
         nand.check_boot(images / 'boot.img')
         nand.extract_seed(base / meta['rootfs_seed'], root)
         install_ssh_login(root)
-        install_nand_recordings(root)
+        install_recordings(root)
         install_config_mount(root, sdk)
         nand.check_root(root)
         extract_applications(applications / 'applications.tar.gz', stage, app)
