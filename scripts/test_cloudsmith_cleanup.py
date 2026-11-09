@@ -6,7 +6,7 @@ import unittest
 from datetime import datetime, timezone
 from unittest.mock import patch
 
-from cloudsmith_cleanup import Cloudsmith, cleanup, eligible, month_ago, superseded
+from cloudsmith_cleanup import Cloudsmith, cleanup, eligible, luckfox_image, month_ago, superseded
 
 
 def package(identifier="old", downloads=0, uploaded="2026-09-03T12:00:00Z"):
@@ -18,7 +18,7 @@ class FakeCloudsmith:
         self.deleted = []
         self.scanned = []
 
-    def list_all(self, path):
+    def list_all(self, path, query=None):
         self.scanned.append(path)
         if path.startswith("/repos/"):
             return [{"slug": "release"}, {"slug": "base"}]
@@ -41,7 +41,7 @@ class FakeX21(FakeCloudsmith):
                  is_downloadable=True),
         ]
 
-    def list_all(self, path):
+    def list_all(self, path, query=None):
         return [{"slug": "x21"}] if path.startswith("/repos/") else self.packages
 
     def request(self, path, method="GET"):
@@ -203,6 +203,43 @@ class CleanupTests(unittest.TestCase):
 
         with patch.object(client, "request", side_effect=missing_replacement):
             self.assertEqual(self.run_cleanup(client), 1)
+        self.assertEqual(client.deleted, [])
+
+    def test_luckfox_images_preserve_platforms_bases_and_components(self):
+        for name in ('openhd-luckfox-pico-mini.img.xz',
+                     'openhd-luckfox-pico-pro-max-nand-firmware.zip',
+                     'OpenHD-luckfox-pico-ultra-w.pico-ohd.sha256',
+                     'openhd-luckfox-pico-zero.components.json'):
+            self.assertTrue(luckfox_image(dict(format='raw', filename=name)))
+        for name in ('openhd-base-luckfox-pico-mini.img.xz',
+                     'openhd-luckfox-pico-sdk.tar.gz',
+                     'openhd-luckfox-pico-3.0.0-evo-abcdef.tar.gz',
+                     'OpenHD-X21B-full.ohd'):
+            self.assertFalse(luckfox_image(dict(format='raw', filename=name)))
+
+    def test_luckfox_only_deletes_old_images_even_if_downloaded_and_recent(self):
+        client = FakeX21()
+        name = 'openhd-luckfox-pico-ultra.img.xz'
+        for item in client.packages:
+            item.update(name=name, filename=name)
+        old, newest = client.packages
+        client.packages += [dict(old, slug_perm='base', name='openhd-base-luckfox-pico-ultra.img.xz',
+                                 filename='openhd-base-luckfox-pico-ultra.img.xz'),
+                            dict(old, slug_perm='other-platform', name='openhd-luckfox-pico-zero.img.xz',
+                                 filename='openhd-luckfox-pico-zero.img.xz')]
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(cleanup(client, 'openhd', self.cutoff, False, luckfox_only=True), 0)
+        self.assertEqual(client.deleted, ['/packages/openhd/dev-release/older/'])
+
+    def test_luckfox_newest_is_excluded_from_general_unused_cleanup(self):
+        client = FakeX21()
+        item = dict(client.packages[0], name='openhd-luckfox-pico-mini.img.xz',
+                    filename='openhd-luckfox-pico-mini.img.xz', downloads=0,
+                    uploaded_at='2026-01-01T00:00:00Z')
+        client.packages = [item]
+        with patch.object(client, 'list_all', side_effect=lambda path:
+                          [{'slug': 'dev-release'}] if path.startswith('/repos/') else client.packages):
+            self.assertEqual(self.run_cleanup(client), 0)
         self.assertEqual(client.deleted, [])
 
 

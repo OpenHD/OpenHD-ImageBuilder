@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Clean unused Cloudsmith packages, retaining only the newest version in x21."""
+"""Clean unused packages and retain the newest X21/Luckfox image uploads."""
 
 from __future__ import annotations
 
@@ -17,6 +17,15 @@ from urllib.request import Request, urlopen
 
 
 API_URL = "https://api.cloudsmith.io/v1"
+
+
+def luckfox_image(package: dict) -> bool:
+    # Finished images and their companion files only: reusable openhd-base
+    # seeds, SDKs and independently versioned component archives are excluded.
+    return package.get('format') == 'raw' and bool(re.fullmatch(
+        r'openhd-luckfox-pico-(?:mini-nand|pro-max-nand|ultra-w|pro-max|mini|plus|zero|ultra)'
+        r'(?:\.img\.xz|-firmware\.zip(?:\.sha256)?|\.pico-ohd(?:\.sha256)?|\.components\.json|\.sha256)',
+        package.get('filename', ''), re.IGNORECASE))
 
 
 def month_ago(now: datetime) -> datetime:
@@ -140,11 +149,14 @@ class Cloudsmith:
                 time.sleep(min(60, max(1, delay)))
         raise RuntimeError("Cloudsmith retry limit reached")
 
-    def list_all(self, path: str) -> list[dict]:
+    def list_all(self, path: str, query: str | None = None) -> list[dict]:
         items = []
         page = 1
         while True:
-            data, headers = self.request(path + "?" + urlencode({"page": page, "page_size": 100}))
+            parameters = {"page": page, "page_size": 100}
+            if query is not None:
+                parameters['query'] = query
+            data, headers = self.request(path + "?" + urlencode(parameters))
             if not isinstance(data, list) or any(not isinstance(item, dict) for item in data):
                 raise RuntimeError(f"Unexpected list response for {path}")
             items.extend(data)
@@ -165,9 +177,11 @@ def report_quota(client: Cloudsmith, owner: str) -> None:
             print(f"{kind}: unavailable ({exc})", flush=True)
 
 
-def cleanup(client: Cloudsmith, owner: str, cutoff: datetime, dry_run: bool) -> int:
+def cleanup(client: Cloudsmith, owner: str, cutoff: datetime, dry_run: bool,
+            luckfox_only: bool = False) -> int:
     namespace = quote(owner, safe="")
-    repos = client.list_all(f"/repos/{namespace}/")
+    repos = ([{'slug': 'dev-release'}] if luckfox_only else
+             client.list_all(f"/repos/{namespace}/"))
     if not repos:
         raise RuntimeError(f"No repositories visible for {owner}; check API key permissions")
     # Process X21 retention first, preserving the API order for other repositories.
@@ -183,11 +197,17 @@ def cleanup(client: Cloudsmith, owner: str, cutoff: datetime, dry_run: bool) -> 
         print(f"Scanning {owner}/{slug}", flush=True)
         try:
             # Finish pagination before deleting, so deletions cannot shift page offsets.
-            packages = client.list_all(path)
+            packages = (client.list_all(path, query='luckfox') if luckfox_only else
+                        client.list_all(path))
             latest_only = slug == "x21"
-            candidates = superseded(packages) if latest_only else {
-                p["slug_perm"]: (p, None) for p in packages if eligible(p, cutoff)
-            }
+            images = [p for p in packages if luckfox_image(p)]
+            if latest_only:
+                candidates = superseded(packages)
+            else:
+                candidates = superseded(images)
+                if not luckfox_only:
+                    candidates.update({p['slug_perm']: (p, None) for p in packages
+                                       if not luckfox_image(p) and eligible(p, cutoff)})
             matched += len(candidates)
             print(f"  {len(packages)} packages; {len(candidates)} candidates", flush=True)
             for identifier, (package, keeper) in candidates.items():
@@ -200,7 +220,7 @@ def cleanup(client: Cloudsmith, owner: str, cutoff: datetime, dry_run: bool) -> 
                     current, _ = client.request(package_path)
                     if not isinstance(current, dict):
                         raise RuntimeError(f"Unexpected package response for {ref}")
-                    if latest_only:
+                    if keeper is not None:
                         keeper_path = path + quote(keeper["slug_perm"], safe="") + "/"
                         live_keeper, _ = client.request(keeper_path)
                         qualifies = isinstance(live_keeper, dict) and still_superseded(
@@ -231,6 +251,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--owner", default=os.environ.get("CLOUDSMITH_OWNER", "openhd"))
     parser.add_argument("--delete", action="store_true", help="Delete matches (default: dry run)")
+    parser.add_argument('--luckfox-images-only', action='store_true',
+                        help='Only retain newest finished Luckfox images in dev-release')
     args = parser.parse_args()
     api_key = os.environ.get("CLOUDSMITH_API_KEY", "").strip()
     if not api_key or not args.owner.strip():
@@ -238,11 +260,12 @@ def main() -> int:
     cutoff = month_ago(datetime.now(timezone.utc))
     print(f"Policy: downloads == 0 and uploaded_at < {cutoff.isoformat()}", flush=True)
     print("x21 override: keep the newest upload of each package; remove superseded uploads", flush=True)
+    print('Luckfox images: keep newest per platform/file; preserve reusable bases and SDKs', flush=True)
     try:
         client = Cloudsmith(api_key)
         owner = args.owner.strip()
         report_quota(client, owner)
-        result = cleanup(client, owner, cutoff, not args.delete)
+        result = cleanup(client, owner, cutoff, not args.delete, args.luckfox_images_only)
         if args.delete:
             report_quota(client, owner)
         return result

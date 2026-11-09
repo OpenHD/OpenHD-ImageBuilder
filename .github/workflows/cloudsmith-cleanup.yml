@@ -10,6 +10,11 @@ on:
         type: boolean
         default: true
         required: true
+      luckfox_images_only:
+        description: Limit this run to old Luckfox images in dev-release
+        type: boolean
+        default: false
+        required: true
 
 permissions:
   contents: read
@@ -27,14 +32,18 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
-      - name: Clean unused packages and keep newest packages in x21
+      - name: Clean unused packages and retain newest X21 and Luckfox images
         env:
           CLOUDSMITH_API_KEY: ${{ secrets.CLOUDSMITH_API_KEY }}
           CLOUDSMITH_OWNER: openhd
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run }}
+          LUCKFOX_ONLY: ${{ github.event_name == 'workflow_dispatch' && inputs.luckfox_images_only }}
         shell: bash
         run: |
           args=()
+          if [[ "$LUCKFOX_ONLY" == "true" ]]; then
+            args+=(--luckfox-images-only)
+          fi
           if [[ "$DRY_RUN" != "true" ]]; then
             args+=(--delete)
           fi
