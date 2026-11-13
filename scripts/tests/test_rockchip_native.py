@@ -125,12 +125,13 @@ class NativeImages(unittest.TestCase):
         self.assertEqual(list((ROOT / 'images').glob('*-lite*')), [])
         for job in workflow['jobs'].values():
             targets = job.get('strategy', {}).get('matrix', {}).get('target', [])
-            self.assertFalse(any('lite' in target for target in targets))
+            self.assertNotIn('lite', str(targets))
         # PyYAML's YAML 1.1 loader treats the unquoted GitHub "on" key as True.
         trigger = workflow.get('on', workflow.get(True))
         self.assertNotIn('lite', trigger['workflow_dispatch']['inputs']['target']['options'])
         targets = workflow['jobs']['full-images']['strategy']['matrix']['target']
-        self.assertTrue({'rock5a', 'rock5b', 'radxa-rock3a', 'radxa-zero3w'}.issubset(targets))
+        for target in ('rock5a', 'rock5b', 'radxa-rock3a', 'radxa-zero3w'):
+            self.assertIn(target, targets)
 
 
 if __name__ == '__main__':

@@ -7,6 +7,18 @@ overlay=/boot/dtbo/radxa-zero3-imx708.dtbo
 [[ -f "$headers/Module.symvers" && -d "/lib/modules/$kernel" ]]
 [[ "$(dpkg-query -W -f='${Version}' camera-engine-rkaiq)" == 5.0x1.2-rc2 ]]
 
+binary=/usr/local/libexec/openhd-zero3w
+if [[ ! -x "$binary" ]]; then
+    echo 'The installed arm64 OpenHD package lacks the Zero 3W native MPP executable.' >&2
+    exit 1
+fi
+needed=$(readelf -d "$binary")
+grep -Fq '[librockchip_mpp.so.1]' <<<"$needed"
+if grep -Eq 'NEEDED.*libgst' <<<"$needed"; then
+    echo 'The Zero 3W executable links GStreamer.' >&2
+    exit 1
+fi
+
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 cd "$work"
@@ -87,6 +99,10 @@ for scene in fallback["main_scene"]:
         sub_scene["scene_isp21"] = copy.deepcopy(processing)
         for key in ("ae_calib", "af", "wb_v21", "ccm_calib"):
             sub_scene["scene_isp21"][key] = original[key]
+        # The IMX708 startup hook selects the 1080p sensor readout.
+        # Keep automatic exposure within that readout's 60 fps frame budget.
+        fps_mode = sub_scene["scene_isp21"]["ae_calib"]["CommCtrl"]["AecFrameRateMode"]
+        fps_mode.update(isFpsFix=1, FpsValue=60)
         # Lift shadows for the low-light Air preview while preserving white.
         gamma = sub_scene["scene_isp21"]["agamma_calib_v10"]["GammaTuningPara"]
         gamma["Gamma_curve"] = [
@@ -128,38 +144,39 @@ for dtb in /usr/lib/linux-image-"$kernel"/rockchip/rk3566-radxa-zero-3w-*.dtb; d
     fdtoverlay -i "$dtb" -o merged.dtb imx708.dtbo
 done
 
-mpp_ref=9b56348cc61393c84662e6d6dd78feae67773a36
-download "https://codeload.github.com/rockchip-linux/mpp/tar.gz/$mpp_ref" mpp.tar.gz \
-    a606079e982cca6d25a00fb3f6684f925b5944f30d88921bb9ab9f8482ee8c68
+mpp_ref=20959ec3dabb313b8c33ca0b7b09c06ffd2a9caa
+download "https://codeload.github.com/HermanChen/mpp/tar.gz/$mpp_ref" mpp.tar.gz \
+    345148b74b8a5e5dd329d58163113756581102685fe9d3d657621960d04172f4
 tar -xf mpp.tar.gz
-cmake -S "mpp-$mpp_ref" -B mpp-build -DCMAKE_BUILD_TYPE=Release -DBUILD_TEST=OFF
+cmake -S "mpp-$mpp_ref" -B mpp-build \
+    -DCMAKE_C_FLAGS=-mno-outline-atomics -DCMAKE_CXX_FLAGS=-mno-outline-atomics \
+    -DCMAKE_BUILD_TYPE=Release -DBUILD_TEST=OFF -DBUILD_SHARED_LIBS=ON
 cmake --build mpp-build --parallel "${OPENHD_BUILD_JOBS:-4}"
 DESTDIR="$work/mpp-install" cmake --install mpp-build
 
-# Use the same SONAME for the Air GStreamer encoder and the native Ground
-# decoder. Leave package-owned libraries in place.
+# Use the MPP revision pinned by the X21B production manifest.
 install -d /usr/local/lib/openhd-mpp /usr/local/share/doc/openhd-mpp
 cp -a mpp-install/usr/local/lib/librockchip_{mpp,vpu}.so.* /usr/local/lib/openhd-mpp/
 install -m 0644 "mpp-$mpp_ref/LICENSES/"{Apache-2.0,MIT} /usr/local/share/doc/openhd-mpp/
 printf '%s\n' "$mpp_ref" >/usr/local/share/doc/openhd-mpp/source-revision
 printf '%s\n' /usr/local/lib/openhd-mpp >/etc/ld.so.conf.d/00-openhd-mpp.conf
 ldconfig
-plugin=/usr/lib/aarch64-linux-gnu/gstreamer-1.0/libgstrockchipmpp.so
-dependencies=$(ldd -r "$plugin" 2>&1)
+dependencies=$(LD_LIBRARY_PATH=/usr/local/lib/openhd-mpp ldd -r "$binary" 2>&1)
 printf '%s\n' "$dependencies"
-grep -q 'librockchip_mpp.so.1 => /usr/local/lib/openhd-mpp/' <<<"$dependencies"
+grep -Fq "librockchip_mpp.so.1 => /usr/local/lib/openhd-mpp/" <<<"$dependencies"
 if grep -Eq 'not found|undefined symbol' <<<"$dependencies"; then
     exit 1
 fi
 
-# OpenHD carries a distro-library RUNPATH. Give the Air service the same
-# MPP runtime that GStreamer resolves through the loader cache.
+# OpenHD carries a distro-library RUNPATH. Select the image's MPP runtime.
 install -d /etc/systemd/system/openhd.service.d
 cat >/etc/systemd/system/openhd.service.d/40-zero3w-air.conf <<'EOF'
 [Unit]
 After=rkaiq_3A.service
 
 [Service]
+ExecStart=
+ExecStart=/usr/local/libexec/openhd-zero3w
 Environment=LD_LIBRARY_PATH=/usr/local/lib/openhd-mpp
 EOF
 

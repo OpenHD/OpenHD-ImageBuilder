@@ -14,6 +14,7 @@ on:
           - supported
           - openhd-hardware
           - full
+          - radxa-zero3w
           - experimental
           - x21-update
           - orqa
@@ -397,18 +398,12 @@ jobs:
   # =========================================================================
   full-images:
     name: full-${{ matrix.target }}
-    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'full'
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'full' || inputs.target == 'radxa-zero3w'
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
-        target:
-          - rock5a
-          - rock5b
-          - radxa-zero3w
-          - radxa-rock3a
-          - x86-minimal
-          - x86-noble
+        target: ${{ fromJSON(inputs.target == 'radxa-zero3w' && '["radxa-zero3w"]' || '["rock5a","rock5b","radxa-zero3w","radxa-rock3a","x86-minimal","x86-noble"]') }}
     steps:
       - uses: actions/checkout@v7
       - name: Prepare development image
@@ -446,6 +441,19 @@ jobs:
           name: openhd-image-${{ matrix.target }}-${{ env.DT }}
           path: deploy/*.img
           if-no-files-found: error
+      - name: Publish Zero 3W to the ImageWriter development catalog
+        if: matrix.target == 'radxa-zero3w'
+        env:
+          FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
+        run: |
+          set -euo pipefail
+          bash scripts/publish_dev_image.sh radxa-zero3w "deploy/openhd-image-radxa-zero3w-${DT}.img"
+          curl --fail-with-body --retry 5 --retry-all-errors \
+            --request POST \
+            --header "Authorization: Bearer ${FLEETCONTROL_DEV_IMAGE_TOKEN}" \
+            --header "Content-Type: application/json" \
+            --data '{"platforms":["radxa-zero3w"]}' \
+            "https://openhd.tech/api/internal/dev-images/${GITHUB_RUN_ID}/promote"
   # =========================================================================
   # 4. Experimental Pi 5
   # =========================================================================

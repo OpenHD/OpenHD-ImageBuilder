@@ -25,12 +25,20 @@ radio. Check focus and exposure against a real scene before calling the
 profile validated.
 
 OpenHD reports the selected codec in `OPENHD_CAMERA_STATUS_AIR`. QOpenHD
-uses that telemetry to select the decoder. An RTP-only receiver needs a
+uses that telemetry to select the decoder on its native Rockchip backend.
+An RTP-only receiver needs a
 matching SDP or explicit codec configuration because both codecs use dynamic
 payload type 96.
 
-The startup hook sets the sensor and ISP to 1920x1080. Selecting 1280x720
-changes the encoded output size. A 720p120 request with the default sensor
+The startup hook sets the sensor and ISP to 1920x1080. The IMX708 RKAIQ
+profile locks auto-exposure to 60 fps for that readout. The image requires
+the arm64 OpenHD package with the MPP-only Zero 3W executable and configures
+the OpenHD service to launch it. The runtime uses MPP revision
+`20959ec3dabb313b8c33ca0b7b09c06ffd2a9caa`, matching the X21B production
+manifest. In QOpenHD, select H.264 or H.265 under OpenHD > Camera > Stream.
+Check both capture and encoded frame rates on the live unit.
+
+Selecting 1280x720 changes the encoded output size. A 720p120 request with the default sensor
 mode produced about 68 fps in both codecs. With the 1536x864 sensor mode
 selected, the bench unit did not deliver frames through the OpenHD pipeline.
 
