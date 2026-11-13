@@ -9,7 +9,7 @@ if [[ ${EUID:-$(id -u)} -ne 0 ]]; then
   exit 1
 fi
 
-export DEBIAN_FRONTEND=noninteractive
+export DEBIAN_FRONTEND=noninteractive APT_LISTCHANGES_FRONTEND=none
 apt_with_retries() {
   local attempt
   local status=1

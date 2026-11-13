@@ -1,0 +1,105 @@
+--- imx708.c
++++ imx708.c
+@@ -947,7 +947,7 @@
+ {
+ 	struct imx708 *imx708 = to_imx708(sd);
+ 	struct v4l2_mbus_framefmt *try_fmt_img =
+-		v4l2_subdev_get_try_format(sd, fh->state, 0);
++		v4l2_subdev_get_try_format(sd, fh->pad, 0);
+ 
+ 	mutex_lock(&imx708->mutex);
+ 
+@@ -1146,7 +1146,7 @@
+ }
+ 
+ static int imx708_enum_mbus_code(struct v4l2_subdev *sd,
+-				 struct v4l2_subdev_state *sd_state,
++				 struct v4l2_subdev_pad_config *sd_state,
+ 				 struct v4l2_subdev_mbus_code_enum *code)
+ {
+ 	struct imx708 *imx708 = to_imx708(sd);
+@@ -1159,7 +1159,7 @@
+ }
+ 
+ static int imx708_enum_frame_size(struct v4l2_subdev *sd,
+-				  struct v4l2_subdev_state *sd_state,
++				  struct v4l2_subdev_pad_config *sd_state,
+ 				  struct v4l2_subdev_frame_size_enum *fse)
+ {
+ 	struct imx708 *imx708 = to_imx708(sd);
+@@ -1180,7 +1180,7 @@
+ }
+ 
+ static int imx708_get_pad_format(struct v4l2_subdev *sd,
+-				 struct v4l2_subdev_state *sd_state,
++				 struct v4l2_subdev_pad_config *sd_state,
+ 				 struct v4l2_subdev_format *fmt)
+ {
+ 	struct imx708 *imx708 = to_imx708(sd);
+@@ -1238,7 +1238,7 @@
+ }
+ 
+ static int imx708_set_pad_format(struct v4l2_subdev *sd,
+-				 struct v4l2_subdev_state *sd_state,
++				 struct v4l2_subdev_pad_config *sd_state,
+ 				 struct v4l2_subdev_format *fmt)
+ {
+ 	const struct imx708_mode *mode;
+@@ -1569,7 +1569,8 @@
+ {
+ 
+ 	config->type = V4L2_MBUS_CSI2_DPHY;
+-	config->bus.mipi_csi2.num_data_lanes = IMX708_LANES;
++	config->flags = V4L2_MBUS_CSI2_2_LANE | V4L2_MBUS_CSI2_CHANNEL_0 |
++			V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
+ 
+ 	return 0;
+ }
+@@ -1744,7 +1745,7 @@
+ #endif
+ 
+ static int imx708_enum_frame_interval(struct v4l2_subdev *sd,
+-	struct v4l2_subdev_state *sd_state,
++	struct v4l2_subdev_pad_config *sd_state,
+ 	struct v4l2_subdev_frame_interval_enum *fie)
+ {
+ 	struct imx708 *imx708 = to_imx708(sd);
+@@ -2041,9 +2042,10 @@
+ 		return dev_err_probe(dev, ret, "failed to get regulators\n");
+ 
+ 	/* Request optional enable pin */
+-	imx708->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_ASIS);
++	imx708->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_ASIS);
+ 	if (IS_ERR(imx708->reset_gpio))
+-		dev_warn(dev, "Failed to get reset-gpios\n");
++		return dev_err_probe(dev, PTR_ERR(imx708->reset_gpio),
++				     "failed to get reset GPIO\n");
+ 	/*
+ 	 * The sensor must be powered for imx708_identify_module()
+ 	 * to be able to read the CHIP_ID register
+@@ -2094,7 +2096,7 @@
+ 		 imx708->module_index, facing,
+ 		 IMX708_NAME, dev_name(sd->dev));
+ 
+-	ret = v4l2_async_register_subdev_sensor(&imx708->subdev);
++	ret = v4l2_async_register_subdev_sensor_common(&imx708->subdev);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to register sensor sub-device: %d\n", ret);
+ 		goto error_media_entity;
+@@ -2120,7 +2122,7 @@
+ 	return ret;
+ }
+ 
+-static void imx708_remove(struct i2c_client *client)
++static int imx708_remove(struct i2c_client *client)
+ {
+ 	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+ 	struct imx708 *imx708 = to_imx708(sd);
+@@ -2136,6 +2138,7 @@
+ 	if (!pm_runtime_status_suspended(&client->dev))
+ 		imx708_power_off(&client->dev);
+ 	pm_runtime_set_suspended(&client->dev);
++	return 0;
+ }
+ 
+ #if IS_ENABLED(CONFIG_OF)

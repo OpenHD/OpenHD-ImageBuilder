@@ -152,6 +152,10 @@ on_chroot() {
     df -h
     cp -r "${STAGE_DIR}/../../additionalFiles" "${MNT_DIR}/opt"
     fi
+    if [[ "${OPENHD_ZERO3W_IMX708:-false}" == true ]]; then
+        install -m 0644 "${BASE_DIR}/additionalFiles/"{configure-zero3w-imx708.sh,zero3w-imx708-5.10.patch,zero3w-dw9817-5.10.patch,zero3w-imx708-media.sh} \
+            "${MNT_DIR}/opt/additionalFiles/"
+    fi
     # Refresh the image policy even when updating an existing base image that
     # still carries an older /opt/additionalFiles directory.
     install -m 0644 "${BASE_DIR}/additionalFiles/prepare-devourer-image.sh" \
@@ -162,6 +166,8 @@ on_chroot() {
         "${MNT_DIR}/opt/additionalFiles/configure-rpi-splash.sh"
     install -m 0644 "${BASE_DIR}/additionalFiles/install-current-components.sh" \
         "${MNT_DIR}/opt/additionalFiles/install-current-components.sh"
+    install -m 0644 "${BASE_DIR}/additionalFiles/install-rockchip-iq-files.sh" \
+        "${MNT_DIR}/opt/additionalFiles/install-rockchip-iq-files.sh"
     install -m 0644 "${BASE_DIR}/last.release" "${MNT_DIR}/opt/additionalFiles/image-release"
     # Retire source pins carried over from older base images. Package selection
     # uses the newest indexed version in the selected OpenHD channel.

@@ -1,0 +1,28 @@
+--- dw9817.c
++++ dw9817.c
+@@ -385,7 +385,7 @@
+ 	return rval;
+ }
+ 
+-static void dw9807_remove(struct i2c_client *client)
++static int dw9807_remove(struct i2c_client *client)
+ {
+ 	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+ 	struct dw9807_device *dw9807_dev = sd_to_dw9807_vcm(sd);
+@@ -397,6 +397,7 @@
+ 	pm_runtime_disable(&client->dev);
+ 
+ 	dw9807_subdev_cleanup(dw9807_dev);
++	return 0;
+ }
+ 
+ /*
+@@ -447,7 +448,7 @@
+ 		.pm = &dw9807_pm_ops,
+ 		.of_match_table = dw9807_of_table,
+ 	},
+-	.probe = dw9807_probe,
++	.probe_new = dw9807_probe,
+ 	.remove = dw9807_remove,
+ };
+ 

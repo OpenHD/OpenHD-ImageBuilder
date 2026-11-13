@@ -49,4 +49,10 @@ if [[ -f /opt/additionalFiles/image-release ]]; then
   cp /usr/share/openhd/image-release /boot/openhd/image-release
 fi
 
+bash "$(dirname "$0")/install-rockchip-iq-files.sh"
+if [[ "${OPENHD_ZERO3W_IMX708:-false}" == true ]]; then
+  apt-get -y --no-install-recommends -o Acquire::Retries=5 install \
+    build-essential cmake pkg-config patch device-tree-compiler v4l-utils
+  bash "$(dirname "$0")/configure-zero3w-imx708.sh"
+fi
 bash "$(dirname "$0")/configure-rockchip-native.sh"
