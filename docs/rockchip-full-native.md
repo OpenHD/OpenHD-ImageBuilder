@@ -38,6 +38,9 @@ linear NV12 from MPP. Its QOpenHD service uses Qt's software renderer for the
 transparent HUD, and Weston uses a 4 ms repaint window. In Ground mode the live
 primary stream comes from OpenHD's local RTP forwarding on port 5600 and is
 presented below the HUD by the independent Wayland video layer.
+QOpenHD defaults to hiding the pointer after two seconds of inactivity on the
+Zero 3W. Mouse motion, clicks and scrolling bring it back. The Video settings
+can keep the pointer visible.
 
 The startup sequence is:
 

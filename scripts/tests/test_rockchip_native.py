@@ -98,6 +98,7 @@ class NativeImages(unittest.TestCase):
             subprocess.run(command, env=env, check=True, capture_output=True)
             dropin = root / 'etc/systemd/system/qopenhd.service.d/40-zero3w-display.conf'
             self.assertIn('Environment=QT_QUICK_BACKEND=software', dropin.read_text())
+            self.assertIn('Environment=QOPENHD_CURSOR_AUTO_HIDE_DEFAULT=1', dropin.read_text())
             self.assertIn('run-qopenhd.sh -platform wayland', dropin.read_text())
             weston = root / 'etc/qopenhd-rockchip/weston.ini'
             self.assertIn('repaint-window=4', weston.read_text())

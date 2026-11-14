@@ -44,6 +44,7 @@ if [[ "${OPENHD_ZERO3W_DISPLAY:-false}" == true ]]; then
   cat > "$zero3w_dropin" <<'EOF'
 [Service]
 Environment=QT_QUICK_BACKEND=software
+Environment=QOPENHD_CURSOR_AUTO_HIDE_DEFAULT=1
 ExecStart=
 ExecStart=/bin/sh /usr/local/share/qopenhd-rockchip/run-qopenhd.sh -platform wayland
 EOF
