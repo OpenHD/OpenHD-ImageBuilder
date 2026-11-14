@@ -37,11 +37,11 @@ the OpenHD service to launch it. The runtime uses MPP revision
 manifest. In QOpenHD, select H.264 or H.265 under OpenHD > Camera > Stream.
 Check both capture and encoded frame rates on the live unit.
 
-720p120 selects the cropped sensor readout, but remains experimental on the
-5.10 RK3566 image. Verify the actual capture and encoded rates and inspect the
-picture. Bench tests observed a stall with the fixed-120 RKAIQ profile and a
-very low bitrate when the cropped readout did produce frames. Select a 60 fps
-mode for normal operation.
+720p120 uses the cropped sensor readout with lens shading correction disabled
+because the reference correction table produces a black image in this mode.
+Booting directly into 720p120 reached 120 fps with native H.265 on the bench.
+Changing the frame rate on a running unit can stall capture. Reboot Air after
+selecting 720p120 if video stalls, or select a 60 fps mode for normal operation.
 
 [Avaf's tuning and compatibility table](https://github.com/avafinger/rockchip-iqfiles)
 
