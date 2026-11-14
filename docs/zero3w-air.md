@@ -67,6 +67,12 @@ The lower-rate 720p modes scale from the 1080p sensor readout. Changing frame
 rate reboots Air so RKAIQ loads the matching fixed-rate profile. The driver
 keeps frame length fixed and bounds exposure to the selected mode.
 
+## Arducam IMX462 Pivariety
+
+Select **IMX462 Pivariety** for the bridge module at I²C address `0x0c`.
+The Zero 3W image stages a separate overlay and a fixed-rate 1080p60 RKAIQ
+profile with lifted shadows. The tested firmware reported one RAW10 sensor mode.
+
 ## Other Sony profiles
 
 The Rock 5 image carries the OpenHD IMX477 profile and its IMX577 alias.

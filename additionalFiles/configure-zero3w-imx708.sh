@@ -44,10 +44,17 @@ imx290_ref=00aee4108ab9ee72f21d0b1ab83fb0afd5cac134
 download "https://raw.githubusercontent.com/OpenHD/luckfox-pico-sdk/$imx290_ref/sysdrv/source/kernel/drivers/media/i2c/imx290.c" imx290.c \
     6bdf19267c9f5fa8a5cd5892fd70bc0480c6346c2ae37db42eac5f98908e6b1a
 patch -p0 < /opt/additionalFiles/zero3w-imx290-5.10.patch
-printf 'obj-m += imx708.o dw9817.o imx519.o imx290.o\n' > Makefile
+pivariety_ref=fbd8b3facb36ce888b1cdcf5f45a78475a8208f2
+pivariety_source="https://raw.githubusercontent.com/raspberrypi/linux/$pivariety_ref/drivers/media/i2c"
+download "$pivariety_source/arducam-pivariety.c" arducam-pivariety.c \
+    a6019afc7975a30516422100d30cc285fcc65d2ff11b6f9999bf515304927a80
+download "$pivariety_source/arducam-pivariety.h" arducam-pivariety.h \
+    bd3fd7be273c17b29e3552c2f40ae36990c43ed386c9d8a0d53b6db71b5b7a2d
+patch -p0 < /opt/additionalFiles/zero3w-pivariety-5.10.patch
+printf 'obj-m += imx708.o dw9817.o imx519.o imx290.o arducam-pivariety.o\n' > Makefile
 make -C "$headers" ARCH=arm64 CROSS_COMPILE= M="$work" modules
 install -d "/lib/modules/$kernel/updates/openhd"
-install -m 0644 imx708.ko dw9817.ko imx519.ko imx290.ko "/lib/modules/$kernel/updates/openhd/"
+install -m 0644 imx708.ko dw9817.ko imx519.ko imx290.ko arducam-pivariety.ko "/lib/modules/$kernel/updates/openhd/"
 depmod -a "$kernel"
 # The Devourer stage can regenerate initramfs for both installed kernels.
 # Include these drivers only in the initramfs built for the matching ABI.
@@ -64,6 +71,7 @@ force_load dw9817
 force_load imx708
 force_load imx519
 force_load imx290
+force_load arducam_pivariety
 EOF
 chmod 0755 /etc/initramfs-tools/hooks/openhd-zero3w-camera
 update-initramfs -u -k "$kernel"
@@ -186,6 +194,24 @@ install -m 0644 imx290.dtbo /boot/dtbo/radxa-zero3-arducam-pivariety-imx462.dtbo
 download "https://raw.githubusercontent.com/avafinger/rockchip-iqfiles/$iq_ref/Rock5/imx290_imx290_default.json" imx290-iq.json \
     da5fd58fcf041542287bce6faa402ae54bc1e0f55b0236178af13f0c85a4d1a6
 python3 /opt/additionalFiles/zero3w-imx290-iq.py imx290-iq.json
+
+dtc -I dtb -O dts imx519.dtbo > pivariety.dts
+sed -i 's/imx519@1a/arducam-pivariety@c/g' pivariety.dts
+dtc -I dts -O dtb -o pivariety.dtbo pivariety.dts
+sensor="$bus/arducam-pivariety@c"
+fdtput -t s pivariety.dtbo /metadata title 'Enable IMX462 Pivariety on Zero 3W'
+fdtput -t s pivariety.dtbo /metadata description 'Enable Arducam IMX462 Pivariety on CAM0.'
+fdtput -t s pivariety.dtbo "$sensor" compatible arducam,arducam-pivariety
+fdtput -t x pivariety.dtbo "$sensor" reg c
+fdtput -t x pivariety.dtbo "$sensor" clock-frequency 16e3600
+fdtput -t x pivariety.dtbo "$bus" clock-frequency 2710
+fdtput -t s pivariety.dtbo "$sensor" rockchip,camera-module-name IMX462
+fdtput -t x pivariety.dtbo "$sensor/port/endpoint" link-frequencies 0 1a8dca60
+install -m 0644 pivariety.dtbo /boot/dtbo/radxa-zero3-imx462-pivariety.dtbo.disabled
+pivariety_iq_ref=e4b941ec100589076a06c8cbaa0bdc3ae6fb98ae
+download "https://raw.githubusercontent.com/OpenHD/rockchip-iq-files/$pivariety_iq_ref/rockchip-iqfiles-rk356x/pivariety_IMX462_default.json" pivariety-iq.json \
+    4747957d35043b3b57a69179549c13436fefc3fbb935f0a82bbbdbd25e1f3351
+python3 /opt/additionalFiles/zero3w-pivariety-iq.py pivariety-iq.json /etc/iqfiles/pivariety_IMX462_default.json
 # The built-in ISP otherwise clears its async wait list before initramfs
 # can load the external sensor module.
 if ! grep -q 'initcall_blacklist=rkisp_clr_unready_dev,rkcif_clr_unready_dev' /etc/kernel/cmdline; then
@@ -198,6 +224,7 @@ for dtb in /usr/lib/linux-image-"$kernel"/rockchip/rk3566-radxa-zero3.dtb \
     fdtoverlay -i "$dtb" -o merged.dtb imx708.dtbo
     fdtoverlay -i "$dtb" -o merged.dtb imx519.dtbo
     fdtoverlay -i "$dtb" -o merged.dtb imx290.dtbo
+    fdtoverlay -i "$dtb" -o merged.dtb pivariety.dtbo
 done
 
 mpp_ref=20959ec3dabb313b8c33ca0b7b09c06ffd2a9caa

@@ -1,0 +1,241 @@
+--- arducam-pivariety.c
++++ arducam-pivariety.c
+@@ -11,6 +11,7 @@
+  */
+ 
+ #include <linux/clk.h>
++#include <linux/rk-camera-module.h>
+ #include <linux/delay.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+@@ -66,7 +67,7 @@
+ 	struct v4l2_subdev sd;
+ 	struct media_pad pad;
+ 
+-	struct v4l2_mbus_config_mipi_csi2 bus;
++	unsigned int max_lanes;
+ 	struct clk *xclk;
+ 	u32 xclk_freq;
+ 
+@@ -394,7 +395,7 @@
+ {
+ 	struct pivariety *pivariety = to_pivariety(sd);
+ 	struct v4l2_mbus_framefmt *try_fmt =
+-		v4l2_subdev_get_try_format(sd, fh->state, 0);
++		v4l2_subdev_get_try_format(sd, fh->pad, 0);
+ 	struct arducam_format *def_fmt = &pivariety->supported_formats[0];
+ 
+ 	/* Initialize try_fmt */
+@@ -450,7 +451,7 @@
+ };
+ 
+ static int pivariety_enum_mbus_code(struct v4l2_subdev *sd,
+-				    struct v4l2_subdev_state *sd_state,
++				    struct v4l2_subdev_pad_config *sd_state,
+ 				    struct v4l2_subdev_mbus_code_enum *code)
+ {
+ 	struct pivariety *pivariety = to_pivariety(sd);
+@@ -468,7 +469,7 @@
+ }
+ 
+ static int pivariety_enum_framesizes(struct v4l2_subdev *sd,
+-				     struct v4l2_subdev_state *sd_state,
++				     struct v4l2_subdev_pad_config *sd_state,
+ 				     struct v4l2_subdev_frame_size_enum *fse)
+ {
+ 	int i;
+@@ -501,7 +502,7 @@
+ }
+ 
+ static int pivariety_get_fmt(struct v4l2_subdev *sd,
+-			     struct v4l2_subdev_state *sd_state,
++			     struct v4l2_subdev_pad_config *sd_state,
+ 			     struct v4l2_subdev_format *format)
+ {
+ 	struct pivariety *pivariety = to_pivariety(sd);
+@@ -640,7 +641,7 @@
+ }
+ 
+ static int pivariety_set_fmt(struct v4l2_subdev *sd,
+-			     struct v4l2_subdev_state *sd_state,
++			     struct v4l2_subdev_pad_config *sd_state,
+ 			     struct v4l2_subdev_format *format)
+ {
+ 	int i, j;
+@@ -763,7 +764,7 @@
+ 
+ static const struct v4l2_rect *
+ __pivariety_get_pad_crop(struct pivariety *pivariety,
+-			 struct v4l2_subdev_state *sd_state,
++			 struct v4l2_subdev_pad_config *sd_state,
+ 			 unsigned int pad,
+ 			 enum v4l2_subdev_format_whence which)
+ {
+@@ -783,7 +784,7 @@
+ }
+ 
+ static int pivariety_get_selection(struct v4l2_subdev *sd,
+-				   struct v4l2_subdev_state *sd_state,
++				   struct v4l2_subdev_pad_config *sd_state,
+ 				   struct v4l2_subdev_selection *sel)
+ {
+ 	int ret = 0;
+@@ -947,23 +948,71 @@
+ {
+ 	struct pivariety *pivariety = to_pivariety(sd);
+ 
+-	if (pivariety->lanes > pivariety->bus.num_data_lanes)
++	if (pivariety->lanes > pivariety->max_lanes)
+ 		return -EINVAL;
+ 
+ 	cfg->type = V4L2_MBUS_CSI2_DPHY;
+-	cfg->bus.mipi_csi2.flags = pivariety->bus.flags;
+-	cfg->bus.mipi_csi2.num_data_lanes = pivariety->lanes;
++	cfg->flags = V4L2_MBUS_CSI2_2_LANE | V4L2_MBUS_CSI2_CHANNEL_0 |
++		     V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
+ 
+ 	return 0;
+ }
+ 
++static const s64 pivariety_link_freq[] = { 445500000 };
++
++static long pivariety_rk_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg)
++{
++	if (cmd == RKMODULE_GET_MODULE_INFO) {
++		struct rkmodule_inf *info = arg;
++
++		memset(info, 0, sizeof(*info));
++		strscpy(info->base.sensor, "pivariety", sizeof(info->base.sensor));
++		strscpy(info->base.module, "IMX462", sizeof(info->base.module));
++		strscpy(info->base.lens, "default", sizeof(info->base.lens));
++		return 0;
++	}
++	if (cmd == RKMODULE_GET_HDR_CFG) {
++		struct rkmodule_hdr_cfg *cfg = arg;
++
++		memset(cfg, 0, sizeof(*cfg));
++		cfg->hdr_mode = NO_HDR;
++		return 0;
++	}
++	return -ENOIOCTLCMD;
++}
++
++static int pivariety_rk_interval(struct v4l2_subdev *sd,
++				struct v4l2_subdev_frame_interval *fi)
++{
++	fi->interval.numerator = 1;
++	fi->interval.denominator = 60;
++	return 0;
++}
++
++static int pivariety_rk_enum_interval(struct v4l2_subdev *sd,
++			   struct v4l2_subdev_pad_config *cfg,
++			   struct v4l2_subdev_frame_interval_enum *fie)
++{
++	if (fie->pad || fie->index)
++		return -EINVAL;
++	fie->code = MEDIA_BUS_FMT_SRGGB10_1X10;
++	fie->width = 1920;
++	fie->height = 1080;
++	fie->interval.numerator = 1;
++	fie->interval.denominator = 60;
++	fie->reserved[0] = NO_HDR;
++	return 0;
++}
++
+ static const struct v4l2_subdev_core_ops pivariety_core_ops = {
++	.ioctl = pivariety_rk_ioctl,
+ 	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
+ 	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
+ };
+ 
+ static const struct v4l2_subdev_video_ops pivariety_video_ops = {
+ 	.s_stream = pivariety_set_stream,
++	.g_frame_interval = pivariety_rk_interval,
+ };
+ 
+ static const struct v4l2_subdev_pad_ops pivariety_pad_ops = {
+@@ -971,6 +1020,7 @@
+ 	.get_fmt = pivariety_get_fmt,
+ 	.set_fmt = pivariety_set_fmt,
+ 	.enum_frame_size = pivariety_enum_framesizes,
++	.enum_frame_interval = pivariety_rk_enum_interval,
+ 	.get_selection = pivariety_get_selection,
+ 	.get_mbus_config = pivariety_get_mbus_config,
+ };
+@@ -1318,7 +1368,7 @@
+ 		goto error_out;
+ 	}
+ 
+-	pivariety->bus = ep_cfg.bus.mipi_csi2;
++	pivariety->max_lanes = ep_cfg.bus.mipi_csi2.num_data_lanes;
+ 
+ 	ret = 0;
+ 
+@@ -1334,6 +1384,7 @@
+ {
+ 	struct device *dev = &client->dev;
+ 	struct pivariety *pivariety;
++	struct v4l2_ctrl *link_freq;
+ 	u32 device_id, firmware_version;
+ 	int ret;
+ 
+@@ -1387,6 +1438,12 @@
+ 
+ 	dev_info(dev, "firmware version: 0x%04X\n", firmware_version);
+ 
++	ret = pivariety_read(pivariety, SENSOR_ID_REG, &device_id);
++	if (ret || device_id != 0xb2) {
++		ret = -ENODEV;
++		goto error_power_off;
++	}
++
+ 	if (pivariety_enum_pixformat(pivariety)) {
+ 		dev_err(dev, "enum pixformat failed.\n");
+ 		ret = -ENODEV;
+@@ -1400,6 +1457,19 @@
+ 	}
+ 
+ 	/* Initialize subdev */
++	link_freq = v4l2_ctrl_find(&pivariety->ctrl_handler, V4L2_CID_LINK_FREQ);
++	if (!link_freq) {
++		link_freq = v4l2_ctrl_new_int_menu(&pivariety->ctrl_handler, NULL,
++						 V4L2_CID_LINK_FREQ, 0, 0, pivariety_link_freq);
++		if (!link_freq) {
++			ret = pivariety->ctrl_handler.error;
++			goto error_handler_free;
++		}
++		link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
++	}
++
++	snprintf(pivariety->sd.name, sizeof(pivariety->sd.name),
++		 "m00_b_pivariety %s", dev_name(dev));
+ 	pivariety->sd.internal_ops = &pivariety_internal_ops;
+ 	pivariety->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+ 	pivariety->sd.entity.function = MEDIA_ENT_F_CAM_SENSOR;
+@@ -1410,7 +1480,7 @@
+ 	if (ret)
+ 		goto error_handler_free;
+ 
+-	ret = v4l2_async_register_subdev_sensor(&pivariety->sd);
++	ret = v4l2_async_register_subdev_sensor_common(&pivariety->sd);
+ 	if (ret < 0)
+ 		goto error_media_entity;
+ 
+@@ -1432,7 +1502,7 @@
+ 	return ret;
+ }
+ 
+-static void pivariety_remove(struct i2c_client *client)
++static int pivariety_remove(struct i2c_client *client)
+ {
+ 	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+ 	struct pivariety *pivariety = to_pivariety(sd);
+@@ -1443,6 +1513,7 @@
+ 
+ 	pm_runtime_disable(&client->dev);
+ 	pm_runtime_set_suspended(&client->dev);
++	return 0;
+ }
+ 
+ static const struct dev_pm_ops pivariety_pm_ops = {
