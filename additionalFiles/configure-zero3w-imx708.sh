@@ -110,6 +110,11 @@ for scene in fallback["main_scene"]:
             for value in gamma["Gamma_curve"]
         ]
 (folder / "imx708-color-lift.json").write_text(json.dumps(fallback, indent=2) + "\n")
+for scene in fallback["main_scene"]:
+    for sub_scene in scene["sub_scene"]:
+        fps_mode = sub_scene["scene_isp21"]["ae_calib"]["CommCtrl"]["AecFrameRateMode"]
+        fps_mode.update(FpsValue=120)
+(folder / "imx708-color-lift-120.json").write_text(json.dumps(fallback, indent=2) + "\n")
 PY
 ln -sfn "$iq_profiles/imx708-color-lift.json" /etc/iqfiles/imx708_uhq_default.json
 
