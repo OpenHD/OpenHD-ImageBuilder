@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Select the Wayland variant of the image's existing Mali GPU/DDK, never another GPU."""
+"""Select the Wayland Mali runtime for the image's GPU."""
 import argparse
 import hashlib
 import json
@@ -18,7 +18,7 @@ DRIVERS = {
 }
 
 
-def select_driver(status):
+def select_driver(status, *, zero3w=False):
     installed = []
     for entry in status.split('\n\n'):
         if '\nStatus: install ok installed\n' not in '\n' + entry + '\n':
@@ -35,7 +35,14 @@ def select_driver(status):
                     raise ValueError('Unsupported installed Mali driver: ' + name)
     if len(set(installed)) > 1:
         raise ValueError('Ambiguous Mali GPU/DDK packages: ' + ', '.join(installed))
-    return installed[0] if installed else None
+    driver = installed[0] if installed else None
+    if zero3w:
+        if driver not in ('bifrost-g52-g2p0', 'bifrost-g52-g13p0'):
+            raise ValueError('Zero 3W display requires an installed Mali G52 BSP package')
+        # Tested on the Zero 3W kernel. Weston advertises explicit linear
+        # NV12 import with this runtime, which the MPP presenter requires.
+        return 'bifrost-g52-g13p0'
+    return driver
 
 
 def download(url):
@@ -49,10 +56,10 @@ def download(url):
             time.sleep(2)
 
 
-def install(root, cache=None):
+def install(root, cache=None, *, zero3w=False):
     root = Path(root)
     status = (root / 'var/lib/dpkg/status').read_text()
-    driver = select_driver(status)
+    driver = select_driver(status, zero3w=zero3w)
     dest = root / 'usr/local/share/qopenhd-rockchip/mali'
     dest.mkdir(parents=True, exist_ok=True)
     if driver is None:
@@ -94,5 +101,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', default='/')
     parser.add_argument('--cache')
+    parser.add_argument('--zero3w', action='store_true')
     args = parser.parse_args()
-    install(args.root, args.cache)
+    install(args.root, args.cache, zero3w=args.zero3w)

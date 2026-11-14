@@ -5,7 +5,8 @@ Full ROCK 5 and ROCK 3 family recipes now select the native QOpenHD packages:
 | Image family | Package | Native graphics selection |
 | --- | --- | --- |
 | ROCK 5A/5B and the existing CM5 full recipe | `qopenhd-native-rk3588` | Matching G610 Mali DDK, or image-provided Mesa |
-| ROCK 3A, ZERO 3W, CM3/core3566 full recipes | `qopenhd-native-rk3566` | Matching G52 Mali DDK, or image-provided Mesa |
+| ROCK 3A and CM3/core3566 full recipes | `qopenhd-native-rk3566` | Matching G52 Mali DDK, or image-provided Mesa |
+| ZERO 3W full recipe | `qopenhd-native-rk3566` | Private G52 g13p0 Wayland/GBM, with a software-rendered Qt HUD |
 
 The full matrix currently builds ROCK 5A, ROCK 5B, ROCK 3A and ZERO 3W.
 Other existing full recipes use the same family selection when built manually.
@@ -27,10 +28,16 @@ support. This keeps images from silently falling back to fpvue/Glide while
 new component packages are still waiting to be published.
 
 The helper reads the image's installed Mali package, selects the corresponding
-G52/G610 and DDK version, downloads the pinned Wayland library, verifies its
+G52/G610 runtime, downloads the pinned Wayland library, verifies its
 SHA256 and retains the upstream license/provenance. Private EGL/GBM libraries
 stay under the QOpenHD runtime. A Mesa image keeps its own graphics stack;
 unknown proprietary drivers fail instead of receiving a guessed GPU/DDK.
+
+The Zero 3W recipe selects the tested G52 g13p0 runtime for Weston to import
+linear NV12 from MPP. Its QOpenHD service uses Qt's software renderer for the
+transparent HUD, and Weston uses a 4 ms repaint window. In Ground mode the live
+primary stream comes from OpenHD's local RTP forwarding on port 5600 and is
+presented below the HUD by the independent Wayland video layer.
 
 The startup sequence is:
 

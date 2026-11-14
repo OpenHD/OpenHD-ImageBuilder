@@ -166,6 +166,8 @@ on_chroot() {
         "${MNT_DIR}/opt/additionalFiles/configure-rpi-splash.sh"
     install -m 0644 "${BASE_DIR}/additionalFiles/install-current-components.sh" \
         "${MNT_DIR}/opt/additionalFiles/install-current-components.sh"
+    install -m 0644 "${BASE_DIR}/additionalFiles/"{configure-rockchip-native.sh,rockchip-mali-runtime.py,rockchip-silent-boot.py} \
+        "${MNT_DIR}/opt/additionalFiles/"
     install -m 0644 "${BASE_DIR}/additionalFiles/install-rockchip-iq-files.sh" \
         "${MNT_DIR}/opt/additionalFiles/install-rockchip-iq-files.sh"
     install -m 0644 "${BASE_DIR}/last.release" "${MNT_DIR}/opt/additionalFiles/image-release"

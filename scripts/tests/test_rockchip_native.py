@@ -1,6 +1,7 @@
 """Exercise full/Lite boundaries, image boot arguments and GPU/DDK selection."""
 import importlib.util
 from pathlib import Path
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -84,6 +85,29 @@ class NativeImages(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(boot.read_text(), first)
 
+            # Exercise Zero 3W image policy with a stand-in for the download.
+            assets = root / 'assets'
+            assets.mkdir()
+            for name in ('configure-rockchip-native.sh', 'rockchip-silent-boot.py'):
+                shutil.copyfile(ROOT / 'additionalFiles' / name, assets / name)
+            (assets / 'rockchip-mali-runtime.py').write_text(
+                'import sys\nassert sys.argv[-1] == "--zero3w"\n')
+            (deployment / 'weston.ini').write_text('[core]\nrepaint-window=16\n')
+            env['OPENHD_ZERO3W_DISPLAY'] = 'true'
+            command = ['bash', str(assets / 'configure-rockchip-native.sh')]
+            subprocess.run(command, env=env, check=True, capture_output=True)
+            dropin = root / 'etc/systemd/system/qopenhd.service.d/40-zero3w-display.conf'
+            self.assertIn('Environment=QT_QUICK_BACKEND=software', dropin.read_text())
+            self.assertIn('run-qopenhd.sh -platform wayland', dropin.read_text())
+            weston = root / 'etc/qopenhd-rockchip/weston.ini'
+            self.assertIn('repaint-window=4', weston.read_text())
+            self.assertFalse((root / 'etc/systemd/system/multi-user.target.wants/qopenhd.service').exists())
+            del env['OPENHD_ZERO3W_DISPLAY']
+            subprocess.run(['bash', str(ROOT / 'additionalFiles/configure-rockchip-native.sh')],
+                           env=env, check=True, capture_output=True)
+            self.assertFalse(dropin.exists())
+            self.assertIn('repaint-window=16', weston.read_text())
+
     def test_silent_boot_preserves_root_device_tree_and_serial(self):
         quiet = module('rockchip-silent-boot')
         with tempfile.TemporaryDirectory() as fixture:
@@ -118,6 +142,16 @@ class NativeImages(unittest.TestCase):
         with self.assertRaises(ValueError):
             mali.select_driver('Package: libmali-valhall-g610-g99p0-x11-gbm\nStatus: install ok installed\n')
         self.assertIsNone(mali.select_driver('Package: libegl-mesa0\nStatus: install ok installed\n'))
+
+    def test_zero3w_uses_the_tested_g52_runtime(self):
+        mali = module('rockchip-mali-runtime')
+        status = 'Package: libmali-bifrost-g52-g2p0-x11-gbm\nStatus: install ok installed\n'
+        self.assertEqual(mali.select_driver(status, zero3w=True), 'bifrost-g52-g13p0')
+        self.assertEqual(mali.select_driver(status), 'bifrost-g52-g2p0')
+        for incompatible in ('libmali-valhall-g610-g6p0-x11-gbm', 'libegl-mesa0'):
+            with self.subTest(package=incompatible), self.assertRaises(ValueError):
+                mali.select_driver(status.replace('libmali-bifrost-g52-g2p0-x11-gbm', incompatible),
+                                   zero3w=True)
 
     def test_lite_build_targets_are_removed(self):
         workflow = yaml.safe_load((ROOT / '.github/workflows/update-image.yml').read_text())

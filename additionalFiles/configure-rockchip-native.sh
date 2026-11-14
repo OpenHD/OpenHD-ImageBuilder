@@ -22,7 +22,11 @@ if ! grep -aFq 'rockchip_native' "$sysutils"; then
   echo 'Full native Rockchip images require the matching SysUtils native-video support' >&2
   exit 1
 fi
-python3 "$assets/rockchip-mali-runtime.py" --root "${root:-/}"
+display_args=()
+if [[ "${OPENHD_ZERO3W_DISPLAY:-false}" == true ]]; then
+  display_args+=(--zero3w)
+fi
+python3 "$assets/rockchip-mali-runtime.py" --root "${root:-/}" "${display_args[@]}"
 mkdir -p "$root/etc/qopenhd-rockchip" "$root/etc/systemd/system/openhd-video.service.d" \
   "$root/etc/systemd/system/openhd.service.d" "$root/boot/openhd"
 install -m644 "$base/deployment/weston.ini" "$root/etc/qopenhd-rockchip/weston.ini"
@@ -33,6 +37,20 @@ install -m644 "$base/deployment/openhd-video-native.conf" "$root/etc/systemd/sys
 touch "$root/etc/qopenhd-rockchip/native-video-enabled"
 # The native unit owns these settings; remove only the prototype drop-in.
 rm -f "$root/etc/systemd/system/qopenhd.service.d/30-rockchip-native.conf"
+zero3w_dropin="$root/etc/systemd/system/qopenhd.service.d/40-zero3w-display.conf"
+if [[ "${OPENHD_ZERO3W_DISPLAY:-false}" == true ]]; then
+  # Keep the QML HUD on shared memory while Weston imports native NV12 video.
+  mkdir -p "$(dirname "$zero3w_dropin")"
+  cat > "$zero3w_dropin" <<'EOF'
+[Service]
+Environment=QT_QUICK_BACKEND=software
+ExecStart=
+ExecStart=/bin/sh /usr/local/share/qopenhd-rockchip/run-qopenhd.sh -platform wayland
+EOF
+  sed -i 's/^repaint-window=.*/repaint-window=4/' "$root/etc/qopenhd-rockchip/weston.ini"
+else
+  rm -f "$zero3w_dropin"
+fi
 cat > "$root/etc/systemd/system/openhd.service.d/20-boot-splash.conf" <<'EOF'
 [Service]
 StandardInput=null
