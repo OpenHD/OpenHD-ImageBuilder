@@ -43,6 +43,19 @@ Booting directly into 720p120 reached 120 fps with native H.265 on the bench.
 Changing the frame rate on a running unit can stall capture. Reboot Air after
 selecting 720p120 if video stalls, or select a 60 fps mode for normal operation.
 
+## Arducam IMX519
+
+The same image stages the IMX519 driver, Zero 3W overlay, and RKAIQ 5 profiles.
+Select IMX519 in ImageWriter or in QOpenHD before swapping the camera with power
+off. SysUtils activates the selected camera overlay. OpenHD reboots Air when
+the IMX519 frame rate changes so the sensor and ISP start with the same profile.
+
+Native MPP streamed 1080p60 and 720p120 with H.264 and H.265 on the bench.
+The receiver stream is 1920x1080 or 1280x720. The tested ISP setup scales from
+a slightly smaller active crop in both modes. The tuning uses the RK3566
+reference ISP calibration with IMX519 exposure and gain settings. Focus and
+color calibration remain bench work.
+
 [Avaf's tuning and compatibility table](https://github.com/avafinger/rockchip-iqfiles)
 
 ## Other Sony profiles

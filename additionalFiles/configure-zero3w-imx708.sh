@@ -36,10 +36,14 @@ focus_ref=35ed3470decc60fc4f326ccb643ede93f7563e9d
 download "https://raw.githubusercontent.com/raspberrypi/linux/$focus_ref/drivers/media/i2c/dw9807-vcm.c" dw9817.c \
     497bd8bc84834a38570e9e922444ce7a968ecacb82e4a07a41a1bab5467d0743
 patch -p0 < /opt/additionalFiles/zero3w-dw9817-5.10.patch
-printf 'obj-m += imx708.o dw9817.o\n' > Makefile
+imx519_ref=54afa27e1439cb2f64fff59508d07eef52382189
+download "https://raw.githubusercontent.com/ArduCAM/IMX519_AK7375/$imx519_ref/IMX519/imx519.c" imx519.c \
+    65b6b2353150c01012eccea8a82969871c80ce9c980ea7b78e07bb91e5502f9f
+patch -p0 < /opt/additionalFiles/zero3w-imx519-5.10.patch
+printf 'obj-m += imx708.o dw9817.o imx519.o\n' > Makefile
 make -C "$headers" ARCH=arm64 CROSS_COMPILE= M="$work" modules
 install -d "/lib/modules/$kernel/updates/openhd"
-install -m 0644 imx708.ko dw9817.ko "/lib/modules/$kernel/updates/openhd/"
+install -m 0644 imx708.ko dw9817.ko imx519.ko "/lib/modules/$kernel/updates/openhd/"
 depmod -a "$kernel"
 # The Devourer stage can regenerate initramfs for both installed kernels.
 # Include these drivers only in the initramfs built for the matching ABI.
@@ -54,6 +58,7 @@ fi
 . /usr/share/initramfs-tools/hook-functions
 force_load dw9817
 force_load imx708
+force_load imx519
 EOF
 chmod 0755 /etc/initramfs-tools/hooks/openhd-zero3w-camera
 update-initramfs -u -k "$kernel"
@@ -142,14 +147,35 @@ fdtput -t x imx708.dtbo "$bus/imx708@1a" lens-focus 100
 fdtput -p -c imx708.dtbo "/__local_fixups__$bus/imx708@1a"
 fdtput -t x imx708.dtbo "/__local_fixups__$bus/imx708@1a" lens-focus 0
 install -m 0644 imx708.dtbo "$overlay.disabled"
+
+# Derive the IMX519 overlay from the same board routing without the IMX708 lens node.
+install -m 0644 imx708.dtbo imx519.dtbo
+fdtput -r imx519.dtbo "$lens"
+fdtput -d imx519.dtbo "$bus/imx708@1a" lens-focus
+fdtput -d imx519.dtbo "/__local_fixups__$bus/imx708@1a" lens-focus
+fdtput -d imx519.dtbo /__fixups__ gpio1
+fdtput -t s imx519.dtbo /metadata title 'Enable Arducam IMX519 on Zero 3W'
+fdtput -t s imx519.dtbo /metadata description 'Enable Arducam IMX519 on CAM0.'
+fdtput -t s imx519.dtbo "$bus/imx708@1a" compatible sony,imx519
+fdtput -t s imx519.dtbo "$bus/imx708@1a" rockchip,camera-module-name arducam
+fdtput -t x imx519.dtbo "$bus/imx708@1a/port/endpoint" link-frequencies 0 1d6a3660
+# Rename the sensor node and its symbol paths together with the local fixup path.
+dtc -I dtb -O dts imx519.dtbo > imx519.dts
+sed -i 's/imx708/imx519/g' imx519.dts
+dtc -I dts -O dtb -o imx519.dtbo imx519.dts
+install -m 0644 imx519.dtbo /boot/dtbo/radxa-zero3-arducam-pivariety-imx519.dtbo.disabled
+python3 /opt/additionalFiles/zero3w-imx519-iq.py "$iq_profiles/imx708-color-lift.json"
 # The built-in ISP otherwise clears its async wait list before initramfs
 # can load the external sensor module.
 if ! grep -q 'initcall_blacklist=rkisp_clr_unready_dev,rkcif_clr_unready_dev' /etc/kernel/cmdline; then
     sed -i '1s/$/ initcall_blacklist=rkisp_clr_unready_dev,rkcif_clr_unready_dev/' /etc/kernel/cmdline
 fi
 u-boot-update
-for dtb in /usr/lib/linux-image-"$kernel"/rockchip/rk3566-radxa-zero-3w-*.dtb; do
+for dtb in /usr/lib/linux-image-"$kernel"/rockchip/rk3566-radxa-zero3.dtb \
+    /usr/lib/linux-image-"$kernel"/rockchip/rk3566-radxa-zero-3w-*.dtb; do
+    [[ -f "$dtb" ]] || continue
     fdtoverlay -i "$dtb" -o merged.dtb imx708.dtbo
+    fdtoverlay -i "$dtb" -o merged.dtb imx519.dtbo
 done
 
 mpp_ref=20959ec3dabb313b8c33ca0b7b09c06ffd2a9caa
@@ -189,9 +215,11 @@ Environment=LD_LIBRARY_PATH=/usr/local/lib/openhd-mpp
 EOF
 
 install -D -m 0755 /opt/additionalFiles/zero3w-imx708-media.sh /usr/local/libexec/openhd-zero3w-imx708-media
+install -D -m 0755 /opt/additionalFiles/zero3w-imx519-media.sh /usr/local/libexec/openhd-zero3w-imx519-media
 install -d /etc/systemd/system/rkaiq_3A.service.d
 cat >/etc/systemd/system/rkaiq_3A.service.d/40-openhd-imx708.conf <<'EOF'
 [Service]
 ExecStartPre=/usr/local/libexec/openhd-zero3w-imx708-media
+ExecStartPre=/usr/local/libexec/openhd-zero3w-imx519-media
 EOF
 systemctl enable rkaiq_3A.service openhd-sys-utils.service

@@ -1,0 +1,269 @@
+--- imx519.c
++++ imx519.c
+@@ -17,6 +17,7 @@
+ #include <linux/regulator/consumer.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-device.h>
++#include <linux/rk-camera-module.h>
+ #include <media/v4l2-event.h>
+ #include <media/v4l2-fwnode.h>
+ #include <media/v4l2-mediabus.h>
+@@ -978,7 +979,11 @@
+ #define IMX519_XCLR_MIN_DELAY_US	8000
+ #define IMX519_XCLR_DELAY_RANGE_US	1000
+ 
++static const s64 imx519_link_freq[] = { IMX519_DEFAULT_LINK_FREQ };
++
+ struct imx519 {
++	const char *module_name;
++	const char *lens_name;
+ 	struct v4l2_subdev sd;
+ 	struct media_pad pad[NUM_PADS];
+ 
+@@ -1112,8 +1117,6 @@
+ 	struct imx519 *imx519 = to_imx519(sd);
+ 	struct v4l2_mbus_framefmt *try_fmt_img =
+ 		v4l2_subdev_get_try_format(sd, fh->pad, IMAGE_PAD);
+-	struct v4l2_mbus_framefmt *try_fmt_meta =
+-		v4l2_subdev_get_try_format(sd, fh->pad, METADATA_PAD);
+ 	struct v4l2_rect *try_crop;
+ 
+ 	mutex_lock(&imx519->mutex);
+@@ -1123,12 +1126,6 @@
+ 	try_fmt_img->height = supported_modes_10bit[0].height;
+ 	try_fmt_img->code = imx519_get_format_code(imx519);
+ 	try_fmt_img->field = V4L2_FIELD_NONE;
+-
+-	/* Initialize try_fmt for the embedded metadata pad */
+-	try_fmt_meta->width = IMX519_EMBEDDED_LINE_WIDTH;
+-	try_fmt_meta->height = IMX519_NUM_EMBEDDED_LINES;
+-	try_fmt_meta->code = MEDIA_BUS_FMT_SENSOR_DATA;
+-	try_fmt_meta->field = V4L2_FIELD_NONE;
+ 
+ 	/* Initialize try_crop */
+ 	try_crop = v4l2_subdev_get_try_crop(sd, fh->pad, IMAGE_PAD);
+@@ -1276,7 +1273,7 @@
+ 		if (code->index > 0)
+ 			return -EINVAL;
+ 
+-		code->code = MEDIA_BUS_FMT_SENSOR_DATA;
++		code->code = MEDIA_BUS_FMT_FIXED;
+ 	}
+ 
+ 	return 0;
+@@ -1303,7 +1300,7 @@
+ 		fse->min_height = supported_modes_10bit[fse->index].height;
+ 		fse->max_height = fse->min_height;
+ 	} else {
+-		if (fse->code != MEDIA_BUS_FMT_SENSOR_DATA || fse->index > 0)
++		if (fse->code != MEDIA_BUS_FMT_FIXED || fse->index > 0)
+ 			return -EINVAL;
+ 
+ 		fse->min_width = IMX519_EMBEDDED_LINE_WIDTH;
+@@ -1339,7 +1336,7 @@
+ {
+ 	fmt->format.width = IMX519_EMBEDDED_LINE_WIDTH;
+ 	fmt->format.height = IMX519_NUM_EMBEDDED_LINES;
+-	fmt->format.code = MEDIA_BUS_FMT_SENSOR_DATA;
++	fmt->format.code = MEDIA_BUS_FMT_FIXED;
+ 	fmt->format.field = V4L2_FIELD_NONE;
+ }
+ 
+@@ -1360,7 +1357,7 @@
+ 		/* update the code which could change due to vflip or hflip: */
+ 		try_fmt->code = fmt->pad == IMAGE_PAD ?
+ 				imx519_get_format_code(imx519) :
+-				MEDIA_BUS_FMT_SENSOR_DATA;
++				MEDIA_BUS_FMT_FIXED;
+ 		fmt->format = *try_fmt;
+ 	} else {
+ 		if (fmt->pad == IMAGE_PAD) {
+@@ -1491,13 +1488,18 @@
+ {
+ 	switch (sel->target) {
+ 	case V4L2_SEL_TGT_CROP: {
+-		struct imx519 *imx519 = to_imx519(sd);
+-
+-		mutex_lock(&imx519->mutex);
+-		sel->r = *__imx519_get_pad_crop(imx519, cfg, sel->pad,
+-						sel->which);
+-		mutex_unlock(&imx519->mutex);
+-
++		struct imx519 *sensor = to_imx519(sd);
++
++		mutex_lock(&sensor->mutex);
++		if (sel->which == V4L2_SUBDEV_FORMAT_TRY) {
++			sel->r = *__imx519_get_pad_crop(sensor, cfg, sel->pad, sel->which);
++		} else {
++			sel->r.left = 0;
++			sel->r.top = 0;
++			sel->r.width = sensor->mode->width;
++			sel->r.height = sensor->mode->height;
++		}
++		mutex_unlock(&sensor->mutex);
+ 		return 0;
+ 	}
+ 
+@@ -1743,13 +1745,79 @@
+ 	return 0;
+ }
+ 
++static long imx519_ioctl(struct v4l2_subdev *sd, unsigned int cmd, void *arg)
++{
++	struct imx519 *sensor = to_imx519(sd);
++
++	switch (cmd) {
++	case RKMODULE_GET_MODULE_INFO: {
++		struct rkmodule_inf *info = arg;
++
++		memset(info, 0, sizeof(*info));
++		strscpy(info->base.sensor, "imx519", sizeof(info->base.sensor));
++		strscpy(info->base.module, sensor->module_name, sizeof(info->base.module));
++		strscpy(info->base.lens, sensor->lens_name, sizeof(info->base.lens));
++		return 0;
++	}
++	case RKMODULE_GET_HDR_CFG: {
++		struct rkmodule_hdr_cfg *hdr = arg;
++
++		memset(hdr, 0, sizeof(*hdr));
++		hdr->hdr_mode = NO_HDR;
++		hdr->esp.mode = HDR_NORMAL_VC;
++		return 0;
++	}
++	default:
++		return -ENOIOCTLCMD;
++	}
++}
++
++static int imx519_g_mbus_config(struct v4l2_subdev *sd, unsigned int pad,
++			       struct v4l2_mbus_config *config)
++{
++	config->type = V4L2_MBUS_CSI2_DPHY;
++	config->flags = V4L2_MBUS_CSI2_2_LANE | V4L2_MBUS_CSI2_CHANNEL_0 |
++			V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
++	return 0;
++}
++
++static int imx519_g_frame_interval(struct v4l2_subdev *sd,
++				   struct v4l2_subdev_frame_interval *fi)
++{
++	struct imx519 *sensor = to_imx519(sd);
++
++	mutex_lock(&sensor->mutex);
++	fi->interval = sensor->mode->timeperframe_min;
++	mutex_unlock(&sensor->mutex);
++	return 0;
++}
++
++static int imx519_enum_frame_interval(struct v4l2_subdev *sd,
++				     struct v4l2_subdev_pad_config *cfg,
++				     struct v4l2_subdev_frame_interval_enum *fie)
++{
++	const struct imx519_mode *mode;
++
++	if (fie->pad != IMAGE_PAD || fie->index >= ARRAY_SIZE(supported_modes_10bit))
++		return -EINVAL;
++	mode = &supported_modes_10bit[fie->index];
++	fie->width = mode->width;
++	fie->height = mode->height;
++	fie->code = MEDIA_BUS_FMT_SRGGB10_1X10;
++	fie->interval = mode->timeperframe_min;
++	fie->reserved[0] = NO_HDR;
++	return 0;
++}
++
+ static const struct v4l2_subdev_core_ops imx519_core_ops = {
++	.ioctl = imx519_ioctl,
+ 	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
+ 	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
+ };
+ 
+ static const struct v4l2_subdev_video_ops imx519_video_ops = {
+ 	.s_stream = imx519_set_stream,
++	.g_frame_interval = imx519_g_frame_interval,
+ };
+ 
+ static const struct v4l2_subdev_pad_ops imx519_pad_ops = {
+@@ -1758,6 +1826,8 @@
+ 	.set_fmt = imx519_set_pad_format,
+ 	.get_selection = imx519_get_selection,
+ 	.enum_frame_size = imx519_enum_frame_size,
++	.enum_frame_interval = imx519_enum_frame_interval,
++	.get_mbus_config = imx519_g_mbus_config,
+ };
+ 
+ static const struct v4l2_subdev_ops imx519_subdev_ops = {
+@@ -1786,6 +1856,15 @@
+ 
+ 	mutex_init(&imx519->mutex);
+ 	ctrl_hdlr->lock = &imx519->mutex;
++
++	{
++		struct v4l2_ctrl *link_freq;
++
++		link_freq = v4l2_ctrl_new_int_menu(ctrl_hdlr, NULL, V4L2_CID_LINK_FREQ,
++						  0, 0, imx519_link_freq);
++		if (link_freq)
++			link_freq->flags |= V4L2_CTRL_FLAG_READ_ONLY;
++	}
+ 
+ 	/* By default, PIXEL_RATE is read only */
+ 	imx519->pixel_rate = v4l2_ctrl_new_std(ctrl_hdlr, &imx519_ctrl_ops,
+@@ -1945,7 +2024,8 @@
+ 	struct device *dev = &client->dev;
+ 	struct imx519 *imx519;
+ 	const struct of_device_id *match;
+-	u32 xclk_freq;
++	u32 xclk_freq, index;
++	const char *facing;
+ 	int ret;
+ 
+ 	imx519 = devm_kzalloc(&client->dev, sizeof(*imx519), GFP_KERNEL);
+@@ -1957,6 +2037,15 @@
+ 	match = of_match_device(imx519_dt_ids, dev);
+ 	if (!match)
+ 		return -ENODEV;
++
++	if (device_property_read_u32(dev, RKMODULE_CAMERA_MODULE_INDEX, &index) ||
++	    device_property_read_string(dev, RKMODULE_CAMERA_MODULE_FACING, &facing) ||
++	    device_property_read_string(dev, RKMODULE_CAMERA_MODULE_NAME, &imx519->module_name) ||
++	    device_property_read_string(dev, RKMODULE_CAMERA_LENS_NAME, &imx519->lens_name))
++		return dev_err_probe(dev, -EINVAL, "missing Rockchip camera module properties\n");
++
++	snprintf(imx519->sd.name, sizeof(imx519->sd.name), "m%02u_%c_imx519 %s",
++		 index, !strcmp(facing, "back") ? 'b' : 'f', dev_name(dev));
+ 
+ 	/* Check the hardware configuration in device tree */
+ 	if (imx519_check_hwcfg(dev))
+@@ -1985,6 +2074,8 @@
+ 	/* Request optional enable pin */
+ 	imx519->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+ 						     GPIOD_OUT_HIGH);
++	if (IS_ERR(imx519->reset_gpio))
++		return PTR_ERR(imx519->reset_gpio);
+ 
+ 	/*
+ 	 * The sensor must be powered for imx519_identify_module()
+@@ -1998,8 +2089,8 @@
+ 	if (ret)
+ 		goto error_power_off;
+ 
+-	/* Set default mode to max resolution */
+-	imx519->mode = &supported_modes_10bit[0];
++	/* Use the 1080p readout at boot. */
++	imx519->mode = &supported_modes_10bit[3];
+ 	imx519->fmt_code = MEDIA_BUS_FMT_SRGGB10_1X10;
+ 
+ 	/* Enable runtime PM and turn off the device */
+@@ -2020,9 +2111,8 @@
+ 
+ 	/* Initialize source pads */
+ 	imx519->pad[IMAGE_PAD].flags = MEDIA_PAD_FL_SOURCE;
+-	imx519->pad[METADATA_PAD].flags = MEDIA_PAD_FL_SOURCE;
+-
+-	ret = media_entity_pads_init(&imx519->sd.entity, NUM_PADS, imx519->pad);
++
++	ret = media_entity_pads_init(&imx519->sd.entity, 1, imx519->pad);
+ 	if (ret) {
+ 		dev_err(dev, "failed to init entity pads: %d\n", ret);
+ 		goto error_handler_free;
