@@ -58,6 +58,12 @@ color calibration remain bench work.
 
 [Avaf's tuning and compatibility table](https://github.com/avafinger/rockchip-iqfiles)
 
+## Direct IMX290-compatible camera
+
+Select IMX462 and 1920×1080 at 30 fps for the direct sensor tested on CAM0.
+The bench module reported the shared IMX327/IMX462 chip ID and produced color
+with IMX290 tuning adapted to RKAIQ 5. The tested driver uses fixed exposure.
+
 ## Other Sony profiles
 
 The Rock 5 image carries the OpenHD IMX477 profile and its IMX577 alias.

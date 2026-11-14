@@ -40,10 +40,14 @@ imx519_ref=54afa27e1439cb2f64fff59508d07eef52382189
 download "https://raw.githubusercontent.com/ArduCAM/IMX519_AK7375/$imx519_ref/IMX519/imx519.c" imx519.c \
     65b6b2353150c01012eccea8a82969871c80ce9c980ea7b78e07bb91e5502f9f
 patch -p0 < /opt/additionalFiles/zero3w-imx519-5.10.patch
-printf 'obj-m += imx708.o dw9817.o imx519.o\n' > Makefile
+imx290_ref=00aee4108ab9ee72f21d0b1ab83fb0afd5cac134
+download "https://raw.githubusercontent.com/OpenHD/luckfox-pico-sdk/$imx290_ref/sysdrv/source/kernel/drivers/media/i2c/imx290.c" imx290.c \
+    6bdf19267c9f5fa8a5cd5892fd70bc0480c6346c2ae37db42eac5f98908e6b1a
+patch -p0 < /opt/additionalFiles/zero3w-imx290-5.10.patch
+printf 'obj-m += imx708.o dw9817.o imx519.o imx290.o\n' > Makefile
 make -C "$headers" ARCH=arm64 CROSS_COMPILE= M="$work" modules
 install -d "/lib/modules/$kernel/updates/openhd"
-install -m 0644 imx708.ko dw9817.ko imx519.ko "/lib/modules/$kernel/updates/openhd/"
+install -m 0644 imx708.ko dw9817.ko imx519.ko imx290.ko "/lib/modules/$kernel/updates/openhd/"
 depmod -a "$kernel"
 # The Devourer stage can regenerate initramfs for both installed kernels.
 # Include these drivers only in the initramfs built for the matching ABI.
@@ -59,6 +63,7 @@ fi
 force_load dw9817
 force_load imx708
 force_load imx519
+force_load imx290
 EOF
 chmod 0755 /etc/initramfs-tools/hooks/openhd-zero3w-camera
 update-initramfs -u -k "$kernel"
@@ -165,6 +170,22 @@ sed -i 's/imx708/imx519/g' imx519.dts
 dtc -I dts -O dtb -o imx519.dtbo imx519.dts
 install -m 0644 imx519.dtbo /boot/dtbo/radxa-zero3-arducam-pivariety-imx519.dtbo.disabled
 python3 /opt/additionalFiles/zero3w-imx519-iq.py "$iq_profiles/imx708-color-lift.json"
+
+# Use the direct sensor on CAM0 under the existing Zero 3W IMX462 selection.
+dtc -I dtb -O dts imx519.dtbo > imx290.dts
+sed -i 's/imx519/imx290/g' imx290.dts
+dtc -I dts -O dtb -o imx290.dtbo imx290.dts
+sensor="$bus/imx290@1a"
+fdtput -t s imx290.dtbo /metadata title 'Enable IMX290-compatible sensor on Zero 3W'
+fdtput -t s imx290.dtbo /metadata description 'Enable the direct IMX290-compatible sensor on CAM0.'
+fdtput -t x imx290.dtbo /fragment@0/__overlay__/external-camera-clock-24m clock-frequency 2367b88
+fdtput -t x imx290.dtbo "$sensor" clock-frequency 2367b88
+fdtput -t s imx290.dtbo "$sensor" rockchip,camera-module-name imx290
+fdtput -t x imx290.dtbo "$sensor/port/endpoint" link-frequencies 0 1a8dca60 0 11b3dc40
+install -m 0644 imx290.dtbo /boot/dtbo/radxa-zero3-arducam-pivariety-imx462.dtbo.disabled
+download "https://raw.githubusercontent.com/avafinger/rockchip-iqfiles/$iq_ref/Rock5/imx290_imx290_default.json" imx290-iq.json \
+    da5fd58fcf041542287bce6faa402ae54bc1e0f55b0236178af13f0c85a4d1a6
+python3 /opt/additionalFiles/zero3w-imx290-iq.py imx290-iq.json
 # The built-in ISP otherwise clears its async wait list before initramfs
 # can load the external sensor module.
 if ! grep -q 'initcall_blacklist=rkisp_clr_unready_dev,rkcif_clr_unready_dev' /etc/kernel/cmdline; then
@@ -176,6 +197,7 @@ for dtb in /usr/lib/linux-image-"$kernel"/rockchip/rk3566-radxa-zero3.dtb \
     [[ -f "$dtb" ]] || continue
     fdtoverlay -i "$dtb" -o merged.dtb imx708.dtbo
     fdtoverlay -i "$dtb" -o merged.dtb imx519.dtbo
+    fdtoverlay -i "$dtb" -o merged.dtb imx290.dtbo
 done
 
 mpp_ref=20959ec3dabb313b8c33ca0b7b09c06ffd2a9caa
