@@ -8,7 +8,17 @@
  #include <linux/delay.h>
  #include <linux/gpio/consumer.h>
  #include <linux/i2c.h>
-@@ -113,6 +114,10 @@
+@@ -80,6 +81,9 @@
+ 	struct v4l2_ctrl_handler ctrls;
+ 	struct v4l2_ctrl *link_freq;
+ 	struct v4l2_ctrl *pixel_rate;
++	struct v4l2_ctrl *exposure;
++	unsigned int fps_1080;
++	bool streaming;
+ 
+ 	struct mutex lock;
+ };
+@@ -113,6 +117,10 @@
  
  static const struct imx290_regval imx290_global_init_settings[] = {
  	{ 0x3007, 0x00 },
@@ -19,7 +29,7 @@
  	{ 0x3018, 0x65 },
  	{ 0x3019, 0x04 },
  	{ 0x301a, 0x00 },
-@@ -190,22 +195,22 @@
+@@ -190,22 +198,22 @@
  	{ 0x3164, 0x1a },
  	{ 0x3480, 0x49 },
  	/* data rate settings */
@@ -51,7 +61,58 @@
  	{ 0x3455, 0x00 },
  };
  
-@@ -477,7 +482,7 @@
+@@ -220,30 +228,30 @@
+ 	{ 0x3419, 0x02 },
+ 	{ 0x3012, 0x64 },
+ 	{ 0x3013, 0x00 },
+-	{ 0x305c, 0x20 },
+-	{ 0x305d, 0x00 },
++	{ 0x305c, 0x18 },
++	{ 0x305d, 0x03 },
+ 	{ 0x305e, 0x20 },
+ 	{ 0x305f, 0x01 },
+ 	{ 0x315e, 0x1a },
+ 	{ 0x3164, 0x1a },
+ 	{ 0x3480, 0x49 },
+ 	/* data rate settings */
+-	{ 0x3405, 0x10 },
+-	{ 0x3446, 0x4f },
++	{ 0x3405, 0x00 },
++	{ 0x3446, 0x77 },
+ 	{ 0x3447, 0x00 },
+-	{ 0x3448, 0x2f },
++	{ 0x3448, 0x67 },
+ 	{ 0x3449, 0x00 },
+-	{ 0x344a, 0x17 },
++	{ 0x344a, 0x47 },
+ 	{ 0x344b, 0x00 },
+-	{ 0x344c, 0x17 },
++	{ 0x344c, 0x37 },
+ 	{ 0x344d, 0x00 },
+-	{ 0x344e, 0x17 },
++	{ 0x344e, 0x3f },
+ 	{ 0x344f, 0x00 },
+-	{ 0x3450, 0x57 },
++	{ 0x3450, 0xff },
+ 	{ 0x3451, 0x00 },
+-	{ 0x3452, 0x17 },
++	{ 0x3452, 0x3f },
+ 	{ 0x3453, 0x00 },
+-	{ 0x3454, 0x17 },
++	{ 0x3454, 0x37 },
+ 	{ 0x3455, 0x00 },
+ };
+ 
+@@ -276,7 +284,7 @@
+ #define FREQ_INDEX_720P		1
+ static const s64 imx290_link_freq_2lanes[] = {
+ 	[FREQ_INDEX_1080P] = 445500000,
+-	[FREQ_INDEX_720P] = 297000000,
++	[FREQ_INDEX_720P] = 445500000,
+ };
+ static const s64 imx290_link_freq_4lanes[] = {
+ 	[FREQ_INDEX_1080P] = 222750000,
+@@ -477,9 +485,25 @@
  		return 0;
  
  	switch (ctrl->id) {
@@ -59,27 +120,89 @@
 +	case V4L2_CID_ANALOGUE_GAIN:
  		ret = imx290_set_gain(imx290, ctrl->val);
  		break;
++	case V4L2_CID_EXPOSURE: {
++		unsigned int vmax = imx290->current_mode->height == 720 ? 750 : 1125;
++		unsigned int shs = vmax - min_t(unsigned int, ctrl->val, vmax - 3) - 1;
++
++		ret = imx290_write_reg(imx290, 0x3001, 1);
++		if (ret)
++			break;
++		ret = imx290_write_reg(imx290, 0x3020, shs & 0xff);
++		if (!ret)
++			ret = imx290_write_reg(imx290, 0x3021, shs >> 8);
++		if (!ret)
++			ret = imx290_write_reg(imx290, 0x3022, 0);
++		if (imx290_write_reg(imx290, 0x3001, 0) && !ret)
++			ret = -EIO;
++		break;
++	}
  	case V4L2_CID_TEST_PATTERN:
-@@ -737,6 +742,18 @@
+ 		if (ctrl->val) {
+ 			imx290_write_reg(imx290, IMX290_BLKLEVEL_LOW, 0x00);
+@@ -628,6 +652,9 @@
+ 	} else {
+ 		format = &imx290->current_format;
+ 		imx290->current_mode = mode;
++		if (imx290->exposure)
++			v4l2_ctrl_modify_range(imx290->exposure, 1,
++					      mode->height == 720 ? 747 : 1122, 1, 58);
+ 		imx290->bpp = imx290_formats[i].bpp;
+ 
+ 		if (imx290->link_freq)
+@@ -712,6 +739,10 @@
+ /* Start streaming */
+ static int imx290_start_streaming(struct imx290 *imx290)
+ {
++	const bool hd = imx290->current_mode->height == 720;
++	const unsigned int vmax = hd ? 750 : 1125;
++	const unsigned int shs = vmax - (hd ? 24 : 58) - 1;
++	const unsigned int hmax = hd ? 1650 : imx290->fps_1080 == 30 ? 4400 : 2200;
+ 	int ret;
+ 
+ 	/* Set init register settings */
+@@ -737,7 +768,19 @@
  		dev_err(imx290->dev, "Could not set current mode\n");
  		return ret;
  	}
-+	ret = imx290_write_reg(imx290, 0x3018, 0x65);
+-	ret = imx290_set_hmax(imx290, imx290->current_mode->hmax);
++	ret = imx290_write_reg(imx290, 0x3018, vmax & 0xff);
 +	if (ret)
 +		return ret;
-+	ret = imx290_write_reg(imx290, 0x3019, 0x04);
++	ret = imx290_write_reg(imx290, 0x3019, vmax >> 8);
 +	if (ret)
 +		return ret;
-+	ret = imx290_write_reg(imx290, 0x3020, 0x2a);
++	ret = imx290_write_reg(imx290, 0x3020, shs & 0xff);
 +	if (ret)
 +		return ret;
-+	ret = imx290_write_reg(imx290, 0x3021, 0x04);
++	ret = imx290_write_reg(imx290, 0x3021, shs >> 8);
 +	if (ret)
 +		return ret;
- 	ret = imx290_set_hmax(imx290, imx290->current_mode->hmax);
++	ret = imx290_set_hmax(imx290, hmax);
  	if (ret < 0)
  		return ret;
-@@ -887,20 +904,82 @@
+ 
+@@ -763,6 +806,9 @@
+ 	struct imx290 *imx290 = to_imx290(sd);
+ 	int ret = 0;
+ 
++	mutex_lock(&imx290->lock);
++	if (imx290->streaming == !!enable)
++		goto unlock_and_return;
+ 	if (enable) {
+ 		ret = pm_runtime_get_sync(imx290->dev);
+ 		if (ret < 0) {
+@@ -781,7 +827,10 @@
+ 		pm_runtime_put(imx290->dev);
+ 	}
+ 
++imx290->streaming = !!enable;
++
+ unlock_and_return:
++	mutex_unlock(&imx290->lock);
+ 
+ 	return ret;
+ }
+@@ -887,20 +936,107 @@
  	SET_RUNTIME_PM_OPS(imx290_power_off, imx290_power_on, NULL)
  };
  
@@ -118,21 +241,45 @@
 +			      struct v4l2_subdev_frame_interval *fi)
 +{
 +	fi->interval.numerator = 1;
-+	fi->interval.denominator = 30;
++	fi->interval.denominator = to_imx290(sd)->current_mode->height == 720 ? 120 : to_imx290(sd)->fps_1080;
 +	return 0;
++}
++
++static int imx290_rk_set_interval(struct v4l2_subdev *sd,
++				  struct v4l2_subdev_frame_interval *fi)
++{
++	struct imx290 *imx290 = to_imx290(sd);
++	unsigned int fps;
++	int ret = -EINVAL;
++
++	if (fi->pad || !fi->interval.numerator ||
++	    fi->interval.denominator % fi->interval.numerator)
++		return -EINVAL;
++	fps = fi->interval.denominator / fi->interval.numerator;
++	mutex_lock(&imx290->lock);
++	if (imx290->streaming) {
++		ret = -EBUSY;
++	} else if (imx290->current_mode->height == 720 ? fps == 120 :
++		   (fps == 30 || fps == 60)) {
++		if (fps != 120)
++			imx290->fps_1080 = fps;
++		ret = imx290_rk_interval(sd, fi);
++	}
++	mutex_unlock(&imx290->lock);
++	return ret;
 +}
 +
 +static int imx290_rk_enum_interval(struct v4l2_subdev *sd,
 +			   struct v4l2_subdev_pad_config *cfg,
 +			   struct v4l2_subdev_frame_interval_enum *fie)
 +{
-+	if (fie->pad || fie->index)
++	if (fie->pad || fie->index > 2)
 +		return -EINVAL;
-+	fie->width = 1920;
-+	fie->height = 1080;
++	fie->width = fie->index == 2 ? 1280 : 1920;
++	fie->height = fie->index == 2 ? 720 : 1080;
 +	fie->code = MEDIA_BUS_FMT_SRGGB10_1X10;
 +	fie->interval.numerator = 1;
-+	fie->interval.denominator = 30;
++	fie->interval.denominator = fie->index == 2 ? 120 : fie->index == 1 ? 60 : 30;
 +	fie->reserved[0] = NO_HDR;
 +	return 0;
 +}
@@ -144,6 +291,7 @@
  static const struct v4l2_subdev_video_ops imx290_video_ops = {
  	.s_stream = imx290_set_stream,
 +	.g_frame_interval = imx290_rk_interval,
++	.s_frame_interval = imx290_rk_set_interval,
  };
  
  static const struct v4l2_subdev_pad_ops imx290_pad_ops = {
@@ -162,8 +310,15 @@
  	.pad = &imx290_pad_ops,
  };
  
-@@ -1049,7 +1128,7 @@
- 	v4l2_ctrl_handler_init(&imx290->ctrls, 4);
+@@ -1046,10 +1182,13 @@
+ 	 */
+ 	imx290_entity_init_cfg(&imx290->sd, NULL);
+ 
+-	v4l2_ctrl_handler_init(&imx290->ctrls, 4);
++	imx290->fps_1080 = 30;
++	v4l2_ctrl_handler_init(&imx290->ctrls, 7);
++	imx290->exposure = v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
++					    V4L2_CID_EXPOSURE, 1, 1122, 1, 58);
  
  	v4l2_ctrl_new_std(&imx290->ctrls, &imx290_ctrl_ops,
 -			  V4L2_CID_GAIN, 0, 72, 1, 0);
@@ -171,7 +326,7 @@
  
  	imx290->link_freq =
  		v4l2_ctrl_new_int_menu(&imx290->ctrls, &imx290_ctrl_ops,
-@@ -1079,6 +1158,8 @@
+@@ -1079,6 +1218,8 @@
  	}
  
  	v4l2_i2c_subdev_init(&imx290->sd, client, &imx290_subdev_ops);
@@ -180,7 +335,7 @@
  	imx290->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
  	imx290->sd.dev = &client->dev;
  	imx290->sd.entity.ops = &imx290_subdev_entity_ops;
-@@ -1091,7 +1172,7 @@
+@@ -1091,7 +1232,7 @@
  		goto free_ctrl;
  	}
  

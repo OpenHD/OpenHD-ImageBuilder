@@ -153,7 +153,7 @@ on_chroot() {
     cp -r "${STAGE_DIR}/../../additionalFiles" "${MNT_DIR}/opt"
     fi
     if [[ "${OPENHD_ZERO3W_IMX708:-false}" == true ]]; then
-        install -m 0644 "${BASE_DIR}/additionalFiles/"{configure-zero3w-imx708.sh,zero3w-imx708-5.10.patch,zero3w-dw9817-5.10.patch,zero3w-imx708-media.sh,zero3w-imx519-5.10.patch,zero3w-imx519-iq.py,zero3w-imx519-media.sh,zero3w-imx290-5.10.patch,zero3w-imx290-iq.py} \
+        install -m 0644 "${BASE_DIR}/additionalFiles/"{configure-zero3w-imx708.sh,zero3w-imx708-5.10.patch,zero3w-dw9817-5.10.patch,zero3w-imx708-media.sh,zero3w-imx519-5.10.patch,zero3w-imx519-iq.py,zero3w-imx519-media.sh,zero3w-imx290-5.10.patch,zero3w-imx290-iq.py,zero3w-imx290-media.sh} \
             "${MNT_DIR}/opt/additionalFiles/"
     fi
     # Refresh the image policy even when updating an existing base image that

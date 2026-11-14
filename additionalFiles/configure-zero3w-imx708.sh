@@ -181,7 +181,7 @@ fdtput -t s imx290.dtbo /metadata description 'Enable the direct IMX290-compatib
 fdtput -t x imx290.dtbo /fragment@0/__overlay__/external-camera-clock-24m clock-frequency 2367b88
 fdtput -t x imx290.dtbo "$sensor" clock-frequency 2367b88
 fdtput -t s imx290.dtbo "$sensor" rockchip,camera-module-name imx290
-fdtput -t x imx290.dtbo "$sensor/port/endpoint" link-frequencies 0 1a8dca60 0 11b3dc40
+fdtput -t x imx290.dtbo "$sensor/port/endpoint" link-frequencies 0 1a8dca60
 install -m 0644 imx290.dtbo /boot/dtbo/radxa-zero3-arducam-pivariety-imx462.dtbo.disabled
 download "https://raw.githubusercontent.com/avafinger/rockchip-iqfiles/$iq_ref/Rock5/imx290_imx290_default.json" imx290-iq.json \
     da5fd58fcf041542287bce6faa402ae54bc1e0f55b0236178af13f0c85a4d1a6
@@ -238,10 +238,12 @@ EOF
 
 install -D -m 0755 /opt/additionalFiles/zero3w-imx708-media.sh /usr/local/libexec/openhd-zero3w-imx708-media
 install -D -m 0755 /opt/additionalFiles/zero3w-imx519-media.sh /usr/local/libexec/openhd-zero3w-imx519-media
+install -D -m 0755 /opt/additionalFiles/zero3w-imx290-media.sh /usr/local/libexec/openhd-zero3w-imx290-media
 install -d /etc/systemd/system/rkaiq_3A.service.d
 cat >/etc/systemd/system/rkaiq_3A.service.d/40-openhd-imx708.conf <<'EOF'
 [Service]
 ExecStartPre=/usr/local/libexec/openhd-zero3w-imx708-media
 ExecStartPre=/usr/local/libexec/openhd-zero3w-imx519-media
+ExecStartPre=/usr/local/libexec/openhd-zero3w-imx290-media
 EOF
 systemctl enable rkaiq_3A.service openhd-sys-utils.service

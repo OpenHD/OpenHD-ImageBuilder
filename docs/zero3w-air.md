@@ -60,9 +60,12 @@ color calibration remain bench work.
 
 ## Direct IMX290-compatible camera
 
-Select IMX462 and 1920×1080 at 30 fps for the direct sensor tested on CAM0.
+Select IMX462 for the direct sensor tested on CAM0.
 The bench module reported the shared IMX327/IMX462 chip ID and produced color
-with IMX290 tuning adapted to RKAIQ 5. The tested driver uses fixed exposure.
+with IMX290 tuning adapted to RKAIQ 5. Select 1080p30, 1080p60, or 720p120.
+The lower-rate 720p modes scale from the 1080p sensor readout. Changing frame
+rate reboots Air so RKAIQ loads the matching fixed-rate profile. The driver
+keeps frame length fixed and bounds exposure to the selected mode.
 
 ## Other Sony profiles
 
