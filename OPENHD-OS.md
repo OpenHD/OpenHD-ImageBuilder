@@ -13,8 +13,11 @@ sudo bash scripts/openhd-os.sh build /opt/openhd-os-work sources.tar.gz
 # root, regenerate the image and run boot/graphical-install validation.
 sudo bash scripts/openhd-os.sh update /opt/openhd-os-work /path/to/new-debs
 
-# For a unified desktop + minimal-mode image, retain the larger size cap:
-sudo IMAGE_BYTES=1499987968 bash scripts/openhd-os.sh update /opt/openhd-os-work /path/to/new-debs
+# Keep the installed desktop image near its 2 GiB target:
+sudo IMAGE_BYTES=2147483648 bash scripts/openhd-os.sh update /opt/openhd-os-work /path/to/new-debs
+
+# Refresh current desktop apps without rebuilding OpenHD:
+sudo bash scripts/openhd-os.sh apps /opt/openhd-os-work
 ```
 
 Keep the work directory between builds. Package-only updates do not compile
