@@ -99,6 +99,8 @@ fi
      systemctl mask userconfig.service
      cat /opt/additionalFiles/issue-new.txt >> /boot/issue.txt
      cp /usr/local/share/openhd_misc/initPi.sh /usr/local/bin/initPi.sh
+     # The image is already laid out for ImageWriter. Skip vendor repartitioning.
+     sed -Ei 's@(^|[[:space:]])init=/usr/lib/raspberrypi-sys-mods/firstboot([[:space:]]|$)@\1@' /boot/cmdline.txt
      #remove serial console
      sed -i /boot/cmdline.txt -e "s/console=ttyAMA0,[0-9]\+ //"
      sed -i /boot/cmdline.txt -e "s/console=serial0,[0-9]\+ //"
@@ -129,8 +131,6 @@ EOF
          # remove preexisting wifi driver for 88xxxu
          rm -Rf /lib/modules/6.1.29-v7l+/kernel/drivers/net/wireless/realtek/rtl8xxxu*
          rm -Rf /lib/modules/6.1.29-v7l/kernel/drivers/net/wireless/realtek/rtl8xxxu*
-         # Disable vendor resizing; storage preparation belongs to ImageWriter
-         sudo sed -i '141,174 s/^/#/' /usr/lib/raspberrypi-sys-mods/firstboot
      fi
      sudo systemctl disable getty@tty1.service
      sudo systemctl mask getty@tty1.service

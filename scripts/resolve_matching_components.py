@@ -68,7 +68,7 @@ def select_pair(
                 continue
             if sdk_sha != str(sysutils.get("sdk_sha256", "")):
                 continue
-            if buildroot_commit != str(sysutils.get("sdk_buildroot_commit", "")):
+            if not buildroot_commit or buildroot_commit == "unknown" or buildroot_commit != str(sysutils.get("sdk_buildroot_commit", "")):
                 continue
             matches.append(
                 (
@@ -94,11 +94,25 @@ def main() -> int:
     parser.add_argument("--openhd-prefix", required=True)
     parser.add_argument("--sysutils-prefix", required=True)
     parser.add_argument("--sdk-sha256", help="Require the SDK used by the selected base firmware")
+    parser.add_argument("--sysutils-provisioning-version", type=int)
     args = parser.parse_args()
+
+    sysutils_candidates = manifests(args.sysutils_prefix, args.platform)
+    if args.sysutils_provisioning_version is not None:
+        sysutils_candidates = [
+            candidate for candidate in sysutils_candidates
+            if candidate[0].get("imagewriter_provisioning_version")
+            == args.sysutils_provisioning_version
+        ]
+        if not sysutils_candidates:
+            raise RuntimeError(
+                f"No SysUtils component supports ImageWriter provisioning v{args.sysutils_provisioning_version}; "
+                "build and publish the dev-release X21B SysUtils component first"
+            )
 
     pair = select_pair(
         manifests(args.openhd_prefix, args.platform),
-        manifests(args.sysutils_prefix, args.platform),
+        sysutils_candidates,
         args.sdk_sha256,
     )
     openhd_archive, sysutils_archive, sdk_sha, buildroot_commit = pair

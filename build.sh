@@ -423,7 +423,8 @@ else
     fi
 fi
 
-# Prepare Windows-readable OpenHD config partition and recordings partition
+# Prepare the Windows-readable OPENHD config volume.
+# ImageWriter allocates and formats recordings storage on the destination.
 sudo chmod +x ${SCRIPT_DIR}/uPart.sh
 ${SCRIPT_DIR}/uPart.sh -v ${PREV_WORK_DIR}/*.img
 

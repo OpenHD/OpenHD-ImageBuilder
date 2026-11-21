@@ -28,7 +28,7 @@ permissions:
 jobs:
   applications:
     name: Current OpenHD and SysUtils only
-    uses: OpenHD/OpenHD/.github/workflows/build_pico_components.yml@openhd-3.0
+    uses: OpenHD/OpenHD/.github/workflows/build_pico_components.yml@dev-release
     secrets:
       OPENHD_SUBMODULE_TOKEN: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
   prepare:

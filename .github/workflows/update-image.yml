@@ -1,5 +1,5 @@
 name: New_Image_Workflow
-run-name: OpenHD 3.0-albatros-beta3 (${{ inputs.target || 'all' }})
+run-name: OpenHD 3.0-albatros-beta4 (${{ inputs.target || 'all' }})
 
 on:
   workflow_dispatch:
@@ -42,15 +42,17 @@ permissions:
   actions: read
 
 env:
-  IMAGE_RELEASE: 3.0-albatros-beta3
+  IMAGE_RELEASE: 3.0-albatros-beta4
   BRANCH: dev-release
   X21_COMPONENT_BASE_URL: https://dl.cloudsmith.io/public/openhd/dev-release/raw/files
 
 jobs:
   x86-openhd-os:
     name: Build OpenHD-OS on x86
-    if: github.event_name != 'workflow_dispatch' || inputs.target != 'publish-pi'
-    uses: OpenHD/OpenHD-OS/.github/workflows/build.yml@main
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'x86'
+    uses: OpenHD/OpenHD-OS/.github/workflows/build.yml@f0e8ffd3a73560ef59fe353a4d5ba235af46a8fc
+    with:
+      openhd_ref: dev-release
 
   luckfox-pico-images:
     name: Luckfox Pico application overlay images
@@ -146,6 +148,7 @@ jobs:
             --platform x21b \
             --openhd-prefix openhd-x21b- \
             --sysutils-prefix openhd-sys-utils-x21b- \
+            --sysutils-provisioning-version 1 \
             --sdk-sha256 "${X21_BASE_SDK_SHA256}" \
             >>"${GITHUB_ENV}"
 
@@ -329,17 +332,34 @@ jobs:
         run: |
           set -euo pipefail
           : "${GH_TOKEN:?OPENHD_SUBMODULE_TOKEN secret is required to download the ORQA payload}"
+
+          on_release_line() {
+            local relation
+            relation="$(gh api "repos/OpenHD/OpenHD/compare/$1...dev-release" --jq .status)" || return 1
+            [[ "$relation" == ahead || "$relation" == identical ]]
+          }
+
           if [[ -n "${ORQA_SOURCE_RUN}" ]]; then
             [[ "${ORQA_SOURCE_RUN}" =~ ^[0-9]+$ ]]
             run_id="${ORQA_SOURCE_RUN}"
-            run_json="$(gh api "repos/OpenHD/OpenHD/actions/runs/${run_id}")"
-            [[ "$(jq -r .head_branch <<<"${run_json}")" == openhd-3.0 ]]
-            head_sha="$(jq -er .head_sha <<<"${run_json}")"
+            head_sha="$(gh api "repos/OpenHD/OpenHD/actions/runs/${run_id}" --jq .head_sha)"
+            on_release_line "$head_sha"
           else
-            run_json="$(gh api \
-              'repos/OpenHD/OpenHD/actions/workflows/final_ci.yml/runs?branch=openhd-3.0&status=success&per_page=1')"
-            run_id="$(jq -er '.workflow_runs[0].id' <<<"${run_json}")"
-            head_sha="$(jq -er '.workflow_runs[0].head_sha' <<<"${run_json}")"
+            # The artifact is tied to the ORQA job, even if an unrelated job failed.
+            # Check ancestry because dev-release previously pointed at another line.
+            candidates="$(gh api 'repos/OpenHD/OpenHD/actions/artifacts?name=openhd-orqa&per_page=30' \
+              --jq '.artifacts[] | select(.expired == false) |
+                select(.workflow_run.head_branch == "dev-release" or .workflow_run.head_branch == "openhd-3.0") |
+                [.workflow_run.id, .workflow_run.head_sha] | @tsv')"
+            run_id=
+            while IFS=$'\t' read -r candidate sha; do
+              if [[ -n "$sha" ]] && on_release_line "$sha"; then
+                run_id="$candidate"
+                head_sha="$sha"
+                break
+              fi
+            done <<< "$candidates"
+            : "${run_id:?No unexpired ORQA artifact from the OpenHD dev-release history}"
           fi
           gh api "repos/OpenHD/OpenHD/actions/runs/${run_id}/jobs?per_page=100" \
             | jq -e 'any(.jobs[]; .name == "build-orqa" and .conclusion == "success")'
@@ -486,7 +506,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: OpenHD/OpenHD
-          ref: openhd-3.0
+          ref: dev-release
           submodules: true
           token: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
           path: components/OpenHD

@@ -150,6 +150,7 @@ trap 'losetup -d "$check_loop"' EXIT
 # free-space counters from an otherwise valid pending transaction.
 e2fsck -pf "${check_loop}p2" > "$work/filesystem-recovery.txt" 2>&1 || [[ $? == 1 ]]
 e2fsck -fn "${check_loop}p2" > "$work/filesystem-validation.txt" 2>&1
+fatlabel "${check_loop}p1" OPENHD
 fsck.fat -n "${check_loop}p1" > "$work/boot-filesystem-validation.txt" 2>&1
 losetup -d "$check_loop"
 trap - EXIT

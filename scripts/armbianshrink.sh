@@ -8,11 +8,9 @@ function cleanup() {
 
 usage() { echo "Usage: $0 [-s] imagefile.img [newimagefile.img]"; exit -1; }
 
-should_skip_autoexpand=false
-
 while getopts ":s" opt; do
   case "${opt}" in
-    s) should_skip_autoexpand=true ;;
+    s) ;; # Retained for compatibility. Expansion is always disabled.
     *) usage ;;
   esac
 done
@@ -71,18 +69,6 @@ tune2fs_output=$(tune2fs -l "$loopback")
 currentsize=$(echo "$tune2fs_output" | grep '^Block count:' | tr -d ' ' | cut -d ':' -f 2)
 blocksize=$(echo "$tune2fs_output" | grep '^Block size:' | tr -d ' ' | cut -d ':' -f 2)
 
-
-#Check if we should make pi expand rootfs on next boot
-if [ "$should_skip_autoexpand" = false ]; then
-  #Make pi expand rootfs on next boot
-  mountdir=$(mktemp -d)
-  mount "$loopback" "$mountdir"
-
-  ln -sf /lib/systemd/system/armbian-resize-filesystem.service "${mountdir}/etc/systemd/system/basic.target.wants/armbian-resize-filesystem.service"
-  umount "$mountdir"
-else
-  echo "Skipping autoexpanding process..."
-fi
 
 #Make sure filesystem is ok
 e2fsck -p -f "$loopback"

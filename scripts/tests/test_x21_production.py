@@ -3,7 +3,8 @@ from pathlib import Path
 import hashlib,io,json,re,subprocess,sys,tarfile,tempfile,unittest,zipfile
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from fetch_x21_base import validate_index,validate_payloads
-from resolve_matching_components import select_pair
+from resolve_matching_components import select_pair, main as resolve_components
+from unittest.mock import patch
 from build_x21_full_update import build,write_entry
 from prepare_x21_provisioning import prepare
 
@@ -58,6 +59,18 @@ class ProductionTests(unittest.TestCase):
         ohd=[candidate('2026-01-01','openhd')]
         sysutils=[candidate('2026-02-01','z-old-sysutils'),candidate('2026-03-01','a-new-sysutils')]
         self.assertEqual(select_pair(ohd,sysutils,'sdk')[:2],('openhd','a-new-sysutils'))
+
+    def test_x21_resolver_requires_a_provisioning_capable_component(self):
+        openhd = ({"sdk_sha256": "sdk", "sdk_buildroot_commit": "br"}, "openhd", "2026-01-01")
+        legacy = (openhd[0], "legacy", "2026-02-01")
+        compatible = (dict(openhd[0], imagewriter_provisioning_version=1), "compatible", "2026-01-02")
+        args = ["resolve", "--platform", "x21b", "--openhd-prefix", "openhd-",
+                "--sysutils-prefix", "sysutils-", "--sysutils-provisioning-version", "1"]
+        with patch.object(sys, "argv", args), \
+             patch("resolve_matching_components.manifests", side_effect=[[legacy, compatible], [openhd]]), \
+             patch("sys.stdout", new_callable=io.StringIO) as output:
+            self.assertEqual(resolve_components(), 0)
+        self.assertIn("SYSUTILS_COMPONENT_NAME=compatible", output.getvalue())
 
     def test_launcher_waits_for_import_and_is_idempotent(self):
         launcher=self.work/'start-ohd.sh'

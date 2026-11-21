@@ -46,7 +46,10 @@ if '#OPENHD_DYNAMIC_CONTENT_BEGIN#' not in s:
 p.write_text(s)
 p = Path('/boot/firmware/cmdline.txt')
 options = p.read_text().strip().split()
-options = [x for x in options if not x.startswith(('console=serial', 'console=ttyAMA', 'systemd.run=', 'systemd.run_success_action=', 'systemd.unit='))]
+ignored = ('console=serial', 'console=ttyAMA', 'systemd.run=',
+           'systemd.run_success_action=', 'systemd.unit=')
+options = [x for x in options if not x.startswith(ignored)
+           and x != 'init=/usr/lib/raspberrypi-sys-mods/firstboot']
 options += ['quiet', 'loglevel=3', 'vt.global_cursor_default=0']
 p.write_text(' '.join(dict.fromkeys(options)) + '\n')
 PY
