@@ -398,7 +398,6 @@ else
     cd /opt/additionalFiles/
     mkdir -p /boot/openhd/
     touch /boot/openhd/rock-rk3566.txt
-    touch /boot/openhd/resize.txt
     df -h
     gunzip -v emmc.img.gz
     ls -l --block-size=M 

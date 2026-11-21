@@ -796,7 +796,6 @@ EOF
 
   if [[ -d /conf ]]; then
     mkdir -p /conf/openhd
-    touch /conf/openhd/resize.txt
     touch /conf/config.txt
     cat >/conf/before.txt <<'EOF'
 remove_packages rsetup-config-first-boot
@@ -835,7 +834,7 @@ if [[ "${OS}" == "raspbian" ]]; then
     echo "Keeping the Raspberry Pi 5 Bookworm kernel and PiSP libcamera stack"
     $APT install gstreamer1.0-libcamera gstreamer1.0-libav
     mkdir -p /boot/openhd
-    touch /boot/openhd/rpi.txt /boot/openhd/rpi5.txt /boot/openhd/resize.txt
+    touch /boot/openhd/rpi.txt /boot/openhd/rpi5.txt
   else
     $APT remove openhd-linux-pi
     echo "Installing custom Kernel package"
