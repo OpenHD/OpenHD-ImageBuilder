@@ -49,8 +49,6 @@ jobs:
     name: Build OpenHD-OS on x86
     if: github.event_name != 'workflow_dispatch' || inputs.target != 'publish-pi'
     uses: OpenHD/OpenHD-OS/.github/workflows/build.yml@main
-    with:
-      output: synced-images
 
   luckfox-pico-images:
     name: Luckfox Pico application overlay images
