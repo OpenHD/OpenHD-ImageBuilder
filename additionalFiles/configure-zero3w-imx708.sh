@@ -1,22 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-kernel=5.10.160-radxa-rk356x
+kernel=${2:-5.10.160-radxa-rk356x}
 headers="/usr/src/linux-headers-$kernel"
 overlay=/boot/dtbo/radxa-zero3-imx708.dtbo
 [[ -f "$headers/Module.symvers" && -d "/lib/modules/$kernel" ]]
-[[ "$(dpkg-query -W -f='${Version}' camera-engine-rkaiq)" == 5.0x1.2-rc2 ]]
 
-binary=/usr/local/libexec/openhd-zero3w
-if [[ ! -x "$binary" ]]; then
-    echo 'The installed arm64 OpenHD package lacks the Zero 3W native MPP executable.' >&2
-    exit 1
-fi
-needed=$(readelf -d "$binary")
-grep -Fq '[librockchip_mpp.so.1]' <<<"$needed"
-if grep -Eq 'NEEDED.*libgst' <<<"$needed"; then
-    echo 'The Zero 3W executable links GStreamer.' >&2
-    exit 1
+if [[ "${1:-}" != --sensors-only ]]; then
+    [[ "$(dpkg-query -W -f='${Version}' camera-engine-rkaiq)" == 5.0x1.2-rc2 ]]
+    binary=/usr/local/libexec/openhd-zero3w
+    if [[ ! -x "$binary" ]]; then
+        echo 'The installed arm64 OpenHD package lacks the Zero 3W native MPP executable.' >&2
+        exit 1
+    fi
+    needed=$(readelf -d "$binary")
+    grep -Fq '[librockchip_mpp.so.1]' <<<"$needed"
+    if grep -Eq 'NEEDED.*libgst' <<<"$needed"; then
+        echo 'The Zero 3W executable links GStreamer.' >&2
+        exit 1
+    fi
 fi
 
 work=$(mktemp -d)
@@ -51,6 +53,9 @@ download "$pivariety_source/arducam-pivariety.c" arducam-pivariety.c \
 download "$pivariety_source/arducam-pivariety.h" arducam-pivariety.h \
     bd3fd7be273c17b29e3552c2f40ae36990c43ed386c9d8a0d53b6db71b5b7a2d
 patch -p0 < /opt/additionalFiles/zero3w-pivariety-5.10.patch
+if [[ "$kernel" == 6.1.* ]]; then
+    patch -p0 < /opt/additionalFiles/rk356x-camera-6.1.patch
+fi
 printf 'obj-m += imx708.o dw9817.o imx519.o imx290.o arducam-pivariety.o\n' > Makefile
 make -C "$headers" ARCH=arm64 CROSS_COMPILE= M="$work" modules
 install -d "/lib/modules/$kernel/updates/openhd"
@@ -65,7 +70,7 @@ set -e
 if [ "${1:-}" = prereqs ]; then
     exit 0
 fi
-[ "${version:-}" = 5.10.160-radxa-rk356x ] || exit 0
+[ -f "/lib/modules/${version:-}/updates/openhd/imx708.ko" ] || exit 0
 . /usr/share/initramfs-tools/hook-functions
 force_load dw9817
 force_load imx708
@@ -130,6 +135,11 @@ for scene in fallback["main_scene"]:
 (folder / "imx708-color-lift.json").write_text(json.dumps(fallback, indent=2) + "\n")
 for scene in fallback["main_scene"]:
     for sub_scene in scene["sub_scene"]:
+        fps_mode = sub_scene["scene_isp21"]["ae_calib"]["CommCtrl"]["AecFrameRateMode"]
+        fps_mode.update(isFpsFix=1, FpsValue=30)
+(folder / "imx708-color-lift-30.json").write_text(json.dumps(fallback, indent=2) + "\n")
+for scene in fallback["main_scene"]:
+    for sub_scene in scene["sub_scene"]:
         isp = sub_scene["scene_isp21"]
         fps_mode = isp["ae_calib"]["CommCtrl"]["AecFrameRateMode"]
         fps_mode.update(FpsValue=120)
@@ -138,6 +148,25 @@ for scene in fallback["main_scene"]:
 (folder / "imx708-color-lift-120.json").write_text(json.dumps(fallback, indent=2) + "\n")
 PY
 ln -sfn "$iq_profiles/imx708-color-lift.json" /etc/iqfiles/imx708_uhq_default.json
+
+python3 /opt/additionalFiles/zero3w-imx519-iq.py "$iq_profiles/imx708-color-lift.json"
+download "https://raw.githubusercontent.com/avafinger/rockchip-iqfiles/$iq_ref/Rock5/imx290_imx290_default.json" imx290-iq.json \
+    da5fd58fcf041542287bce6faa402ae54bc1e0f55b0236178af13f0c85a4d1a6
+python3 /opt/additionalFiles/zero3w-imx290-iq.py imx290-iq.json
+pivariety_iq_ref=e4b941ec100589076a06c8cbaa0bdc3ae6fb98ae
+download "https://raw.githubusercontent.com/OpenHD/rockchip-iq-files/$pivariety_iq_ref/rockchip-iqfiles-rk356x/pivariety_IMX462_default.json" pivariety-iq.json \
+    4747957d35043b3b57a69179549c13436fefc3fbb935f0a82bbbdbd25e1f3351
+python3 /opt/additionalFiles/zero3w-pivariety-iq.py pivariety-iq.json /etc/iqfiles/pivariety_IMX462_default.json
+
+# The built-in ISP otherwise clears its async wait list before initramfs
+# can load the external sensor module.
+if ! grep -q 'initcall_blacklist=rkisp_clr_unready_dev,rkcif_clr_unready_dev' /etc/kernel/cmdline; then
+    sed -i '1s/$/ initcall_blacklist=rkisp_clr_unready_dev,rkcif_clr_unready_dev/' /etc/kernel/cmdline
+fi
+if [[ "${1:-}" == --sensors-only ]]; then
+    u-boot-update
+    exit 0
+fi
 
 # Reuse the board's CSI routing. The CAM_PWDN regulator already owns the
 # enable GPIO. Use the module name expected by the matching IQ file.
@@ -177,7 +206,7 @@ dtc -I dtb -O dts imx519.dtbo > imx519.dts
 sed -i 's/imx708/imx519/g' imx519.dts
 dtc -I dts -O dtb -o imx519.dtbo imx519.dts
 install -m 0644 imx519.dtbo /boot/dtbo/radxa-zero3-arducam-pivariety-imx519.dtbo.disabled
-python3 /opt/additionalFiles/zero3w-imx519-iq.py "$iq_profiles/imx708-color-lift.json"
+
 
 # Use the direct sensor on CAM0 under the existing Zero 3W IMX462 selection.
 dtc -I dtb -O dts imx519.dtbo > imx290.dts
@@ -191,9 +220,7 @@ fdtput -t x imx290.dtbo "$sensor" clock-frequency 2367b88
 fdtput -t s imx290.dtbo "$sensor" rockchip,camera-module-name imx290
 fdtput -t x imx290.dtbo "$sensor/port/endpoint" link-frequencies 0 1a8dca60
 install -m 0644 imx290.dtbo /boot/dtbo/radxa-zero3-arducam-pivariety-imx462.dtbo.disabled
-download "https://raw.githubusercontent.com/avafinger/rockchip-iqfiles/$iq_ref/Rock5/imx290_imx290_default.json" imx290-iq.json \
-    da5fd58fcf041542287bce6faa402ae54bc1e0f55b0236178af13f0c85a4d1a6
-python3 /opt/additionalFiles/zero3w-imx290-iq.py imx290-iq.json
+
 
 dtc -I dtb -O dts imx519.dtbo > pivariety.dts
 sed -i 's/imx519@1a/arducam-pivariety@c/g' pivariety.dts
@@ -208,15 +235,7 @@ fdtput -t x pivariety.dtbo "$bus" clock-frequency 2710
 fdtput -t s pivariety.dtbo "$sensor" rockchip,camera-module-name IMX462
 fdtput -t x pivariety.dtbo "$sensor/port/endpoint" link-frequencies 0 1a8dca60
 install -m 0644 pivariety.dtbo /boot/dtbo/radxa-zero3-imx462-pivariety.dtbo.disabled
-pivariety_iq_ref=e4b941ec100589076a06c8cbaa0bdc3ae6fb98ae
-download "https://raw.githubusercontent.com/OpenHD/rockchip-iq-files/$pivariety_iq_ref/rockchip-iqfiles-rk356x/pivariety_IMX462_default.json" pivariety-iq.json \
-    4747957d35043b3b57a69179549c13436fefc3fbb935f0a82bbbdbd25e1f3351
-python3 /opt/additionalFiles/zero3w-pivariety-iq.py pivariety-iq.json /etc/iqfiles/pivariety_IMX462_default.json
-# The built-in ISP otherwise clears its async wait list before initramfs
-# can load the external sensor module.
-if ! grep -q 'initcall_blacklist=rkisp_clr_unready_dev,rkcif_clr_unready_dev' /etc/kernel/cmdline; then
-    sed -i '1s/$/ initcall_blacklist=rkisp_clr_unready_dev,rkcif_clr_unready_dev/' /etc/kernel/cmdline
-fi
+
 u-boot-update
 for dtb in /usr/lib/linux-image-"$kernel"/rockchip/rk3566-radxa-zero3.dtb \
     /usr/lib/linux-image-"$kernel"/rockchip/rk3566-radxa-zero-3w-*.dtb; do

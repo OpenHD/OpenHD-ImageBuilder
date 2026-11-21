@@ -1,0 +1,127 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// CAM0 and CAM1 use the same carrier wiring on OCHIN V1 and V2.
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "radxa,cm3-rpi-cm4-io";
+};
+
+&{/} {
+    // One GPIO drives pin 17 on both FFCs. Both overlays merge this node.
+    ochin-camera-enable {
+        compatible = "regulator-fixed";
+        regulator-name = "ochin-camera-enable";
+        gpio = <&gpio4 17 0>; /* GPIO4_C1, active high */
+        enable-active-high;
+        regulator-boot-on;
+        regulator-always-on;
+    };
+    sensor_clock: CLOCK_NODE {
+        compatible = "fixed-clock";
+        #clock-cells = <0>;
+        clock-frequency = <SENSOR_CLOCK>; /* oscillator on the camera module */
+    };
+};
+
+&CAM_I2C {
+    status = "okay";
+#if CAM_I2C2
+    pinctrl-names = "default";
+    pinctrl-0 = <&i2c2m1_xfer>;
+#endif
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    SENSOR_NODE {
+        compatible = SENSOR_COMPATIBLE;
+        reg = <SENSOR_ADDRESS>;
+        clocks = <&sensor_clock>;
+        clock-frequency = <SENSOR_CLOCK>;
+#if CAMERA_IMX708
+        lens-focus = <&actuator>;
+#endif
+        rockchip,camera-module-index = <CAM_INDEX>;
+        rockchip,camera-module-facing = "back";
+        rockchip,camera-module-name = SENSOR_MODULE;
+        rockchip,camera-module-lens-name = "default";
+        port {
+            sensor_out: endpoint {
+                remote-endpoint = <&dphy_in>;
+                clock-lanes = <0>;
+                data-lanes = <1 2>;
+                link-frequencies = /bits/ 64 <SENSOR_LINK>;
+            };
+        };
+    };
+#if CAMERA_IMX708
+    actuator: dw9817@c {
+        compatible = "dongwoon,dw9817-vcm";
+        reg = <0xc>;
+    };
+#endif
+};
+
+&csi2_dphy0 { status = "disabled"; };
+&csi2_dphy_hw { status = "okay"; };
+&rkisp { status = "okay"; };
+&rkisp_mmu { status = "okay"; };
+
+&CAM_DPHY {
+    status = "okay";
+    ports {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        port@0 {
+            reg = <0>;
+            dphy_in: endpoint {
+                remote-endpoint = <&sensor_out>;
+                clock-lanes = <0>;
+                data-lanes = <1 2>;
+            };
+        };
+        port@1 {
+            reg = <1>;
+            dphy_out: endpoint { remote-endpoint = <&RECEIVER_IN>; };
+        };
+    };
+};
+
+#if CAM_INDEX == 0
+&mipi_csi2 {
+    status = "okay";
+    ports {
+        #address-cells = <1>;
+        #size-cells = <0>;
+        port@0 {
+            reg = <0>;
+            csi_in: endpoint { remote-endpoint = <&dphy_out>; };
+        };
+        port@1 {
+            reg = <1>;
+            csi_out: endpoint { remote-endpoint = <&cif_in>; };
+        };
+    };
+};
+&rkcif { status = "okay"; };
+&rkcif_mmu { status = "okay"; };
+&rkcif_mipi_lvds {
+    status = "okay";
+    port {
+        cif_in: endpoint { remote-endpoint = <&csi_out>; };
+    };
+};
+&rkcif_mipi_lvds_sditf {
+    status = "okay";
+    port {
+        cif_out: endpoint { remote-endpoint = <&isp_in>; };
+    };
+};
+#endif
+
+&CAM_ISP {
+    status = "okay";
+    port {
+        isp_in: endpoint { remote-endpoint = <&ISP_SOURCE>; };
+    };
+};

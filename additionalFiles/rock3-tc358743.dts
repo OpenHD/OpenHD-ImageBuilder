@@ -1,0 +1,105 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = BOARD_COMPATIBLE;
+};
+
+&{/} {
+    hdmi_refclk: openhd-hdmi-clock {
+        compatible = "fixed-clock";
+        #clock-cells = <0>;
+        clock-frequency = <27000000>;
+    };
+
+    openhd-hdmi-camera-power {
+        compatible = "regulator-fixed";
+        regulator-name = "openhd-hdmi-camera-power";
+        gpio = <POWER_GPIO>;
+        enable-active-high;
+        regulator-boot-on;
+        regulator-always-on;
+    };
+};
+
+&CAM_I2C {
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&CAM_I2C_PINS>;
+    #address-cells = <1>;
+    #size-cells = <0>;
+
+    hdmi-bridge@f {
+        compatible = "toshiba,tc358743";
+        reg = <0xf>;
+        clocks = <&hdmi_refclk>;
+        clock-names = "refclk";
+        rockchip,camera-module-index = <0>;
+        rockchip,camera-module-facing = "back";
+        rockchip,camera-module-name = "tc358743";
+        rockchip,camera-module-lens-name = "default";
+
+        port {
+            hdmi_out: endpoint {
+                data-lanes = <CSI_LANES>;
+                clock-lanes = <0>;
+                clock-noncontinuous;
+                link-frequencies = /bits/ 64 <297000000>;
+                remote-endpoint = <&dphy_in>;
+            };
+        };
+    };
+};
+
+&csi2_dphy_hw { status = "okay"; };
+
+&CAM_DPHY {
+    status = "okay";
+
+    ports {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        port@0 {
+            reg = <0>;
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            dphy_in: endpoint@1 {
+                reg = <1>;
+                data-lanes = <CSI_LANES>;
+                remote-endpoint = <&hdmi_out>;
+            };
+        };
+
+        port@1 {
+            reg = <1>;
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            dphy_out: endpoint@1 {
+                reg = <1>;
+                remote-endpoint = <&isp_in>;
+            };
+        };
+    };
+};
+
+&rkisp_vir0 {
+    status = "okay";
+
+    port {
+        #address-cells = <1>;
+        #size-cells = <0>;
+
+        isp_in: endpoint@0 {
+            reg = <0>;
+            remote-endpoint = <&dphy_out>;
+        };
+    };
+};
+
+&rkisp { status = "okay"; };
+&rkisp_mmu { status = "okay"; };
+&rkcif { status = "okay"; };
+&rkcif_mmu { status = "okay"; };

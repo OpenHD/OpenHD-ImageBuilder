@@ -1,0 +1,166 @@
+--- arducam-pivariety.c
++++ arducam-pivariety.c
+@@ -398 +398 @@
+-		v4l2_subdev_get_try_format(sd, fh->pad, 0);
++		v4l2_subdev_get_try_format(sd, fh->state, 0);
+@@ -454 +454 @@
+-				    struct v4l2_subdev_pad_config *sd_state,
++				    struct v4l2_subdev_state *sd_state,
+@@ -472 +472 @@
+-				     struct v4l2_subdev_pad_config *sd_state,
++				     struct v4l2_subdev_state *sd_state,
+@@ -505 +505 @@
+-			     struct v4l2_subdev_pad_config *sd_state,
++			     struct v4l2_subdev_state *sd_state,
+@@ -644 +644 @@
+-			     struct v4l2_subdev_pad_config *sd_state,
++			     struct v4l2_subdev_state *sd_state,
+@@ -767 +767 @@
+-			 struct v4l2_subdev_pad_config *sd_state,
++			 struct v4l2_subdev_state *sd_state,
+@@ -787 +787 @@
+-				   struct v4l2_subdev_pad_config *sd_state,
++				   struct v4l2_subdev_state *sd_state,
+@@ -955,2 +955,5 @@
+-	cfg->flags = V4L2_MBUS_CSI2_2_LANE | V4L2_MBUS_CSI2_CHANNEL_0 |
+-		     V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
++	cfg->bus.mipi_csi2.flags = 0;
++	cfg->bus.mipi_csi2.clock_lane = 0;
++	cfg->bus.mipi_csi2.num_data_lanes = 2;
++	cfg->bus.mipi_csi2.data_lanes[0] = 1;
++	cfg->bus.mipi_csi2.data_lanes[1] = 2;
+@@ -993 +996 @@
+-			   struct v4l2_subdev_pad_config *cfg,
++			   struct v4l2_subdev_state *cfg,
+@@ -1483 +1486 @@
+-	ret = v4l2_async_register_subdev_sensor_common(&pivariety->sd);
++	ret = v4l2_async_register_subdev_sensor(&pivariety->sd);
+@@ -1505 +1508 @@
+-static int pivariety_remove(struct i2c_client *client)
++static void pivariety_remove(struct i2c_client *client)
+@@ -1516 +1518,0 @@
+-	return 0;
+--- dw9817.c
++++ dw9817.c
+@@ -388 +388 @@
+-static int dw9807_remove(struct i2c_client *client)
++static void dw9807_remove(struct i2c_client *client)
+@@ -400 +399,0 @@
+-	return 0;
+--- imx290.c
++++ imx290.c
+@@ -543 +543 @@
+-				 struct v4l2_subdev_pad_config *cfg,
++				 struct v4l2_subdev_state *cfg,
+@@ -555 +555 @@
+-				  struct v4l2_subdev_pad_config *cfg,
++				  struct v4l2_subdev_state *cfg,
+@@ -577 +577 @@
+-			  struct v4l2_subdev_pad_config *cfg,
++			  struct v4l2_subdev_state *cfg,
+@@ -623 +623 @@
+-			  struct v4l2_subdev_pad_config *cfg,
++			  struct v4l2_subdev_state *cfg,
+@@ -676 +676 @@
+-				  struct v4l2_subdev_pad_config *cfg)
++				  struct v4l2_subdev_state *cfg)
+@@ -965,2 +965,5 @@
+-	config->flags = V4L2_MBUS_CSI2_2_LANE | V4L2_MBUS_CSI2_CHANNEL_0 |
+-			V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
++	config->bus.mipi_csi2.flags = 0;
++	config->bus.mipi_csi2.clock_lane = 0;
++	config->bus.mipi_csi2.num_data_lanes = 2;
++	config->bus.mipi_csi2.data_lanes[0] = 1;
++	config->bus.mipi_csi2.data_lanes[1] = 2;
+@@ -1003 +1006 @@
+-			   struct v4l2_subdev_pad_config *cfg,
++			   struct v4l2_subdev_state *cfg,
+@@ -1235 +1238 @@
+-	ret = v4l2_async_register_subdev_sensor_common(&imx290->sd);
++	ret = v4l2_async_register_subdev_sensor(&imx290->sd);
+@@ -1267 +1270 @@
+-static int imx290_remove(struct i2c_client *client)
++static void imx290_remove(struct i2c_client *client)
+@@ -1283 +1285,0 @@
+-	return 0;
+--- imx519.c
++++ imx519.c
+@@ -1119 +1119 @@
+-		v4l2_subdev_get_try_format(sd, fh->pad, IMAGE_PAD);
++		v4l2_subdev_get_try_format(sd, fh->state, IMAGE_PAD);
+@@ -1131 +1131 @@
+-	try_crop = v4l2_subdev_get_try_crop(sd, fh->pad, IMAGE_PAD);
++	try_crop = v4l2_subdev_get_try_crop(sd, fh->state, IMAGE_PAD);
+@@ -1259 +1259 @@
+-				 struct v4l2_subdev_pad_config *cfg,
++				 struct v4l2_subdev_state *cfg,
+@@ -1283 +1283 @@
+-				  struct v4l2_subdev_pad_config *cfg,
++				  struct v4l2_subdev_state *cfg,
+@@ -1344 +1344 @@
+-				 struct v4l2_subdev_pad_config *cfg,
++				 struct v4l2_subdev_state *cfg,
+@@ -1424 +1424 @@
+-				 struct v4l2_subdev_pad_config *cfg,
++				 struct v4l2_subdev_state *cfg,
+@@ -1472 +1472 @@
+-__imx519_get_pad_crop(struct imx519 *imx519, struct v4l2_subdev_pad_config *cfg,
++__imx519_get_pad_crop(struct imx519 *imx519, struct v4l2_subdev_state *cfg,
+@@ -1486 +1486 @@
+-				struct v4l2_subdev_pad_config *cfg,
++				struct v4l2_subdev_state *cfg,
+@@ -1779,2 +1779,5 @@
+-	config->flags = V4L2_MBUS_CSI2_2_LANE | V4L2_MBUS_CSI2_CHANNEL_0 |
+-			V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
++	config->bus.mipi_csi2.flags = 0;
++	config->bus.mipi_csi2.clock_lane = 0;
++	config->bus.mipi_csi2.num_data_lanes = 2;
++	config->bus.mipi_csi2.data_lanes[0] = 1;
++	config->bus.mipi_csi2.data_lanes[1] = 2;
+@@ -1796 +1799 @@
+-				     struct v4l2_subdev_pad_config *cfg,
++				     struct v4l2_subdev_state *cfg,
+@@ -2121 +2124 @@
+-	ret = v4l2_async_register_subdev_sensor_common(&imx519->sd);
++	ret = v4l2_async_register_subdev_sensor(&imx519->sd);
+@@ -2143 +2146 @@
+-static int imx519_remove(struct i2c_client *client)
++static void imx519_remove(struct i2c_client *client)
+@@ -2157 +2159,0 @@
+-	return 0;
+--- imx708.c
++++ imx708.c
+@@ -950 +950 @@
+-		v4l2_subdev_get_try_format(sd, fh->pad, 0);
++		v4l2_subdev_get_try_format(sd, fh->state, 0);
+@@ -1149 +1149 @@
+-				 struct v4l2_subdev_pad_config *sd_state,
++				 struct v4l2_subdev_state *sd_state,
+@@ -1162 +1162 @@
+-				  struct v4l2_subdev_pad_config *sd_state,
++				  struct v4l2_subdev_state *sd_state,
+@@ -1183 +1183 @@
+-				 struct v4l2_subdev_pad_config *sd_state,
++				 struct v4l2_subdev_state *sd_state,
+@@ -1241 +1241 @@
+-				 struct v4l2_subdev_pad_config *sd_state,
++				 struct v4l2_subdev_state *sd_state,
+@@ -1572,2 +1572,5 @@
+-	config->flags = V4L2_MBUS_CSI2_2_LANE | V4L2_MBUS_CSI2_CHANNEL_0 |
+-			V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
++	config->bus.mipi_csi2.flags = 0;
++	config->bus.mipi_csi2.clock_lane = 0;
++	config->bus.mipi_csi2.num_data_lanes = 2;
++	config->bus.mipi_csi2.data_lanes[0] = 1;
++	config->bus.mipi_csi2.data_lanes[1] = 2;
+@@ -1748 +1751 @@
+-	struct v4l2_subdev_pad_config *sd_state,
++	struct v4l2_subdev_state *sd_state,
+@@ -2099 +2102 @@
+-	ret = v4l2_async_register_subdev_sensor_common(&imx708->subdev);
++	ret = v4l2_async_register_subdev_sensor(&imx708->subdev);
+@@ -2125 +2128 @@
+-static int imx708_remove(struct i2c_client *client)
++static void imx708_remove(struct i2c_client *client)
+@@ -2141 +2143,0 @@
+-	return 0;

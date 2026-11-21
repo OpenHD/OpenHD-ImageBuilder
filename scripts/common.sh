@@ -152,10 +152,11 @@ on_chroot() {
     df -h
     cp -r "${STAGE_DIR}/../../additionalFiles" "${MNT_DIR}/opt"
     fi
-    if [[ "${OPENHD_ZERO3W_IMX708:-false}" == true ]]; then
+    if [[ "${OPENHD_ZERO3W_IMX708:-false}" == true ||
+          "${OS:-}" == radxa-debian-rock-cm3 || -n "${OPENHD_OCHIN_CARRIER:-}" ]]; then
         install -m 0644 "${BASE_DIR}/additionalFiles/"{configure-zero3w-imx708.sh,zero3w-imx708-5.10.patch,zero3w-dw9817-5.10.patch,zero3w-imx708-media.sh,zero3w-imx519-5.10.patch,zero3w-imx519-iq.py,zero3w-imx519-media.sh,zero3w-imx290-5.10.patch,zero3w-imx290-iq.py,zero3w-imx290-media.sh} \
             "${MNT_DIR}/opt/additionalFiles/"
-        install -m 0644 "${BASE_DIR}/additionalFiles/"{zero3w-pivariety-5.10.patch,zero3w-pivariety-iq.py} \
+        install -m 0644 "${BASE_DIR}/additionalFiles/"{zero3w-pivariety-5.10.patch,zero3w-pivariety-iq.py,rk356x-camera-6.1.patch} \
             "${MNT_DIR}/opt/additionalFiles/"
     fi
     # Refresh the image policy even when updating an existing base image that
@@ -168,6 +169,10 @@ on_chroot() {
         "${MNT_DIR}/opt/additionalFiles/configure-rpi-splash.sh"
     install -m 0644 "${BASE_DIR}/additionalFiles/install-current-components.sh" \
         "${MNT_DIR}/opt/additionalFiles/install-current-components.sh"
+    install -m 0644 "${BASE_DIR}/additionalFiles/"{install-rock3-hdmi-csi.sh,rock3-tc358743.dts,rock3-rk628.dts} \
+        "${MNT_DIR}/opt/additionalFiles/"
+    install -m 0644 "${BASE_DIR}/additionalFiles/"{install-ochin-cameras.sh,ochin-camera.dts,ochin-camera-media.sh} \
+        "${MNT_DIR}/opt/additionalFiles/"
     install -m 0644 "${BASE_DIR}/additionalFiles/"{configure-rockchip-native.sh,rockchip-mali-runtime.py,rockchip-silent-boot.py} \
         "${MNT_DIR}/opt/additionalFiles/"
     install -m 0644 "${BASE_DIR}/additionalFiles/install-rockchip-iq-files.sh" \

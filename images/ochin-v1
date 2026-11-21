@@ -1,0 +1,2 @@
+source "$(dirname "${BASH_SOURCE[0]}")/radxa-cm3"
+OPENHD_OCHIN_CARRIER=v1

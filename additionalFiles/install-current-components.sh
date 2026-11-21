@@ -50,6 +50,13 @@ if [[ -f /opt/additionalFiles/image-release ]]; then
 fi
 
 bash "$(dirname "$0")/install-rockchip-iq-files.sh"
+bash "$(dirname "$0")/install-rock3-hdmi-csi.sh"
+if [[ -n "${OPENHD_OCHIN_CARRIER:-}" ]] &&
+   ! grep -Fq '"id": "ochin-cm3"' /usr/share/openhd/settings/imagewriter-settings.json; then
+  echo 'The selected OpenHD package does not include the OCHIN Air camera profiles.' >&2
+  exit 1
+fi
+bash "$(dirname "$0")/install-ochin-cameras.sh"
 if [[ "${OPENHD_ZERO3W_IMX708:-false}" == true ]]; then
   apt-get -y --no-install-recommends -o Acquire::Retries=5 install \
     build-essential cmake pkg-config patch device-tree-compiler v4l-utils

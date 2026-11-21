@@ -15,6 +15,8 @@ on:
           - openhd-hardware
           - full
           - radxa-zero3w
+          - ochin-v1
+          - ochin-v2
           - experimental
           - x86
           - x21-update
@@ -404,12 +406,12 @@ jobs:
   # =========================================================================
   full-images:
     name: full-${{ matrix.target }}
-    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'full' || inputs.target == 'radxa-zero3w'
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'full' || inputs.target == 'radxa-zero3w' || inputs.target == 'ochin-v1' || inputs.target == 'ochin-v2'
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
-        target: ${{ fromJSON(inputs.target == 'radxa-zero3w' && '["radxa-zero3w"]' || '["rock5a","rock5b","radxa-zero3w","radxa-rock3a"]') }}
+        target: ${{ fromJSON((inputs.target == 'radxa-zero3w' || inputs.target == 'ochin-v1' || inputs.target == 'ochin-v2') && format('["{0}"]', inputs.target) || '["rock5a","rock5b","radxa-zero3w","radxa-rock3a"]') }}
     steps:
       - uses: actions/checkout@v7
       - name: Prepare development image
