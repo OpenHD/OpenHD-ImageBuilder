@@ -16,6 +16,7 @@ on:
           - full
           - radxa-zero3w
           - experimental
+          - x86
           - x21-update
           - orqa
           - luckfox
@@ -44,6 +45,13 @@ env:
   X21_COMPONENT_BASE_URL: https://dl.cloudsmith.io/public/openhd/dev-release/raw/files
 
 jobs:
+  x86-openhd-os:
+    name: Build OpenHD-OS on x86
+    if: github.event_name != 'workflow_dispatch' || inputs.target != 'publish-pi'
+    uses: OpenHD/OpenHD-OS/.github/workflows/build.yml@main
+    with:
+      output: synced-images
+
   luckfox-pico-images:
     name: Luckfox Pico application overlay images
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'luckfox' || inputs.target == 'luckfox-pico-mini-nand' || inputs.target == 'luckfox-pico-pro-max-nand'
