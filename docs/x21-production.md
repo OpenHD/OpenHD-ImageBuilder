@@ -15,15 +15,15 @@ SysUtils components that share the base SDK and Buildroot revision. Application
 source revisions may advance independently; kernel/library ABI compatibility
 is required. There is no fallback to an older full firmware image.
 
-Outputs are:
+The workflow publishes three separate GitHub Actions downloads:
 
-- `firmware-*.zip`: complete firmware with the selected base kernel/rootfs and
-  newly assembled applications, suitable for the normal X21 flashing tools.
-- `OpenHD-X21B-full-*.ohd_base`: SWUpdate package with applications plus the
-  inactive A/B bootloader, kernel and rootfs. This is the normal published update.
-- `OpenHD-X21B-applications-*.ohd`: applications only, retained as an artifact.
-  It does not install kernel or camera driver changes.
-- Base/application manifests and full-update SHA256 for provenance/verification.
+- `firmware-x21b-*.zip`: select the downloaded ZIP directly in ImageWriter
+  for USB flashing in MaskROM or Loader mode. It includes both build manifests.
+- `OpenHD-X21B-full-*.zip`: extract the `.ohd_base` before copying it to the
+  update card. It updates the applications, bootloader, kernel and rootfs
+  in the inactive A/B slot. The ZIP also contains the SHA256 sidecar.
+- `OpenHD-X21B-applications-*.zip`: extract the `.ohd` before copying it to
+  the update card. This package updates applications only.
 
 The updater chooses the inactive slot for a full update. Use the standard
 partition layout: 100 MiB OHD and 64 MiB A/B boot/rootfs. ImageBuilder rejects
