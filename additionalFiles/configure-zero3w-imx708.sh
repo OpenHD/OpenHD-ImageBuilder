@@ -14,9 +14,17 @@ if [[ "${1:-}" != --sensors-only ]]; then
         exit 1
     fi
     needed=$(readelf -d "$binary")
-    grep -Fq '[librockchip_mpp.so.1]' <<<"$needed"
-    if grep -Eq 'NEEDED.*libgst' <<<"$needed"; then
-        echo 'The Zero 3W executable links GStreamer.' >&2
+    if ! grep -Fq '[librockchip_mpp.so.1]' <<<"$needed"; then
+        echo 'The Zero 3W executable lacks native MPP video support.' >&2
+        exit 1
+    fi
+    # Match OpenHD packaging: USB microphone capture uses GStreamer appsink.
+    if ! grep -Fq '[libgstapp-1.0.so.0]' <<<"$needed"; then
+        echo 'The Zero 3W executable lacks GStreamer audio capture support.' >&2
+        exit 1
+    fi
+    if grep -Eq 'NEEDED.*libgst(video|sdp)-' <<<"$needed"; then
+        echo 'The Zero 3W executable must use native MPP video.' >&2
         exit 1
     fi
 fi
