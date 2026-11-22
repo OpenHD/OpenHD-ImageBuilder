@@ -209,10 +209,21 @@ jobs:
       - name: Put the updated OHD partition into the full X21B firmware
         run: |
           set -euo pipefail
+          pack_tools="${RUNNER_TEMP}/x21-pack-tools"
+          mkdir -p "${pack_tools}"
+          pack_url="https://raw.githubusercontent.com/OpenHD/luckfox-pico-sdk/00aee4108ab9ee72f21d0b1ab83fb0afd5cac134/tools/linux/Linux_Pack_Firmware"
+          curl -fsSL --retry 5 "${pack_url}/afptool" -o "${pack_tools}/afptool"
+          curl -fsSL --retry 5 "${pack_url}/rkImageMaker" -o "${pack_tools}/rkImageMaker"
+          (cd "${pack_tools}" && sha256sum -c <<'EOF'
+          c5ff2f9ac587bf47c808c1a0c1e2f78a6d9c582f7a6fb9e8be5beb7b17b634fd  afptool
+          a26367480183188185b2415aa14cc8c8e748f3f9c1592602227e3c97536b8866  rkImageMaker
+          EOF
+          )
+          chmod +x "${pack_tools}/afptool" "${pack_tools}/rkImageMaker"
           bash ./scripts/repack_x21_firmware.sh \
             "${GITHUB_WORKSPACE}/x21-output/firmware-base.zip" \
             "${GITHUB_WORKSPACE}/x21-output/OpenHD-X21B-applications-${DT}.ohd" \
-            "${GITHUB_WORKSPACE}/x21-output/firmware-${DT}.zip"
+            "${GITHUB_WORKSPACE}/x21-output/firmware-${DT}.zip" "${pack_tools}"
           zip -q -j "x21-output/firmware-${DT}.zip" \
             x21-output/base-manifest.json x21-output/applications-manifest.json
           rm x21-output/firmware-base.zip
