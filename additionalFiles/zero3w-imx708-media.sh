@@ -6,7 +6,7 @@ mode_file=/run/openhd-zero3w-imx708-mode
 ready_file=/run/openhd-zero3w-imx708-ready
 if [[ ${1:-} == --select ]]; then
     case ${2:-} in
-        60|120) ;;
+        30|60|120) ;;
         *) exit 2 ;;
     esac
     exec 9>"$mode_file.lock"
@@ -31,16 +31,28 @@ fi
 rm -f "$ready_file"
 fps=$(cat "$mode_file" 2>/dev/null || python3 -c '
 import json
+from pathlib import Path
+
 try:
-    with open("/usr/local/share/openhd/video/ROCK_3_IMX708_0.json") as config:
-        fps = json.load(config)["streamed_video_format"]["framerate"]
-except (OSError, ValueError, KeyError):
+    camera = Path("/usr/local/share/openhd/video/ROCK_3_IMX708_0.json")
+    fps = json.loads(camera.read_text())["streamed_video_format"]["framerate"]
+except (OSError, ValueError, KeyError, TypeError):
     fps = 60
-print(120 if fps == 120 else 60)
+    try:
+        sysutils = Path("/usr/local/share/OpenHD/SysUtils/config.json")
+        settings = json.loads(sysutils.read_text())
+        if settings.get("camera_type") == 93:
+            fps = {"1280x720@30": 30, "1280x720@120": 120}.get(
+                settings.get("camera_resolution_fps"), 60)
+    except (OSError, ValueError, AttributeError, TypeError):
+        pass
+print(fps if fps in (30, 60, 120) else 60)
 ')
 mode=1920x1080
 profile=imx708-color-lift.json
-if [[ $fps == 120 ]]; then
+if [[ $fps == 30 ]]; then
+    profile=imx708-color-lift-30.json
+elif [[ $fps == 120 ]]; then
     mode=1536x864
     profile=imx708-color-lift-120.json
 fi

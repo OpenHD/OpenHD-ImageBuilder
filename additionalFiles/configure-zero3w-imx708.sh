@@ -65,9 +65,26 @@ if [[ "$kernel" == 6.1.* ]]; then
     patch -p0 < /opt/additionalFiles/rk356x-camera-6.1.patch
 fi
 printf 'obj-m += imx708.o dw9817.o imx519.o imx290.o arducam-pivariety.o\n' > Makefile
+if [[ "${1:-}" != --sensors-only ]]; then
+    imx415_ref=00eb929841fd2231793b888c167594d14ae7b274
+    imx415_source="https://raw.githubusercontent.com/radxa/kernel/$imx415_ref/drivers/media"
+    download "$imx415_source/i2c/imx415.c" openhd_imx415.c \
+        5dca98899cb5d01277595d3ecd430f52b707766e30203757d4b381c731610529
+    download "$imx415_source/platform/rockchip/isp/rkisp_tb_helper.h" rkisp_tb_helper.h \
+        8c16dc3f21a117bb8c13521d4439b1b58fa7893f686d5935fe44a68a37ee4006
+    # The stock kernel has imx415 built in. Keep a distinct binding for the
+    # driver with the binned mode while preserving the IQ sensor name.
+    sed -i -e 's|"../platform/rockchip/isp/rkisp_tb_helper.h"|"rkisp_tb_helper.h"|' \
+           -e 's/"sony,imx415"/"openhd,zero3w-imx415"/g' \
+           -e 's/\.name = IMX415_NAME,/.name = "openhd-imx415",/' openhd_imx415.c
+    printf 'obj-m += openhd_imx415.o\n' >> Makefile
+fi
 make -C "$headers" ARCH=arm64 CROSS_COMPILE= M="$work" modules
 install -d "/lib/modules/$kernel/updates/openhd"
 install -m 0644 imx708.ko dw9817.ko imx519.ko imx290.ko arducam-pivariety.ko "/lib/modules/$kernel/updates/openhd/"
+if [[ -f openhd_imx415.ko ]]; then
+    install -m 0644 openhd_imx415.ko "/lib/modules/$kernel/updates/openhd/"
+fi
 depmod -a "$kernel"
 # The Devourer stage can regenerate initramfs for both installed kernels.
 # Include these drivers only in the initramfs built for the matching ABI.
@@ -85,6 +102,9 @@ force_load imx708
 force_load imx519
 force_load imx290
 force_load arducam_pivariety
+if [ -f "/lib/modules/${version:-}/updates/openhd/openhd_imx415.ko" ]; then
+    force_load openhd_imx415
+fi
 EOF
 chmod 0755 /etc/initramfs-tools/hooks/openhd-zero3w-camera
 update-initramfs -u -k "$kernel"
@@ -176,6 +196,23 @@ if [[ "${1:-}" == --sensors-only ]]; then
     exit 0
 fi
 
+imx415_iq_repo=https://gitlab.com/firefly-linux/external/camera_engine_rkaiq
+imx415_iq_ref=da2677af69358747ace62dcf8970f8dc670f41a4
+imx415_iq_file=imx415_CMK-OT2022-PX1_IR0147-50IRC-8M-F20.json
+imx415_iq_path=iqfiles/isp21/$imx415_iq_file
+if ! curl -fsSL --retry 2 "$imx415_iq_repo/-/raw/$imx415_iq_ref/$imx415_iq_path" -o imx415-iq.json; then
+    # GitLab also exposes the same pinned blob via Git when raw HTTP is rate limited.
+    git init -q imx415-iq
+    git -C imx415-iq fetch -q --depth 1 "$imx415_iq_repo.git" "$imx415_iq_ref"
+    git -C imx415-iq show "FETCH_HEAD:$imx415_iq_path" > imx415-iq.json
+fi
+printf '%s  %s\n' 8fd0cb6446e75a09b97a4b7d0fa421f3a5e5f5bef3557f7d815a794e524b9a54 imx415-iq.json | sha256sum -c -
+python3 /opt/additionalFiles/zero3w-fixed-fps-iq.py imx415-iq.json "/etc/iqfiles/$imx415_iq_file" 30 --imx415-binned
+for profile in /etc/iqfiles/{imx219,ov5647}_*.json; do
+    [[ -f "$profile" ]] || continue
+    python3 /opt/additionalFiles/zero3w-fixed-fps-iq.py "$profile" "$profile" 30
+done
+
 # Reuse the board's CSI routing. The CAM_PWDN regulator already owns the
 # enable GPIO. Use the module name expected by the matching IQ file.
 if [[ ! -f "$overlay.disabled.openhd-original" ]]; then
@@ -215,6 +252,25 @@ sed -i 's/imx708/imx519/g' imx519.dts
 dtc -I dts -O dtb -o imx519.dtbo imx519.dts
 install -m 0644 imx519.dtbo /boot/dtbo/radxa-zero3-arducam-pivariety-imx519.dtbo.disabled
 
+# CAM0 modules with their own 37.125 MHz oscillator can use the same
+# four-lane wiring and connector power as the other Zero 3W overlays.
+dtc -I dtb -O dts imx519.dtbo > imx415.dts
+sed -i 's/imx519/imx415/g' imx415.dts
+dtc -I dts -O dtb -o imx415.dtbo imx415.dts
+sensor="$bus/imx415@1a"
+fdtput -t s imx415.dtbo /metadata title 'Enable Sony IMX415 on Zero 3W'
+fdtput -t s imx415.dtbo /metadata description 'Enable a four-lane IMX415 module with onboard clock on CAM0.'
+fdtput -t s imx415.dtbo "$sensor" compatible openhd,zero3w-imx415
+fdtput -t x imx415.dtbo /fragment@0/__overlay__/external-camera-clock-24m clock-frequency 2367b88
+fdtput -t x imx415.dtbo "$sensor" clock-frequency 2367b88
+fdtput -t s imx415.dtbo "$sensor" rockchip,camera-module-name CMK-OT2022-PX1
+fdtput -t s imx415.dtbo "$sensor" rockchip,camera-module-lens-name IR0147-50IRC-8M-F20
+fdtput -t x imx415.dtbo "$sensor/port/endpoint" link-frequencies 0 11b3dc40
+fdtput -t u imx415.dtbo "$sensor/port/endpoint" data-lanes 1 2 3 4
+dphy_endpoint=$(fdtget -t s imx415.dtbo /__symbols__ mipi_in_ucam0)
+fdtput -t u imx415.dtbo "$dphy_endpoint" data-lanes 1 2 3 4
+install -m 0644 imx415.dtbo /boot/dtbo/radxa-zero3-imx415.dtbo.disabled
+
 
 # Use the direct sensor on CAM0 under the existing Zero 3W IMX462 selection.
 dtc -I dtb -O dts imx519.dtbo > imx290.dts
@@ -250,6 +306,7 @@ for dtb in /usr/lib/linux-image-"$kernel"/rockchip/rk3566-radxa-zero3.dtb \
     [[ -f "$dtb" ]] || continue
     fdtoverlay -i "$dtb" -o merged.dtb imx708.dtbo
     fdtoverlay -i "$dtb" -o merged.dtb imx519.dtbo
+    fdtoverlay -i "$dtb" -o merged.dtb imx415.dtbo
     fdtoverlay -i "$dtb" -o merged.dtb imx290.dtbo
     fdtoverlay -i "$dtb" -o merged.dtb pivariety.dtbo
 done
@@ -293,11 +350,13 @@ EOF
 install -D -m 0755 /opt/additionalFiles/zero3w-imx708-media.sh /usr/local/libexec/openhd-zero3w-imx708-media
 install -D -m 0755 /opt/additionalFiles/zero3w-imx519-media.sh /usr/local/libexec/openhd-zero3w-imx519-media
 install -D -m 0755 /opt/additionalFiles/zero3w-imx290-media.sh /usr/local/libexec/openhd-zero3w-imx290-media
+install -D -m 0755 /opt/additionalFiles/zero3w-imx415-media.sh /usr/local/libexec/openhd-zero3w-imx415-media
 install -d /etc/systemd/system/rkaiq_3A.service.d
 cat >/etc/systemd/system/rkaiq_3A.service.d/40-openhd-imx708.conf <<'EOF'
 [Service]
 ExecStartPre=/usr/local/libexec/openhd-zero3w-imx708-media
 ExecStartPre=/usr/local/libexec/openhd-zero3w-imx519-media
 ExecStartPre=/usr/local/libexec/openhd-zero3w-imx290-media
+ExecStartPre=/usr/local/libexec/openhd-zero3w-imx415-media
 EOF
 systemctl enable rkaiq_3A.service openhd-sys-utils.service

@@ -58,6 +58,17 @@ color calibration remain bench work.
 
 [Avaf's tuning and compatibility table](https://github.com/avafinger/rockchip-iqfiles)
 
+## Sony IMX415
+
+Select **IMX415** on the Zero 3W in ImageWriter or under **Sony** in QOpenHD.
+The image installs the Radxa IMX415 driver, a CAM0 overlay and an ISP21 IQ
+profile derived from Firefly's IMX415 tuning. The overlay expects a four-lane
+module at I²C address `0x1a` with an onboard 37.125 MHz clock and wiring
+compatible with the Zero 3W CSI connector.
+
+The sensor uses RAW12 binning and the ISP crops the active area to 1920x1080.
+RKAIQ keeps 30 fps fixed while controlling exposure and gain.
+
 ## Direct IMX290-compatible camera
 
 Select IMX462 for the direct sensor tested on CAM0.

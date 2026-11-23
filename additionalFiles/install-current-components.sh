@@ -59,7 +59,7 @@ fi
 bash "$(dirname "$0")/install-ochin-cameras.sh"
 if [[ "${OPENHD_ZERO3W_IMX708:-false}" == true ]]; then
   apt-get -y --no-install-recommends -o Acquire::Retries=5 install \
-    build-essential cmake pkg-config patch device-tree-compiler v4l-utils
+    build-essential cmake pkg-config patch device-tree-compiler v4l-utils git
   bash "$(dirname "$0")/configure-zero3w-imx708.sh"
 fi
 bash "$(dirname "$0")/configure-rockchip-native.sh"

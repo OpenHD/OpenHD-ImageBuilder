@@ -28,7 +28,8 @@ except (OSError, ValueError, KeyError, TypeError):
         settings = json.loads(Path("/usr/local/share/OpenHD/SysUtils/config.json").read_text())
         if settings.get("camera_type") == 94:
             fmt = settings.get("camera_resolution_fps", "")
-            fps = {"1920x1080@30": 30, "1280x720@120": 120}.get(fmt, 60)
+            fps = {"1280x720@30": 30, "1920x1080@30": 30,
+                   "1280x720@120": 120}.get(fmt, 60)
     except (OSError, ValueError, AttributeError):
         pass
 print(fps if fps in (30, 60, 120) else 60)
