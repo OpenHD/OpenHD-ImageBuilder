@@ -61,5 +61,6 @@ if [[ "${OPENHD_ZERO3W_IMX708:-false}" == true ]]; then
   apt-get -y --no-install-recommends -o Acquire::Retries=5 install \
     build-essential cmake pkg-config patch device-tree-compiler v4l-utils git
   bash "$(dirname "$0")/configure-zero3w-imx708.sh"
+  bash "$(dirname "$0")/configure-zero3w-uart.sh"
 fi
 bash "$(dirname "$0")/configure-rockchip-native.sh"

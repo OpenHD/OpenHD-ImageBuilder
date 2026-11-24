@@ -43,6 +43,19 @@ Booting directly into 720p120 reached 120 fps with native H.265 on the bench.
 Changing the frame rate on a running unit can stall capture. Reboot Air after
 selecting 720p120 if video stalls, or select a 60 fps mode for normal operation.
 
+## Flight-controller UART
+
+The image enables **UART4 M1** in the Device Tree and includes the overlay in
+the default boot entries. Select `/dev/ttyS4` for flight-controller telemetry
+under **Ports → Air Unit** and set the baud rate to match the controller.
+
+ImageBuilder generates the Extlinux configuration with `prompt 0` and
+`timeout 0`. A local diversion preserves this behavior when SysUtils or a
+kernel upgrade regenerates the configuration. UART2 M0 stays available for
+boot diagnostics. Extlinux settings apply after U-Boot's earlier serial
+autoboot check, so a separate bootloader change and a hardware boot test are
+needed before treating UART2 M0 as a general-purpose telemetry port.
+
 ## Arducam IMX519
 
 The same image stages the IMX519 driver, Zero 3W overlay, and RKAIQ 5 profiles.

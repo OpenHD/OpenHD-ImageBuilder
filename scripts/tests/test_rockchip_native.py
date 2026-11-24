@@ -109,6 +109,27 @@ class NativeImages(unittest.TestCase):
             self.assertFalse(dropin.exists())
             self.assertIn('repaint-window=16', weston.read_text())
 
+    def test_zero3w_menu_wrapper_disables_the_vendor_prompt(self):
+        source = ROOT / 'additionalFiles/zero3w-u-boot-update.sh'
+        with tempfile.TemporaryDirectory() as fixture:
+            root = Path(fixture)
+            vendor = root / 'u-boot-update.distrib'
+            vendor.write_text("""#!/bin/sh
+U_BOOT_PROMPT=0
+U_BOOT_TIMEOUT=0
+_CONFIG="default l0
+menu title U-Boot menu
+prompt 1
+timeout ${U_BOOT_TIMEOUT}"
+printf '%s\\n' "$_CONFIG"
+""")
+            wrapper = root / 'u-boot-update'
+            wrapper.write_text(source.read_text().replace('/usr/sbin/u-boot-update.distrib', str(vendor)))
+            result = subprocess.run(['sh', str(wrapper)], check=True, capture_output=True, text=True)
+            self.assertEqual(result.stdout.splitlines(), [
+                'default l0', 'menu title U-Boot menu', 'prompt 0', 'timeout 0'
+            ])
+
     def test_silent_boot_preserves_root_device_tree_and_serial(self):
         quiet = module('rockchip-silent-boot')
         with tempfile.TemporaryDirectory() as fixture:
