@@ -206,7 +206,7 @@ if ! curl -fsSL --retry 2 "$imx415_iq_repo/-/raw/$imx415_iq_ref/$imx415_iq_path"
     git -C imx415-iq fetch -q --depth 1 "$imx415_iq_repo.git" "$imx415_iq_ref"
     git -C imx415-iq show "FETCH_HEAD:$imx415_iq_path" > imx415-iq.json
 fi
-printf '%s  %s\n' 8fd0cb6446e75a09b97a4b7d0fa421f3a5e5f5bef3557f7d815a794e524b9a54 imx415-iq.json | sha256sum -c -
+printf '%s  %s\n' 76295b0b5e5ac8051de504c808b5e0a55630874cce745a7d11b34df225323a7a imx415-iq.json | sha256sum -c -
 python3 /opt/additionalFiles/zero3w-fixed-fps-iq.py imx415-iq.json "/etc/iqfiles/$imx415_iq_file" 30 --imx415-binned
 for profile in /etc/iqfiles/{imx219,ov5647}_*.json; do
     [[ -f "$profile" ]] || continue
