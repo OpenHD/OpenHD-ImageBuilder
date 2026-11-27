@@ -73,8 +73,10 @@ if [[ "${OS}" == "radxa-debian-rock-cm3" ]]; then
     sudo sed -i 's/^ExecStart=.*/ExecStart=-\/sbin\/agetty --autologin root --noclear %I $TERM/' /lib/systemd/system/getty@.service
     cp /opt/additionalFiles/issue-new.txt /conf/issue.txt
     echo "remove_packages rsetup-config-first-boot" > /conf/before.txt
-    sudo echo "/dev/mmcblk1p4  /Videos  auto  defaults  0  2" | sudo tee -a /etc/fstab
-    mkdir -p /Videos
+    if [[ "${OPENHD_ZERO3W_DISPLAY:-false}" != true ]]; then
+        sudo echo "/dev/mmcblk1p4  /Videos  auto  defaults  0  2" | sudo tee -a /etc/fstab
+        mkdir -p /Videos
+    fi
     else
     cp /opt/additionalFiles/issue-new.txt /conf/issue.txt
     #autologin as root

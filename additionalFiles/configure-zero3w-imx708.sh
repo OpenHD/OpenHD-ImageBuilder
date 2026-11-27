@@ -345,6 +345,7 @@ After=rkaiq_3A.service
 ExecStart=
 ExecStart=/usr/local/libexec/openhd-zero3w
 Environment=LD_LIBRARY_PATH=/usr/local/lib/openhd-mpp
+Environment=OPENHD_REQUIRE_SYSUTILS=1
 EOF
 
 install -D -m 0755 /opt/additionalFiles/zero3w-imx708-media.sh /usr/local/libexec/openhd-zero3w-imx708-media

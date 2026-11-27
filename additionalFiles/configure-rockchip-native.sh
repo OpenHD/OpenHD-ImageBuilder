@@ -39,12 +39,17 @@ touch "$root/etc/qopenhd-rockchip/native-video-enabled"
 rm -f "$root/etc/systemd/system/qopenhd.service.d/30-rockchip-native.conf"
 zero3w_dropin="$root/etc/systemd/system/qopenhd.service.d/40-zero3w-display.conf"
 if [[ "${OPENHD_ZERO3W_DISPLAY:-false}" == true ]]; then
+  # SysUtils identifies ImageWriter storage by label, independent of SD/eMMC order.
+  if [[ -f "$root/etc/fstab" ]]; then
+    sed -i -E '\|^[[:space:]]*/dev/mmcblk1p4[[:space:]]+/Videos[[:space:]]|d' "$root/etc/fstab"
+  fi
   # Keep the QML HUD on shared memory while Weston imports native NV12 video.
   mkdir -p "$(dirname "$zero3w_dropin")"
   cat > "$zero3w_dropin" <<'EOF'
 [Service]
 Environment=QT_QUICK_BACKEND=software
 Environment=QOPENHD_CURSOR_AUTO_HIDE_DEFAULT=1
+Environment=QOPENHD_ZERO3W_OSD_RECORDING=1
 ExecStart=
 ExecStart=/bin/sh /usr/local/share/qopenhd-rockchip/run-qopenhd.sh -platform wayland
 EOF

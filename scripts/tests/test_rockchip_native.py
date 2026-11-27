@@ -93,12 +93,17 @@ class NativeImages(unittest.TestCase):
             (assets / 'rockchip-mali-runtime.py').write_text(
                 'import sys\nassert sys.argv[-1] == "--zero3w"\n')
             (deployment / 'weston.ini').write_text('[core]\nrepaint-window=16\n')
+            fstab = root / 'etc/fstab'
+            config_mount = 'LABEL=OPENHD /conf vfat defaults 0 2\n'
+            fstab.write_text(config_mount + '/dev/mmcblk1p4 /Videos auto defaults 0 2\n')
             env['OPENHD_ZERO3W_DISPLAY'] = 'true'
             command = ['bash', str(assets / 'configure-rockchip-native.sh')]
             subprocess.run(command, env=env, check=True, capture_output=True)
             dropin = root / 'etc/systemd/system/qopenhd.service.d/40-zero3w-display.conf'
             self.assertIn('Environment=QT_QUICK_BACKEND=software', dropin.read_text())
             self.assertIn('Environment=QOPENHD_CURSOR_AUTO_HIDE_DEFAULT=1', dropin.read_text())
+            self.assertIn('Environment=QOPENHD_ZERO3W_OSD_RECORDING=1', dropin.read_text())
+            self.assertEqual(fstab.read_text(), config_mount)
             self.assertIn('run-qopenhd.sh -platform wayland', dropin.read_text())
             weston = root / 'etc/qopenhd-rockchip/weston.ini'
             self.assertIn('repaint-window=4', weston.read_text())
