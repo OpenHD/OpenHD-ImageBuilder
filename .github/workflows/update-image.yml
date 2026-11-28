@@ -1,5 +1,5 @@
 name: New_Image_Workflow
-run-name: OpenHD ${{ github.ref_name == 'snapshots' && format('0.0.{0}', github.run_number) || '3.0-albatros-beta4' }} (${{ inputs.target || 'all' }})
+run-name: OpenHD ${{ github.ref_name == 'snapshots' && format('4.2.{0}', github.run_number) || '3.0-albatros-beta4' }} (${{ inputs.target || 'all' }})
 
 on:
   workflow_dispatch:
@@ -42,7 +42,7 @@ permissions:
   actions: read
 
 env:
-  IMAGE_RELEASE: ${{ github.ref_name == 'snapshots' && format('0.0.{0}', github.run_number) || '3.0-albatros-beta4' }}
+  IMAGE_RELEASE: ${{ github.ref_name == 'snapshots' && format('4.2.{0}', github.run_number) || '3.0-albatros-beta4' }}
   OPENHD_SNAPSHOT_NUMBER: ${{ github.ref_name == 'snapshots' && github.run_number || '' }}
   X21_COMPONENT_BASE_URL: https://dl.cloudsmith.io/public/openhd/dev-release/raw/files
 
@@ -50,7 +50,7 @@ jobs:
   x86-openhd-os:
     name: Build OpenHD-OS on x86
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'x86'
-    uses: OpenHD/OpenHD-OS/.github/workflows/build.yml@d756100ee70ff94bc4a47b0c9839c8239db89596
+    uses: OpenHD/OpenHD-OS/.github/workflows/build.yml@85fef6c89f8222e7282ec8cc66060494d8825d1b
     with:
       openhd_ref: snapshots
       qopenhd_ref: snapshots

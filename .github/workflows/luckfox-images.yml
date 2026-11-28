@@ -144,7 +144,7 @@ jobs:
           pipx install cloudsmith-cli
           version="$(date -u +'%Y-%m-%d-%H-%M-%S')"
           if [[ "$GITHUB_REF_NAME" == snapshots ]]; then
-            version="0.0.$GITHUB_RUN_NUMBER"
+            version="4.2.$GITHUB_RUN_NUMBER"
           fi
           mkdir publish
           for artifact in deploy/*; do
