@@ -5,7 +5,7 @@ on:
    branches:
       - "sdk"
       - "dev-release"
-      - "release"
+      - "master"
 
 jobs:
   build:

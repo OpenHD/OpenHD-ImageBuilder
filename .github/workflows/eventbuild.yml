@@ -5,7 +5,7 @@ on:
    branches:
       - "2.6-evo"
       - "dev-release"
-      - "release"
+      - "master"
       - "rock5"
 
 jobs:
@@ -219,7 +219,7 @@ jobs:
           if-no-files-found: error
 
   upload:
-    if: "github.event_name == 'push' && github.ref == 'refs/heads/release'"
+    if: "github.event_name == 'push' && github.ref == 'refs/heads/master'"
     needs: build
     runs-on: ubuntu-latest
     strategy:
@@ -296,7 +296,7 @@ jobs:
 
 
   # upload2:
-  #   if: "github.event_name == 'push' && github.ref == 'refs/heads/release'"
+  #   if: "github.event_name == 'push' && github.ref == 'refs/heads/master'"
   #   needs: createEmmcImage
   #   runs-on: ubuntu-latest
   #   strategy:
