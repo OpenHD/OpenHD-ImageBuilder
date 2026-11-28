@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
     inputs:
       source_run:
-        description: Successful dev-release New_Image_Workflow run containing the Pi image
+        description: Successful snapshots New_Image_Workflow run containing the Pi image
         required: true
         type: string
 
@@ -39,7 +39,7 @@ jobs:
           set -euo pipefail
           [[ "$SOURCE_RUN" =~ ^[0-9]+$ ]]
           gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN" > /tmp/source-run.json
-          jq -e '.head_branch == "dev-release" and .name == "New_Image_Workflow" and .conclusion == "success"' /tmp/source-run.json
+          jq -e '(.head_branch == "snapshots" or .head_branch == "dev-release") and .name == "New_Image_Workflow" and .conclusion == "success"' /tmp/source-run.json
           gh api "repos/$GITHUB_REPOSITORY/actions/runs/$SOURCE_RUN/artifacts?per_page=100" > /tmp/source-artifacts.json
           artifact=$(jq -er '[.artifacts[] | select(.expired == false and (.name | startswith("openhd-image-pi-bullseye-")))] | if length == 1 then .[0].name else error("Expected exactly one Pi image") end' /tmp/source-artifacts.json)
           echo "artifact=$artifact" >> "$GITHUB_OUTPUT"

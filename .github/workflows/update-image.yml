@@ -1,5 +1,5 @@
 name: New_Image_Workflow
-run-name: OpenHD 3.0-albatros-beta4 (${{ inputs.target || 'all' }})
+run-name: OpenHD ${{ github.ref_name == 'snapshots' && format('0.0.{0}', github.run_number) || '3.0-albatros-beta4' }} (${{ inputs.target || 'all' }})
 
 on:
   workflow_dispatch:
@@ -31,7 +31,7 @@ on:
         type: string
   push:
     branches:
-      - dev-release
+      - snapshots
 
 concurrency:
   group: final-image-ci-${{ github.event_name == 'workflow_dispatch' && inputs.target || github.ref }}
@@ -42,17 +42,19 @@ permissions:
   actions: read
 
 env:
-  IMAGE_RELEASE: 3.0-albatros-beta4
-  BRANCH: dev-release
+  IMAGE_RELEASE: ${{ github.ref_name == 'snapshots' && format('0.0.{0}', github.run_number) || '3.0-albatros-beta4' }}
+  OPENHD_SNAPSHOT_NUMBER: ${{ github.ref_name == 'snapshots' && github.run_number || '' }}
   X21_COMPONENT_BASE_URL: https://dl.cloudsmith.io/public/openhd/dev-release/raw/files
 
 jobs:
   x86-openhd-os:
     name: Build OpenHD-OS on x86
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'x86'
-    uses: OpenHD/OpenHD-OS/.github/workflows/build.yml@d589830d4976ba3ecfacbab38c2245d893a3fceb
+    uses: OpenHD/OpenHD-OS/.github/workflows/build.yml@413ddbbec5dde6217b2592c72b36287a6de33d37
     with:
-      openhd_ref: dev-release
+      openhd_ref: snapshots
+      qopenhd_ref: snapshots
+      sysutils_ref: snapshots
 
   luckfox-pico-images:
     name: Luckfox Pico application overlay images
@@ -255,7 +257,7 @@ jobs:
           retention-days: 30
 
       - name: Stage X21B firmware and update on FleetControl
-        if: github.ref == 'refs/heads/dev-release'
+        if: github.ref == 'refs/heads/snapshots'
         env:
           FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
         run: |
@@ -264,7 +266,7 @@ jobs:
           bash scripts/publish_dev_image.sh x21b-update "x21-output/OpenHD-X21B-full-${DT}.ohd_base"
 
       - name: Promote completed X21B firmware and update
-        if: github.ref == 'refs/heads/dev-release'
+        if: github.ref == 'refs/heads/snapshots'
         env:
           FLEETCONTROL_DEV_IMAGE_TOKEN: ${{ secrets.FLEETCONTROL_DEV_IMAGE_TOKEN }}
         run: |
@@ -360,7 +362,7 @@ jobs:
 
           on_release_line() {
             local relation
-            relation="$(gh api "repos/OpenHD/OpenHD/compare/$1...dev-release" --jq .status)" || return 1
+            relation="$(gh api "repos/OpenHD/OpenHD/compare/$1...snapshots" --jq .status)" || return 1
             [[ "$relation" == ahead || "$relation" == identical ]]
           }
 
@@ -374,7 +376,7 @@ jobs:
             # Check ancestry because dev-release previously pointed at another line.
             candidates="$(gh api 'repos/OpenHD/OpenHD/actions/artifacts?name=openhd-orqa&per_page=30' \
               --jq '.artifacts[] | select(.expired == false) |
-                select(.workflow_run.head_branch == "dev-release" or .workflow_run.head_branch == "openhd-3.0") |
+                select(.workflow_run.head_branch == "snapshots" or .workflow_run.head_branch == "dev-release" or .workflow_run.head_branch == "openhd-3.0") |
                 [.workflow_run.id, .workflow_run.head_sha] | @tsv')"
             run_id=
             while IFS=$'\t' read -r candidate sha; do
@@ -384,7 +386,7 @@ jobs:
                 break
               fi
             done <<< "$candidates"
-            : "${run_id:?No unexpired ORQA artifact from the OpenHD dev-release history}"
+            : "${run_id:?No unexpired ORQA artifact from the OpenHD snapshots history}"
           fi
           gh api "repos/OpenHD/OpenHD/actions/runs/${run_id}/jobs?per_page=100" \
             | jq -e 'any(.jobs[]; .name == "build-orqa" and .conclusion == "success")'
@@ -398,7 +400,7 @@ jobs:
           test -s orqa-input/openhd/openhd-orqa-deploy.tar.gz
 
           curl --fail --location --retry 5 --retry-delay 3 \
-            "https://raw.githubusercontent.com/OpenHD/OpenHD-SysUtils/dev-release/misc/wifi_cards.json" \
+            "https://raw.githubusercontent.com/OpenHD/OpenHD-SysUtils/snapshots/misc/wifi_cards.json" \
             -o orqa-input/wifi_cards.json
 
       - name: Install OpenHD into the ORQA flash bundle
@@ -520,18 +522,18 @@ jobs:
       - uses: actions/checkout@v7
         with:
           repository: OpenHD/QOpenHD
-          ref: dev-release
+          ref: snapshots
           submodules: recursive
           path: components/QOpenHD
       - uses: actions/checkout@v7
         with:
           repository: OpenHD/OpenHD-SysUtils
-          ref: dev-release
+          ref: snapshots
           path: components/OpenHD-SysUtils
       - uses: actions/checkout@v7
         with:
           repository: OpenHD/OpenHD
-          ref: dev-release
+          ref: snapshots
           submodules: true
           token: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
           path: components/OpenHD

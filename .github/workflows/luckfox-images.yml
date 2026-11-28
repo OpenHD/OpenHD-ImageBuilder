@@ -28,7 +28,7 @@ permissions:
 jobs:
   applications:
     name: Current OpenHD and SysUtils only
-    uses: OpenHD/OpenHD/.github/workflows/build_pico_components.yml@dev-release
+    uses: OpenHD/OpenHD/.github/workflows/build_pico_components.yml@snapshots
     secrets:
       OPENHD_SUBMODULE_TOKEN: ${{ secrets.OPENHD_SUBMODULE_TOKEN }}
   prepare:
@@ -143,6 +143,9 @@ jobs:
           : "${CLOUDSMITH_API_KEY:?Cloudsmith publication credentials are required}"
           pipx install cloudsmith-cli
           version="$(date -u +'%Y-%m-%d-%H-%M-%S')"
+          if [[ "$GITHUB_REF_NAME" == snapshots ]]; then
+            version="0.0.$GITHUB_RUN_NUMBER"
+          fi
           mkdir publish
           for artifact in deploy/*; do
             name=$(basename "$artifact")
