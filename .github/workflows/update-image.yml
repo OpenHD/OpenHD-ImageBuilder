@@ -50,7 +50,7 @@ jobs:
   x86-openhd-os:
     name: Build OpenHD-OS on x86
     if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'x86'
-    uses: OpenHD/OpenHD-OS/.github/workflows/build.yml@2ce0fc4c6db11cc0b7da3b01a7ff330ca96127ec
+    uses: OpenHD/OpenHD-OS/.github/workflows/build.yml@d756100ee70ff94bc4a47b0c9839c8239db89596
     with:
       openhd_ref: snapshots
       qopenhd_ref: snapshots
